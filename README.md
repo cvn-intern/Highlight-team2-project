@@ -7,7 +7,7 @@
   Allow users to register and log in to the app to access the quiz game.
   ### Room Categories
   Users should be able to choose a topic of the room from a variety of categories (e.g., Animals, Flag, Country, ...). 
-  ### Create Room (Only for registed user)
+  ### Create Room 
   Users can create a room with the topic already been initialized on the system. Users can add a character of that topic.
   ### Host Game
   Users can host a game using a room they have created.
