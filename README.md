@@ -1,5 +1,4 @@
-![theme](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/79750494-520d-49df-b9c1-1b5a15b2d614)
-![room](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/07ec0369-c9b7-4b3b-8b15-e5f0d02e3a15)
+
 # Highlight-team2-project
 # MVP Requirement
 ## I/ Functional Requirements
