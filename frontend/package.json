@@ -19,6 +19,7 @@
     "lucide-react": "^0.258.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-responsive": "^9.0.2",
     "react-router-dom": "^6.14.1",
     "react-spinners": "^0.13.8",
     "tailwind-merge": "^1.13.2",
