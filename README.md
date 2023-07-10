@@ -23,10 +23,13 @@
   The drawer will have their option to choose 1 out of 2 letter which is randomly given by the system.
   ### Drawing and hint box (for drawer only)
   The drawer will draw their letter in this area, they can choose to public the hint to other players or not.
+  ![usecasehint](https://github.com/cvn-intern/Highlight-team2-project/assets/58035150/f95e67a6-aa98-4810-90fb-0f0e09aa0e2d)
   ### Chat box
   The user can chat with other users in this area. This box will also notify the players in the room if there is someone join or leave the room or someone has been kicked out of the room.
+  ![usecasechat](https://github.com/cvn-intern/Highlight-team2-project/assets/58035150/055a391e-2678-4ed7-a774-23a57c69cda1)
   ### Answer box
   The users can guess the letter by typing their answer to the answer box. This will also show the status of their answer.
+  ![usecaseanswers](https://github.com/cvn-intern/Highlight-team2-project/assets/58035150/0b3584c7-117a-4b95-842c-95d2f207661a)
   ### Progress and Results
   Display the user's progress (e.g., show the status of the answer of the user (close, hit, ...), time remaining) and the score of that round.
   ### Ranking board
