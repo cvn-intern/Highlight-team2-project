@@ -9,7 +9,7 @@
   ### Room Categories
   Users should be able to choose a theme of the room from a variety of categories (e.g., Animals, Flag, Country, ...). 
   ### Create Room 
-  Users can create a room with the theme already been initialized on the system. Users can add a character of that theme.
+  Users can create a room with the theme already initialized or logged user created on the system. Users can add a character of that theme.
   ### Edit Room
   Users can edit or delete the room that they created.
   ### Create Theme (with only logged user)
