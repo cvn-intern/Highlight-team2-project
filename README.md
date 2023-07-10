@@ -57,11 +57,10 @@
   The game should work seamlessly across various devices - desktop and mobile. There should be no lag during gameplay to provide a smooth user experience.
 
 ## V/ Use-case diagram
-![main](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/744e1163-0321-4543-99b3-12ae868bb7be)
-![playing](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/d846320b-4975-4fe4-ac4e-7630c07d009f)
-![room0](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/a18d0f1b-1627-4361-bac5-39d54f74b9f8)
-![theme](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/4eabf793-c5ba-413f-b215-83c06066a051)
-
+![main](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/c5f80de9-c817-4a7b-930b-4247ffcb76e0)
+![playing](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/3410040b-214d-4fcf-9f40-107a5a7e22d5)
+![room](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/4939654f-5dac-4e53-8a84-b39eb7e7e001)
+![theme](https://github.com/cvn-intern/Highlight-team2-project/assets/92099362/bacbb463-2fa5-4d4b-864e-f7341c6d4ae5)
 
 
 ## VI/ Function MVP Requirement
