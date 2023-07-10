@@ -9,6 +9,12 @@
   Users should be able to choose a topic of the room from a variety of categories (e.g., Animals, Flag, Country, ...). 
   ### Create Room 
   Users can create a room with the topic already been initialized on the system. Users can add a character of that topic.
+  ### Edit Room
+  Users can edit or delete the room that they created.
+  ### Create Theme (with only logged user)
+  Users can create theme with guess words as their wish.
+  ### Edit Theme (with only logged user)
+  Users can edit or delete the theme that they created.
   ### Host Game
   Users can host a game using a room they have created.
   ### Join Game
