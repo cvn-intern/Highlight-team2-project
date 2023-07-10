@@ -7,9 +7,9 @@
   ### User Registration and Authentication
   Allow users to register and log in to the app to access the quiz game.
   ### Room Categories
-  Users should be able to choose a topic of the room from a variety of categories (e.g., Animals, Flag, Country, ...). 
+  Users should be able to choose a theme of the room from a variety of categories (e.g., Animals, Flag, Country, ...). 
   ### Create Room 
-  Users can create a room with the topic already been initialized on the system. Users can add a character of that topic.
+  Users can create a room with the theme already been initialized on the system. Users can add a character of that theme.
   ### Edit Room
   Users can edit or delete the room that they created.
   ### Create Theme (with only logged user)
@@ -20,7 +20,7 @@
   Users can host a game using a room they have created.
   ### Join Game
   Users (participants) can join a game by using a link or enter a room's code.
-  ### Topic Display (for drawer only)
+  ### theme Display (for drawer only)
   The drawer will have their option to choose 1 out of 2 letter which is randomly given by the system.
   ### Drawing and hint box (for drawer only)
   The drawer will draw their letter in this area, they can choose to public the hint to other players or not.
@@ -50,7 +50,7 @@
 
 ## IV/ Goals
   ### Functionality
-  To develop a simple, interactive, and user-friendly online drawing and guess game. Users should be able to participate in different categories of topic, keep track of their scores, and compete with others.
+  To develop a simple, interactive, and user-friendly online drawing and guess game. Users should be able to participate in different categories of theme, keep track of their scores, and compete with others.
   ### Ease of Use
   The game should be easy to navigate and play, with clear instructions and intuitive controls. The interface should be clean and appealing.
   ### Responsiveness
