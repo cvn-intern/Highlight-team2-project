@@ -36,6 +36,7 @@
     --radius: 0.5rem;
 
     --bg-color: #22a699;
+    --color-gray-cc: #cccccc;
   }
 
   .dark {
@@ -67,6 +68,10 @@
     --destructive-foreground: 0 85.7% 97.3%;
 
     --ring: 217.2 32.6% 17.5%;
+  }
+
+  body .react-colorful {
+    width: auto;
   }
 }
 

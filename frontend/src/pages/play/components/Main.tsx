@@ -86,9 +86,7 @@ export default function Main() {
       snapshot && drawTriangle(ctx, snapshot, e, startX, startY, isFill);
     }
   };
-  const handleFinishDrawing = (
-    e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
-  ) => {
+  const handleFinishDrawing = () => {
     if (!ctx) return;
     const canvas = ctx.canvas;
     setIsDrawing(false);
@@ -97,7 +95,7 @@ export default function Main() {
   };
   return (
     <div className="flex flex-col flex-1 h-full gap-6">
-      <div className="flex-1 rounded-md overflow-hidden relative">
+      <div className="relative flex-1 overflow-hidden rounded-md">
         <canvas
           ref={canvasRef}
           id="canvas"

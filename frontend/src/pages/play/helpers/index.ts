@@ -1,3 +1,4 @@
+/* eslint-disable prefer-const */
 import { MouseEvent } from "react";
 import { rgbaToHex } from "@/common/lib/colors";
 import { DEFAULT_WHITE } from "../constants/color";
@@ -115,7 +116,7 @@ export const fillColorIntoCanvas = (
   const c_width = canvas.width;
   const c_height = canvas.height;
   const id = ctx.getImageData(0, 0, c_width, c_height);
-  let pixel_pos = (y * c_width + x) * 4;
+  const pixel_pos = (y * c_width + x) * 4;
   const start_r = id.data[pixel_pos + 0];
   const start_g = id.data[pixel_pos + 1];
   const start_b = id.data[pixel_pos + 2];
@@ -134,6 +135,7 @@ export const fillColorIntoCanvas = (
 
   while (stack.length) {
     let new_pos, x, y, pixel_pos, reach_left, reach_right;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     new_pos = stack.pop()!;
     x = new_pos[0];
     y = new_pos[1];
@@ -145,6 +147,7 @@ export const fillColorIntoCanvas = (
     }
     reach_left = false;
     reach_right = false;
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       y++;
       pixel_pos = (y * c_width + x) * 4;

@@ -26,3 +26,9 @@ export type PaintContextType = {
   setIsFill: (isFill: boolean) => void;
   setBrushSize: (brushSize: number) => void;
 };
+
+export type PaintToolBtnType = {
+  Icon: LucideIcon;
+  onChange: string;
+  value: string;
+};
