@@ -57,19 +57,19 @@ const PlayForm = (props: Props) => {
                     )}
                 />
                 <div className='flex gap-3'>
-                <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#22A699] p-5'>
-                    <img src={DoorIcon} alt="" className='w-[20%]' />
-                    <p>
-                    ROOMS
-                    </p>                    
-                </Button>
+                    <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#22A699] p-5'>
+                        <img src={DoorIcon} alt="" className='w-[20%]' />
+                        <p>
+                        ROOMS
+                        </p>                    
+                    </Button>
 
-                <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5'>
-                    <img src={ControllerIcon} alt="" className='w-[25%]' />
-                    <p>
-                    ROOMS
-                    </p>                    
-                </Button>
+                    <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5'>
+                        <img src={ControllerIcon} alt="" className='w-[25%]' />
+                        <p>
+                        ROOMS
+                        </p>                    
+                    </Button>
                 </div>
                 
             </form>
