@@ -1,7 +1,7 @@
-import Profiles from './profile';
 import { Leaderboard } from './mockdata';
+import UserFrame from './UserFrame';
 
-export default function Board() {
+export default function RankingBoard() {
 
   const ranking_order = (data: typeof Leaderboard) => {
     // sort with descending order
@@ -10,7 +10,7 @@ export default function Board() {
 
   return (
     <div className="board">
-      <Profiles Leaderboard={ranking_order(Leaderboard)} />
+      <UserFrame Leaderboard={ranking_order(Leaderboard)} />
     </div>
   );
 }
