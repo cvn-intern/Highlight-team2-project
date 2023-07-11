@@ -4,7 +4,7 @@ import RankingBoard from "./components/PlayingGameDesktopScreen/RankingBoard";
 import Main from "./components/PlayingGameDesktopScreen/Main";
 import PaintTools from "./components/PlayingGameDesktopScreen/PaintTools";
 
-// type Props = {}
+type Props = {};
 
 export default function PlayingGameDesktopScreen() {
   // const { roomId } = useParams();
