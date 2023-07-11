@@ -6,7 +6,7 @@ type Props = {}
 const PlayingGame = (props: Props) => {
   return (
     <div className='p-48 bg-black'>
-        <BoxChatAnswer />
+      <BoxChatAnswer />
     </div>
   )
 }
