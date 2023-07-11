@@ -1,0 +1,38 @@
+services:
+  draw-and-guess:
+    build: .
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./:/drawandguess/backend
+      - /app/node_modules
+    env_file:
+      - .docker.env
+    depends_on:
+      - redis
+      - postgres
+    
+  redis:
+    container_name: cache
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+  postgres:
+    container_name: db_postgres
+    image: postgres
+    restart: always
+    environment:
+     - POSTGRES_DB=DRAWANDGUESS
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=1234
+    ports:
+     - 5432:5432
+    volumes:
+     - docker-nest-postgres:/var/lib/postgresql/data
+
+volumes:
+  redis:
+    driver: local
+  docker-nest-postgres:
