@@ -3,7 +3,7 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Homepage from "./pages/home";
 import PlayingGameScreen from "@/pages/play";
 import { Suspense } from "react";
-// import { useTranslation } from 'react-i18next'
+// import { useTranslation } from "react-i18next";
 
 const client = new QueryClient();
 
@@ -17,7 +17,7 @@ function App() {
   return (
     <Suspense fallback="loading">
       <QueryClientProvider client={client}>
-        {/* <h1 onClick={() => onChangeLang("vn")}>{t("home")}</h1> */}
+        {/* <h1 onClick={() => onChangeLang("vn")}>{t("playgame.board.ul")}</h1> */}
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
