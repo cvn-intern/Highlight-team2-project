@@ -1,14 +1,8 @@
 // import { useMutation } from '@tanstack/react-query'
-import { Button } from '../../common/components/ui/Button'
-import { Avatar, AvatarFallback, AvatarImage } from '../../common/components/ui/Avatar'
-import { useExampleStore } from '../../common/stores/exampleStore'
-import authService from '../../common/lib/services/authService'
-import MainLayout from '@/common/layout/MainLayout'
-import SloganImg from "@/common/assets/slogan.png"
 import BannerImg from "@/common/assets/play-banner.png"
-import AvatarImg from "@/common/assets/avatar.svg"
+import SloganImg from "@/common/assets/slogan.png"
 import Logo from '@/common/components/core/Logo'
-import { User2, Edit2, DoorOpen } from 'lucide-react'
+import MainLayout from '@/common/layout/MainLayout'
 import CustomAvatar from './components/CustomAvatar'
 import PlayForm from './components/PlayForm'
 
