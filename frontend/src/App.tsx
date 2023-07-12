@@ -7,6 +7,8 @@ import RankingBoard from './pages/play/components/ranking-board/RankingBoard'
 import PlayingGameScreen from "@/pages/play";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
+// import { useTranslation } from 'react-i18next'
+import PlayingGame from './pages/play-game'
 
 const client = new QueryClient();
 
@@ -33,6 +35,7 @@ function App() {
             <Route path='/pbi4' element={<RankingBoard />} />
             <Route path="/" element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
+            <Route path='/test' element={<PlayingGame/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
