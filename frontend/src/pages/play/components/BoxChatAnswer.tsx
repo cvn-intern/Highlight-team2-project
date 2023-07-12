@@ -45,7 +45,7 @@ const Box = (props: BoxProps) => {
           <span>{props.label.toLocaleUpperCase()}</span>
         </div>
         <div>
-          <div className='lg:box-content max-h-[110px] overflow-auto'>
+          <div className='lg:box-content min-h-[110px] max-h-[115px] overflow-auto'>
             {
               props.listChat.map((ele: any, index: number) => (
                 <Message key={index} user={ele.user} content={ele.content} type={ele.type} icon={ele.icon} />
@@ -74,48 +74,49 @@ const BoxChatAnswer = (props: Props) => {
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
+    
     {
       user: 'Tư Mã Ý',
       content: 'hit answer!',
       type: 'text-red-600',
       icon: Edit2,
     },
-    {
-      user: 'Gia Cat Luong',
-      content: 'is corrected!',
-      type: 'text-green-600',
-      icon: Check,
-    }
+    
   ]
 
   const listAnswer = [
@@ -126,7 +127,40 @@ const BoxChatAnswer = (props: Props) => {
     {
       user: 'Gia Cat Luong',
       content: 'is corrected!',
-    }
+    },
+    {
+      user: 'Tư Mã Ý',
+      content: 'hit answer!',
+    },
+    {
+      user: 'Gia Cat Luong',
+      content: 'is corrected!',
+    },
+    {
+      user: 'Tư Mã Ý',
+      content: 'hit answer!',
+    },
+    {
+      user: 'Gia Cat Luong',
+      content: 'is corrected!',
+    },
+    {
+      user: 'Tư Mã Ý',
+      content: 'hit answer!',
+    },
+    {
+      user: 'Gia Cat Luong',
+      content: 'is corrected!',
+    },
+    {
+      user: 'Tư Mã Ý',
+      content: 'hit answer!',
+    },
+    {
+      user: 'Gia Cat Luong',
+      content: 'is corrected!',
+    },
+
   ]
 
   return (
