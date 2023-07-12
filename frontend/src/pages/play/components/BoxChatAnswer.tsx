@@ -45,7 +45,7 @@ const Box = (props: BoxProps) => {
           <span>{props.label.toLocaleUpperCase()}</span>
         </div>
         <div>
-          <div className='lg:box-content min-h-[110px] max-h-[115px] overflow-auto'>
+          <div className='lg:box-content min-h-[110px] max-h-[115px] overflow-auto pr-2 scrollbar-thin  scrollbar-thumb-slate-400  scrollbar-thumb-rounded-md'>
             {
               props.listChat.map((ele: any, index: number) => (
                 <Message key={index} user={ele.user} content={ele.content} type={ele.type} icon={ele.icon} />
