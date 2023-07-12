@@ -16,6 +16,22 @@ export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
   ctx?.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 };
 
+export const drawLine = (
+  ctx: CanvasRenderingContext2D,
+  snapshot: ImageData,
+  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
+  startX: number,
+  startY: number
+) => {
+  if (!ctx) return;
+  ctx.beginPath();
+  snapshot && ctx.putImageData(snapshot, 0, 0);
+  ctx.moveTo(startX, startY);
+  ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  ctx.lineCap = "round";
+  ctx.stroke();
+};
+
 export const drawRectangle = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,

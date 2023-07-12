@@ -18,7 +18,7 @@ export default function BtnChosePenStyle({
   type,
 }: Props) {
   return (
-    <label htmlFor={value} className="bg-white flexCenter">
+    <label htmlFor={value} className="bg-white flexCenter cursor-pointer">
       <input
         type={type}
         name={name}
@@ -31,8 +31,8 @@ export default function BtnChosePenStyle({
         <span
           className={`${classNames(
             "text-xl",
-            { "color-[#ffc26f] font-bold": active },
-            { "color-[#848484] font-semibold": !active }
+            { "text-[#ffc26f] font-bold": active },
+            { "text-[#848484] font-semibold": !active }
           )}`}
         >
           {Icon}

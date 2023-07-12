@@ -9,6 +9,7 @@ import {
   eraser,
   fillWithColor,
   pickColor,
+  drawLine,
 } from "@/pages/play/helpers";
 import { rgbaToHex } from "@/common/lib/colors";
 
@@ -34,6 +35,8 @@ export default function Main() {
     setStartY,
     setColor,
   } = variables;
+
+  // Handlers
   const handleStartDrawing = (
     e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
   ) => {
@@ -84,6 +87,9 @@ export default function Main() {
     }
     if (penStyle === "triangle") {
       snapshot && drawTriangle(ctx, snapshot, e, startX, startY, isFill);
+    }
+    if (penStyle === "line") {
+      snapshot && drawLine(ctx, snapshot, e, startX, startY);
     }
   };
   const handleFinishDrawing = () => {

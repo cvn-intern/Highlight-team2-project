@@ -16,15 +16,15 @@ export type PaintContextType = {
   penStyle: string;
   isFill: boolean;
   brushSize: number;
-  setCtx: (ctx: CanvasRenderingContext2D | null) => void;
-  setSnapshot: (snapshot: ImageData) => void;
-  setIsDrawing: (isDrawing: boolean) => void;
-  setStartX: (startX: number) => void;
-  setStartY: (startY: number) => void;
-  setColor: (color: RGBAColorType) => void;
-  setPenStyle: (penStyle: string) => void;
-  setIsFill: (isFill: boolean) => void;
-  setBrushSize: (brushSize: number) => void;
+  setCtx: Dispatch<SetStateAction<CanvasRenderingContext2D | null>>;
+  setSnapshot: Dispatch<SetStateAction<ImageData | undefined>>;
+  setIsDrawing: Dispatch<SetStateAction<boolean>>;
+  setStartX: Dispatch<SetStateAction<number>>;
+  setStartY: Dispatch<SetStateAction<number>>;
+  setColor: Dispatch<SetStateAction<RGBAColorType>>;
+  setPenStyle: Dispatch<SetStateAction<string>>;
+  setIsFill: Dispatch<SetStateAction<boolean>>;
+  setBrushSize: Dispatch<SetStateAction<number>>;
 };
 
 export type PaintToolBtnType = {

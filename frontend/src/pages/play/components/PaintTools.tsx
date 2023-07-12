@@ -1,19 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useContext, MouseEvent } from "react";
+import { useContext } from "react";
 import { PaintContext } from "@/pages/play";
-import {
-  drawFreeStyle,
-  eraser,
-  fillWithColor,
-  pickColor,
-  resetCanvas,
-  drawRectangle,
-  drawCircle,
-  drawTriangle,
-} from "@/pages/play/helpers";
-import { rgbaToHex } from "@/common/lib/colors";
+import { resetCanvas } from "@/pages/play/helpers";
 import BtnChosePenStyle from "./BtnChosePenStyle";
-// Functions
 // Components
 import {
   Edit,
@@ -27,49 +15,54 @@ import {
   CopyX,
 } from "lucide-react";
 import { RgbaColorPicker } from "react-colorful";
-// type Props = {}
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);
   if (!variables) return null;
   const {
-    canvasRef,
     ctx,
-    snapshot,
-    isDrawing,
-    startX,
-    startY,
     color,
     penStyle,
     isFill,
     brushSize,
-    setCtx,
-    setSnapshot,
-    setIsDrawing,
-    setStartX,
-    setStartY,
     setColor,
     setPenStyle,
     setIsFill,
     setBrushSize,
   } = variables;
   // Handlers
-  const handleChoseBrush = () => {};
-  const handleChoseEraser = () => {};
-  const handleChoseRectangle = () => {};
-  const handleChoseCircle = () => {};
-  const handleChoseTriangle = () => {};
-  const handleToggleFill = () => {};
-  const handleChoseLine = () => {};
-  const handleChoseBucket = () => {};
-  const handleChoseColorPicker = () => {};
-  const handleClearCanvas = (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
-  ) => {
+  const handleChoseBrush = () => {
+    setPenStyle("brush");
+  };
+  const handleChoseEraser = () => {
+    setPenStyle("eraser");
+  };
+  const handleChoseRectangle = () => {
+    setPenStyle("rectangle");
+  };
+  const handleChoseCircle = () => {
+    setPenStyle("circle");
+  };
+  const handleChoseTriangle = () => {
+    setPenStyle("triangle");
+  };
+  const handleToggleFill = () => {
+    setIsFill((prev: boolean) => !prev);
+  };
+  const handleChoseLine = () => {
+    setPenStyle("line");
+  };
+  const handleChoseBucket = () => {
+    setPenStyle("bucket");
+  };
+  const handleChoseColorPicker = () => {
+    setPenStyle("picker");
+  };
+  const handleClearCanvas = () => {
     if (!ctx) return;
     resetCanvas(ctx);
   };
-  const handleSaveCanvasAsImage = (e: MouseEvent<HTMLButtonElement, any>) => {
+  const handleSaveCanvasAsImage = () => {
     if (!ctx) return;
     const canvas = ctx.canvas;
     const link = document.createElement("a");
@@ -77,80 +70,85 @@ export default function PaintTools() {
     link.href = canvas.toDataURL();
     link.click();
   };
+  // Renders
+  const toolsBtn = (
+    <div className="grid grid-cols-2 auto-rows-[44px] gap-[1px] bg-[var(--color-gray-cc)]">
+      <BtnChosePenStyle
+        Icon={Edit}
+        active={penStyle === "brush"}
+        onChange={handleChoseBrush}
+        value="brush"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={Eraser}
+        active={penStyle === "eraser"}
+        onChange={handleChoseEraser}
+        value="eraser"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={Square}
+        active={penStyle === "rectangle"}
+        onChange={handleChoseRectangle}
+        value="rectangle"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={Circle}
+        active={penStyle === "circle"}
+        onChange={handleChoseCircle}
+        value="circle"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={Triangle}
+        active={penStyle === "triangle"}
+        onChange={handleChoseTriangle}
+        value="triangle"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={"fill"}
+        active={isFill}
+        onChange={handleToggleFill}
+        name="fill"
+        value="fill"
+        type="checkbox"
+      />
+      <BtnChosePenStyle
+        Icon={Minus}
+        active={penStyle === "line"}
+        onChange={handleChoseLine}
+        value="line"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={PaintBucket}
+        active={penStyle === "bucket"}
+        onChange={handleChoseBucket}
+        value="bucket"
+        type="radio"
+      />
+      <BtnChosePenStyle
+        Icon={Pipette}
+        active={penStyle === "picker"}
+        onChange={handleChoseColorPicker}
+        value="picker"
+        type="radio"
+      />
+      <button
+        className="bg-white flexCenter cursor-pointer"
+        onClick={handleClearCanvas}
+      >
+        <CopyX color={"#848484"} size={28} strokeWidth={2} />
+      </button>
+    </div>
+  );
   return (
     <div className="w-[158px] rounded-md bg-white h-full p-4 flex flex-col justify-between">
-      <div className="grid grid-cols-2 auto-rows-[44px] gap-[0.8px] bg-[var(--color-gray-cc)]">
-        <BtnChosePenStyle
-          Icon={Edit}
-          active={penStyle === "brush"}
-          onChange={handleChoseBrush}
-          value="brush"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={Eraser}
-          active={penStyle === "eraser"}
-          onChange={handleChoseEraser}
-          value="eraser"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={Square}
-          active={penStyle === "rectangle"}
-          onChange={handleChoseRectangle}
-          value="eraser"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={Circle}
-          active={penStyle === "circle"}
-          onChange={handleChoseCircle}
-          value="eraser"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={Triangle}
-          active={penStyle === "triangle"}
-          onChange={handleChoseTriangle}
-          value="triangle"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={"fill"}
-          active={isFill}
-          onChange={handleToggleFill}
-          name="fill"
-          value="fill"
-          type="checkbox"
-        />
-        <BtnChosePenStyle
-          Icon={Minus}
-          active={penStyle === "line"}
-          onChange={handleChoseLine}
-          value="line"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={PaintBucket}
-          active={penStyle === "bucket"}
-          onChange={handleChoseBucket}
-          value="bucket"
-          type="radio"
-        />
-        <BtnChosePenStyle
-          Icon={Pipette}
-          active={penStyle === "picker"}
-          onChange={handleChoseColorPicker}
-          value="picker"
-          type="radio"
-        />
-        <div className="bg-white flexCenter">
-          <CopyX color={"#848484"} size={28} strokeWidth={2} />
-        </div>
-      </div>
-      {/* Color Picker */}
+      {toolsBtn}
       <RgbaColorPicker color={color} onChange={setColor} />
-      {/* Slider */}
       <input
         type="range"
         min="1"
@@ -160,7 +158,6 @@ export default function PaintTools() {
           setBrushSize(Number(e.target.value));
         }}
       ></input>
-      {/* Buttons */}
       <button
         className="px-4 py-2 font-semibold text-blue-700 bg-transparent border border-blue-500 rounded hover:bg-blue-500 hover:text-white hover:border-transparent"
         onClick={handleSaveCanvasAsImage}
