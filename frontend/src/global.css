@@ -92,3 +92,6 @@
     @apply flex items-center justify-between;
   }
 }
+#main-layout{
+  background-image: url("./common//assets//bg.png");
+}

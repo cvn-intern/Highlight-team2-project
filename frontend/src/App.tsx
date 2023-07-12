@@ -1,12 +1,11 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Homepage from './pages/home'
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import {User} from "lucide-react"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import Homepage from "./pages/home";
 import PlayingGameScreen from "@/pages/play";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
-// import { useTranslation } from 'react-i18next'
 
 const client = new QueryClient();
 
