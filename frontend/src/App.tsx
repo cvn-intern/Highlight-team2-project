@@ -3,12 +3,10 @@ import Homepage from './pages/home'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import {User} from "lucide-react"
-import RankingBoard from './pages/play/components/ranking-board/RankingBoard'
 import PlayingGameScreen from "@/pages/play";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
 // import { useTranslation } from 'react-i18next'
-import PlayingGame from './pages/play-game'
 
 const client = new QueryClient();
 
@@ -32,10 +30,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Homepage />} />
-            <Route path='/pbi4' element={<RankingBoard />} />
-            <Route path="/" element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
-            <Route path='/test' element={<PlayingGame/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
