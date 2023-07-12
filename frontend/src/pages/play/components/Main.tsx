@@ -1,4 +1,4 @@
-import { MouseEvent, useContext } from "react";
+import { MouseEvent, useContext, useEffect } from "react";
 import { PaintContext } from "@/pages/play";
 // Functions
 import {
@@ -12,8 +12,13 @@ import {
   drawLine,
 } from "@/pages/play/helpers";
 import { rgbaToHex } from "@/common/lib/colors";
+import { io } from 'socket.io-client';
 
 // type Props = {}
+
+
+
+const socket = io("http://localhost:3000");
 
 export default function Main() {
   const variables = useContext(PaintContext);
@@ -40,6 +45,8 @@ export default function Main() {
   const handleStartDrawing = (
     e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
   ) => {
+    console.log(e);
+    
     if (!ctx) return;
     const canvas = ctx.canvas;
     if (penStyle === "bucket") {
@@ -68,10 +75,15 @@ export default function Main() {
     (penStyle === "brush" || penStyle === "circle") &&
       drawFreeStyle(ctx, e, color);
     penStyle === "eraser" && eraser(ctx, e);
+
+    
+    socket.emit("start-drawing", { startX, startY, color, penStyle, isFill, brushSize });
+
   };
   const handleDrawing = (
     e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
   ) => {
+    
     if (!ctx || !isDrawing) return;
     if (penStyle === "brush") {
       drawFreeStyle(ctx, e, color);
@@ -91,6 +103,9 @@ export default function Main() {
     if (penStyle === "line") {
       snapshot && drawLine(ctx, snapshot, e, startX, startY);
     }
+
+    socket.emit("drawing", { startX, startY, penStyle, color });
+
   };
   const handleFinishDrawing = () => {
     if (!ctx) return;
@@ -98,7 +113,42 @@ export default function Main() {
     setIsDrawing(false);
     // Save previous state to restore when resize
     setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
+
+    socket.emit("finish-drawing");
   };
+
+
+  useEffect(() => {
+    socket.on("other-start-drawing", (data) => {
+      // Xử lý logic vẽ từ các người dùng khác
+      
+      handleStartDrawing(data)
+      // Cập nhật giao diện vẽ
+    });
+
+    // Lắng nghe sự kiện other-drawing từ server và cập nhật giao diện vẽ
+    socket.on("other-drawing", (data) => {
+      // Xử lý logic vẽ từ các người dùng khác
+      handleDrawing(data)
+      // Cập nhật giao diện vẽ
+    });
+
+    // Lắng nghe sự kiện other-finish-drawing từ server và cập nhật giao diện vẽ
+    socket.on("other-finish-drawing", () => {
+      // Xử lý logic vẽ từ các người dùng khác
+      handleFinishDrawing()
+      // Cập nhật giao diện vẽ
+    });
+
+    return () => {
+      socket.off('other-start-drawing')
+      socket.off('other-drawing')
+      socket.off('other-finish-drawing')
+    }
+
+
+  }, [])
+
   return (
     <div className="flex flex-col flex-1 h-full gap-6">
       <div className="relative flex-1 overflow-hidden rounded-md">

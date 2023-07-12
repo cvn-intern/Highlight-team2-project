@@ -2,15 +2,22 @@ import { SubscribeMessage, MessageBody } from '@nestjs/websockets';
 import { AbstractGateway } from '../shared/abstract.gateway';
 import { Server, Socket } from 'socket.io';
 
-const users = {}
-
 export class DrawGateway extends AbstractGateway {
 
-  @SubscribeMessage('draw')
-  handleJoinRoom(client: Socket, {room, name}:{room: string, name: string}): void {
-    console.log(room);
-    users[client.id] = name
-    client.join(room)
-    client.broadcast.to(room).emit('user', name)
+  @SubscribeMessage('start-drawing')
+  handleStartDrawing(client: Socket, data: any): void {
+    client.broadcast.emit('other-start-drawing', data)
   }
+
+
+  @SubscribeMessage('drawing')
+  handleDrawing(client: Socket, data: any): void {
+    client.broadcast.emit('other-drawing', data)
+  } 
+
+  @SubscribeMessage('finish-drawing')
+  handleFinishDrawing(client: Socket, data: any): void {
+    client.broadcast.emit('other-finish-drawing')
+  }
+
 }
