@@ -1,5 +1,5 @@
-import { Suspense } from 'react'
-import {User} from "lucide-react"
+import { Suspense } from "react";
+// import {User} from "lucide-react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Homepage from "./pages/home";
@@ -28,7 +28,7 @@ function App() {
         /> */}
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>

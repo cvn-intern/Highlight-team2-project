@@ -13,6 +13,7 @@ import {
 } from "@/pages/play/helpers";
 import { rgbaToHex } from "@/common/lib/colors";
 import BoxChatAnswer from "./BoxChatAnswer";
+import { Point } from "../config/types";
 
 // type Props = {}
 
@@ -24,34 +25,34 @@ export default function Main() {
     ctx,
     snapshot,
     isDrawing,
-    startX,
-    startY,
+    previousPoint,
     color,
     penStyle,
     isFill,
     brushSize,
     setSnapshot,
     setIsDrawing,
-    setStartX,
-    setStartY,
+    setPreviousPoint,
     setColor,
   } = variables;
 
   // Handlers
-  const handleStartDrawing = (
+  const getPointFromEvent = (
     e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
-  ) => {
+  ): Point => {
+    const x = e.nativeEvent.offsetX;
+    const y = e.nativeEvent.offsetY;
+    return { x, y };
+  };
+  const handleStartDrawing = (point: Point) => {
     if (!ctx) return;
     const canvas = ctx.canvas;
     if (penStyle === "bucket") {
-      fillWithColor(ctx, e, color);
+      fillWithColor(ctx, point, color);
       return;
     }
     setIsDrawing(true);
-    const x = e.nativeEvent.offsetX;
-    const y = e.nativeEvent.offsetY;
-    setStartX(x);
-    setStartY(y);
+    setPreviousPoint(point);
     const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
     ctx.fillStyle = hexColor;
     ctx.strokeStyle = hexColor;
@@ -59,7 +60,7 @@ export default function Main() {
     // Pick color
     if (penStyle === "picker") {
       // alert("picker");
-      pickColor(ctx, x, y, setColor);
+      pickColor(ctx, point, setColor);
       return;
     }
     // Save previous state to prevent drag image
@@ -67,30 +68,31 @@ export default function Main() {
     ctx.beginPath();
     // Make a dot
     (penStyle === "brush" || penStyle === "circle") &&
-      drawFreeStyle(ctx, e, color);
-    penStyle === "eraser" && eraser(ctx, e);
+      drawFreeStyle(ctx, point, color);
+    penStyle === "eraser" && eraser(ctx, point);
   };
-  const handleDrawing = (
-    e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
-  ) => {
+  const handleDrawing = (currentPoint: Point) => {
     if (!ctx || !isDrawing) return;
     if (penStyle === "brush") {
-      drawFreeStyle(ctx, e, color);
+      drawFreeStyle(ctx, currentPoint, color);
     }
     if (penStyle === "eraser") {
-      eraser(ctx, e);
+      eraser(ctx, currentPoint);
     }
     if (penStyle === "rectangle") {
-      snapshot && drawRectangle(ctx, snapshot, e, startX, startY, isFill);
+      snapshot &&
+        drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "circle") {
-      snapshot && drawCircle(ctx, snapshot, e, startX, startY, isFill);
+      snapshot &&
+        drawCircle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "triangle") {
-      snapshot && drawTriangle(ctx, snapshot, e, startX, startY, isFill);
+      snapshot &&
+        drawTriangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "line") {
-      snapshot && drawLine(ctx, snapshot, e, startX, startY);
+      snapshot && drawLine(ctx, snapshot, currentPoint, previousPoint);
     }
   };
   const handleFinishDrawing = () => {
@@ -107,8 +109,14 @@ export default function Main() {
           ref={canvasRef}
           id="canvas"
           className="w-full h-full bg-white"
-          onMouseDown={handleStartDrawing}
-          onMouseMove={handleDrawing}
+          onMouseDown={(e) => {
+            const point = getPointFromEvent(e);
+            handleStartDrawing(point);
+          }}
+          onMouseMove={(e) => {
+            const point = getPointFromEvent(e);
+            handleDrawing(point);
+          }}
           onMouseUp={handleFinishDrawing}
           onMouseLeave={handleFinishDrawing}
         ></canvas>
