@@ -35,7 +35,8 @@ export const drawLine = (
 export const drawRectangle = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
+  currentX: number,
+  currentY: number,
   startX: number,
   startY: number,
   isFill: boolean
@@ -46,8 +47,8 @@ export const drawRectangle = (
   ctx.rect(
     startX,
     startY,
-    e.nativeEvent.offsetX - startX,
-    e.nativeEvent.offsetY - startY
+    currentX,
+    currentY
   );
   isFill ? ctx.fill() : ctx.stroke();
 };
@@ -92,20 +93,23 @@ export const drawTriangle = (
 
 export const drawFreeStyle = (
   ctx: CanvasRenderingContext2D,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
+  x: number,
+  y: number,
   color: RGBAColorType
 ) => {
+  
   if (!ctx) return;
   const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
   ctx.strokeStyle = hexColor;
   ctx.lineCap = "round";
-  ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  ctx.lineTo(x, y);
   ctx.stroke();
 };
 
 export const eraser = (
   ctx: CanvasRenderingContext2D,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+  x: number,
+  y: number
 ) => {
   if (!ctx) return;
   const hexBgColor = rgbaToHex(
@@ -115,7 +119,7 @@ export const eraser = (
     DEFAULT_WHITE.a
   );
   ctx.strokeStyle = hexBgColor;
-  ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  ctx.lineTo(x, y);
   ctx.stroke();
 };
 
@@ -218,7 +222,8 @@ export const fillColorIntoCanvas = (
 
 export const fillWithColor = (
   ctx: CanvasRenderingContext2D,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
+  x: number,
+  y: number,
   color: RGBAColorType
 ) => {
   if (!ctx) return;
@@ -226,8 +231,8 @@ export const fillWithColor = (
   ctx.fillStyle = hexColor;
   fillColorIntoCanvas(
     ctx,
-    e.nativeEvent.offsetX,
-    e.nativeEvent.offsetY,
+    x,
+    y,
     color.r,
     color.g,
     color.b,

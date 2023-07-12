@@ -25,7 +25,8 @@ export default function PlayingGameScreen() {
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
   const [penStyle, setPenStyle] = useState<string>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
-  const [brushSize, setBrushSize] = useState<number>(1);
+  const [brushSize, setBrushSize] = useState<number>(1);  
+  
   // Side Effects
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -41,6 +42,7 @@ export default function PlayingGameScreen() {
   useEffect(() => {
     if (!canvasRef.current) return;
     setCtx(canvasRef.current.getContext("2d"));
+    
   }, [canvasRef]);
 
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function PlayingGameScreen() {
       <MainLayout>
         <div className="h-full flex px-10 py-[56px] gap-6">
           <RankingBoard />
-          <Main />
+          <Main ctx={ctx}/>
           <PaintTools />
         </div>
       </MainLayout>

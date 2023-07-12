@@ -20,12 +20,17 @@ import { io } from 'socket.io-client';
 
 const socket = io("http://localhost:3000");
 
-export default function Main() {
+export default function Main(props: any) {
+  // console.log(props.ctx);
+  
+  
   const variables = useContext(PaintContext);
+
   if (!variables) return null;
   const {
     canvasRef,
     ctx,
+    setCtx,
     snapshot,
     isDrawing,
     startX,
@@ -41,23 +46,42 @@ export default function Main() {
     setColor,
   } = variables;
 
+  console.log(snapshot);
+  
+
   // Handlers
+  // let ctx = canvasRef
+  // console.log(canvasRef.current.getContext('2d'));
+  
   const handleStartDrawing = (
-    e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+    ctx: any,
+    startX: number,
+    startY: number,
+    color: any,
+    penStyle: string,
+    brushSize: number
   ) => {
-    console.log(e);
+    ctx = canvasRef.current?.getContext('2d')
+
+    console.log(ctx);
+    
+    color = color
+    console.log(color);
     
     if (!ctx) return;
+    console.log(ctx);
+    
     const canvas = ctx.canvas;
     if (penStyle === "bucket") {
-      fillWithColor(ctx, e, color);
+      fillWithColor(ctx, startX, startY, color);
       return;
     }
+    
     setIsDrawing(true);
-    const x = e.nativeEvent.offsetX;
-    const y = e.nativeEvent.offsetY;
-    setStartX(x);
-    setStartY(y);
+    // const x = e.nativeEvent.offsetX;
+    // const y = e.nativeEvent.offsetY;
+    setStartX(startX);
+    setStartY(startY);
     const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
     ctx.fillStyle = hexColor;
     ctx.strokeStyle = hexColor;
@@ -65,7 +89,7 @@ export default function Main() {
     // Pick color
     if (penStyle === "picker") {
       // alert("picker");
-      pickColor(ctx, x, y, setColor);
+      pickColor(ctx, startX, startY, setColor);
       return;
     }
     // Save previous state to prevent drag image
@@ -73,40 +97,82 @@ export default function Main() {
     ctx.beginPath();
     // Make a dot
     (penStyle === "brush" || penStyle === "circle") &&
-      drawFreeStyle(ctx, e, color);
-    penStyle === "eraser" && eraser(ctx, e);
-
-    
-    socket.emit("start-drawing", { startX, startY, color, penStyle, isFill, brushSize });
+      drawFreeStyle(ctx, startX, startY, color);
+    penStyle === "eraser" && eraser(ctx, startX, startY);
 
   };
-  const handleDrawing = (
-    e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+
+  const funcStartDraw = (
+    ctx: any,
+    startX: number,
+    startY: number,
+    color: any,
+    penStyle: string,
+    brushSize: number
   ) => {
+    
+    socket.emit("start-drawing", { startX, startY, color, penStyle, brushSize, ctx: ctx });
+    handleStartDrawing(ctx, startX, startY, color, penStyle, brushSize)
+  }
+
+
+  const handleDrawing = (
+    ctx: any,
+    currentX: number,
+    currentY: number,
+    color: any,
+    penStyle: string,
+    isDrawing: boolean,
+    snapshot: any
+  ) => {    
+    
+
+    ctx = canvasRef.current?.getContext('2d')
+    console.log(ctx);
     
     if (!ctx || !isDrawing) return;
     if (penStyle === "brush") {
-      drawFreeStyle(ctx, e, color);
+      console.log(987);
+      console.log(currentX, currentY, color, penStyle);
+      
+      drawFreeStyle(ctx, currentX, currentY, color);
     }
     if (penStyle === "eraser") {
-      eraser(ctx, e);
+      eraser(ctx, currentX, currentY);
     }
     if (penStyle === "rectangle") {
-      snapshot && drawRectangle(ctx, snapshot, e, startX, startY, isFill);
+      console.log(snapshot);
+      
+      snapshot && drawRectangle(ctx, snapshot, currentX, currentY, startX, startY, isFill);
     }
-    if (penStyle === "circle") {
-      snapshot && drawCircle(ctx, snapshot, e, startX, startY, isFill);
-    }
-    if (penStyle === "triangle") {
-      snapshot && drawTriangle(ctx, snapshot, e, startX, startY, isFill);
-    }
-    if (penStyle === "line") {
-      snapshot && drawLine(ctx, snapshot, e, startX, startY);
-    }
+    // if (penStyle === "circle") {
+    //   snapshot && drawCircle(ctx, snapshot, e, startX, startY, isFill);
+    // }
+    // if (penStyle === "triangle") {
+    //   snapshot && drawTriangle(ctx, snapshot, e, startX, startY, isFill);
+    // }
+    // if (penStyle === "line") {
+    //   snapshot && drawLine(ctx, snapshot, e, startX, startY);
+    // }
 
-    socket.emit("drawing", { startX, startY, penStyle, color });
-
+    
   };
+
+  const funcDrawing = (
+    ctx: any,
+    currentX: number,
+    currentY: number,
+    color: any,
+    penStyle: string,
+    isDrawing: boolean,
+    snapshot: any,
+  ) => {
+    if(isDrawing){
+      socket.emit("drawing", { currentX, currentY, penStyle, color, ctx, isDrawing, snapshot });
+      handleDrawing(ctx, currentX, currentY, color, penStyle, isDrawing, snapshot)
+    }
+  }
+
   const handleFinishDrawing = () => {
     if (!ctx) return;
     const canvas = ctx.canvas;
@@ -119,25 +185,24 @@ export default function Main() {
 
 
   useEffect(() => {
-    socket.on("other-start-drawing", (data) => {
-      // Xử lý logic vẽ từ các người dùng khác
+    socket.on("other-start-drawing", ({startX,
+      startY,
+      color,
+      penStyle,
+      brushSize,
+      ctx}) => {
+        console.log(color);
+        
+      handleStartDrawing(ctx, startX, startY, color, penStyle, brushSize)
+    });
+
+    socket.on("other-drawing", ({currentX, currentY, color,penStyle, ctx, isDrawing, snapshot}) => {
+      console.log(snapshot);
       
-      handleStartDrawing(data)
-      // Cập nhật giao diện vẽ
+      handleDrawing(ctx, currentX, currentY, color, penStyle, isDrawing, snapshot)
     });
 
-    // Lắng nghe sự kiện other-drawing từ server và cập nhật giao diện vẽ
-    socket.on("other-drawing", (data) => {
-      // Xử lý logic vẽ từ các người dùng khác
-      handleDrawing(data)
-      // Cập nhật giao diện vẽ
-    });
-
-    // Lắng nghe sự kiện other-finish-drawing từ server và cập nhật giao diện vẽ
     socket.on("other-finish-drawing", () => {
-      // Xử lý logic vẽ từ các người dùng khác
-      handleFinishDrawing()
-      // Cập nhật giao diện vẽ
     });
 
     return () => {
@@ -147,7 +212,7 @@ export default function Main() {
     }
 
 
-  }, [])
+  }, [canvasRef])
 
   return (
     <div className="flex flex-col flex-1 h-full gap-6">
@@ -156,8 +221,8 @@ export default function Main() {
           ref={canvasRef}
           id="canvas"
           className="w-full h-full bg-white"
-          onMouseDown={handleStartDrawing}
-          onMouseMove={handleDrawing}
+          onMouseDown={(e) => funcStartDraw(ctx, e.nativeEvent.offsetX, e.nativeEvent.offsetY, color, penStyle, brushSize)}
+          onMouseMove={(e) => funcDrawing(ctx, e.nativeEvent.offsetX, e.nativeEvent.offsetY, color, penStyle, isDrawing, snapshot)}
           onMouseUp={handleFinishDrawing}
           onMouseLeave={handleFinishDrawing}
         ></canvas>
