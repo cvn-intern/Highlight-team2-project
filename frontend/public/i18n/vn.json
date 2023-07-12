@@ -1,3 +1,7 @@
 {
-    "home": "trang home"
+  "playgame": {
+    "board": {
+      "ul": "english"
+    }
+  }
 }
