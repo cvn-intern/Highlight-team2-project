@@ -1,8 +1,9 @@
+import { Suspense } from 'react'
+import {User} from "lucide-react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Homepage from "./pages/home";
 import PlayingGameScreen from "@/pages/play";
-import { Suspense } from "react";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
 
@@ -27,7 +28,7 @@ function App() {
         /> */}
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path='/' element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>
