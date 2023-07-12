@@ -17,13 +17,21 @@ export class SocketService {
   async storeClientConnection(client: Socket) {
     const payload = await this.extractPayload(client);
     const idUser: number = payload.id;
+
     return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay)
+  }
+
+  async removeClientDisconnection(client: Socket) {
+    const payload = await this.extractPayload(client);
+    const idUser: number = payload.id;
+    
+    return await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
   }
 
   async extractPayload(socket: Socket): Promise<any> {
     try {
       const token: string = socket.handshake.headers.authorization;
-      
+     
       return await this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_ACCESSKEY'),
       });
