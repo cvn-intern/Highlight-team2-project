@@ -6,7 +6,7 @@ import MainLayout from "@/common/layout/MainLayout";
 // Types
 import { RGBAColorType, PaintContextType } from "./config/types";
 import { resetCanvas } from "./helpers";
-import RankingBoard from "./components/RankingBoard";
+import RankingBoard from "./components/ranking-board/RankingBoard";
 import Main from "./components/Main";
 import PaintTools from "./components/PaintTools";
 // Funtions

@@ -3,7 +3,7 @@ import Homepage from './pages/home'
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import {User} from "lucide-react"
-import RankingBoard from './pages/ranking-board/components/RankingBoard'
+import RankingBoard from './pages/play/components/ranking-board/RankingBoard'
 import PlayingGameScreen from "@/pages/play";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
