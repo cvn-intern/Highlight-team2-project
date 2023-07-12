@@ -11,6 +11,9 @@ import { RoomroundModule } from 'src/modules/roomround/roomround.module';
 import { WordModule } from 'src/modules/word/word.module';
 import { UserwordModule } from 'src/modules/userword/userword.module';
 import { ThemeModule } from 'src/modules/theme/theme.module';
+import { SocketModule } from 'src/modules/socket/socket.module';
+import { RedisModule } from 'src/modules/redis/redis.module';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
 
@@ -24,6 +27,9 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
     WordModule,
     UserwordModule,
     ThemeModule,
+    SocketModule,
+    RedisModule,
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,

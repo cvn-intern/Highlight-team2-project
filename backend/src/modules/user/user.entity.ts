@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Language } from "../language/language.entity";
 
 @Entity('user')
 export class User {
@@ -11,7 +12,11 @@ export class User {
     @Column({nullable: false})
     nickname: string;
 
-    @Column({nullable: false, default: false})
+    @ManyToOne(() => Language, (language) => language.code)
+    @JoinColumn({name: 'language'})
+    language: string;
+
+    @Column({nullable: false, default: true})
     is_guest: boolean;
 
     @Column({
