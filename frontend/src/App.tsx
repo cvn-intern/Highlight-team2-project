@@ -4,9 +4,11 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query'
 import { Suspense } from 'react'
 import {User} from "lucide-react"
 import RankingBoard from './pages/ranking-board/components/RankingBoard'
-// import { useTranslation } from 'react-i18next'
+import PlayingGameScreen from "@/pages/play";
+// import { useTranslation } from "react-i18next";
+// import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
 
-const client = new QueryClient()
+const client = new QueryClient();
 
 function App() {
   // const { i18n, t } = useTranslation();
@@ -18,16 +20,24 @@ function App() {
   return (
     <Suspense fallback="loading">
       <QueryClientProvider client={client}>
-        {/* <h1 onClick={() => onChangeLang("vn")}>{t("home")}</h1> */}
+        {/* <h1 onClick={() => onChangeLang("vn")}>{t("playgame.board.ul")}</h1> */}
+        {/* <AlertDialogYesNo
+          buttonText="Click me!"
+          buttonClassName="w-full"
+          buttonVariant={"outline"}
+          onYesClick={() => alert("Yes")}
+        /> */}
         <BrowserRouter>
           <Routes>
             <Route path='/' element={<Homepage />} />
             <Route path='/pbi4' element={<RankingBoard />} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="/:roomId" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
-    </Suspense >
-  )
+    </Suspense>
+  );
 }
 
-export default App
+export default App;
