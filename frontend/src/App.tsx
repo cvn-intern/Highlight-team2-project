@@ -4,6 +4,7 @@ import Homepage from "./pages/home";
 import PlayingGameScreen from "@/pages/play";
 import { Suspense } from "react";
 // import { useTranslation } from "react-i18next";
+import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
 
 const client = new QueryClient();
 
@@ -18,6 +19,12 @@ function App() {
     <Suspense fallback="loading">
       <QueryClientProvider client={client}>
         {/* <h1 onClick={() => onChangeLang("vn")}>{t("playgame.board.ul")}</h1> */}
+        <AlertDialogYesNo
+          buttonText="Click me!"
+          buttonClassName="w-full"
+          buttonVariant={"outline"}
+          onYesClick={() => alert("Yes")}
+        />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
