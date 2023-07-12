@@ -51,11 +51,12 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                                     <p className="text-lg font-medium text-truncate dark:text-white">
                                         {value.name}
                                     </p>
-                                    <p className="text-sm text-textBlueColor truncate dark:text-gray-400">
-                                        {value.score}
+                                    <p className="text-md font-medium text-textBlueColor truncate dark:text-gray-400">
+                                        <strong>{value.score}</strong>
+                                        <span> pts</span>
                                     </p>
                                 </div>
-                                {value.host && <Home color="#2062fb" strokeWidth={2.5} />}
+                                {value.host && <Home color="#2062fb" strokeWidth={2.5} size={36} />}
                             </div>
                         </div>
                     </li>

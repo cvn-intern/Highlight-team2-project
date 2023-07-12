@@ -23,7 +23,6 @@ export const Leaderboard: Array<{
                 "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
             host: false,
             type: "text-blue-500",
-            icon: Paintbrush,
         },
         {
             name: "Bessie Hickle",
@@ -58,7 +57,7 @@ export const Leaderboard: Array<{
             score: 2550,
             img:
                 "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-            host: true,
+            host: false,
             type: "text-green-500",
             icon: Check,
         },

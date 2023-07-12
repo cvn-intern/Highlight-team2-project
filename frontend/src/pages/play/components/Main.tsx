@@ -12,6 +12,7 @@ import {
   drawLine,
 } from "@/pages/play/helpers";
 import { rgbaToHex } from "@/common/lib/colors";
+import BoxChatAnswer from "./BoxChatAnswer";
 
 // type Props = {}
 
@@ -112,7 +113,9 @@ export default function Main() {
           onMouseLeave={handleFinishDrawing}
         ></canvas>
       </div>
-      <div className="bg-white rounded-md h-[245px]">Chat and answers</div>
+      <div className="bg-white rounded-md h-[245px]">
+        <BoxChatAnswer />
+      </div>
     </div>
   );
 }
