@@ -11,6 +11,7 @@ import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
 import { resetCanvas } from "./helpers";
 
+
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -51,6 +52,7 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
+
   return (
     <PaintContext.Provider
       value={{

@@ -28,9 +28,9 @@ type Props = {}
 const formSchema = z.object({
     nickname: z.string().min(2).max(50),
     language: z
-    .string({
-      required_error: "Please select an language.",
-    })
+        .string({
+            required_error: "Please select an language.",
+        })
 })
 
 const PlayForm = (props: Props) => {
@@ -53,9 +53,9 @@ const PlayForm = (props: Props) => {
                     control={form.control}
                     name="nickname"
                     render={({ field }) => (
-                        <FormItem className='flex items-center text-slate-400'>
+                        <FormItem className='flex items-start text-slate-400'>
 
-                            <FormLabel className='flex items-center gap-3 mt-3'>
+                            <FormLabel className='flex items-center gap-3 mt-5'>
                                 <div >
                                     <User2 size={28} strokeWidth={2} color={'#22A699'} />
                                 </div>
@@ -63,10 +63,12 @@ const PlayForm = (props: Props) => {
                                     NICKNAME
                                 </div>
                             </FormLabel>
-                            <FormControl >
-                                <Input {...field} className={'font-bold text-lg border-primaryTextColor border-2 h-12'} />
-                            </FormControl>
-                            <FormMessage />
+                            <div className='relative flex flex-col'>
+                                <FormControl>
+                                    <Input {...field} className={'font-bold text-lg border-primaryTextColor border-2 h-12'} />
+                                </FormControl>
+                                <FormMessage className='absolute bottom-[-32px] left-0 w-[120%] leading-4' />
+                            </div>
                         </FormItem>
                     )}
                 />
@@ -113,7 +115,7 @@ const PlayForm = (props: Props) => {
                     <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5'>
                         <img src={ControllerIcon} alt="" className='w-[25%]' />
                         <p>
-                            ROOMS
+                            PLAY!
                         </p>
                     </Button>
                 </div>
