@@ -5,12 +5,8 @@ import Logo from '@/common/components/core/Logo'
 import MainLayout from '@/common/layout/MainLayout'
 import CustomAvatar from './components/CustomAvatar'
 import PlayForm from './components/PlayForm'
-import { useUserStore } from "@/common/stores/userStore"
-
 
 const Homepage = () => {
-
-
   return (
     <MainLayout>
       <div className="w-full h-full flex flex-col items-center justify-center">

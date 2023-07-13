@@ -1,6 +1,4 @@
 import { create } from "zustand";
-import { io, Socket } from 'socket.io-client';
-
 
 export interface IUser{
   id: number

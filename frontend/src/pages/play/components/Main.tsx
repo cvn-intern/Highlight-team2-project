@@ -12,12 +12,9 @@ import {
   drawLine,
 } from "@/pages/play/helpers";
 import { rgbaToHex } from "@/common/lib/colors";
-import { io } from 'socket.io-client';
 import { Point } from "../config/types";
 import BoxChatAnswer from "./BoxChatAnswer";
 import { useSocketStore } from "@/common/stores/socketStore";
-
-// type Props = {}
 
 export default function Main() {
   const variables = useContext(PaintContext);

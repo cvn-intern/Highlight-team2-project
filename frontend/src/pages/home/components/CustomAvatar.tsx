@@ -1,5 +1,4 @@
 import AvatarHeader from '@/common/assets/avatar-header.png'
-import AvatarImg from "@/common/assets/avatar.svg"
 import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar'
 import { Button } from "@/common/components/ui/Button"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
@@ -24,7 +23,7 @@ type CustomAvatarProps = {
   customClassname?: string
 }
 
-const CustomAvatar = ({ customClassname = "" }: CustomAvatarProps) => {
+const CustomAvatar = ({ }: CustomAvatarProps) => {
   const [avatarIndex, setAvatarIndex] = useState(0)
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex)
 

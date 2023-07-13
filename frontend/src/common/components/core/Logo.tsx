@@ -1,4 +1,3 @@
-import React from 'react'
 import LogoImg from "@/common/assets/logo.png"
 import { cn } from '@/common/lib/utils'
 
