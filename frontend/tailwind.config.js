@@ -17,6 +17,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        textBlueColor: "#22A699",
         primaryTextColor: "#838383",
         headerTextColor: "#22A699",
         border: "hsl(var(--border))",
@@ -74,5 +75,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require('tailwind-scrollbar')({ nocompatible: true }),],
 }

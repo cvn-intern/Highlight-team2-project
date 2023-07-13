@@ -19,6 +19,9 @@ export class Room {
   @JoinColumn({name: 'theme'})
   theme: number;
 
+  @Column({nullable: true})
+  max_player: number;
+
   @Column({nullable: false})
   time_per_round: number;
 

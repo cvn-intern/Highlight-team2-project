@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { RoomroundController } from '../roomround.controller';
+import { RoomroundController } from '../roomRound.controller';
 
 describe('RoomroundController', () => {
   let controller: RoomroundController;

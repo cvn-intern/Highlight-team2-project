@@ -1,6 +1,6 @@
 import AvatarHeader from '@/common/assets/avatar-header.png'
 import AvatarImg from "@/common/assets/avatar.svg"
-import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/Avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar'
 import { Button } from "@/common/components/ui/Button"
 import {
   Dialog,
@@ -45,8 +45,8 @@ const CustomAvatar = ({ customClassname = "" }: CustomAvatarProps) => {
           </DialogHeader>
           <div className="overflow-y-auto h-96 w-full">
             <div className="grid grid-cols-5 gap-2 p-2 bg-gray-300">
-              {[0,1,2,3,4,5,6,7,8,9,10].map(item => (
-                <AvatarCard onClick={() => setSelectedAvatar(item)} isSelected={item === selectedAvatar}/>
+              {[0,1,2,3,4,5,6,7,8,9,10].map((item, index) => (
+                <AvatarCard onClick={() => setSelectedAvatar(item)} key={index} isSelected={item === selectedAvatar}/>
               ))} 
             </div>
           </div>

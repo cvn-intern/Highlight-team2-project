@@ -27,6 +27,10 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async updateUser(user: UserInterface) {
+    return this.userRepository.save(user);
+  }
+
   generateGuest() {
     const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = AVATAR_DEFAULT;

@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
-import { UserwordService } from './userword.service';
+import { UserwordService } from './userWord.service';
 
 @Controller('userword')
-export class UserwordController {
+export class UserWordController {
     constructor(
         private userWordService: UserwordService,
     ) {}

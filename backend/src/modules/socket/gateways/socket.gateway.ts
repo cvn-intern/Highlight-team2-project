@@ -3,21 +3,45 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { UserService } from 'src/modules/user/user.service';
+import { RedisService } from 'src/modules/redis/redis.service';
+import { RoomUserService } from 'src/modules/roomuser/roomUser.service';
+import { extractIdRoom } from 'src/common/utils/helper';
 
 @WebSocketGateway(3001, { cors: '*:*' })
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     public socketService: SocketService,
     public userService: UserService,
+    public redisService: RedisService,
+    public roomUserService: RoomUserService,
   ) { }
 
   @WebSocketServer() public server: Server;
   private logger: Logger = new Logger('SocketGateway');
 
   // client ngắt kết nối
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     this.logger.log(`Client ${client.id} disconnected!`);
     this.socketService.removeClientDisconnection(client);
+
+    const payload = await this.socketService.extractPayload(client);
+    const user = await this.userService.getUserById(payload.id);
+    const codeRoom = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
+    
+    client.leave(codeRoom);
+    console.log('disconnect', codeRoom);
+    if(codeRoom !== null) {
+      const idRoom = extractIdRoom(codeRoom);
+      await this.roomUserService.deleteRoomUser(idRoom, user.id);
+    }
+
+    this.server.in(codeRoom).emit(`${codeRoom}-leave`, {
+      user: user.nickname,
+      content: 'left',
+      type: 'text-red-600',
+      icon: 'LogOut',
+    })
+    await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
   }
 
   // client kết nối

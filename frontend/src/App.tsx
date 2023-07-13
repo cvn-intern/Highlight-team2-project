@@ -1,12 +1,16 @@
+import { User } from "lucide-react"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import Homepage from "./pages/home";
 import PlayingGameScreen from "@/pages/play";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "./common/stores/socketStore";
 import { io } from "socket.io-client";
+import authService from "./common/lib/services/authService";
+import { useUserStore } from "./common/stores/userStore";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
+import JWTManager from "@/common/lib/jwt"
 
 const client = new QueryClient();
 
@@ -16,22 +20,44 @@ function App() {
   // const onChangeLang = (lang_code: "vn" | "en") => {
   //   i18n.changeLanguage(lang_code);
   // };
-  const {socket, initSocket} = useSocketStore()
+  const [loading, setLoading] = useState(true)
+  const { socket, initSocket } = useSocketStore()
+  const { setUser } = useUserStore()
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const createSocketInstance = (token: string) =>  {
       const socketInit = io("http://localhost:3001", {
         extraHeaders: {
-          authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTQsImlhdCI6MTY4OTE1NTc1MywiZXhwIjoxNjg5MjQyMTUzfQ.M0MIO3wNWsJF9lqLQl8kmXCs50TR1sDpJIZiaNPAlnk`,
+          authorization: token,
         },
-      });
+      })
       initSocket(socketInit)
-    }, 3000)
+      setLoading(false)
+    }
 
-    return () => clearTimeout(timeout)
+    const initUser = async () => {
+      try {
+        const { data } = await authService.newUser()
+        setUser(data.data.user)
+        JWTManager.setToken(data.data.accessToken)
+        createSocketInstance(data.data.accessToken)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    const token = JWTManager.getToken()
+    const user = window.localStorage.getItem("user")
+    if(!token && !socket){
+      initUser()
+    }
+    else if(token && user){
+      createSocketInstance(token)
+      setUser(JSON.parse(user))
+    }
   }, [])
 
-  console.log({socket})
+  if(loading) return null
 
   return (
     <Suspense fallback="loading">
@@ -45,7 +71,7 @@ function App() {
         /> */}
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path='/' element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>

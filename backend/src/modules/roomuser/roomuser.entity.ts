@@ -18,5 +18,5 @@ export class RoomUser {
     score: number;
 
     @Column({type: 'timestamp', nullable: true})
-    answered_at: number;
+    answered_at: Date;
 }

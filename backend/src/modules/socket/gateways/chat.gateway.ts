@@ -3,10 +3,19 @@ import { Server, Socket } from 'socket.io';
 import { SocketGateway } from './socket.gateway';
 import { UserService } from 'src/modules/user/user.service';
 import { SocketService } from '../socket.service';
+import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { extractIdRoom } from 'src/common/utils/helper';
 
 interface MessageBodyInterface {
   codeRoom: string;
   message: string;
+}
+
+interface Chat {
+  user: string;
+  content: string;
+  type: string;
+  icon: string;
 }
 
 export class ChatGateway extends SocketGateway {
@@ -18,8 +27,21 @@ export class ChatGateway extends SocketGateway {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
 
+    await this.redisService.setObjectByKeyValue(`USER:${user.id}:ROOM`, codeRoom, expireTimeOneDay);
+    
     client.join(codeRoom);
-    client.to(codeRoom).emit(codeRoom, `${user.nickname} joined`);
+    console.log('connect', codeRoom);
+    if(codeRoom !== null) {
+      const idRoom = extractIdRoom(codeRoom);
+      await this.roomUserService.createNewRoomUser(idRoom, user.id);
+    }
+
+    this.server.in(codeRoom).emit(codeRoom, {
+      user: user.nickname,
+      content: 'joined',
+      type: 'text-green-600',
+      icon: 'Info',
+    } as Chat);
   }
 
   @SubscribeMessage('chat')
@@ -29,8 +51,13 @@ export class ChatGateway extends SocketGateway {
   ) {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
-    
-    this.server.in(msgBody.codeRoom).emit(`${msgBody.codeRoom}-chat`, `${user.nickname} ${msgBody.message}`)
+
+    this.server.in(msgBody.codeRoom).emit(`${msgBody.codeRoom}-chat`, {
+      user: user.nickname,
+      content: msgBody.message,
+      type: 'text-blue-600',
+      icon: 'MessageCircle',
+    } as Chat)
   }
 
   @SubscribeMessage('leave-room')
@@ -41,7 +68,12 @@ export class ChatGateway extends SocketGateway {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
 
+    client.to(codeRoom).emit(`${codeRoom}-leave`, {
+      user: user.nickname,
+      content: 'left',
+      type: 'text-neutral-600',
+      icon: 'LogOut',
+    } as Chat);
     client.leave(codeRoom);
-    client.to(codeRoom).emit(codeRoom, `${user.nickname} left`);
   }
 }

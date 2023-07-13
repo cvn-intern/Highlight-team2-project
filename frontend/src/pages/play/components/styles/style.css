@@ -17,7 +17,6 @@
   }
 
   .box-content {
-    height: 150px;
     padding: 25px 0;
   }
 
@@ -29,7 +28,6 @@
   }
 
   .box {
-    width: 400px;
     padding: 20px;
   }
 }

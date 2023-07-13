@@ -1,9 +1,9 @@
 import { Controller } from '@nestjs/common';
-import { RoomroundService } from './roomround.service';
+import { RoomRoundService } from './roomRound.service';
 
 @Controller('roomround')
-export class RoomroundController {
+export class RoomRoundController {
     constructor(
-        private roomRoundService: RoomroundService,
+        private roomRoundService: RoomRoundService,
     ) {}
 }
