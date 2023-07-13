@@ -1,7 +1,7 @@
-import { Avatar, AvatarImage } from '@/common/components/ui/avatar'
 import { Card, CardContent } from '@/common/components/ui/card'
 import { AvatarFallback } from '@radix-ui/react-avatar'
 import { cn } from '@/common/lib/utils'
+import { Avatar, AvatarImage } from '@/common/components/ui/Avatar'
 
 type AvatarCardProps = {
     isSelected?: boolean

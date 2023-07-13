@@ -1,5 +1,4 @@
 import AvatarHeader from '@/common/assets/avatar-header.png'
-import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar'
 import { Button } from "@/common/components/ui/Button"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
 import {
@@ -18,6 +17,7 @@ import { cn } from "@/common/lib/utils"
 import { Check, Edit2 as EditIcon } from 'lucide-react'
 import { useState } from 'react'
 import { avatarImages } from '../constants'
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/Avatar'
 
 type CustomAvatarProps = {
   customClassname?: string
