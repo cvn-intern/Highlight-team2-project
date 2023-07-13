@@ -6,7 +6,7 @@ import {
 } from "@/common/components/ui/Modal"
 import { Label } from "@/common/components/ui/label"
 import { Ban, ThumbsDown } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/common/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/common/components/ui/avatar-shadcn"
 
 type Props = {
     user: any
