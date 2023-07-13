@@ -3,7 +3,7 @@ import { Home, LucideIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { DialogDemo } from './modals/ProfileModal';
 import { cn } from '@/common/lib/utils';
-import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/Avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar';
 
 interface ProfileProps {
     Leaderboard: Array<{

@@ -17,7 +17,7 @@ import { cn } from "@/common/lib/utils"
 import { Check, Edit2 as EditIcon } from 'lucide-react'
 import { useState } from 'react'
 import { avatarImages } from '../constants'
-import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/Avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar'
 
 type CustomAvatarProps = {
   customClassname?: string
