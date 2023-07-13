@@ -5,24 +5,10 @@ import Logo from '@/common/components/core/Logo'
 import MainLayout from '@/common/layout/MainLayout'
 import CustomAvatar from './components/CustomAvatar'
 import PlayForm from './components/PlayForm'
+import { useUserStore } from "@/common/stores/userStore"
 
 
 const Homepage = () => {
-  // const {value} = useExampleStore()
-
-  // const {mutate: login} = useMutation({
-  //   mutationFn: async (input: LoginInputType) => {
-  //     const {data} = await authService.login(input)
-
-  //     return data
-  //   },
-  //   onSuccess: (data) => {
-  //     console.log(data)
-  //   },
-  //   onError: (error) => {
-  //     console.log({error})
-  //   }
-  // })
 
 
   return (

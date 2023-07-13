@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoomRound } from './roomround.entity';
-import { RoomroundController } from './roomround.controller';
-import { RoomroundService } from './roomround.service';
+import { RoomRound } from './roomRound.entity';
+import { RoomRoundController } from './roomRound.controller';
+import { RoomRoundService } from './roomRound.service';
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([RoomRound])
     ],
-    controllers: [RoomroundController],
-    providers: [RoomroundService],
-    exports: [RoomroundService],
+    controllers: [RoomRoundController],
+    providers: [RoomRoundService],
+    exports: [RoomRoundService],
 })
-export class RoomroundModule {}
+export class RoomRoundModule {}

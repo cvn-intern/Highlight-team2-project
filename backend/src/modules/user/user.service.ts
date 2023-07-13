@@ -10,24 +10,36 @@ const AVATAR_DEFAULT: string = "https://yt3.googleusercontent.com/-CFTJHU7fEWb7B
 
 @Injectable()
 export class UserService {
-    constructor(
-        @InjectRepository(User)
-        private userRepository: Repository<User>,
-    ) {}
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) { }
 
-    async createUser(user: UserInterface) {
-        return this.userRepository.save(user);
-    }
+  async getUserById(id: number) {
+    return await this.userRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+  }
 
-    generateGuest() {
-        const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
-        const avatar: string = AVATAR_DEFAULT;
-        const language: string = 'en';
+  async createUser(user: UserInterface) {
+    return this.userRepository.save(user);
+  }
 
-        return {
-            nickname: nicknameGuest,
-            avatar: avatar,
-            language: language,
-        } as UserInterface;
-    }
+  async updateUser(user: UserInterface) {
+    return this.userRepository.save(user);
+  }
+
+  generateGuest() {
+    const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
+    const avatar: string = AVATAR_DEFAULT;
+    const language: string = 'en';
+
+    return {
+      nickname: nicknameGuest,
+      avatar: avatar,
+      language: language,
+    } as UserInterface;
+  }
 }

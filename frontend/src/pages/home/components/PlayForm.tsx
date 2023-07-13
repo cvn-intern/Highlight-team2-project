@@ -22,30 +22,65 @@ import ControllerIcon from '@/common/assets/controller-icon.svg'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Globe, User2 } from 'lucide-react'
+import { useUserStore } from '@/common/stores/userStore'
+import playService from '@/common/lib/services/playService'
+import { useNavigate } from 'react-router-dom'
+import { useSocketStore } from '@/common/stores/socketStore'
+import authService from '@/common/lib/services/authService'
 
 type Props = {}
 
 const formSchema = z.object({
     nickname: z.string().min(2).max(50),
     language: z
-        .string({
-            required_error: "Please select an language.",
-        })
+    .string({
+      required_error: "Please select an language.",
+    })
 })
 
 const PlayForm = (props: Props) => {
 
+    const { user, setUser } = useUserStore()
+    const {socket} = useSocketStore()
+    const navigate = useNavigate()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            nickname: "User8744",
-            language: "en"
+            nickname: user?.nickname,
+            language: user?.language
         },
     })
 
     const handleSubmit = (values: z.infer<typeof formSchema>) => {
         console.log({ values })
     }
+
+
+    const handleQuickPlay = async () => {
+        try {
+            const nickname = form.getValues("nickname");
+            const language = form.getValues("language");
+            
+            if(user?.nickname !== nickname || user?.language !== language) {
+                const {data} = await authService.updateUser({
+                    ...user,
+                    nickname,
+                    language,
+                })
+
+                setUser(data.data.user)
+            }
+
+            const {data} = await playService.quickPlay()
+            navigate("/" + data.data.code_room)
+
+            socket?.emit('join-room', data.data.code_room)
+        } catch (error) {
+            console.log({error})
+        }
+    }
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8 w-[50%]">
@@ -93,7 +128,7 @@ const PlayForm = (props: Props) => {
                                     </SelectTrigger>
                                     <SelectContent className='border-primaryTextColor border-2 font-bold text-lg'>
                                         <SelectItem value="en">English (EN)</SelectItem>
-                                        <SelectItem value="vn">Vietnamese (VN)</SelectItem>
+                                        <SelectItem value="vi">Vietnamese (VN)</SelectItem>
                                     </SelectContent>
                                 </Select>
                             </FormControl>
@@ -112,10 +147,10 @@ const PlayForm = (props: Props) => {
                         </p>
                     </Button>
 
-                    <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5'>
+                    <Button type='submit' variant="opacityHover" className='gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5' onClick={handleQuickPlay}>
                         <img src={ControllerIcon} alt="" className='w-[25%]' />
                         <p>
-                            PLAY!
+                            PLAY
                         </p>
                     </Button>
                 </div>

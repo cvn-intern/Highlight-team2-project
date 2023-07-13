@@ -1,9 +1,11 @@
-import { Controller } from '@nestjs/common';
-import { RoomuserService } from './roomuser.service';
+import { Controller, Logger } from '@nestjs/common';
+import { RoomUserService } from './roomUser.service';
+
 
 @Controller('roomuser')
-export class RoomuserController {
-    constructor(
-        private roomUserService: RoomuserService,
-    ) {}
+export class RoomUserController {
+  constructor(
+    private roomUserService: RoomUserService,
+    private logger: Logger = new Logger(RoomUserController.name),
+  ) { }
 }
