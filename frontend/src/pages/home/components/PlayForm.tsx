@@ -38,7 +38,7 @@ const formSchema = z.object({
     })
 })
 
-const PlayForm = (props: Props) => {
+const PlayForm = ({}: Props) => {
 
     const { user, setUser } = useUserStore()
     const {socket} = useSocketStore()

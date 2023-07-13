@@ -1,7 +1,6 @@
 import { Avatar, AvatarImage } from '@/common/components/ui/avatar'
 import { Card, CardContent } from '@/common/components/ui/card'
 import { AvatarFallback } from '@radix-ui/react-avatar'
-import AvatarImg from "@/common/assets/game-avatars/koala.png"
 import { cn } from '@/common/lib/utils'
 
 type AvatarCardProps = {

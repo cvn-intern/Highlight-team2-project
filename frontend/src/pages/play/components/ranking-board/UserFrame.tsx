@@ -1,5 +1,5 @@
 import { Dialog, DialogTrigger } from '@/common/components/ui/Modal';
-import { Home, LucideIcon, UserCircle2 } from 'lucide-react';
+import { Home, LucideIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { DialogDemo } from './modals/ProfileModal';
 import { cn } from '@/common/lib/utils';
@@ -71,7 +71,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                     </a>
                 ))}
                 {/* Render empty slots */}
-                {emptySlots > 0 && Array.from({ length: emptySlots }).map((_, index) => (
+                {emptySlots > 0 && Array.from({ length: emptySlots }).map((_) => (
                     <li className="py-3 sm:py-4 flex">
                         <div className="flex items-center space-x-3">
                             <div className='flex items-center space-x-4 w-[40px]'></div>

@@ -1,4 +1,4 @@
-import { Check, LucideIcon, Paintbrush } from "lucide-react";
+import { Check, LucideIcon } from "lucide-react";
 export const Leaderboard: Array<{
     name: string;
     score: number;
