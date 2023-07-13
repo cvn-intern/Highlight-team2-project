@@ -3,13 +3,14 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
 import MainLayout from "@/common/layout/MainLayout";
-// Types
-import { RGBAColorType, PaintContextType } from "./config/types";
-import { resetCanvas } from "./helpers";
 import RankingBoard from "./components/ranking-board/RankingBoard";
 import Main from "./components/Main";
 import PaintTools from "./components/PaintTools";
+// Types
+import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
+import { resetCanvas } from "./helpers";
+
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -20,8 +21,7 @@ export default function PlayingGameScreen() {
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [snapshot, setSnapshot] = useState<ImageData>();
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number>(0);
-  const [startY, setStartY] = useState<number>(0);
+  const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
   const [penStyle, setPenStyle] = useState<string>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
@@ -52,6 +52,7 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
+
   return (
     <PaintContext.Provider
       value={{
@@ -59,8 +60,7 @@ export default function PlayingGameScreen() {
         ctx,
         snapshot,
         isDrawing,
-        startX,
-        startY,
+        previousPoint,
         color,
         penStyle,
         isFill,
@@ -68,8 +68,7 @@ export default function PlayingGameScreen() {
         setCtx,
         setSnapshot,
         setIsDrawing,
-        setStartX,
-        setStartY,
+        setPreviousPoint,
         setColor,
         setPenStyle,
         setIsFill,

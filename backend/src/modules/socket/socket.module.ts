@@ -10,6 +10,7 @@ import { RoomUserModule } from '../roomUser/roomUser.module';
 import { RoomUserService } from '../roomuser/roomUser.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomUser } from '../roomUser/roomUser.entity';
+import { DrawGateway } from './gateways/draw.gateway';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { RoomUser } from '../roomUser/roomUser.entity';
     TypeOrmModule.forFeature([RoomUser])
   ],
   controllers: [],
-  providers: [SocketGateway, SocketService, Logger, ChatGateway, RoomUserService],
+  providers: [SocketGateway, SocketService, Logger, DrawGateway, ChatGateway, RoomUserService],
   exports: [SocketService],
 })
 export class SocketModule {}

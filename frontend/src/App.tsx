@@ -71,7 +71,7 @@ function App() {
         /> */}
         <BrowserRouter>
           <Routes>
-            <Route path='/' element={<Homepage />} />
+            <Route path="/" element={<Homepage />} />
             <Route path="/:roomId" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>

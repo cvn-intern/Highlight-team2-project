@@ -10,8 +10,7 @@ export type PaintContextType = {
   ctx: CanvasRenderingContext2D | null;
   snapshot: ImageData | undefined;
   isDrawing: boolean;
-  startX: number;
-  startY: number;
+  previousPoint: Point;
   color: RGBAColorType;
   penStyle: string;
   isFill: boolean;
@@ -19,8 +18,7 @@ export type PaintContextType = {
   setCtx: Dispatch<SetStateAction<CanvasRenderingContext2D | null>>;
   setSnapshot: Dispatch<SetStateAction<ImageData | undefined>>;
   setIsDrawing: Dispatch<SetStateAction<boolean>>;
-  setStartX: Dispatch<SetStateAction<number>>;
-  setStartY: Dispatch<SetStateAction<number>>;
+  setPreviousPoint: Dispatch<SetStateAction<Point>>;
   setColor: Dispatch<SetStateAction<RGBAColorType>>;
   setPenStyle: Dispatch<SetStateAction<string>>;
   setIsFill: Dispatch<SetStateAction<boolean>>;
@@ -31,4 +29,9 @@ export type PaintToolBtnType = {
   Icon: LucideIcon;
   onChange: string;
   value: string;
+};
+
+export type Point = {
+  x: number;
+  y: number;
 };

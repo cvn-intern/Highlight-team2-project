@@ -29,7 +29,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const codeRoom = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
     
     client.leave(codeRoom);
-    console.log('disconnect', codeRoom);
+
     if(codeRoom !== null) {
       const idRoom = extractIdRoom(codeRoom);
       await this.roomUserService.deleteRoomUser(idRoom, user.id);

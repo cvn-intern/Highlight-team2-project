@@ -30,7 +30,7 @@ export class ChatGateway extends SocketGateway {
     await this.redisService.setObjectByKeyValue(`USER:${user.id}:ROOM`, codeRoom, expireTimeOneDay);
     
     client.join(codeRoom);
-    console.log('connect', codeRoom);
+
     if(codeRoom !== null) {
       const idRoom = extractIdRoom(codeRoom);
       await this.roomUserService.createNewRoomUser(idRoom, user.id);
@@ -39,7 +39,7 @@ export class ChatGateway extends SocketGateway {
     this.server.in(codeRoom).emit(codeRoom, {
       user: user.nickname,
       content: 'joined',
-      type: 'text-green-600',
+      type: 'text-green-400',
       icon: 'Info',
     } as Chat);
   }
