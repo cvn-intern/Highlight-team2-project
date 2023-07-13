@@ -3,30 +3,29 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
 import MainLayout from "@/common/layout/MainLayout";
-// Types
-import { RGBAColorType, PaintContextType } from "./config/types";
-import { resetCanvas } from "./helpers";
-import RankingBoard from "./components/RankingBoard";
 import Main from "./components/Main";
 import PaintTools from "./components/PaintTools";
+// Types
+import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
+import { resetCanvas } from "./helpers";
+import RankingBoard from "./components/RankingBoard";
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const snapshotRef = useRef<ImageData>()
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [snapshot, setSnapshot] = useState<ImageData>();
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
-  const [startX, setStartX] = useState<number>(0);
-  const [startY, setStartY] = useState<number>(0);
+  const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
   const [penStyle, setPenStyle] = useState<string>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
-  const [brushSize, setBrushSize] = useState<number>(1);  
-  
+  const [brushSize, setBrushSize] = useState<number>(1);
   // Side Effects
   useEffect(() => {
     window.addEventListener("resize", () => {
@@ -42,7 +41,6 @@ export default function PlayingGameScreen() {
   useEffect(() => {
     if (!canvasRef.current) return;
     setCtx(canvasRef.current.getContext("2d"));
-    
   }, [canvasRef]);
 
   useEffect(() => {
@@ -61,17 +59,16 @@ export default function PlayingGameScreen() {
         ctx,
         snapshot,
         isDrawing,
-        startX,
-        startY,
+        previousPoint,
         color,
         penStyle,
         isFill,
         brushSize,
+        snapshotRef,
         setCtx,
         setSnapshot,
         setIsDrawing,
-        setStartX,
-        setStartY,
+        setPreviousPoint,
         setColor,
         setPenStyle,
         setIsFill,
@@ -80,8 +77,8 @@ export default function PlayingGameScreen() {
     >
       <MainLayout>
         <div className="h-full flex px-10 py-[56px] gap-6">
-          <RankingBoard />
-          <Main ctx={ctx}/>
+          <RankingBoard/>
+          <Main />
           <PaintTools />
         </div>
       </MainLayout>

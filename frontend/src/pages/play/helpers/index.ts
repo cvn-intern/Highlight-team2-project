@@ -1,8 +1,7 @@
 /* eslint-disable prefer-const */
-import { MouseEvent } from "react";
 import { rgbaToHex } from "@/common/lib/colors";
 import { DEFAULT_WHITE } from "../constants/color";
-import { RGBAColorType } from "../config/types";
+import { Point, RGBAColorType } from "../config/types";
 
 export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
   if (!ctx) return;
@@ -19,15 +18,16 @@ export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
 export const drawLine = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
-  startX: number,
-  startY: number
+  currentPoint: Point,
+  previousPoint: Point
 ) => {
   if (!ctx) return;
+  const { x: previousX, y: previousY } = previousPoint;
+  const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
   snapshot && ctx.putImageData(snapshot, 0, 0);
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  ctx.moveTo(previousX, previousY);
+  ctx.lineTo(currentX, currentY);
   ctx.lineCap = "round";
   ctx.stroke();
 };
@@ -35,82 +35,73 @@ export const drawLine = (
 export const drawRectangle = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,
-  currentX: number,
-  currentY: number,
-  startX: number,
-  startY: number,
+  currentPoint: Point,
+  previousPoint: Point,
   isFill: boolean
 ) => {
   if (!ctx) return;
+  const { x: previousX, y: previousY } = previousPoint;
+  const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
   snapshot && ctx.putImageData(snapshot, 0, 0);
-  ctx.rect(
-    startX,
-    startY,
-    currentX,
-    currentY
-  );
+  ctx.rect(previousX, previousY, currentX - previousX, currentY - previousY);
   isFill ? ctx.fill() : ctx.stroke();
 };
 
 export const drawCircle = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
-  startX: number,
-  startY: number,
+  currentPoint: Point,
+  previousPoint: Point,
   isFill: boolean
 ) => {
   if (!ctx) return;
+  const { x: previousX, y: previousY } = previousPoint;
+  const { x: currentX, y: currentY } = currentPoint;
   snapshot && ctx.putImageData(snapshot, 0, 0);
-  ctx.moveTo(startX, startY);
+  ctx.moveTo(previousX, previousY);
   ctx.beginPath();
   const radius = Math.sqrt(
-    Math.pow(e.nativeEvent.offsetX - startX, 2) +
-      Math.pow(e.nativeEvent.offsetY - startY, 2)
+    Math.pow(currentX - previousX, 2) + Math.pow(currentY - previousY, 2)
   );
-  ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
+  ctx.arc(previousX, previousY, radius, 0, 2 * Math.PI);
   isFill ? ctx.fill() : ctx.stroke();
 };
 
 export const drawTriangle = (
   ctx: CanvasRenderingContext2D,
   snapshot: ImageData,
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>,
-  startX: number,
-  startY: number,
+  currentPoint: Point,
+  previousPoint: Point,
   isFill: boolean
 ) => {
   if (!ctx) return;
+  const { x: previousX, y: previousY } = previousPoint;
+  const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
+  console.log(snapshot.data.length);
   snapshot && ctx.putImageData(snapshot, 0, 0);
-  ctx.moveTo(startX, startY);
-  ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-  ctx.lineTo(startX * 2 - e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+  ctx.moveTo(previousX, previousY);
+  ctx.lineTo(currentX, currentY);
+  ctx.lineTo(previousX * 2 - currentX, currentY);
   ctx.closePath();
   isFill ? ctx.fill() : ctx.stroke();
 };
 
 export const drawFreeStyle = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  point: Point,
   color: RGBAColorType
 ) => {
-  
   if (!ctx) return;
   const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
   ctx.strokeStyle = hexColor;
   ctx.lineCap = "round";
-  ctx.lineTo(x, y);
+  ctx.lineTo(point.x, point.y);
   ctx.stroke();
 };
 
-export const eraser = (
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number
-) => {
+export const eraser = (ctx: CanvasRenderingContext2D, point: Point) => {
   if (!ctx) return;
   const hexBgColor = rgbaToHex(
     DEFAULT_WHITE.r,
@@ -119,19 +110,19 @@ export const eraser = (
     DEFAULT_WHITE.a
   );
   ctx.strokeStyle = hexBgColor;
-  ctx.lineTo(x, y);
+  ctx.lineTo(point.x, point.y);
   ctx.stroke();
 };
 
 export const fillColorIntoCanvas = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  point: Point,
   fill_r: number,
   fill_g: number,
   fill_b: number,
   fill_a: number
 ) => {
+  const { x, y } = point;
   const canvas = ctx.canvas;
   const c_width = canvas.width;
   const c_height = canvas.height;
@@ -222,8 +213,7 @@ export const fillColorIntoCanvas = (
 
 export const fillWithColor = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  point: Point,
   color: RGBAColorType
 ) => {
   if (!ctx) return;
@@ -231,8 +221,7 @@ export const fillWithColor = (
   ctx.fillStyle = hexColor;
   fillColorIntoCanvas(
     ctx,
-    x,
-    y,
+    point,
     color.r,
     color.g,
     color.b,
@@ -242,11 +231,11 @@ export const fillWithColor = (
 
 export const pickColor = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  point: Point,
   setColor: (color: RGBAColorType) => void
 ) => {
   if (!ctx) return;
+  const { x, y } = point;
   const dataImage = ctx.getImageData(x, y, 1, 1);
   const r = dataImage.data[0];
   const g = dataImage.data[1];

@@ -1,7 +1,37 @@
-[Trung]
-====================== BUG =========================
-- Bug 1: Thu nhỏ màn hình -> canvas unmount -> Mất state (Fixed)
---> Không lam kiểu mỗi màn hình hiển thị một component nữa
-====================== OPTIONAL ============================
-- Cải thiện UI Paint Tools
-- Implement1 : Chức năng tiến lùi 1 bước
+const handleStartDrawing = (
+    point: Point,
+    color: any,
+    penStyle: string,
+    brushSize: number,
+  ) => {
+    const ctx = canvasRef.current?.getContext('2d')
+      
+    
+    if (!ctx) return;
+    
+    const canvas = ctx.canvas;
+    if (penStyle === "bucket") {
+      fillWithColor(ctx, point, color);
+      return;
+    }
+    
+    setIsDrawing(true);
+    setPreviousPoint(point);
+    const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
+    ctx.fillStyle = hexColor;
+    ctx.strokeStyle = hexColor;
+    ctx.lineWidth = brushSize;
+    // Pick color
+    if (penStyle === "picker") {
+      pickColor(ctx, point, setColor);
+      return;
+    }
+    // Save previous state to prevent drag image
+    setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    ctx.beginPath();
+    // Make a dot
+    (penStyle === "brush" || penStyle === "circle") &&
+      drawFreeStyle(ctx, point, color);
+    penStyle === "eraser" && eraser(ctx, point);
+
+  };
