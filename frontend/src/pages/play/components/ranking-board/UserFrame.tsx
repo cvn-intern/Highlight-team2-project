@@ -27,7 +27,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
         return (
             <>
                 {data.slice(0, maxItems).map((value, _index) => (
-                    <a href="" className="group block" onClick={() => handleLinkClick(value)}>
+                    <button className="group block cursor-pointer w-full" onClick={() => handleLinkClick(value)}>
                         <li className="py-3 sm:py-4 flex">
                             <div className="flex items-center space-x-3 w-full">
                                 <div className={cn('flex items-center space-x-4 w-[40px]', value.type)}>
@@ -62,7 +62,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                                 </div>
                             </div>
                         </li>
-                    </a>
+                    </button>
                 ))}
                 {/* Render empty slots */}
                 {emptySlots > 0 && Array.from({ length: emptySlots }).map((_) => (
