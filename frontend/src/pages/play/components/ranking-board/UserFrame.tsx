@@ -27,7 +27,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
         return (
             <>
                 {data.slice(0, maxItems).map((value, _index) => (
-                    <a href="#" className="group block" onClick={() => handleLinkClick(value)}>
+                    <a href="" className="group block" onClick={() => handleLinkClick(value)}>
                         <li className="py-3 sm:py-4 flex">
                             <div className="flex items-center space-x-3 w-full">
                                 <div className={cn('flex items-center space-x-4 w-[40px]', value.type)}>
