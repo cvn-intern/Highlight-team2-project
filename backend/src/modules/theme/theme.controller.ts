@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, Logger, Post, Res, ValidationPipe } from 
 import { ThemeService } from './theme.service';
 import { CreateThemeDTO } from './dto/createTheme';
 import { Response } from 'express';
-import { ResponseClient } from 'src/common/types/responseClient';
+import { ResponseClient } from '../../common/types/responseClient';
 
 @Controller('theme')
 export class ThemeController {

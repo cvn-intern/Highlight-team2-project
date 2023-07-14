@@ -3,7 +3,7 @@ import { RedisService } from '../redis/redis.service';
 import { Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { expireTimeOneDay } from '../../common/variables/constVariable';
 
 @Injectable()
 export class SocketService {

@@ -2,10 +2,10 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
-import { UserService } from 'src/modules/user/user.service';
-import { RedisService } from 'src/modules/redis/redis.service';
-import { RoomUserService } from 'src/modules/roomUser/roomUser.service';
-import { extractIdRoom } from 'src/common/utils/helper';
+import { UserService } from '../../user/user.service';
+import { RedisService } from '../../redis/redis.service';
+import { RoomUserService } from '../../roomUser/roomUser.service';
+import { extractIdRoom } from '../../../common/utils/helper';
 
 @WebSocketGateway(3001, { cors: '*:*' })
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

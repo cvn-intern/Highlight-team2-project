@@ -1,11 +1,11 @@
 import { Body, Controller, Get, HttpStatus, Logger, Post, Res, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserGuestDTO } from '../user/dto/createUserGuest';
-import { ResponseClient } from 'src/common/types/responseClient';
+import { ResponseClient } from '../../common/types/responseClient';
 import { Response } from 'express';
 import { RedisService } from '../redis/redis.service';
 import { ConfigService } from '@nestjs/config';
-import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { expireTimeOneDay } from '../../common/variables/constVariable';
 import { UserInterface } from '../user/user.interface';
 
 @Controller('/auth')

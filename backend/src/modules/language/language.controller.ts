@@ -1,7 +1,7 @@
 import { Controller, Get, HttpStatus, Logger, Res } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { Response } from 'express';
-import { ResponseClient } from 'src/common/types/responseClient';
+import { ResponseClient } from '../../common/types/responseClient';
 
 @Controller('language')
 export class LanguageController {
