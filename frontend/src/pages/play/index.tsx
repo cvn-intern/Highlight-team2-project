@@ -10,6 +10,7 @@ import PaintTools from "./components/PaintTools";
 import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
 import { resetCanvas } from "./helpers";
+import { rgbaToHex } from "@/common/lib/colors";
 
 
 // type Props = {};
@@ -28,14 +29,23 @@ export default function PlayingGameScreen() {
   const [brushSize, setBrushSize] = useState<number>(1);
   // Side Effects
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    const resetState = () => {
       if (!ctx) return;
       const canvas = ctx.canvas;
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
       resetCanvas(ctx);
-      // Restore previous state
+      // Restore previous states
       snapshot && ctx.putImageData(snapshot, 0, 0);
+      const hexColor = rgbaToHex(color.r, color.g, color.b, color.a);
+      ctx.fillStyle = hexColor;
+      ctx.strokeStyle = hexColor;
+      ctx.lineWidth = brushSize;
+      ctx.lineCap = "round";
+    };
+    resetState();
+    window.addEventListener("resize", () => {
+      resetState();
     });
   }, [ctx, snapshot]);
   useEffect(() => {
