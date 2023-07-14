@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Room } from './room.entity';
 import { RoomInterface } from './room.interface';
 import { randomString } from 'src/common/utils/helper';
-import { RoomRoundService } from '../roomround/roomRound.service';
+import { RoomRoundService } from '../roomRound/roomRound.service';
 
 const MAX_LENGTH_RANDOM = 5;
 

@@ -5,9 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Room } from './room.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
-import { RoomRoundModule } from '../roomround/roomRound.module';
+import { RoomRoundModule } from '../roomRound/roomRound.module';
 import { RoomUserModule } from '../roomUser/roomUser.module';
-import { RoomUserService } from '../roomuser/roomUser.service';
+import { RoomUserService } from '../roomUser/roomUser.service';
 import { RoomUser } from '../roomUser/roomUser.entity';
 
 @Module({

@@ -3,11 +3,10 @@ import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
 import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
-import { IdUser } from 'src/common/decorators/IdUser';
 import { ResponseClient } from 'src/common/types/responseClient';
-import { RoomUserService } from '../roomuser/roomUser.service';
 import { extractIdRoom } from 'src/common/utils/helper';
-import { error } from 'console';
+import { RoomUserService } from '../roomUser/roomUser.service';
+import { IdUser } from 'src/common/decorators/idUser';
 
 @Controller('room')
 export class RoomController {
