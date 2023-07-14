@@ -4,6 +4,7 @@ import { DialogDemo } from './modals/ProfileModal';
 import { cn } from '@/common/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar-shadcn';
 import { ILeaderboard } from './RankingBoard';
+import emptyPerson from '@/common/assets/emptyPerson.jpg';
 
 interface ProfileProps {
     Leaderboard: ILeaderboard[];
@@ -70,7 +71,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                             <div className='flex items-center space-x-4 w-[40px]'></div>
                             <div className='flex items-center space-x-4 w-full'>
                                 <Avatar className="relative flex items-center bg-yellow-300 w-1/5 h-auto overflow-visible">
-                                    <AvatarImage src='src/common/assets/emptyPerson.jpg' alt="avatar" className='rounded-full' />
+                                    <AvatarImage src={emptyPerson} alt="avatar" className='rounded-full' />
                                     <AvatarFallback>Avatar</AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1 min-w-0">

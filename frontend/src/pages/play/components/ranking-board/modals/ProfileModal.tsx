@@ -8,6 +8,7 @@ import { Label } from "@/common/components/ui/label"
 import { Ban, ThumbsDown } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/common/components/ui/avatar-shadcn"
 import { ILeaderboard } from "../RankingBoard"
+import ProfileLabel from "@/common/assets/ProfileLabel.png"
 
 type Props = {
     user: ILeaderboard['user'] | null
@@ -19,7 +20,7 @@ export function DialogDemo({ user }: Props) {
         <DialogContent className="sm:w-[425px]">
             <DialogHeader>
                 <div className="flex items-center justify-center gap-5 w-full">
-                    <img className="w-4/5 h-fit" src="src/common/assets/ProfileLabel.png" alt="avatar" />
+                    <img className="w-4/5 h-fit" src={ProfileLabel} alt="avatar" />
                 </div>
             </DialogHeader>
             <div className="flex flex-col items-center justify-center gap-5 w-full py-5">
