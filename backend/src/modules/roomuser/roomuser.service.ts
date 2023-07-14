@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoomUser } from './roomUser.entity';
 import { Repository } from 'typeorm';
-import { RoomUserInterface } from './roomUser.interface';
-import { User } from '../user/user.entity';
 
 @Injectable()
 export class RoomUserService {

@@ -7,9 +7,8 @@ import { LanguageModule } from 'src/modules/language/language.module';
 import { UserModule } from 'src/modules/user/user.module';
 import { RoomModule } from 'src/modules/room/room.module';
 import { RoomUserModule } from 'src/modules/roomUser/roomUser.module';
-import { RoomRoundModule } from 'src/modules/roomround/roomRound.module';
+import { RoomRoundModule } from 'src/modules/roomRound/roomRound.module';
 import { WordModule } from 'src/modules/word/word.module';
-import { UserWordModule } from 'src/modules/userWord/userWord.module';
 import { ThemeModule } from 'src/modules/theme/theme.module';
 import { SocketModule } from 'src/modules/socket/socket.module';
 import { RedisModule } from 'src/modules/redis/redis.module';
@@ -25,7 +24,6 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
     RoomUserModule,
     RoomRoundModule,
     WordModule,
-    UserWordModule,
     ThemeModule,
     SocketModule,
     RedisModule,

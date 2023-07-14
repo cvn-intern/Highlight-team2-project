@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { UserService } from 'src/modules/user/user.service';
 import { RedisService } from 'src/modules/redis/redis.service';
-import { RoomUserService } from 'src/modules/roomuser/roomUser.service';
+import { RoomUserService } from 'src/modules/roomUser/roomUser.service';
 import { extractIdRoom } from 'src/common/utils/helper';
 
 @WebSocketGateway(3001, { cors: '*:*' })

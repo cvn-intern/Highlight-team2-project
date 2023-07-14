@@ -7,7 +7,7 @@ import { SocketGateway } from './gateways/socket.gateway';
 import { UserModule } from '../user/user.module';
 import { ChatGateway } from './gateways/chat.gateway';
 import { RoomUserModule } from '../roomUser/roomUser.module';
-import { RoomUserService } from '../roomuser/roomUser.service';
+import { RoomUserService } from '../roomUser/roomUser.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomUser } from '../roomUser/roomUser.entity';
 import { DrawGateway } from './gateways/draw.gateway';

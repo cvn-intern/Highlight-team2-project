@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RoomRound } from './roomRound.entity';
-import { RoomRoundController } from './roomRound.controller';
 import { RoomRoundService } from './roomRound.service';
+import { RoomRoundController } from './roomRound.controller';
 
 @Module({
     imports: [
