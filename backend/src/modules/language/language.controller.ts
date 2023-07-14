@@ -22,7 +22,30 @@ export class LanguageController {
         message: 'Successfully!',
         success: true,
         data: listLanguage,
-      })
+      } as ResponseClient)
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.statusCode | 500).json({
+        statusCode: error.statusCode | 500,
+        message: 'Anything is wrong!',
+        success: false,
+        data: {},
+      } as ResponseClient)
+    }
+  }
+
+  @Get('/init')
+  async initLanguage(
+    @Res() response: Response,
+  ) {
+    try {
+      await this.languageService.initLanguageForDb();
+
+      return response.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: 'Init data for table language successfully!',
+        success: true,
+      } as ResponseClient)
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
