@@ -71,7 +71,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:roomId" element={<PlayingGameScreen />} />
+            <Route path="/:codeRoom" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>

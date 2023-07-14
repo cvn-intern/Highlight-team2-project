@@ -7,13 +7,14 @@ import {
 import { Label } from "@/common/components/ui/label"
 import { Ban, ThumbsDown } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/common/components/ui/avatar-shadcn"
+import { ILeaderboard } from "../RankingBoard"
 
 type Props = {
-    user: any
+    user: ILeaderboard['user'] | null
 }
 
 export function DialogDemo({ user }: Props) {
-
+    if(!user) return null
     return (
         <DialogContent className="sm:w-[425px]">
             <DialogHeader>
@@ -26,18 +27,18 @@ export function DialogDemo({ user }: Props) {
                     <img className="w-40 h-40 rounded-full" src={user?.img} alt="avatar" />
                 </div> */}
                 <Avatar className="flex items-center bg-yellow-300 w-1/3 h-auto rounded-full">
-                    <AvatarImage src={user?.img} alt="avatar" />
+                    <AvatarImage src={user?.avatar} alt="avatar" />
                     <AvatarFallback>Avatar</AvatarFallback>
                 </Avatar>
 
                 <div className="flex items-center justify-center w-full">
                     <Label htmlFor="name" className="text-lg font-medium text-truncate dark:text-white">
-                        {user?.name}
+                        {user?.nickname}
                     </Label>
                 </div>
             </div>
             <DialogFooter>
-                <div className="flex flex-col items-center justify-center gap-5 w-full">
+                <div className="flex flex-col items-center justify-center gap-5 w-full pb-4">
                     <div className="flex items-center justify-center w-full">
                         <Button className="rounded-l-full rounded-r-full ring-8 ring-black bg-yellow-600 hover:bg-yellow-200 text-white"><ThumbsDown size={24} color="#000" strokeWidth={4} className="mr-1" />VOTE KICK</Button>
                     </div>
