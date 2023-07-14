@@ -2,8 +2,8 @@ import { Body, Controller, Get, HttpStatus, Logger, Post, Put, Res, UseGuards, V
 import { UserService } from './user.service';
 import { CreateUserGuestDTO } from './dto/createUserGuest';
 import { Response } from 'express';
-import { ResponseClient } from 'src/common/types/responseClient';
-import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
+import { ResponseClient } from '../../common/types/responseClient';
+import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
 
 @Controller('user')

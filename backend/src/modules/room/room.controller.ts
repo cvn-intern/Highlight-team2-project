@@ -2,11 +2,11 @@ import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Query, Res, Use
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
-import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
-import { ResponseClient } from 'src/common/types/responseClient';
-import { extractIdRoom } from 'src/common/utils/helper';
+import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
+import { ResponseClient } from '../../common/types/responseClient';
+import { extractIdRoom } from '../../common/utils/helper';
 import { RoomUserService } from '../roomUser/roomUser.service';
-import { IdUser } from 'src/common/decorators/idUser';
+import { IdUser } from '../../common/decorators/idUser';
 
 @Controller('room')
 export class RoomController {

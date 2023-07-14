@@ -7,5 +7,18 @@ services:
     volumes:
       - ./:/drawandguess/backend
       - /app/node_modules
-    env_file:
-      - .docker.env
+    environment:
+      - PORT=3000
+      - DATABASE_USERNAME=highlight
+      - DATABASE_PASSWORD=qhSEXIRlLF9nSmfbaXKdKA3YPJ7AapH1
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=drawandguess
+      - DATABASE_HOST=dpg-cio10pdgkuvudif5ekn0-a.singapore-postgres.render.com
+      - SOCKET_PORT=3001
+      - REDIS_HOST=redis-18695.c302.asia-northeast1-1.gce.cloud.redislabs.com
+      - REDIS_PORT=18695
+      - REDIS_PASSWORD=hQcjSiBVk1zppKKdqAS6A2cQPWid3erz
+      - TIME_EXPIRED_ONE_DAY=86400000
+      - JWT_ACCESSKEY=highlight-team-drawandguess-accesskey
+      - JWT_ACCESSKEY_EXPIRE=1d
+      - JWT_REFRESHKEY=highlight-team-drawandguess-refreshkey

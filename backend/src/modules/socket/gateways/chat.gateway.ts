@@ -3,8 +3,8 @@ import { Server, Socket } from 'socket.io';
 import { SocketGateway } from './socket.gateway';
 import { UserService } from 'src/modules/user/user.service';
 import { SocketService } from '../socket.service';
-import { expireTimeOneDay } from 'src/common/variables/constVariable';
-import { extractIdRoom } from 'src/common/utils/helper';
+import { expireTimeOneDay } from '../../../common/variables/constVariable';
+import { extractIdRoom } from '../../../common/utils/helper';
 
 interface MessageBodyInterface {
   codeRoom: string;
