@@ -26,22 +26,24 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
-    const codeRoom = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
-    
-    client.leave(codeRoom);
+    if(user) {
+      const codeRoom = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
 
-    if(codeRoom !== null) {
-      const idRoom = extractIdRoom(codeRoom);
-      await this.roomUserService.deleteRoomUser(idRoom, user.id);
+      client.leave(codeRoom);
+  
+      if(codeRoom !== null) {
+        const idRoom = extractIdRoom(codeRoom);
+        await this.roomUserService.deleteRoomUser(idRoom, user.id);
+      }
+  
+      this.server.in(codeRoom).emit(`${codeRoom}-leave`, {
+        user: user.nickname,
+        content: 'left',
+        type: 'text-red-600',
+        icon: 'LogOut',
+      })
+      await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
     }
-
-    this.server.in(codeRoom).emit(`${codeRoom}-leave`, {
-      user: user.nickname,
-      content: 'left',
-      type: 'text-red-600',
-      icon: 'LogOut',
-    })
-    await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
   }
 
   // client kết nối

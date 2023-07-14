@@ -26,22 +26,24 @@ export class ChatGateway extends SocketGateway {
   ) {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
-
-    await this.redisService.setObjectByKeyValue(`USER:${user.id}:ROOM`, codeRoom, expireTimeOneDay);
     
-    client.join(codeRoom);
-
-    if(codeRoom !== null) {
-      const idRoom = extractIdRoom(codeRoom);
-      await this.roomUserService.createNewRoomUser(idRoom, user.id);
+    if(user) {
+      await this.redisService.setObjectByKeyValue(`USER:${user.id}:ROOM`, codeRoom, expireTimeOneDay);
+      
+      client.join(codeRoom);
+  
+      if(codeRoom !== null) {
+        const idRoom = extractIdRoom(codeRoom);
+        await this.roomUserService.createNewRoomUser(idRoom, user.id);
+      }
+  
+      this.server.in(codeRoom).emit(codeRoom, {
+        user: user.nickname,
+        content: 'joined',
+        type: 'text-green-400',
+        icon: 'Info',
+      } as Chat);
     }
-
-    this.server.in(codeRoom).emit(codeRoom, {
-      user: user.nickname,
-      content: 'joined',
-      type: 'text-green-400',
-      icon: 'Info',
-    } as Chat);
   }
 
   @SubscribeMessage('chat')
@@ -52,12 +54,14 @@ export class ChatGateway extends SocketGateway {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
 
-    this.server.in(msgBody.codeRoom).emit(`${msgBody.codeRoom}-chat`, {
-      user: user.nickname,
-      content: msgBody.message,
-      type: 'text-blue-600',
-      icon: 'MessageCircle',
-    } as Chat)
+    if(user) {
+      this.server.in(msgBody.codeRoom).emit(`${msgBody.codeRoom}-chat`, {
+        user: user.nickname,
+        content: msgBody.message,
+        type: 'text-blue-600',
+        icon: 'MessageCircle',
+      } as Chat)
+    }
   }
 
   @SubscribeMessage('leave-room')
@@ -68,12 +72,14 @@ export class ChatGateway extends SocketGateway {
     const payload = await this.socketService.extractPayload(client);
     const user = await this.userService.getUserById(payload.id);
 
-    client.to(codeRoom).emit(`${codeRoom}-leave`, {
-      user: user.nickname,
-      content: 'left',
-      type: 'text-neutral-600',
-      icon: 'LogOut',
-    } as Chat);
-    client.leave(codeRoom);
+    if(user) {
+      client.to(codeRoom).emit(`${codeRoom}-leave`, {
+        user: user.nickname,
+        content: 'left',
+        type: 'text-neutral-600',
+        icon: 'LogOut',
+      } as Chat);
+      client.leave(codeRoom);
+    }
   }
 }

@@ -22,6 +22,8 @@ export class RedisService {
   }
 
   async deleteObjectByKey(key: string): Promise<any> {
-    return await this.redisCache.del(key);
+    if(this.redisCache.get(key)) {
+      return await this.redisCache.del(key);
+    }
   }
 }
