@@ -1,7 +1,0 @@
-[Trung]
-====================== BUG =========================
-- Bug 1: Thu nhỏ màn hình -> canvas unmount -> Mất state (Fixed)
---> Không lam kiểu mỗi màn hình hiển thị một component nữa
-====================== OPTIONAL ============================
-- Cải thiện UI Paint Tools
-- Implement1 : Chức năng tiến lùi 1 bước
