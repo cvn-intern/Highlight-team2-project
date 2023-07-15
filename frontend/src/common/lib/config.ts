@@ -1,1 +1,2 @@
-export const baseURL = "https://f6fc-118-69-74-9.ngrok-free.app/api/v1"
+export const baseURL = import.meta.env.VITE_REACT_API_URL
+
