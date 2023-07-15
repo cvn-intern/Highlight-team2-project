@@ -15,7 +15,7 @@ function App() {
   const [loading, setLoading] = useState(true)
   const { socket, initSocket } = useSocketStore()
   const { setUser } = useUserStore()
-  console.log(import.meta.env.VITE_REACT_API_URL)
+  
   useEffect(() => {
     const createSocketInstance = (token: string) =>  {
       const socketInit = io(import.meta.env.VITE_REACT_SOCKET_URL as string, {
