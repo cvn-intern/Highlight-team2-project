@@ -39,4 +39,14 @@ export class RoomService {
 
     return rooms[0].code_room;
   }
+
+  async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
+    const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+
+    if(!room) {
+      throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
+    }
+
+    return room;
+  }
 }

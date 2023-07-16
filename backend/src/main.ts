@@ -6,10 +6,10 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const logger: Logger = new Logger("main");
   const app = await NestFactory.create(AppModule);
-  const configService: ConfigService = new  ConfigService();
+  const configService: ConfigService = new ConfigService();
 
-  if(process.env.NODE_ENV === 'development') {
-   app.enableCors();
+  if (process.env.NODE_ENV === 'development') {
+    app.enableCors();
   } else {
     app.enableCors({
       origin: configService.get<string>('FRONTEND_URL'),

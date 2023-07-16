@@ -11,6 +11,7 @@ import { DrawGateway } from './gateways/draw.gateway';
 import { RoomUserModule } from '../room-user/roomUser.module';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomUserService } from '../room-user/roomUser.service';
+import { RoomModule } from '../room/room.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RoomUserService } from '../room-user/roomUser.service';
     UserModule,
     RedisModule,
     RoomUserModule,
+    RoomModule,
     TypeOrmModule.forFeature([RoomUser])
   ],
   controllers: [],

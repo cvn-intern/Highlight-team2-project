@@ -19,4 +19,12 @@ export class RoomRepository extends Repository<Room> {
     .leftJoinAndMapMany('room.users', RoomUser, 'roomuser', 'roomuser.id_room = room.id')
     .getMany();
   }
+
+  async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
+    return await this.findOne({
+      where: {
+        code_room: codeRoom,
+      },
+    });
+  }
 }
