@@ -6,7 +6,7 @@ import { ResponseClient } from '../../common/types/responseClient';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(
     private userService: UserService,

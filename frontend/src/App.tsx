@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     const createSocketInstance = (token: string) =>  {
-      const socketInit = io("https://f6fc-118-69-74-9.ngrok-free.app/", {
+      const socketInit = io("http://54.251.8.134:3001", {
         extraHeaders: {
           authorization: token,
         },

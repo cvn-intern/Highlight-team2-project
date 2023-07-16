@@ -5,6 +5,7 @@ import { UserService } from 'src/modules/user/user.service';
 import { SocketService } from '../socket.service';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { extractIdRoom } from '../../../common/utils/helper';
+import { CHAT_ROOM_CHANNEL, JOIN_ROOM_CHANNEL, LEAVE_ROOM_CHANNEL } from '../constant';
 
 interface MessageBodyInterface {
   codeRoom: string;
@@ -19,7 +20,7 @@ interface Chat {
 }
 
 export class ChatGateway extends SocketGateway {
-  @SubscribeMessage('join-room')
+  @SubscribeMessage(JOIN_ROOM_CHANNEL)
   async handleJoinRoom(
     @MessageBody() codeRoom: string,
     @ConnectedSocket() client: Socket,
@@ -46,7 +47,7 @@ export class ChatGateway extends SocketGateway {
     }
   }
 
-  @SubscribeMessage('chat')
+  @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(
     @MessageBody() msgBody: MessageBodyInterface,
     @ConnectedSocket() client: Socket,
@@ -64,7 +65,7 @@ export class ChatGateway extends SocketGateway {
     }
   }
 
-  @SubscribeMessage('leave-room')
+  @SubscribeMessage(LEAVE_ROOM_CHANNEL)
   async handleLeaveRoom(
     @MessageBody() codeRoom: string,
     @ConnectedSocket() client: Socket,

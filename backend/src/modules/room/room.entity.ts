@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { Theme } from "../theme/theme.entity";
 import { User } from "../user/user.entity";
 import { Language } from "../language/language.entity";
@@ -43,4 +43,9 @@ export class Room {
 
   @Column({type: 'timestamp', default: 'now()'})
   updated_at: Date;
+
+  @AfterInsert()
+  public async handleAfterInsert() {
+    this.code_room = this.code_room + "_" + this.id;
+  }
 }

@@ -6,13 +6,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LanguageModule } from '../modules/language/language.module';
 import { UserModule } from '../modules/user/user.module';
 import { RoomModule } from '../modules/room/room.module';
-import { RoomUserModule } from '../modules/roomUser/roomUser.module';
-import { RoomRoundModule } from '../modules/roomRound/roomRound.module';
 import { WordModule } from '../modules/word/word.module';
 import { ThemeModule } from '../modules/theme/theme.module';
 import { SocketModule } from '../modules/socket/socket.module';
 import { RedisModule } from '../modules/redis/redis.module';
 import { AuthModule } from '../modules/auth/auth.module';
+import { RoomUserModule } from 'src/modules/room-user/roomUser.module';
+import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
+import { UserWordModule } from 'src/modules/user-word/userWord.module';
 
 const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
 
@@ -28,6 +29,7 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
     SocketModule,
     RedisModule,
     AuthModule,
+    UserWordModule,
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,

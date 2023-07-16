@@ -3,14 +3,14 @@ import { LanguageService } from './language.service';
 import { Response } from 'express';
 import { ResponseClient } from '../../common/types/responseClient';
 
-@Controller('language')
+@Controller('languages')
 export class LanguageController {
   constructor(
     private languageService: LanguageService,
     private logger: Logger = new Logger(LanguageService.name),
   ) { }
 
-  @Get('/getAll')
+  @Get()
   async getAllLanguage(
     @Res() response: Response
   ) {

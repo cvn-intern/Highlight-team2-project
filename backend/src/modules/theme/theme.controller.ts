@@ -4,14 +4,14 @@ import { CreateThemeDTO } from './dto/createTheme';
 import { Response } from 'express';
 import { ResponseClient } from '../../common/types/responseClient';
 
-@Controller('theme')
+@Controller('themes')
 export class ThemeController {
   constructor(
     private themeService: ThemeService,
     private logger: Logger = new Logger(ThemeController.name),
   ) { }
 
-  @Post('/create')
+  @Post()
   async createNewTheme(
     @Body(new ValidationPipe()) themeInformation: CreateThemeDTO,
     @Res() response: Response,

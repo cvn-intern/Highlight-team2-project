@@ -5,10 +5,11 @@ import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { ResponseClient } from '../../common/types/responseClient';
 import { extractIdRoom } from '../../common/utils/helper';
-import { RoomUserService } from '../roomUser/roomUser.service';
 import { IdUser } from '../../common/decorators/idUser';
+import { RoomUserService } from '../room-user/roomUser.service';
+import { Room } from './room.entity';
 
-@Controller('room')
+@Controller('rooms')
 export class RoomController {
   constructor(
     private roomService: RoomService,
@@ -17,24 +18,19 @@ export class RoomController {
   ) { }
 
   @UseGuards(AuthorizeJWT)
-  @Post('/create')
+  @Post()
   async createRoom(
     @Body(new ValidationPipe()) roomInformation: CreateRoomDTO,
     @Res() response: Response,
     @IdUser() idUser: number,
   ) {
     try {
-      const newRoom = await this.roomService.createNewRoom({
+      const newRoom: Room = await this.roomService.createNewRoom({
         ...roomInformation,
         host: idUser,
       });
 
-      return response.status(HttpStatus.CREATED).json({
-        message: 'Create new room successfully!',
-        statusCode: HttpStatus.CREATED,
-        success: true,
-        data: newRoom,
-      } as ResponseClient);
+      return response.status(HttpStatus.OK).json(newRoom);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
@@ -54,12 +50,7 @@ export class RoomController {
     try {
       const room = await this.roomService.randomRoomForQuickPlay();
 
-      return response.status(HttpStatus.OK).json({
-        message: 'Get an available room successfully!',
-        statusCode: HttpStatus.OK,
-        success: true,
-        data: room,
-      } as ResponseClient);
+      return response.status(HttpStatus.OK).json(room);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({

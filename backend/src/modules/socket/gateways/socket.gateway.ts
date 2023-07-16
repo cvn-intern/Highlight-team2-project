@@ -4,8 +4,8 @@ import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { UserService } from '../../user/user.service';
 import { RedisService } from '../../redis/redis.service';
-import { RoomUserService } from '../../roomUser/roomUser.service';
 import { extractIdRoom } from '../../../common/utils/helper';
+import { RoomUserService } from '../../../modules/room-user/roomUser.service';
 
 @WebSocketGateway(3001, { cors: '*:*' })
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

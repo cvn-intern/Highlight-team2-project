@@ -6,11 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import { SocketGateway } from './gateways/socket.gateway';
 import { UserModule } from '../user/user.module';
 import { ChatGateway } from './gateways/chat.gateway';
-import { RoomUserModule } from '../roomUser/roomUser.module';
-import { RoomUserService } from '../roomUser/roomUser.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoomUser } from '../roomUser/roomUser.entity';
 import { DrawGateway } from './gateways/draw.gateway';
+import { RoomUserModule } from '../room-user/roomUser.module';
+import { RoomUser } from '../room-user/roomUser.entity';
+import { RoomUserService } from '../room-user/roomUser.service';
 
 @Module({
   imports: [
