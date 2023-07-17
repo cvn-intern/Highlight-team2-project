@@ -9,7 +9,7 @@ import authService from "./common/lib/services/authService";
 import { useUserStore } from "./common/stores/userStore";
 // import { useTranslation } from "react-i18next";
 // import AlertDialogYesNo from "@/common/components/AlertDialogYesNo";
-import JWTManager from "@/common/lib/jwt"
+import JWTManager from "@/common/lib/jwt";
 
 const client = new QueryClient();
 
@@ -19,44 +19,43 @@ function App() {
   // const onChangeLang = (lang_code: "vn" | "en") => {
   //   i18n.changeLanguage(lang_code);
   // };
-  const [loading, setLoading] = useState(true)
-  const { socket, initSocket } = useSocketStore()
-  const { setUser } = useUserStore()
+  const [loading, setLoading] = useState(true);
+  const { socket, initSocket } = useSocketStore();
+  const { setUser } = useUserStore();
 
   useEffect(() => {
-    const createSocketInstance = (token: string) =>  {
-      const socketInit = io("http://54.251.8.134:3001", {
+    const createSocketInstance = (token: string) => {
+      const socketInit = io("http://localhost:3001", {
         extraHeaders: {
           authorization: token,
         },
-      })
-      initSocket(socketInit)
-      setLoading(false)
-    }
+      });
+      initSocket(socketInit);
+      setLoading(false);
+    };
 
     const initUser = async () => {
       try {
-        const { data } = await authService.newUser()
-        setUser(data.data.user)
-        JWTManager.setToken(data.data.accessToken)
-        createSocketInstance(data.data.accessToken)
+        const { data } = await authService.newUser();
+        setUser(data.data.user);
+        JWTManager.setToken(data.data.accessToken);
+        createSocketInstance(data.data.accessToken);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    }
+    };
 
-    const token = JWTManager.getToken()
-    const user = window.localStorage.getItem("user")
-    if(!token && !socket){
-      initUser()
+    const token = JWTManager.getToken();
+    const user = window.localStorage.getItem("user");
+    if (!token && !socket) {
+      initUser();
+    } else if (token && user) {
+      createSocketInstance(token);
+      setUser(JSON.parse(user));
     }
-    else if(token && user){
-      createSocketInstance(token)
-      setUser(JSON.parse(user))
-    }
-  }, [])
+  }, []);
 
-  if(loading) return null
+  if (loading) return null;
 
   return (
     <Suspense fallback="loading">
