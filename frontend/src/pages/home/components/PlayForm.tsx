@@ -70,7 +70,7 @@ const PlayForm = ({}: Props) => {
       }
 
       const { data } = await playService.quickPlay();
-      //   console.log({ data });
+      console.log(data);
       navigate("/" + data);
 
       socket?.emit("join-room", data);

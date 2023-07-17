@@ -54,7 +54,7 @@ export class RoomController {
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
-        message: 'Something is wrong!',
+        message: error,
         statusCode: error.statusCode | 500,
         success: false,
       } as ResponseClient)
@@ -81,7 +81,7 @@ export class RoomController {
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
-        message: 'Something is wrong!',
+        message: error,
         statusCode: error.statusCode | 500,
         success: false,
       } as ResponseClient)

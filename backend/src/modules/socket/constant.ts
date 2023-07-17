@@ -1,10 +1,11 @@
 export const JOIN_ROOM_CHANNEL: string = 'join-room';
-export const CHAT_ROOM_CHANNEL: string = 'chat';
+export const CHAT_ROOM_CHANNEL: string = 'chat-room';
 export const LEAVE_ROOM_CHANNEL: string = 'leave-room';
 export const START_DRAWING_CHANNEL: string = 'start-drawing';
 export const DRAWING_CHANNEL: string = 'drawing';
 export const FINISH_DRAWING_CHANNEL: string = 'finish-drawing';
 export const RESET_CANVAS_CHANNEL: string = 'reset-canvas';
+export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
 
 // type message
 export const TEXT_GREEN = 'text-green-400';

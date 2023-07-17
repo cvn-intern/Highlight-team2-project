@@ -3,7 +3,7 @@ import { Server, Socket } from 'socket.io';
 import { SocketGateway } from './socket.gateway';
 import { DRAWING_CHANNEL, FINISH_DRAWING_CHANNEL, RESET_CANVAS_CHANNEL, START_DRAWING_CHANNEL } from '../constant';
 
-interface Point{
+interface Point {
   x: number;
   y: number;
 };
@@ -15,14 +15,14 @@ export type RGBAColorType = {
   a: number;
 };
 
-interface StartDraw{
+interface StartDraw {
   point: Point,
   color: RGBAColorType,
   penStyle: string,
   brushSize: number,
 }
 
-interface Drawing{
+interface Drawing {
   currentPoint: Point,
   color: RGBAColorType,
   penStyle: string,
@@ -44,7 +44,7 @@ export class DrawGateway extends SocketGateway {
     @ConnectedSocket() client: Socket,
   ): void {
     client.broadcast.emit('other-drawing', data)
-  } 
+  }
 
   @SubscribeMessage(FINISH_DRAWING_CHANNEL)
   handleFinishDrawing(

@@ -18,12 +18,15 @@ export class RoomService {
     private roomUserService: RoomUserService,
   ) { }
 
+
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
     const codeRoom: string = randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
+    const idRoom: number = await this.roomRepository.generateIdRoom();
 
-    const room = this.roomRepository.create({
+    const room: Room = this.roomRepository.create({
       ...roomInformation,
-      code_room: codeRoom,
+      code_room: `${codeRoom}_${idRoom}`,
+      id: idRoom,
     });
 
     return await this.roomRepository.save(room);

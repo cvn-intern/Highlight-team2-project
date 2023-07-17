@@ -22,9 +22,8 @@ export class LanguageController {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
         statusCode: error.statusCode | 500,
-        message: 'Anything is wrong!',
+        message: error,
         success: false,
-        data: {},
       } as ResponseClient)
     }
   }

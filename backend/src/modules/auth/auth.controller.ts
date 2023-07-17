@@ -30,20 +30,17 @@ export class AuthController {
 
       await this.redisService.setObjectByKeyValue(`USER:${user.id}`, accessToken, expireTimeOneDay);
 
-      return response.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        message: 'Successfully!',
-        success: true,
-        data: {
+      return response.status(HttpStatus.OK).json(
+        {
           user: user,
           accessToken: accessToken,
-        },
-      })
+        }
+      )
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
         statusCode: error.statusCode | 500,
-        message: 'Anything is wrong!',
+        message: error,
         success: false,
         data: {},
       } as ResponseClient)
