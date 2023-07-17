@@ -62,6 +62,19 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
+  // Render
+  const test = (
+    <div
+      className={`w-[1366px] h-full flex px-10 py-[56px] gap-6 scale-75 mx-auto`}
+    >
+      <div className="bg-white rounded-md w-[448px] h-full"></div>
+      <div className="w-[760px] flex flex-col gap-6">
+        <canvas className="w-[760px] h-[390px] bg-white rounded-md"></canvas>
+        <div className="bg-white rounded-md w-[760px] flex-1"></div>
+      </div>
+      <div className="bg-white rounded-md w-[158px]"></div>
+    </div>
+  );
   return (
     <PaintContext.Provider
       value={{
@@ -85,14 +98,15 @@ export default function PlayingGameScreen() {
       }}
     >
       <MainLayout>
-        <div className="h-full flex px-10 py-[56px] gap-6">
+        {/* <div className="h-full flex px-10 py-[56px] gap-6">
           <RankingBoard />
           <div className={`flex flex-col h-full gap-8`}>
             <Canvas />
             <BoxChatAnswer />
           </div>
           <PaintTools />
-        </div>
+        </div> */}
+        {test}
       </MainLayout>
     </PaintContext.Provider>
   );
