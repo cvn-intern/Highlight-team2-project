@@ -39,24 +39,24 @@ export default function RankingBoard() {
     }
   }
 
-  useEffect(() => {
-    socket?.on(`${codeRoom}-leave`, async () => {
-      // console.log({leaderboardData, data})
-      // const newUsersArray = leaderboardData.filter(item => item.user.nickname !== data.user)
-      // setLeaderboardData(newUsersArray)
-      await getRoomParticipants()
-    })
+  // useEffect(() => {
+  //   socket?.on(`${codeRoom}-leave`, async () => {
+  //     // console.log({leaderboardData, data})
+  //     // const newUsersArray = leaderboardData.filter(item => item.user.nickname !== data.user)
+  //     // setLeaderboardData(newUsersArray)
+  //     await getRoomParticipants()
+  //   })
 
-    socket?.on(codeRoom ?? "", async () => {
-      await getRoomParticipants()
-    })
+  //   socket?.on(codeRoom ?? "", async () => {
+  //     await getRoomParticipants()
+  //   })
 
-    return () => {
-      socket?.off(`${codeRoom}-leave`)
-      socket?.off(codeRoom)
-    }
+  //   return () => {
+  //     socket?.off(`${codeRoom}-leave`)
+  //     socket?.off(codeRoom)
+  //   }
 
-  }, [socket])
+  // }, [socket])
 
 
   return (
