@@ -16,17 +16,19 @@ type Language = {
     name: string;
 };
 
-export const readFileLanguage = async (): Promise<Array<Language>> => {
-    const listLanguage = [];
-    const file = await open('src/common/files/language.txt');
+export const getLanguages = async (): Promise<Array<Language>> => {
+    const languages: Array<Language> = [];
+    const languageFile = await open('src/common/files/language.txt');
 
-    for await (const line of file.readLines()) {
-        const language = line.split(',');
-        listLanguage.push({
-            code: language[0],
-            name: language[1],
+    for await (const line of languageFile.readLines()) {
+        const [code, name] = line.split(',');
+        languages.push({
+            code: code,
+            name: name,
         });
     }
 
-    return listLanguage;
+    await languageFile.close();
+
+    return languages;
 }

@@ -7,7 +7,7 @@ import { ResponseClient } from '../../common/types/responseClient';
 export class LanguageController {
   constructor(
     private languageService: LanguageService,
-    private logger: Logger = new Logger(LanguageService.name),
+    private logger: Logger = new Logger(LanguageController.name),
   ) { }
 
   @Get()
@@ -15,14 +15,9 @@ export class LanguageController {
     @Res() response: Response
   ) {
     try {
-      const listLanguage =  await this.languageService.getAllLanguge();
+      const languages =  await this.languageService.getAllLanguge();
 
-      return response.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        message: 'Successfully!',
-        success: true,
-        data: listLanguage,
-      } as ResponseClient)
+      return response.status(HttpStatus.OK).json(languages);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
@@ -41,11 +36,7 @@ export class LanguageController {
     try {
       await this.languageService.initLanguageForDb();
 
-      return response.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        message: 'Init data for table language successfully!',
-        success: true,
-      } as ResponseClient)
+      return response.status(HttpStatus.OK); 
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({

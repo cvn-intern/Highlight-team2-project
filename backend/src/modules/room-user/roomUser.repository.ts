@@ -29,4 +29,8 @@ export class RoomUserRepository extends Repository<RoomUser> {
       },
     });
   }
+
+  async countParticipantInRoom(id_room: number): Promise<Number> {
+    return 0;
+  }
 }

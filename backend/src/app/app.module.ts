@@ -15,7 +15,7 @@ import { RoomUserModule } from 'src/modules/room-user/roomUser.module';
 import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
 import { UserWordModule } from 'src/modules/user-word/userWord.module';
 
-const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
+const USE_SSL: boolean = process.env.NODE_ENV === "production";
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
           database: configService.get<string>('DATABASE_NAME'),
           synchronize: true,
           autoLoadEntities: true,
-          ssl: is_ssl,
+          ssl: USE_SSL,
         }
       )  
     })
