@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import UserFrame from './UserFrame';
 import { LucideIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
-import playService from "@/common/lib/services/playService";
-import { useSocketStore } from "@/common/stores/socketStore";
+import playService from "@/shared/services/playService";
+import { useSocketStore } from "@/shared/stores/socketStore";
 
 
 export interface ILeaderboard {

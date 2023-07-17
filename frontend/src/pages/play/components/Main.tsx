@@ -11,10 +11,10 @@ import {
   pickColor,
   drawLine,
 } from "@/pages/play/helpers";
-import { rgbaToHex } from "@/common/lib/colors";
+import { rgbaToHex } from "@/shared/lib/colors";
 import { Point } from "../config/types";
 import BoxChatAnswer from "./BoxChatAnswer";
-import { useSocketStore } from "@/common/stores/socketStore";
+import { useSocketStore } from "@/shared/stores/socketStore";
 
 export default function Main() {
   const variables = useContext(PaintContext);

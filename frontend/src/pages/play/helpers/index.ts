@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { rgbaToHex } from "@/common/lib/colors";
+import { rgbaToHex } from "@/shared/lib/colors";
 import { DEFAULT_WHITE } from "../constants/color";
 import { Point, RGBAColorType } from "../config/types";
 

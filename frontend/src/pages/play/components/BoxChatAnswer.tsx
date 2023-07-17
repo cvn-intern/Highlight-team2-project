@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Edit2, LucideIcon, MessageCircle, Pencil } from "lucide-react"
 import './styles/style.css'
-import { cn } from '@/common/lib/utils'
-import { useSocketStore } from '@/common/stores/socketStore'
+import { cn } from '@/shared/lib/utils'
+import { useSocketStore } from '@/shared/stores/socketStore'
 import { iconsMap } from '../constants/icons'
 
 type Props = {

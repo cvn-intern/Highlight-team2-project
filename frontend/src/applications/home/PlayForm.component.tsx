@@ -22,11 +22,11 @@ import ControllerIcon from '@/common/assets/controller-icon.svg'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { Globe, User2 } from 'lucide-react'
-import { useUserStore } from '@/common/stores/userStore'
-import playService from '@/common/lib/services/playService'
+import { useUserStore } from '@/shared/stores/userStore'
+import playService from '@/shared/services/playService'
 import { useNavigate } from 'react-router-dom'
-import { useSocketStore } from '@/common/stores/socketStore'
-import authService from '@/common/lib/services/authService'
+import { useSocketStore } from '@/shared/stores/socketStore'
+import authService from '@/shared/services/authService'
 
 const formSchema = z.object({
     nickname: z.string().min(2).max(50),

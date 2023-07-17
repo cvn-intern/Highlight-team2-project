@@ -1,4 +1,4 @@
-import axiosClient from "../axiosClient";
+import axiosClient from "../lib/axiosClient";
 
 export default {
     login: (data: LoginInputType) => axiosClient.post<LoginPayload>("", data),

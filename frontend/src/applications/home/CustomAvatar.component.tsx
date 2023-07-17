@@ -10,7 +10,7 @@ import {
   DialogTrigger
 } from "@/common/components/ui/dialog"
 
-import { cn } from "@/common/lib/utils"
+import { cn } from "@/shared/lib/utils"
 import { Check, Edit2 as EditIcon } from 'lucide-react'
 import { useState } from 'react'
 import { avatarImages } from './constants'

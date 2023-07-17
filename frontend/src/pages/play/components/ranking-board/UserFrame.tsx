@@ -1,7 +1,7 @@
 import { Dialog, DialogTrigger } from '@/common/components/ui/Modal';
 import React, { useRef, useState } from 'react';
 import { DialogDemo } from './modals/ProfileModal';
-import { cn } from '@/common/lib/utils';
+import { cn } from '@/shared/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/common/components/ui/avatar-shadcn';
 import { ILeaderboard } from './RankingBoard';
 import emptyPerson from '@/common/assets/emptyPerson.jpg';

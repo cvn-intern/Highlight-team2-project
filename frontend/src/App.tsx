@@ -2,11 +2,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import PlayingGameScreen from "@/pages/play";
 import { Suspense, useEffect, useState } from "react";
-import { useSocketStore } from "./common/stores/socketStore";
+import { useSocketStore } from "./shared/stores/socketStore";
 import { io } from "socket.io-client";
-import authService from "./common/lib/services/authService";
-import { useUserStore } from "./common/stores/userStore";
-import JWTManager from "@/common/lib/jwt"
+import authService from "./shared/services/authService";
+import { useUserStore } from "./shared/stores/userStore";
+import JWTManager from "@/shared/lib/jwt"
 import Homepage from "./applications/home/Page";
 
 const client = new QueryClient();

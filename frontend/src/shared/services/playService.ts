@@ -1,4 +1,4 @@
-import axiosClient from "../axiosClient";
+import axiosClient from "../lib/axiosClient";
 
 export default {
     quickPlay: () => axiosClient.get<any>("room/quick-play"),

@@ -10,7 +10,7 @@ import PaintTools from "./components/PaintTools";
 import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
 import { resetCanvas } from "./helpers";
-import { rgbaToHex } from "@/common/lib/colors";
+import { rgbaToHex } from "@/shared/lib/colors";
 
 
 // type Props = {};

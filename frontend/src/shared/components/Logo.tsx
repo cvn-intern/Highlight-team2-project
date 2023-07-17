@@ -1,5 +1,5 @@
 import LogoImg from "@/common/assets/logo.png"
-import { cn } from '@/common/lib/utils'
+import { cn } from '@/shared/lib/utils'
 
 type LogoProps = {
     customClassname?: string
