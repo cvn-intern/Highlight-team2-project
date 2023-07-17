@@ -91,7 +91,22 @@
   .flexBetween {
     @apply flex items-center justify-between;
   }
+  .cursor-pencil {
+    cursor: url("./shared/assets/icons/cursor/pencil.svg"), auto;
+  }
+  .cursor-eraser {
+    cursor: url("./shared/assets/icons/cursor/eraser.svg"), auto;
+  }
+  .cursor-cross {
+    cursor: url("./shared/assets/icons/cursor/cross.svg"), auto;
+  }
+  .cursor-bucket {
+    cursor: url("./shared/assets/icons/cursor/bucket.svg"), auto;
+  }
+  .cursor-picker {
+    cursor: url("./shared/assets/icons/cursor/picker.svg"), auto;
+  }
 }
-#main-layout{
-  background-image: url("./common//assets//bg.png");
+#main-layout {
+  background-image: url("./shared/assets/bg.png");
 }
