@@ -33,7 +33,15 @@
 
     --ring: 215 20.2% 65.1%;
 
-    --radius: 0.5rem;
+    --radius: 0.5rem2;
+
+    --play-window-width: calc(1366px * 1);
+    --play-window-height: calc(760px * 1);
+    --ranking-board-width: calc(448px * 1);
+    --canvas-width: calc(760px * 1);
+    --canvas-height: calc(390px * 1);
+    --tool-section-width: calc(158px * 1);
+    --chat-content-heigth: calc(154px * 1);
 
     --bg-color: #22a699;
     --color-gray-cc: #cccccc;

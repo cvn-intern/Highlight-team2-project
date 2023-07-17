@@ -153,7 +153,7 @@ export default function PaintTools() {
     </div>
   );
   return (
-    <div className="w-[158px] rounded-md bg-white h-full p-4 flex flex-col justify-between">
+    <div className="w-[var(--tool-section-width)] rounded-[10px] bg-white h-full p-4 flex flex-col justify-between">
       {toolsBtn}
       <ColorPicker />
       <input

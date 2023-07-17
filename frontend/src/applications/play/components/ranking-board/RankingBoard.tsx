@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import UserFrame from './UserFrame';
+import UserFrame from "./UserFrame";
 import { LucideIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 import playService from "@/shared/services/playService";
 import { useSocketStore } from "@/shared/stores/socketStore";
-
 
 export interface ILeaderboard {
   user: {
@@ -13,54 +12,51 @@ export interface ILeaderboard {
     nickname: string;
   };
   score: number;
-  answered_at: null | Date
+  answered_at: null | Date;
   type?: string;
   icon?: LucideIcon;
 }
 
 export default function RankingBoard() {
-  const {socket} = useSocketStore()
+  const { socket } = useSocketStore();
   const [leaderboardData, setLeaderboardData] = useState<ILeaderboard[]>([]);
-  const { codeRoom } = useParams()
+  const { codeRoom } = useParams();
 
   const rankingOrder = (data: ILeaderboard[]) => {
     return data.sort((a, b) => b.score - a.score);
   };
 
   const getRoomParticipants = async () => {
-    if(!codeRoom) return
+    if (!codeRoom) return;
     try {
-      const {data} = await playService.roomParticipants(codeRoom)
-      console.log({data})
-      setLeaderboardData(data.data)
-
+      const { data } = await playService.roomParticipants(codeRoom);
+      console.log({ data });
+      setLeaderboardData(data.data);
     } catch (error) {
-      console.log({error})
+      console.log({ error });
     }
-  }
+  };
 
   useEffect(() => {
     socket?.on(`${codeRoom}-leave`, async () => {
       // console.log({leaderboardData, data})
       // const newUsersArray = leaderboardData.filter(item => item.user.nickname !== data.user)
       // setLeaderboardData(newUsersArray)
-      await getRoomParticipants()
-    })
+      await getRoomParticipants();
+    });
 
     socket?.on(codeRoom ?? "", async () => {
-      await getRoomParticipants()
-    })
+      await getRoomParticipants();
+    });
 
     return () => {
-      socket?.off(`${codeRoom}-leave`)
-      socket?.off(codeRoom)
-    }
-
-  }, [socket])
-
+      socket?.off(`${codeRoom}-leave`);
+      socket?.off(codeRoom);
+    };
+  }, [socket]);
 
   return (
-    <div className="board">
+    <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full">
       <UserFrame Leaderboard={rankingOrder(leaderboardData)} />
     </div>
   );

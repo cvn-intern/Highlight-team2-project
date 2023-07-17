@@ -27,7 +27,7 @@ export default function ColorPicker() {
           return (
             <div
               key={colour}
-              className={`w-full h-[30px] rounded-md shadow-md cursor-pointer border-2 border-transparent ${classNames(
+              className={`w-full h-[30px] rounded-[4px] shadow-md cursor-pointer border-2 border-transparent ${classNames(
                 { "border-[#ffc26f]": isActive }
               )}`}
               style={{ backgroundColor: colour }}

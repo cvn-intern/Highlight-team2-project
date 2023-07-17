@@ -47,6 +47,7 @@ export default function PlayingGameScreen() {
     window.addEventListener("resize", () => {
       resetState();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -62,19 +63,6 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
-  // Render
-  const test = (
-    <div
-      className={`w-[1366px] h-full flex px-10 py-[56px] gap-6 scale-75 mx-auto`}
-    >
-      <div className="bg-white rounded-md w-[448px] h-full"></div>
-      <div className="w-[760px] flex flex-col gap-6">
-        <canvas className="w-[760px] h-[390px] bg-white rounded-md"></canvas>
-        <div className="bg-white rounded-md w-[760px] flex-1"></div>
-      </div>
-      <div className="bg-white rounded-md w-[158px]"></div>
-    </div>
-  );
   return (
     <PaintContext.Provider
       value={{
@@ -98,15 +86,16 @@ export default function PlayingGameScreen() {
       }}
     >
       <MainLayout>
-        {/* <div className="h-full flex px-10 py-[56px] gap-6">
+        <div
+          className={`w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[0.8] 2xl:scale-100 select-none`}
+        >
           <RankingBoard />
-          <div className={`flex flex-col h-full gap-8`}>
+          <div className="w-[var(--canvas-width)] flex flex-col gap-6">
             <Canvas />
             <BoxChatAnswer />
           </div>
           <PaintTools />
-        </div> */}
-        {test}
+        </div>
       </MainLayout>
     </PaintContext.Provider>
   );

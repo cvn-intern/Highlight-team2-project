@@ -102,12 +102,12 @@ export default function Canvas() {
   };
   return (
     <div
-      className={`relative overflow-hidden rounded-md w-[760px] aspect-[2] flex-shrink-0`}
+      className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0`}
     >
       <canvas
         ref={canvasRef}
         id="canvas"
-        className={`w-full h-full bg-white cursor-pencil ${
+        className={`w-[var(--canvas-width)] h-[var(--canvas-height)] bg-white rounded-[10px] ${
           cursorsIconMap[penStyle as keyof typeof cursorsIconMap] ?? ""
         }`}
         onMouseDown={(e) => {
