@@ -34,11 +34,11 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
         {data.slice(0, maxItems).map((value, _index) => (
           <button
             key={_index}
-            className="group block cursor-pointer w-full"
+            className="block w-full cursor-pointer group"
             onClick={() => handleLinkClick(value)}
           >
-            <li className="py-3 sm:py-4 flex">
-              <div className="flex items-center space-x-3 w-full">
+            <li className="flex py-3 sm:py-4">
+              <div className="flex items-center w-full space-x-3">
                 <div
                   className={cn(
                     "flex items-center space-x-4 w-[40px]",
@@ -79,7 +79,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                       <p className="text-lg font-medium text-truncate dark:text-white">
                         {value.user.nickname}
                       </p>
-                      <p className="text-md font-medium text-textBlueColor truncate dark:text-gray-400">
+                      <p className="font-medium truncate text-md text-textBlueColor dark:text-gray-400">
                         <strong>{value.score}</strong>
                         <span> pts</span>
                       </p>
@@ -93,12 +93,12 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
         ))}
         {/* Render empty slots */}
         {emptySlots > 0 &&
-          Array.from({ length: emptySlots }).map((_) => (
-            <li className="py-3 sm:py-4 flex">
+          Array.from({ length: emptySlots }).map((item, index) => (
+            <li key={index} className="flex py-3 sm:py-4">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-4 w-[40px]"></div>
-                <div className="flex items-center space-x-4 w-full">
-                  <Avatar className="relative flex items-center bg-yellow-300 w-1/5 h-auto overflow-visible">
+                <div className="flex items-center w-full space-x-4">
+                  <Avatar className="relative flex items-center w-1/5 h-auto overflow-visible bg-yellow-300">
                     <AvatarImage
                       src={emptyPerson}
                       alt="avatar"
@@ -122,10 +122,9 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
   return (
     <div
       id="profile"
-      className="w-full max-w-md h-full py-4  bg-white border border-gray-200 
-        rounded-lg shadow  dark:bg-gray-800 dark:border-gray-700 bg-center self-center"
+      className="self-center w-full h-full max-w-md py-4 bg-white bg-center border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
     >
-      <div className="flow-root w-full h-full overflow-auto px-4 scrollbar-thin  scrollbar-thumb-slate-400  scrollbar-thumb-rounded-md">
+      <div className="flow-root w-full h-full px-4 overflow-auto scrollbar-thin scrollbar-thumb-slate-400 scrollbar-thumb-rounded-md">
         <ul
           role="list"
           className="divide-y divide-gray-200 dark:divide-gray-700"

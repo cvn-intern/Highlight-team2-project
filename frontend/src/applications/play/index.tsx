@@ -17,6 +17,7 @@ import { rgbaToHex } from "@/shared/lib/colors";
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
+  const isDrawer = true;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -94,7 +95,7 @@ export default function PlayingGameScreen() {
             <Canvas />
             <BoxChatAnswer />
           </div>
-          <PaintTools />
+          {isDrawer && <PaintTools />}
         </div>
       </MainLayout>
     </PaintContext.Provider>

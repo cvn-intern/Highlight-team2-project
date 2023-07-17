@@ -22,7 +22,7 @@ interface MessageProps {
 
 const Message = (props: MessageProps) => {
   const { icon: Icon, type } = props;
-  console.log({ type });
+  // console.log({ type });
   return (
     <div className={cn("text-green-400 flex gap-2", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
@@ -114,7 +114,7 @@ const BoxChat = (props: BoxProps) => {
               id={"box-input-" + props.label}
               type="text"
               placeholder={props.placeholder}
-              className="block w-full px-3 py-2 pl-10 mt-1 text-sm bg-white border rounded-md shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+              className="block w-full px-3 py-2 pl-10 mt-1 text-sm bg-white border rounded-[4px] shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
             />
             <label
               htmlFor={"box-input-" + props.label}
@@ -154,7 +154,7 @@ const BoxAnswer = (props: BoxProps) => {
               id={"box-input-" + props.label}
               type="text"
               placeholder={props.placeholder}
-              className="block w-full px-3 py-2 pl-10 mt-1 text-sm bg-white border rounded-md shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
+              className="block w-full px-3 py-2 pl-10 mt-1 text-sm bg-white border rounded-[4px] shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1"
             />
             <label
               htmlFor={"box-input-" + props.label}
