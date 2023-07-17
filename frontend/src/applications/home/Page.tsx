@@ -1,4 +1,3 @@
-// import { useMutation } from '@tanstack/react-query'
 import BannerImg from "@/common/assets/play-banner.png"
 import SloganImg from "@/common/assets/slogan.png"
 import Logo from '@/common/components/core/Logo'

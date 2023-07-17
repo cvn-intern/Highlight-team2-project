@@ -2,12 +2,12 @@ import LogoImg from "@/common/assets/logo.png"
 import { cn } from '@/common/lib/utils'
 
 type LogoProps = {
-    customClassname?: string
+    className?: string
 }
 
-const Logo = ({customClassname = ""}: LogoProps) => {
+const Logo = ({className = ""}: LogoProps) => {
   return (
-    <img src={LogoImg} alt="" className={cn("w-[380px]", customClassname)} />
+    <img src={LogoImg} alt="" className={cn("w-[380px]", className)} />
   )
 }
 
