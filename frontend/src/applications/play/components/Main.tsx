@@ -1,5 +1,5 @@
-import { MouseEvent, useContext, useEffect} from "react";
-import { PaintContext } from "@/pages/play";
+import { MouseEvent, useContext, useEffect } from "react";
+import { PaintContext } from "@/applications/play";
 // Functions
 import {
   drawRectangle,
@@ -10,7 +10,7 @@ import {
   fillWithColor,
   pickColor,
   drawLine,
-} from "@/pages/play/helpers";
+} from "@/applications/play/helpers";
 import { rgbaToHex } from "@/shared/lib/colors";
 import { Point } from "../config/types";
 import BoxChatAnswer from "./BoxChatAnswer";
@@ -18,7 +18,7 @@ import { useSocketStore } from "@/shared/stores/socketStore";
 
 export default function Main() {
   const variables = useContext(PaintContext);
-  const {socket} = useSocketStore()
+  const { socket } = useSocketStore();
   if (!variables) return null;
   const {
     canvasRef,
@@ -44,16 +44,15 @@ export default function Main() {
     const y = e.nativeEvent.offsetY;
     return { x, y };
   };
-  
+
   const handleStartDrawing = (
     point: Point,
     color: any,
     penStyle: string,
-    brushSize: number,
+    brushSize: number
   ) => {
-    const ctx = canvasRef.current?.getContext('2d')
-      
-    
+    const ctx = canvasRef.current?.getContext("2d");
+
     if (!ctx) return;
     const canvas = ctx.canvas;
     if (penStyle === "bucket") {
@@ -81,19 +80,16 @@ export default function Main() {
     penStyle === "eraser" && eraser(ctx, point);
   };
 
-
-
   const handleDrawing = (
     currentPoint: Point,
     color: any,
     penStyle: string,
     snapshot: ImageData
-  ) => {    
-    
+  ) => {
     console.log(ctx);
-    
+
     // const ctx = canvasRef.current?.getContext('2d')
-    
+
     if (!ctx || !isDrawing) return;
     if (penStyle === "brush") {
       drawFreeStyle(ctx, currentPoint, color);
@@ -103,9 +99,9 @@ export default function Main() {
     }
     if (penStyle === "rectangle") {
       console.log(penStyle);
-        
-      
-      snapshot && drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
+
+      snapshot &&
+        drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "circle") {
       snapshot &&
@@ -133,61 +129,49 @@ export default function Main() {
     penStyle: string,
     brushSize: number
   ) => {
-    
     socket?.emit("start-drawing", { point, color, penStyle, brushSize });
-    handleStartDrawing(point, color, penStyle, brushSize)
-  }
+    handleStartDrawing(point, color, penStyle, brushSize);
+  };
 
   const funcDrawing = (
     currentPoint: Point,
     color: any,
     penStyle: string,
-    isDrawing: boolean,
+    isDrawing: boolean
   ) => {
-    
-    if(isDrawing){
+    if (isDrawing) {
       socket?.emit("drawing", { currentPoint, penStyle, color });
-      snapshot && handleDrawing(currentPoint, color, penStyle, snapshot)
+      snapshot && handleDrawing(currentPoint, color, penStyle, snapshot);
     }
-  }
+  };
 
   const funcFinishDraw = () => {
-    
     socket?.emit("finish-drawing");
-    handleFinishDrawing()
-  }
-
-  
-
+    handleFinishDrawing();
+  };
 
   useEffect(() => {
-    socket?.on("other-start-drawing", ({
-      point,
-      color,
-      penStyle,
-      brushSize,
-      }) => {    
-      handleStartDrawing(point, color, penStyle, brushSize)
-    });
+    socket?.on(
+      "other-start-drawing",
+      ({ point, color, penStyle, brushSize }) => {
+        handleStartDrawing(point, color, penStyle, brushSize);
+      }
+    );
 
-    socket?.on("other-drawing", ({currentPoint, color, penStyle})=> {
-      
-      snapshot && handleDrawing(currentPoint, color, penStyle, snapshot)
+    socket?.on("other-drawing", ({ currentPoint, color, penStyle }) => {
+      snapshot && handleDrawing(currentPoint, color, penStyle, snapshot);
     });
 
     socket?.on("other-finish-drawing", () => {
-      handleFinishDrawing()
+      handleFinishDrawing();
     });
 
     return () => {
-      socket?.off('other-start-drawing')
-      socket?.off('other-drawing')
-      socket?.off('other-finish-drawing')
-    }
-
-
-  }, [canvasRef, snapshot, socket])
-
+      socket?.off("other-start-drawing");
+      socket?.off("other-drawing");
+      socket?.off("other-finish-drawing");
+    };
+  }, [canvasRef, snapshot, socket]);
 
   return (
     <div className="flex flex-col flex-1 h-full gap-6">
@@ -196,19 +180,21 @@ export default function Main() {
           ref={canvasRef}
           id="canvas"
           className="w-full h-full bg-white"
-          onMouseDown={(e) =>{
-            const point = getPointFromEvent(e)
-             funcStartDraw(point, color, penStyle, brushSize)
-            }}
+          onMouseDown={(e) => {
+            const point = getPointFromEvent(e);
+            funcStartDraw(point, color, penStyle, brushSize);
+          }}
           onMouseMove={(e) => {
-            const point = getPointFromEvent(e)
-            funcDrawing(point, color, penStyle, isDrawing)
+            const point = getPointFromEvent(e);
+            funcDrawing(point, color, penStyle, isDrawing);
           }}
           onMouseUp={funcFinishDraw}
           onMouseLeave={funcFinishDraw}
         ></canvas>
       </div>
-      <div className="bg-white rounded-md h-[245px]"><BoxChatAnswer /></div>
+      <div className="bg-white rounded-md h-[245px]">
+        <BoxChatAnswer />
+      </div>
     </div>
   );
 }

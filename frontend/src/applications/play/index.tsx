@@ -2,16 +2,16 @@ import { useRef, useState, useEffect, createContext } from "react";
 // Variables
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
-import MainLayout from "@/common/layout/MainLayout";
+import MainLayout from "@/shared/components/MainLayout";
 import RankingBoard from "./components/ranking-board/RankingBoard";
-import Main from "./components/Main";
+import Canvas from "./components/Canvas";
+import BoxChatAnswer from "./components/BoxChatAnswer";
 import PaintTools from "./components/PaintTools";
 // Types
 import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions
 import { resetCanvas } from "./helpers";
 import { rgbaToHex } from "@/shared/lib/colors";
-
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -47,7 +47,7 @@ export default function PlayingGameScreen() {
     window.addEventListener("resize", () => {
       resetState();
     });
-  }, [ctx, snapshot]);
+  }, []);
   useEffect(() => {
     if (!canvasRef.current) return;
     setCtx(canvasRef.current.getContext("2d"));
@@ -62,7 +62,6 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
-
   return (
     <PaintContext.Provider
       value={{
@@ -88,7 +87,10 @@ export default function PlayingGameScreen() {
       <MainLayout>
         <div className="h-full flex px-10 py-[56px] gap-6">
           <RankingBoard />
-          <Main />
+          <div className={`flex flex-col h-full gap-8`}>
+            <Canvas />
+            <BoxChatAnswer />
+          </div>
           <PaintTools />
         </div>
       </MainLayout>

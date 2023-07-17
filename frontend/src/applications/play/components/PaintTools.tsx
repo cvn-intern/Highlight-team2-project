@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { PaintContext } from "@/pages/play";
-import { resetCanvas } from "@/pages/play/helpers";
+import { PaintContext } from "@/applications/play";
+import { resetCanvas } from "@/applications/play/helpers";
 import BtnChosePenStyle from "./BtnChosePenStyle";
 // Components
 import {
@@ -14,18 +14,18 @@ import {
   Pipette,
   CopyX,
 } from "lucide-react";
-import { RgbaColorPicker } from "react-colorful";
+import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
+import AlertIcon from "@/shared/components/icons/AlertIcon";
+import ColorPicker from "./ColorPicker";
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);
   if (!variables) return null;
   const {
     ctx,
-    color,
     penStyle,
     isFill,
     brushSize,
-    setColor,
     setPenStyle,
     setIsFill,
     setBrushSize,
@@ -76,7 +76,10 @@ export default function PaintTools() {
       <BtnChosePenStyle
         Icon={Edit}
         active={penStyle === "brush"}
-        onChange={handleChoseBrush}
+        onChange={() => {
+          handleChoseBrush();
+          console.log(penStyle);
+        }}
         value="brush"
         type="radio"
       />
@@ -137,18 +140,22 @@ export default function PaintTools() {
         value="picker"
         type="radio"
       />
-      <button
-        className="bg-white flexCenter cursor-pointer"
-        onClick={handleClearCanvas}
-      >
-        <CopyX color={"#848484"} size={28} strokeWidth={2} />
-      </button>
+      <AlertDialogYesNo
+        buttonContent={<CopyX color={"#848484"} size={28} strokeWidth={2} />}
+        buttonVariant={"link"}
+        buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
+        onYesClick={handleClearCanvas}
+        Icon={AlertIcon}
+        confirmText="Yes"
+        cancelText="No"
+        alertMessage="Are you sure to clear your canvas? This action cannot be undone."
+      />
     </div>
   );
   return (
     <div className="w-[158px] rounded-md bg-white h-full p-4 flex flex-col justify-between">
       {toolsBtn}
-      <RgbaColorPicker color={color} onChange={setColor} />
+      <ColorPicker />
       <input
         type="range"
         min="1"

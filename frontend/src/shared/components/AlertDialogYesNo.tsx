@@ -6,13 +6,12 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/common/components/ui/alert-dialog";
-import { Button } from "@/common/components/ui/Button";
+} from "@/shared/components/shadcn-ui/alert-dialog";
+import { Button } from "@/shared/components/shadcn-ui/Button";
 
 interface Props {
-  buttonText: string;
+  buttonContent: React.ReactNode;
   buttonVariant?:
     | "link"
     | "default"
@@ -25,33 +24,46 @@ interface Props {
   buttonClassName?: string;
   onYesClick?: (...args: any[]) => void;
   onNoClick?: (...args: any[]) => void;
+  Icon: ({}) => JSX.Element;
+  confirmText?: string;
+  cancelText?: string;
+  alertMessage?: string;
 }
 
 export default function AlertDialogYesNo({
-  buttonText,
+  buttonContent,
   buttonVariant = "outline",
   buttonClassName = "",
   onYesClick = () => {},
   onNoClick = () => {},
+  Icon,
+  confirmText = "Continue",
+  cancelText = "Cancel",
+  alertMessage = "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
 }: Props) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant={buttonVariant} className={buttonClassName}>
-          {buttonText}
+          {buttonContent}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+          <div className="flexCenter">
+            <Icon />
+          </div>
+          <AlertDialogDescription className="text-center">
+            {alertMessage}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={onNoClick}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onYesClick}>Continue</AlertDialogAction>
+        <AlertDialogFooter className="sm:justify-center">
+          <AlertDialogCancel onClick={onNoClick}>
+            {cancelText}
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={onYesClick}>
+            {confirmText}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
