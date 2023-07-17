@@ -1,5 +1,20 @@
-import { Logger, UseFilters, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer, WsException } from '@nestjs/websockets';
+import {
+  Logger,
+  UseFilters,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import {
+  ConnectedSocket,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  WsException,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from '../socket.service';
 import { UserService } from '../../user/user.service';
@@ -16,9 +31,7 @@ const configService: ConfigService = new ConfigService();
 const SOCKET_PORT = 3001;
 
 @WebSocketGateway(SOCKET_PORT, {
-  cors: {
-    origin: configService.get<string>('FRONTEND_URL'),
-  },
+  cors: true,
 })
 @UseFilters(WebsocketExceptionsFilter)
 @UsePipes(new ValidationPipe({ transform: true }))
@@ -31,41 +44,41 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     public roomUserService: RoomUserService,
     public roomService: RoomService,
     public logger: Logger = new Logger(SocketGateway.name),
-  ) { }
+  ) {}
 
   @WebSocketServer() public server: Server;
 
-  async handleDisconnect(
-    @ConnectedSocket() client: any,
-  ) {
+  async handleDisconnect(@ConnectedSocket() client: any) {
     try {
       this.socketService.removeClientDisconnection(client);
-  
+
       const payload = await this.socketService.extractPayload(client);
-  
+
       if (!payload) {
         this.logger.warn(`${client.id} invalid credential!`);
         return;
       }
-  
+
       const user = await this.userService.getUserById(payload.id);
-  
+
       if (user) {
-        const codeRoom = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
-  
+        const codeRoom = await this.redisService.getObjectByKey(
+          `USER:${user.id}:ROOM`,
+        );
+
         client.leave(codeRoom);
-  
+
         if (codeRoom !== null) {
           const idRoom = extractIdRoom(codeRoom);
           await this.roomUserService.deleteRoomUser(idRoom, user.id);
         }
-  
+
         this.server.in(codeRoom).emit(codeRoom, {
           user: user.nickname,
           content: 'left',
           type: TEXT_RED,
           icon: LOGOUT_ICON,
-        })
+        });
         await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
       }
     } catch (error) {
@@ -73,13 +86,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
   }
 
-  handleConnection(
-    @ConnectedSocket() client: Socket,
-  ) {
+  handleConnection(@ConnectedSocket() client: Socket) {
     try {
       this.socketService.storeClientConnection(client);
     } catch (error) {
-      this.logger.error(error);      
+      this.logger.error(error);
     }
   }
 }
