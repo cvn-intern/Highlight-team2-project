@@ -7,6 +7,8 @@ import { RedisService } from '../redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
 import { UserInterface } from '../user/user.interface';
+import { UserService } from '../user/user.service';
+import { User } from '../user/user.entity';
 
 @Controller('/auth')
 export class AuthController {
@@ -15,6 +17,7 @@ export class AuthController {
     private logger: Logger = new Logger(AuthController.name),
     private redisService: RedisService,
     private configService: ConfigService,
+    private userService: UserService,
   ) { }
 
   @Get('/register-guest')
@@ -22,8 +25,10 @@ export class AuthController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const user = await this.authService.registerAccountGuest();
-      console.log({user})
+      const userInformation = this.userService.generateGuest();
+
+      const user: User = await this.userService.createUser(userInformation);
+
       const accessToken = await this.authService.generateAccessToken({
         id: user.id
       });
@@ -35,7 +40,7 @@ export class AuthController {
           user: user,
           accessToken: accessToken,
         }
-      )
+      );
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | 500).json({
@@ -43,7 +48,7 @@ export class AuthController {
         message: error,
         success: false,
         data: {},
-      } as ResponseClient)
+      } as ResponseClient);
     }
   }
 }
