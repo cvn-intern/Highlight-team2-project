@@ -11,10 +11,10 @@ import {
   fillWithColor,
   pickColor,
   drawLine,
-} from "@/applications/play/helpers";
+} from "@/applications/play/draw.helper";
 // Types
 import { rgbaToHex } from "@/shared/lib/colors";
-import { Point } from "./config/types";
+import { Point } from "./draw";
 
 export default function Canvas() {
   const variables = useContext(PaintContext);
@@ -77,20 +77,18 @@ export default function Canvas() {
     if (penStyle === "eraser") {
       eraser(ctx, currentPoint);
     }
+    if (!snapshot) return;
     if (penStyle === "rectangle") {
-      snapshot &&
-        drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
+      drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "circle") {
-      snapshot &&
-        drawCircle(ctx, snapshot, currentPoint, previousPoint, isFill);
+      drawCircle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "triangle") {
-      snapshot &&
-        drawTriangle(ctx, snapshot, currentPoint, previousPoint, isFill);
+      drawTriangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
     if (penStyle === "line") {
-      snapshot && drawLine(ctx, snapshot, currentPoint, previousPoint);
+      drawLine(ctx, snapshot, currentPoint, previousPoint);
     }
   };
   const handleFinishDrawing = () => {
@@ -107,9 +105,8 @@ export default function Canvas() {
       <canvas
         ref={canvasRef}
         id="canvas"
-        className={`w-[var(--canvas-width)] h-[var(--canvas-height)] bg-white rounded-[10px] ${
-          cursorsIconMap[penStyle as keyof typeof cursorsIconMap] ?? ""
-        }`}
+        className={`w-[var(--canvas-width)] h-[var(--canvas-height)] bg-white rounded-[10px] ${cursorsIconMap[penStyle] ?? ""
+          }`}
         onMouseDown={(e) => {
           const point = getPointFromEvent(e);
           handleStartDrawing(point);

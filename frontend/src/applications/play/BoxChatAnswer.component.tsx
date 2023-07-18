@@ -21,7 +21,7 @@ interface MessageProps {
 }
 
 const Message = (props: MessageProps) => {
-  const { icon: Icon, type } = props;
+  const { icon: Icon} = props;
   // console.log({ type });
   return (
     <div className={cn("text-green-400 flex gap-2", props.type)}>

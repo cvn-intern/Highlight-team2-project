@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { PaintContext } from "@/applications/play/Play";
-import { resetCanvas } from "@/applications/play/helpers";
+import { resetCanvas } from "@/applications/play/draw.helper";
 import BtnChosePenStyle from "./BtnChosePenStyle.component";
 // Components
 import {

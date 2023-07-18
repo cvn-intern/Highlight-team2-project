@@ -1,10 +1,3 @@
-export type RGBAColorType = {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-};
-
 export type PaintContextType = {
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   ctx: CanvasRenderingContext2D | null;
@@ -12,7 +5,7 @@ export type PaintContextType = {
   isDrawing: boolean;
   previousPoint: Point;
   color: RGBAColorType;
-  penStyle: string;
+  penStyle: PenStyleType;
   isFill: boolean;
   brushSize: number;
   setCtx: Dispatch<SetStateAction<CanvasRenderingContext2D | null>>;
@@ -25,6 +18,13 @@ export type PaintContextType = {
   setBrushSize: Dispatch<SetStateAction<number>>;
 };
 
+export type RGBAColorType = {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+};
+
 export type PaintToolBtnType = {
   Icon: LucideIcon;
   onChange: string;
@@ -35,3 +35,5 @@ export type Point = {
   x: number;
   y: number;
 };
+
+export type PenStyleType = "circle" | "line" | "bucket" | "picker" | "brush" | "eraser" | "rectangle" | "triangle";
