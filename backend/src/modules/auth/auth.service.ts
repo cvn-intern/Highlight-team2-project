@@ -19,6 +19,7 @@ export class AuthService {
 
   async registerAccountGuest() {
     const userInformation = this.userService.generateGuest();
+    console.log(userInformation)
     const user: User = await this.userService.createUser(userInformation);
 
     return user;    
