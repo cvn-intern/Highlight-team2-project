@@ -23,7 +23,7 @@ export class AuthController {
   ): Promise<any> {
     try {
       const user = await this.authService.registerAccountGuest();
-
+      console.log({user})
       const accessToken = await this.authService.generateAccessToken({
         id: user.id
       });
