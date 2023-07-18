@@ -16,3 +16,4 @@ export const TEXT_RED = 'text-red-600';
 export const INFO_ICON = 'Info';
 export const MESSAGECIRCLE_ICON = 'MessageCircle';
 export const LOGOUT_ICON = 'LogOut';
+export const CORRECT_ANSWER_ICON = 'BadgeCheck'
