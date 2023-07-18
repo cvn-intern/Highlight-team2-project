@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     const createSocketInstance = (token: string) =>  {
-      const socketInit = io("http://localhost:3001", {
+      const socketInit = io("http://localhost:3001/", {
         extraHeaders: {
           authorization: token,
         },
