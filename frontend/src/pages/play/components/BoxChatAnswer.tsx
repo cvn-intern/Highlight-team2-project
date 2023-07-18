@@ -63,6 +63,11 @@ const BoxChat = (props: BoxProps) => {
             codeRoom: codeRoom,
             message: inputChat,
           } as MessageBodyInterface)
+        }else{         
+          socket?.emit('answer-room', {
+            codeRoom: codeRoom,
+            message: inputChat,
+          } as MessageBodyInterface)
         }
 
         SetInputChat("")
@@ -115,6 +120,11 @@ const BoxChatAnswer = ({ }: Props) => {
       setListChat(pre => [...pre, data])
     })
 
+    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
+      console.log(data);
+      setListAnswer(pre => [...pre, data])
+    })
+
     socket?.on(`${codeRoom}-leave`, (data: Chat) => {
       console.log(data);
       setListChat(pre => [...pre, data])
@@ -123,6 +133,7 @@ const BoxChatAnswer = ({ }: Props) => {
     return () => {
       socket?.off(codeRoom)
       socket?.off(`${codeRoom}-chat`)
+      socket?.off(`${codeRoom}-answer`)
       socket?.off(`${codeRoom}-leave`)
     }
   }, [socket])
