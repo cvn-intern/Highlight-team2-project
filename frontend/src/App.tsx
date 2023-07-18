@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import PlayingGameScreen from "@/applications/play";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { io } from "socket.io-client";
@@ -8,7 +7,7 @@ import authService from "@/shared/services/authService";
 import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
-import React from "react";
+import PlayingGameScreen from "./applications/play";
 
 const client = new QueryClient();
 
@@ -57,7 +56,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:codeRoom" element={<PlayingGameScreen />} />
+            <Route path="/:codeRoom" element={<PlayingGameScreen/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
