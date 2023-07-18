@@ -9,8 +9,8 @@ export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
 
 // type message
 export const TEXT_GREEN = 'text-green-400';
-export const TEXT_BLUE = 'text-blue-600';
-export const TEXT_RED = 'text-red-600';
+export const TEXT_BLUE = 'text-blue-400';
+export const TEXT_RED = 'text-red-400';
 
 // icon
 export const INFO_ICON = 'Info';

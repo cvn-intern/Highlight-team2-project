@@ -51,7 +51,6 @@ const PlayForm = ({}: Props) => {
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
   };
 
   const handleQuickPlay = async () => {
@@ -70,7 +69,7 @@ const PlayForm = ({}: Props) => {
       }
 
       const { data } = await playService.quickPlay();
-      console.log(data);
+
       navigate("/" + data);
 
       socket?.emit("join-room", data);

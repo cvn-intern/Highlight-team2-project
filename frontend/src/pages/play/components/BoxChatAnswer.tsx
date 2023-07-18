@@ -24,10 +24,10 @@ interface MessageProps {
 }
 
 const Message = (props: MessageProps) => {
-  const { icon: Icon } = props
+  const { icon: Icon, type } = props
 
   return (
-    <div className={cn('text-green-400 flex gap-2', props.type)}>
+    <div className={`${type} flex gap-2`}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>
         {props.user}
@@ -106,7 +106,6 @@ const BoxChatAnswer = ({ }: Props) => {
 
   useEffect(() => {
     socket?.on(codeRoom, (data: Chat) => {
-      console.log(data);
       setListChat(pre => [...pre, data])
     })
 
