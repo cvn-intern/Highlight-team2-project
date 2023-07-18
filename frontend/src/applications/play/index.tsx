@@ -3,7 +3,7 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./components/ranking-board/RankingBoard";
+import RankingBoard from "./components/RankingBoard";
 import Canvas from "./components/Canvas";
 import BoxChatAnswer from "./components/BoxChatAnswer";
 import PaintTools from "./components/PaintTools";

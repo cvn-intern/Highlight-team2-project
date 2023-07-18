@@ -172,49 +172,49 @@ const BoxAnswer = (props: BoxProps) => {
 const BoxChatAnswer = () => {
   const listChat = [
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
@@ -223,7 +223,7 @@ const BoxChatAnswer = () => {
 
   const listAnswer = [
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -231,7 +231,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -239,7 +239,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -247,7 +247,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -255,7 +255,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
