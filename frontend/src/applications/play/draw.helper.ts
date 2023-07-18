@@ -1,7 +1,7 @@
 /* eslint-disable prefer-const */
 import { rgbaToHex } from "@/shared/lib/colors";
-import { DEFAULT_WHITE } from "../constants/color";
-import { Point, RGBAColorType } from "../config/types";
+import { DEFAULT_WHITE } from "./constants/color";
+import { Point, RGBAColorType } from "./draw";
 
 export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
   if (!ctx) return;

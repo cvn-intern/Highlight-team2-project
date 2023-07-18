@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 
-export interface Event{
+interface Event{
     name: string,
     handler(...args: any[]): any;
 }
 
-export const useSocketEvents = (eventName: any, eventHandler: any) => {
+export const useSocketEvents = (eventName: string, eventHandler: any) => {
     const {socket} = useSocketStore()
 
     useEffect(() => {
