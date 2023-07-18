@@ -3,7 +3,7 @@ import { Edit2, LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
 import { cn } from "@/shared/lib/utils";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { iconsMap } from "../constants/icons";
+import { iconsMap } from "./constants/icons";
 
 interface BoxProps {
   label: string;

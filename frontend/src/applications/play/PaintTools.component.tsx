@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { PaintContext } from "@/applications/play";
+import { PaintContext } from "@/applications/play/Play";
 import { resetCanvas } from "@/applications/play/helpers";
-import BtnChosePenStyle from "./BtnChosePenStyle";
+import BtnChosePenStyle from "./BtnChosePenStyle.component";
 // Components
 import {
   Edit,
@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "./ColorPicker.component";
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);

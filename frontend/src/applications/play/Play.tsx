@@ -3,10 +3,10 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./components/RankingBoard";
-import Canvas from "./components/Canvas";
-import BoxChatAnswer from "./components/BoxChatAnswer";
-import PaintTools from "./components/PaintTools";
+import RankingBoard from "./RankingBoard.component";
+import Canvas from "./Canvas.component";
+import BoxChatAnswer from "./BoxChatAnswer.component";
+import PaintTools from "./PaintTools.component";
 // Types
 import { RGBAColorType, PaintContextType, Point } from "./config/types";
 // Funtions

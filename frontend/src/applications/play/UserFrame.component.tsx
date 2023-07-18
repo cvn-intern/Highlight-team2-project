@@ -8,7 +8,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { ILeaderboard } from "./RankingBoard";
+import { ILeaderboard } from "./RankingBoard.component";
 import emptyPerson from "@/shared/assets/emptyPerson.jpg";
 
 interface ProfileProps {
@@ -95,7 +95,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
           ))}
         </FlipMove>
         {/* Render empty slots */}
-        {emptySlots > 0 && Array.from({ length: emptySlots }).map((item, index) => (
+        {emptySlots > 0 && Array.from({ length: emptySlots }).map((_item, index) => (
             <li key={index} className="flex py-3 sm:py-4">
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-4 w-[40px]"></div>

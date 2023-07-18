@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import paletteImage from "@/shared/assets/palette.svg";
-import { palette } from "../constants/color";
-import { PaintContext } from "..";
+import { palette } from "./constants/color";
+import { PaintContext } from "./Play";
 import { hexToRGBA, rgbaToHex } from "@/shared/lib/colors";
 import { RgbaColorPicker } from "react-colorful";
 import classNames from "classnames";

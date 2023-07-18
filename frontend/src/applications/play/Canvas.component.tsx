@@ -1,6 +1,6 @@
 import { MouseEvent, useContext } from "react";
-import { PaintContext } from "@/applications/play";
-import cursorsIconMap from "../constants/cursorsIconMap";
+import { PaintContext } from "@/applications/play/Play";
+import cursorsIconMap from "./constants/cursorsIconMap";
 // Functions
 import {
   drawRectangle,
@@ -14,7 +14,7 @@ import {
 } from "@/applications/play/helpers";
 // Types
 import { rgbaToHex } from "@/shared/lib/colors";
-import { Point } from "../config/types";
+import { Point } from "./config/types";
 
 export default function Canvas() {
   const variables = useContext(PaintContext);

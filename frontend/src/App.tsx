@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import PlayingGameScreen from "@/applications/play";
+import PlayingGameScreen from "@/applications/play/Play";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { io } from "socket.io-client";
