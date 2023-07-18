@@ -3,14 +3,14 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./components/ranking-board/RankingBoard";
-import Canvas from "./components/Canvas";
-import BoxChatAnswer from "./components/BoxChatAnswer";
-import PaintTools from "./components/PaintTools";
+import RankingBoard from "./RankingBoard.component";
+import Canvas from "./Canvas.component";
+import BoxChatAnswer from "./BoxChatAnswer.component";
+import PaintTools from "./PaintTools.component";
 // Types
-import { RGBAColorType, PaintContextType, Point } from "./config/types";
+import { RGBAColorType, PaintContextType, Point, PenStyleType } from "./draw";
 // Funtions
-import { resetCanvas } from "./helpers";
+import { resetCanvas } from "./draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
 
 // type Props = {};
@@ -25,7 +25,7 @@ export default function PlayingGameScreen() {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
-  const [penStyle, setPenStyle] = useState<string>("brush");
+  const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   // Side Effects

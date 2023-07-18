@@ -3,7 +3,7 @@ import { Edit2, LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
 import { cn } from "@/shared/lib/utils";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { iconsMap } from "../constants/icons";
+import { iconsMap } from "./constants/icons";
 
 interface BoxProps {
   label: string;
@@ -21,8 +21,7 @@ interface MessageProps {
 }
 
 const Message = (props: MessageProps) => {
-  const { icon: Icon, type } = props;
-  // console.log({ type });
+  const { icon: Icon} = props;
   return (
     <div className={cn("text-green-400 flex gap-2", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
@@ -172,49 +171,49 @@ const BoxAnswer = (props: BoxProps) => {
 const BoxChatAnswer = () => {
   const listChat = [
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
     },
 
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
       type: "text-red-600",
       icon: Edit2,
@@ -223,7 +222,7 @@ const BoxChatAnswer = () => {
 
   const listAnswer = [
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -231,7 +230,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -239,7 +238,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -247,7 +246,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
@@ -255,7 +254,7 @@ const BoxChatAnswer = () => {
       content: "is corrected!",
     },
     {
-      user: "Tư Mã Ý",
+      user: "bủ bủ lmeo",
       content: "hit answer!",
     },
     {
