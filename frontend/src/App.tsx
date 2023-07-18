@@ -31,6 +31,7 @@ function App() {
       try {
         const { data } = await authService.newUser();
         setUser(data.user);
+        console.log(data);
         JWTManager.setToken(data.accessToken);
         createSocketInstance(data.accessToken);
       } catch (error) {

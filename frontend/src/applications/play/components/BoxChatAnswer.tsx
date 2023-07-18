@@ -27,7 +27,7 @@ const Message = (props: MessageProps) => {
   const { icon: Icon } = props
 
   return (
-    <div className={cn(`text-green-400 flex gap-2`, props.type)}>
+    <div className={cn(`text-blue-400 flex gap-2`, props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>
         {props.user}
