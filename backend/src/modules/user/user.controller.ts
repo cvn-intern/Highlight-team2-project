@@ -22,14 +22,7 @@ export class UserController {
     try {
       const user = await this.userService.updateUser(userInformation);
 
-      return response.status(HttpStatus.OK).json({
-        message: 'Update user profile successfully!',
-        success: true,
-        statusCode: HttpStatus.OK,
-        data: {
-          user
-        },
-      } as ResponseClient)
+      return response.status(HttpStatus.OK).json(user);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.statusCode | HttpStatus.INTERNAL_SERVER_ERROR).json({
