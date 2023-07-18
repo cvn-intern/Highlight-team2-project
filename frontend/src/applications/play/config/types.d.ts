@@ -1,3 +1,4 @@
+
 export type RGBAColorType = {
   r: number;
   g: number;
@@ -35,3 +36,25 @@ export type Point = {
   x: number;
   y: number;
 };
+
+export type StartDraw = {
+  point: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  brushSize: number,
+}
+
+export type StartDraw = {
+  point: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  brushSize: number,
+}
+
+export type Drawing = {
+  currentPoint: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  snapshot: ImageData | undefined,
+  isFill: boolean,
+}
