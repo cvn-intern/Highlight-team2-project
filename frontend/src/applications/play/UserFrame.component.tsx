@@ -14,9 +14,10 @@ import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
+  max_player: number;
 }
 
-const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
+const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
@@ -25,16 +26,17 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
     setUserSelected(user);
     triggerRef.current?.click();
   };
-  const renderItem = (data: ILeaderboard[]) => {
-    const maxItems = 10; // Maximum number of items to render
+  const renderItem = (data: ProfileProps) => {
+    console.log()
+    const maxItems = data.max_player; // Maximum number of items to render
 
     // Calculate the number of empty slots
-    const emptySlots = maxItems - data.length;
+    const emptySlots = maxItems - data.Leaderboard.length;
 
     return (
       <>
         <FlipMove className="flip-wrapper">
-          {data.slice(0, maxItems).map((value, _index) => (
+          {data.Leaderboard.slice(0, maxItems).map((value, _index) => (
             <button
               key={_index}
               className="block w-full cursor-pointer group"

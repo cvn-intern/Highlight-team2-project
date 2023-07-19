@@ -27,6 +27,7 @@ import playService from "@/shared/services/playService";
 import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import authService from "@/shared/services/authService";
+import React from "react";
 
 const formSchema = z.object({
   nickname: z.string().min(2).max(50),
@@ -49,7 +50,7 @@ const PlayForm = () => {
   });
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+    // console.log({ values });
   };
 
   const handleQuickPlay = async () => {
@@ -64,13 +65,14 @@ const PlayForm = () => {
           language,
         });
 
-        setUser(data.data.user);
+        setUser(data);
       }
 
       const { data } = await playService.quickPlay();
-      navigate("/" + data.data.code_room);
 
-      socket?.emit("join-room", data.data.code_room);
+      navigate("/" + data);
+
+      socket?.emit("join-room", data);
     } catch (error) {
       console.log({ error });
     }

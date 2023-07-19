@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Language } from './language.entity';
-import { readFileLanguage } from '../../common/utils/helper';
+import { getLanguages } from '../../common/utils/helper';
 
 @Injectable()
 export class LanguageService {
@@ -16,7 +16,7 @@ export class LanguageService {
   }
 
   async initLanguageForDb() {
-    const listLanguage = await readFileLanguage();
+    const listLanguage = await getLanguages();
     for (const language of listLanguage) {
       await this.languageRepository.save({
         ...language,

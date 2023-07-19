@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import playService from "@/shared/services/playService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 
+
+
 export interface ILeaderboard {
   user: {
     id: number;
@@ -17,9 +19,17 @@ export interface ILeaderboard {
   icon?: LucideIcon;
 }
 
+interface RankingUser {
+  users: ILeaderboard[],
+  max_player: number;
+}
+
 export default function RankingBoard() {
   const { socket } = useSocketStore();
-  const [leaderboardData, setLeaderboardData] = useState<ILeaderboard[]>([]);
+  const [leaderboardData, setLeaderboardData] = useState<RankingUser>({
+    users: [],
+    max_player: 0,
+  });
   const { codeRoom } = useParams();
 
   const rankingOrder = (data: ILeaderboard[]) => {
@@ -30,8 +40,8 @@ export default function RankingBoard() {
     if (!codeRoom) return;
     try {
       const { data } = await playService.roomParticipants(codeRoom);
-      console.log(data.data);
-      setLeaderboardData(data.data);
+
+      setLeaderboardData(data);
     } catch (error) {
       console.log({ error });
     }
@@ -57,7 +67,7 @@ export default function RankingBoard() {
 
   return (
     <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full">
-      <UserFrame Leaderboard={rankingOrder(leaderboardData)} />
+      <UserFrame Leaderboard={rankingOrder(leaderboardData.users)} max_player={leaderboardData.max_player} />
     </div>
   );
 }

@@ -30,9 +30,10 @@ function App() {
     const initUser = async () => {
       try {
         const { data } = await authService.newUser();
-        setUser(data.data.user);
-        JWTManager.setToken(data.data.accessToken);
-        createSocketInstance(data.data.accessToken);
+        setUser(data.user);
+        console.log(data);
+        JWTManager.setToken(data.accessToken);
+        createSocketInstance(data.accessToken);
       } catch (error) {
         console.log(error);
       }
@@ -56,7 +57,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:codeRoom" element={<PlayingGameScreen />} />
+            <Route path="/:codeRoom" element={<PlayingGameScreen/>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
