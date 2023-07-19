@@ -2,7 +2,6 @@ import { Body, Controller, HttpStatus, Logger, Post, Res, ValidationPipe } from 
 import { ThemeService } from './theme.service';
 import { CreateThemeDTO } from './dto/createTheme';
 import { Response } from 'express';
-import { ResponseClient } from '../../common/types/responseClient';
 
 @Controller('themes')
 export class ThemeController {
@@ -19,21 +18,10 @@ export class ThemeController {
     try {
       const newTheme = await this.themeService.createNewTheme(themeInformation);
 
-      return response.status(HttpStatus.CREATED).json({
-        statusCode: HttpStatus.CREATED,
-        message: 'Create new theme successfully!',
-        success: true,
-        data: newTheme,
-      } as ResponseClient)
+      return response.status(HttpStatus.CREATED).json(newTheme);
     } catch (error) {
       this.logger.error(error);
-      this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        statusCode: error.statusCode | 500,
-        message: 'Anything is wrong!',
-        success: false,
-        data: {},
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 }

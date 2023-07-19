@@ -31,7 +31,7 @@ export default function RankingBoard() {
     try {
       const { data } = await playService.roomParticipants(codeRoom);
       console.log({ data });
-      setLeaderboardData(data.data);
+      setLeaderboardData(data);
     } catch (error) {
       console.log({ error });
     }

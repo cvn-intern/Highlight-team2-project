@@ -1,12 +1,9 @@
 import { Body, Controller, Get, HttpStatus, Logger, Post, Res, ValidationPipe } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserGuestDTO } from '../user/dto/createUserGuest';
-import { ResponseClient } from '../../common/types/responseClient';
 import { Response } from 'express';
 import { RedisService } from '../redis/redis.service';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
-import { UserInterface } from '../user/user.interface';
 import { UserService } from '../user/user.service';
 import { User } from '../user/user.entity';
 
@@ -43,12 +40,7 @@ export class AuthController {
       );
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        statusCode: error.statusCode | 500,
-        message: error,
-        success: false,
-        data: {},
-      } as ResponseClient);
+      return response.status(error.status).json(error);
     }
   }
 }

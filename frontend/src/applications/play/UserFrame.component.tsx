@@ -81,7 +81,7 @@ const UserFrame: React.FC<ProfileProps> = ({ Leaderboard }) => {
                         <p className="text-lg font-medium text-truncate dark:text-white">
                           {value.user.nickname}
                         </p>
-                        <p className="font-medium truncate text-md text-textBlueColor dark:text-gray-400">
+                        <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">
                           <strong>{value.score}</strong>
                           <span> pts</span>
                         </p>
