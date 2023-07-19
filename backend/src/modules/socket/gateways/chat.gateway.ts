@@ -92,6 +92,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
     @ConnectedSocket() client: SocketClass,
   ) {
     try {
+      
       const ROOM_CHAT: string = `${msgBody.codeRoom}-chat`;
 
       const chatContent: Chat = {
@@ -100,7 +101,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         type: TEXT_BLUE,
         icon: MESSAGECIRCLE_ICON,
       };
-
+      
       this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent)
     } catch (error) {
       this.logger.error(error);

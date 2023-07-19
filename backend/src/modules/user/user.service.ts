@@ -41,6 +41,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async getUserByIdProvider(idProvider: string): Promise<User> {
+    const userExisted = await this.userRepository.findOne({
+      where: {
+        id_provider: idProvider,
+      },
+    });
+
+    return userExisted;
+  }
+
   generateGuest(): UserInterface {
     const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = AVATAR_DEFAULT;

@@ -8,6 +8,7 @@ import authService from "@/shared/services/authService";
 import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
+import Providers from "./Providers";
 
 const client = new QueryClient();
 
@@ -53,15 +54,15 @@ function App() {
 
   return (
     <Suspense fallback="loading">
-      <QueryClientProvider client={client}>
+      <Providers>
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:codeRoom" element={<PlayingGameScreen/>} />
+            <Route path="/:codeRoom" element={<PlayingGameScreen />} />
           </Routes>
         </BrowserRouter>
-      </QueryClientProvider>
-    </Suspense>
+      </Providers>
+    </Suspense >
   );
 }
 

@@ -20,8 +20,10 @@ import {
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import AvatarCard from "./AvatarCard.component";
+import { useUserStore } from "@/shared/stores/userStore";
 
 const CustomAvatar = () => {
+  const {user} = useUserStore()
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
 
@@ -30,13 +32,12 @@ const CustomAvatar = () => {
   };
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
-
   return (
     <div className="relative">
-      <Avatar className="w-fit h-[200px]">
+      <Avatar className="w-fit h-[180px]">
         <AvatarImage
-          className="w-[180px] object-contain"
-          src={avatarImages[selectedAvatar]}
+          className="w-full h-full object-cover"
+          src={user?.avatar ?? avatarImages[selectedAvatar]}
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>

@@ -118,12 +118,12 @@ const BoxChatAnswer = ({ }: Props) => {
       setListChat(pre => [...pre, data])
     })
 
-    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
-      setListChat(pre => [...pre, data])
-    })
-
     socket?.on(`${codeRoom}-answer`, (data: Chat) => {
       setListAnswer(pre => [...pre, data])
+    })
+
+    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
+      setListChat(pre => [...pre, data])
     })
 
     return () => {
