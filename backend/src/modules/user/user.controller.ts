@@ -4,7 +4,6 @@ import { Response, Request } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
 import { getFileAvatars } from '../../common/utils/helper';
-import path from 'path';
 
 @Controller('users')
 export class UserController {
@@ -35,7 +34,7 @@ export class UserController {
     @Req() request: Request,
   ) {
     try {
-      const hostBE: string  = request.get('host');
+      const hostBE: string = request.get('host');
 
       const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
         return `http://${hostBE}/${avatar}`;

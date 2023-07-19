@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
 import { cn } from "@/shared/lib/utils";
-import { Check, Edit2 as EditIcon } from "lucide-react";
+import { Check, Edit2 as EditIcon, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Avatar,
@@ -31,7 +31,7 @@ const CustomAvatar = () => {
     try {
       setSelectedAvatar(avatarIndex);
 
-      const {data} = await userService.updateUser({
+      const { data } = await userService.updateUser({
         ...user,
         avatar: avatarImages[avatarIndex],
       })
@@ -65,6 +65,12 @@ const CustomAvatar = () => {
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
+      {!user?.is_guest && (
+        <Button className="flex items-center gap-2 bg-blue-700 h-9 mx-auto mt-2 hover:bg-red-400" style={{ borderRadius: '5px' }}>
+          <LogOut />
+          <span>LOG OUT</span>
+        </Button>
+      )}
 
       <Dialog>
         <DialogTrigger asChild>

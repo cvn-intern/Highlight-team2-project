@@ -6,8 +6,11 @@ import PlayForm from "./PlayForm.component";
 import CustomAvatar from "./CustomAvatar.component";
 import GoogleLoginButton from "./GoogleLoginButton";
 import DividerWithText from "@/shared/components/DividerWithText";
+import { useUserStore } from "@/shared/stores/userStore";
 
 const Homepage = () => {
+
+  const { user } = useUserStore()
   return (
     <MainLayout>
       <div className="w-full h-full flex flex-col items-center justify-center">
@@ -22,12 +25,15 @@ const Homepage = () => {
             <PlayForm />
           </div>
 
-          <DividerWithText className="mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
-            textClassname="text-lg w-20 h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
-
-          <div className="flex items-center justify-center gap-4 mt-10">
-            <GoogleLoginButton />
-          </div>
+          {user?.is_guest && (
+            <>
+              <DividerWithText className="mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
+                textClassname="text-lg w-20 h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
+              <div className="flex items-center justify-center gap-4 mt-10">
+                <GoogleLoginButton />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </MainLayout>

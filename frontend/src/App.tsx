@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PlayingGameScreen from "@/applications/play/Play";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { io } from "socket.io-client";
 import authService from "@/shared/services/authService";
 import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
@@ -11,17 +10,12 @@ import Providers from "./Providers";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const { socket, initSocket } = useSocketStore();
+  const { socket, createSocketInstance } = useSocketStore();
   const { setUser } = useUserStore();
 
   useEffect(() => {
-    const createSocketInstance = (token: string) => {
-      const socketInit = io(import.meta.env.VITE_REACT_SOCKET_URL as string, {
-        extraHeaders: {
-          authorization: token,
-        },
-      });
-      initSocket(socketInit);
+    const initSocket = (token: string) => {
+      createSocketInstance(token)
       setLoading(false);
     };
 
@@ -29,9 +23,9 @@ function App() {
       try {
         const { data } = await authService.newUser();
         setUser(data.user);
-        console.log(data);
+
         JWTManager.setToken(data.accessToken);
-        createSocketInstance(data.accessToken);
+        initSocket(data.accessToken);
       } catch (error) {
         console.log(error);
       }
@@ -42,7 +36,7 @@ function App() {
     if (!token && !socket) {
       initUser();
     } else if (token && user) {
-      createSocketInstance(token);
+      initSocket(token);
       setUser(JSON.parse(user));
     }
   }, []);
