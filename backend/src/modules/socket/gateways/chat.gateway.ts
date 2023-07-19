@@ -1,85 +1,129 @@
-import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { SubscribeMessage, MessageBody, ConnectedSocket, WsException, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
-import { UserService } from 'src/modules/user/user.service';
-import { SocketService } from '../socket.service';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { extractIdRoom } from '../../../common/utils/helper';
+import { ANSWER_ROOM_CHANNEL, CHAT_ROOM_CHANNEL, INFO_ICON, JOIN_ROOM_CHANNEL, LEAVE_ROOM_CHANNEL, LOGOUT_ICON, MESSAGECIRCLE_ICON, TEXT_BLUE, TEXT_GREEN, TEXT_RED } from '../constant';
+import { SocketClass } from '../socket.class';
+import { Socket } from 'socket.io';
+import { Chat } from '../types/chat';
+import { MessageBodyType } from '../types/messageBody';
 
-interface MessageBodyInterface {
-  codeRoom: string;
-  message: string;
-}
+export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
-interface Chat {
-  user: string;
-  content: string;
-  type: string;
-  icon: string;
-}
+  async handleDisconnect(@ConnectedSocket() client: any) {
+    try {
+      this.socketService.removeClientDisconnection(client);
 
-export class ChatGateway extends SocketGateway {
-  @SubscribeMessage('join-room')
+      const payload = await this.socketService.extractPayload(client);
+
+      if (!payload) {
+        this.logger.warn(`${client.id} invalid credential!`);
+        return;
+      }
+
+      const user = await this.userService.getUserById(payload.id);
+
+      if (user) {
+        const codeRoom = await this.redisService.getObjectByKey(
+          `USER:${user.id}:ROOM`,
+        );
+
+        client.leave(codeRoom);
+
+        if (codeRoom !== null) {
+          const idRoom = extractIdRoom(codeRoom);
+          await this.roomUserService.deleteRoomUser(idRoom, user.id);
+        }
+
+        const ROOM_LEAVE = `${codeRoom}-leave`
+
+        this.server.in(codeRoom).emit(ROOM_LEAVE, {
+          user: user.nickname,
+          content: 'left',
+          type: TEXT_RED,
+          icon: LOGOUT_ICON,
+        });
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
+      }
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  handleConnection(@ConnectedSocket() client: Socket) {
+    try {
+      this.socketService.storeClientConnection(client);
+    } catch (error) {
+      this.logger.error(error);
+    }
+  }
+
+  @SubscribeMessage(JOIN_ROOM_CHANNEL)
   async handleJoinRoom(
     @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: SocketClass,
   ) {
-    const payload = await this.socketService.extractPayload(client);
-    const user = await this.userService.getUserById(payload.id);
-    
-    if(user) {
-      await this.redisService.setObjectByKeyValue(`USER:${user.id}:ROOM`, codeRoom, expireTimeOneDay);
-      
+    try {
+      await this.roomService.getRoomByCodeRoom(codeRoom);
+
+      await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
+
       client.join(codeRoom);
-  
-      if(codeRoom !== null) {
-        const idRoom = extractIdRoom(codeRoom);
-        await this.roomUserService.createNewRoomUser(idRoom, user.id);
-      }
-  
-      this.server.in(codeRoom).emit(codeRoom, {
-        user: user.nickname,
+
+      const idRoom = extractIdRoom(codeRoom);
+      await this.roomUserService.createNewRoomUser(idRoom, client.user.id);
+
+      const chatContent: Chat = {
+        user: client.user.nickname,
         content: 'joined',
-        type: 'text-green-400',
-        icon: 'Info',
-      } as Chat);
+        type: TEXT_GREEN,
+        icon: INFO_ICON,
+      };
+
+      this.server.in(codeRoom).emit(codeRoom, chatContent);
+    } catch (error) {
+      this.logger.error(error);
     }
   }
 
-  @SubscribeMessage('chat')
+  @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(
-    @MessageBody() msgBody: MessageBodyInterface,
-    @ConnectedSocket() client: Socket,
+    @MessageBody() msgBody: MessageBodyType,
+    @ConnectedSocket() client: SocketClass,
   ) {
-    const payload = await this.socketService.extractPayload(client);
-    const user = await this.userService.getUserById(payload.id);
+    try {
+      const ROOM_CHAT: string = `${msgBody.codeRoom}-chat`;
 
-    if(user) {
-      this.server.in(msgBody.codeRoom).emit(`${msgBody.codeRoom}-chat`, {
-        user: user.nickname,
+      const chatContent: Chat = {
+        user: client.user.nickname,
         content: msgBody.message,
-        type: 'text-blue-600',
-        icon: 'MessageCircle',
-      } as Chat)
+        type: TEXT_BLUE,
+        icon: MESSAGECIRCLE_ICON,
+      };
+
+      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent)
+    } catch (error) {
+      this.logger.error(error);
     }
   }
 
-  @SubscribeMessage('leave-room')
+  @SubscribeMessage(LEAVE_ROOM_CHANNEL)
   async handleLeaveRoom(
     @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: Socket,
+    @ConnectedSocket() client: SocketClass,
   ) {
-    const payload = await this.socketService.extractPayload(client);
-    const user = await this.userService.getUserById(payload.id);
-
-    if(user) {
-      client.to(codeRoom).emit(`${codeRoom}-leave`, {
-        user: user.nickname,
+    try {
+      const chatContent: Chat = {
+        user: client.user.nickname,
         content: 'left',
-        type: 'text-neutral-600',
-        icon: 'LogOut',
-      } as Chat);
+        type: TEXT_RED,
+        icon: LOGOUT_ICON,
+      };
+
+      client.to(codeRoom).emit(`${codeRoom}-leave`, chatContent);
       client.leave(codeRoom);
+    } catch (error) {
+      this.logger.error(error);
     }
   }
 }

@@ -6,11 +6,13 @@ import { ConfigModule } from '@nestjs/config';
 import { SocketGateway } from './gateways/socket.gateway';
 import { UserModule } from '../user/user.module';
 import { ChatGateway } from './gateways/chat.gateway';
-import { RoomUserModule } from '../roomUser/roomUser.module';
-import { RoomUserService } from '../roomUser/roomUser.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { RoomUser } from '../roomUser/roomUser.entity';
 import { DrawGateway } from './gateways/draw.gateway';
+import { RoomUserModule } from '../room-user/roomUser.module';
+import { RoomUser } from '../room-user/roomUser.entity';
+import { RoomUserService } from '../room-user/roomUser.service';
+import { RoomModule } from '../room/room.module';
+import { AnswerGateway } from './gateways/answer.gateway';
 
 @Module({
   imports: [
@@ -20,10 +22,11 @@ import { DrawGateway } from './gateways/draw.gateway';
     UserModule,
     RedisModule,
     RoomUserModule,
+    RoomModule,
     TypeOrmModule.forFeature([RoomUser])
   ],
   controllers: [],
-  providers: [SocketGateway, SocketService, Logger, DrawGateway, ChatGateway, RoomUserService],
+  providers: [SocketGateway, SocketService, Logger, DrawGateway, ChatGateway, RoomUserService, AnswerGateway],
   exports: [SocketService],
 })
 export class SocketModule {}

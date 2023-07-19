@@ -37,3 +37,25 @@ export type Point = {
 };
 
 export type PenStyleType = "circle" | "line" | "bucket" | "picker" | "brush" | "eraser" | "rectangle" | "triangle";
+
+export type StartDraw = {
+  point: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  brushSize: number,
+}
+
+export type StartDraw = {
+  point: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  brushSize: number,
+}
+
+export type Drawing = {
+  currentPoint: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  snapshot: ImageData | undefined,
+  isFill: boolean,
+}

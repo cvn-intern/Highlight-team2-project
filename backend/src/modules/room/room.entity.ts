@@ -1,11 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
+import { AfterInsert, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn, Unique, getConnection } from "typeorm";
 import { Theme } from "../theme/theme.entity";
 import { User } from "../user/user.entity";
 import { Language } from "../language/language.entity";
 
 @Entity('room')
 export class Room {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({unique: true})

@@ -64,13 +64,14 @@ const PlayForm = () => {
           language,
         });
 
-        setUser(data.data.user);
+        setUser(data);
       }
 
       const { data } = await playService.quickPlay();
-      navigate("/" + data.data.code_room);
 
-      socket?.emit("join-room", data.data.code_room);
+      navigate("/" + data);
+
+      socket?.emit("join-room", data);
     } catch (error) {
       console.log({ error });
     }
