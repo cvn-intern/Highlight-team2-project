@@ -45,17 +45,24 @@ export type StartDraw = {
   brushSize: number,
 }
 
-export type StartDraw = {
+export type Drawing = {
+  currentPoint: Point,
+  color: RGBAColorType,
+  penStyle: string,
+  snapshot: ImageData ,
+  isFill: boolean,
+}
+export type SocketStartDraw = {
   point: Point,
   color: RGBAColorType,
   penStyle: string,
   brushSize: number,
 }
 
-export type Drawing = {
+export type SocketDrawing = {
   currentPoint: Point,
   color: RGBAColorType,
   penStyle: string,
-  snapshot: ImageData | undefined,
   isFill: boolean,
 }
+

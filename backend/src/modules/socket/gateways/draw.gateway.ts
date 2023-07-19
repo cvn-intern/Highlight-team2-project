@@ -1,7 +1,7 @@
 import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketGateway } from './socket.gateway';
-import { DRAWING_CHANNEL, FINISH_DRAWING_CHANNEL, RESET_CANVAS_CHANNEL, START_DRAWING_CHANNEL } from '../constant';
+import { DRAWING_CHANNEL, FINISH_DRAWING_CHANNEL, CLEAR_CANVAS_CHANNEL, START_DRAWING_CHANNEL } from '../constant';
 import { Drawing, StartDraw } from '../types/drawBody';
 
 
@@ -29,10 +29,11 @@ export class DrawGateway extends SocketGateway {
     client.broadcast.emit('other-finish-drawing')
   }
 
-  @SubscribeMessage(RESET_CANVAS_CHANNEL)
+  @SubscribeMessage(CLEAR_CANVAS_CHANNEL)
   handleResetCanvas(
     @ConnectedSocket() client: Socket,
   ): void {
-    client.broadcast.emit('reset-canvas')
+    client.broadcast.emit('other-clear-canvas')
   }
+  
 }

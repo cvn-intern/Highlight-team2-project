@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { PaintContext } from "@/applications/play/Play";
-import { resetCanvas } from "@/applications/play/draw.helper";
 import BtnChosePenStyle from "./BtnChosePenStyle.component";
 // Components
 import {
@@ -17,9 +16,11 @@ import {
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 import ColorPicker from "./ColorPicker.component";
+import { useSocket } from "@/shared/hooks/useSocketEvents";
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);
+  const { handleClickClearCanvas } = useSocket() as {handleClickClearCanvas(): void}
   if (!variables) return null;
   const {
     ctx,
@@ -57,10 +58,6 @@ export default function PaintTools() {
   };
   const handleChoseColorPicker = () => {
     setPenStyle("picker");
-  };
-  const handleClearCanvas = () => {
-    if (!ctx) return;
-    resetCanvas(ctx);
   };
   const handleSaveCanvasAsImage = () => {
     if (!ctx) return;
@@ -144,7 +141,7 @@ export default function PaintTools() {
         buttonContent={<CopyX color={"#848484"} size={28} strokeWidth={2} />}
         buttonVariant={"link"}
         buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
-        onYesClick={handleClearCanvas}
+        onYesClick={handleClickClearCanvas}
         Icon={AlertIcon}
         confirmText="Yes"
         cancelText="No"

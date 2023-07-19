@@ -2,6 +2,7 @@
 import { rgbaToHex } from "@/shared/lib/colors";
 import { DEFAULT_WHITE } from "./constants/color";
 import { Point, RGBAColorType } from "./draw";
+import { MouseEvent } from "react";
 
 export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
   if (!ctx) return;
@@ -243,4 +244,12 @@ export const pickColor = (
   const a = dataImage.data[3] / 255;
   const color = { r, g, b, a };
   setColor(color);
+};
+
+export const getPointFromEvent = (
+  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+): Point => {
+  const x = e.nativeEvent.offsetX;
+  const y = e.nativeEvent.offsetY;
+  return { x, y };
 };

@@ -4,7 +4,7 @@ export const LEAVE_ROOM_CHANNEL: string = 'leave-room';
 export const START_DRAWING_CHANNEL: string = 'start-drawing';
 export const DRAWING_CHANNEL: string = 'drawing';
 export const FINISH_DRAWING_CHANNEL: string = 'finish-drawing';
-export const RESET_CANVAS_CHANNEL: string = 'reset-canvas';
+export const CLEAR_CANVAS_CHANNEL: string = 'clear-canvas';
 export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
 
 // type message
