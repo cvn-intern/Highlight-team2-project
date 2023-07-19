@@ -11,7 +11,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { ILeaderboard } from "../RankingBoard";
+import { ILeaderboard } from "./RankingBoard.component";
 import ProfileLabel from "@/shared/assets/ProfileLabel.png";
 
 type Props = {

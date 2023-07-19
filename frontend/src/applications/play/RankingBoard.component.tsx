@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import UserFrame from "./UserFrame";
+import UserFrame from "./UserFrame.component";
 import { LucideIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 import playService from "@/shared/services/playService";

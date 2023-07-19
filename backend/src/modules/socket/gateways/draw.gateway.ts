@@ -2,32 +2,8 @@ import { SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websocke
 import { Server, Socket } from 'socket.io';
 import { SocketGateway } from './socket.gateway';
 import { DRAWING_CHANNEL, FINISH_DRAWING_CHANNEL, RESET_CANVAS_CHANNEL, START_DRAWING_CHANNEL } from '../constant';
+import { Drawing, StartDraw } from '../types/drawBody';
 
-interface Point {
-  x: number;
-  y: number;
-};
-
-export type RGBAColorType = {
-  r: number;
-  g: number;
-  b: number;
-  a: number;
-};
-
-interface StartDraw {
-  point: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  brushSize: number,
-}
-
-interface Drawing {
-  currentPoint: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  isFill: boolean,
-}
 
 export class DrawGateway extends SocketGateway {
   @SubscribeMessage(START_DRAWING_CHANNEL)
