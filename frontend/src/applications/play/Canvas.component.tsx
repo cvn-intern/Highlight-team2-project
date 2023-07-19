@@ -1,4 +1,4 @@
-import { MouseEvent, useContext, useEffect } from "react";
+import { MouseEvent, useContext } from "react";
 import { PaintContext } from "@/applications/play/Play";
 import cursorsIconMap from "./constants/cursorsIconMap";
 // Functions
