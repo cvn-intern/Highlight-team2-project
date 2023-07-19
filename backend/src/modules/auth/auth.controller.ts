@@ -62,7 +62,7 @@ export class AuthController {
       if (!tokenPayload) throw new BadRequestException("Login google failed")
 
       const existingUser = await this .userService.getUserByIdProvider(tokenPayload.sub)
-      
+
       if(existingUser)  return response.status(HttpStatus.OK).json(existingUser);
 
       const updatedUser = await this.userService.updateUser({
