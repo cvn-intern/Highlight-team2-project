@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Edit2, LucideIcon, MessageCircle, Pencil } from "lucide-react"
+import { LucideIcon, MessageCircle, Pencil } from "lucide-react"
 import './styles/style.css'
 import { iconsMap } from './constants/icons'
 import { useSocketStore } from '@/shared/stores/socketStore'

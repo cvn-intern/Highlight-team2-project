@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import PlayingGameScreen from "@/applications/play/Play";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
@@ -9,8 +8,6 @@ import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-
-const client = new QueryClient();
 
 function App() {
   const [loading, setLoading] = useState(true);
