@@ -20,9 +20,11 @@ import {
 import AvatarCard from "./AvatarCard.component";
 import { useUserStore } from "@/shared/stores/userStore";
 import userService from "@/shared/services/userService";
+import authService from "@/shared/services/authService";
+import JWTManager from "@/shared/lib/jwt";
 
 const CustomAvatar = () => {
-  const { user, setUser } = useUserStore()
+  const { user, setUser, deleteUser } = useUserStore()
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
   const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
@@ -56,6 +58,18 @@ const CustomAvatar = () => {
   })
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+
+      JWTManager.deleteToken();
+      deleteUser();
+      window.location.reload();
+    } catch(error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="relative">
       <Avatar className="w-fit h-[180px]">
@@ -66,7 +80,7 @@ const CustomAvatar = () => {
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
       {!user?.is_guest && (
-        <Button className="flex items-center gap-2 bg-blue-700 h-9 mx-auto mt-2 hover:bg-red-400" style={{ borderRadius: '5px' }}>
+        <Button className="flex items-center gap-2 bg-blue-700 h-9 mx-auto mt-2 hover:bg-red-400" style={{ borderRadius: '5px' }} onClick={handleLogout}>
           <LogOut />
           <span>LOG OUT</span>
         </Button>

@@ -8,7 +8,6 @@ import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { RedisService } from '../redis/redis.service';
-import { error } from 'console';
 
 const DAY_OF_YEAR = 365;
 
@@ -35,7 +34,7 @@ export class AuthController {
         id: user.id
       });
 
-      await this.redisService.setObjectByKeyValue(`USER:${user.id}`, accessToken, expireTimeOneDay);
+      await this.redisService.setObjectByKeyValue(`USER:${user.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
 
       return response.status(HttpStatus.OK).json(
         {
@@ -73,7 +72,7 @@ export class AuthController {
           throw new HttpException('Logined in another device!', HttpStatus.NOT_ACCEPTABLE);
         }
 
-        await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}`, accessToken, expireTimeOneDay);
+        await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
 
         return response.status(HttpStatus.OK).json({
           user: existingUser,
@@ -94,7 +93,7 @@ export class AuthController {
         id: userId,
       });
 
-      await this.redisService.setObjectByKeyValue(`USER:${updatedUser.id}`, accessToken, expireTimeOneDay);
+      await this.redisService.setObjectByKeyValue(`USER:${updatedUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
 
       return response.status(HttpStatus.OK).json({
         user: updatedUser,
@@ -113,11 +112,10 @@ export class AuthController {
     @IdUser() idUser: number,
   ) {
     try {
-      const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:BLOCKLIST`);
-
+      const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
       await this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAY_OF_YEAR);
       await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
 
       return response.status(HttpStatus.OK).json();
     } catch (error) {

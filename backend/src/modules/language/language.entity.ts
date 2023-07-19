@@ -1,4 +1,4 @@
-import { AfterLoad, Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, getConnection } from "typeorm";
 
 @Entity('language')
 export class Language {

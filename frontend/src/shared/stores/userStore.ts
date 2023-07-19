@@ -14,7 +14,8 @@ export interface IUser{
 
 interface UserState {
   user: null | IUser
-  setUser: (data: IUser) => void;
+  setUser: (data: IUser) => void
+  deleteUser: () => void
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -22,5 +23,9 @@ export const useUserStore = create<UserState>((set) => ({
   setUser: (data) => {
     set((state) => ({ ...state, user: data }))
     window.localStorage.setItem('user',JSON.stringify(data))
+  },
+  deleteUser: () => {
+    set((state) => ({ ...state, user: null }));
+    window.localStorage.removeItem('user');
   },
 }));

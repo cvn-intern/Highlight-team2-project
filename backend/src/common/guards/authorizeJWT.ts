@@ -1,6 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
+import { RedisService } from "src/modules/redis/redis.service";
 import { UserService } from "src/modules/user/user.service";
 
 @Injectable()
@@ -16,7 +17,12 @@ export class AuthorizeJWT implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const authHeader = request.header('Authorization');
     const jwtToken = authHeader && authHeader.split(' ')[1];
+    const isInBlocklist = await this.userService.checkAccessTokenOfUserInBlocklist(jwtToken);
 
+    if(isInBlocklist) {
+      return false;
+    }
+    
     try {
       const secret = this.configService.get<string>('JWT_ACCESSKEY');
       const payload = await this.jwtService.verify(jwtToken, { secret: secret, });
