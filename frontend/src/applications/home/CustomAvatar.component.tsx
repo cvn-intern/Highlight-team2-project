@@ -9,11 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
-
 import { cn } from "@/shared/lib/utils";
 import { Check, Edit2 as EditIcon } from "lucide-react";
-import { useState } from "react";
-import { avatarImages } from "./constants";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -21,15 +19,41 @@ import {
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import AvatarCard from "./AvatarCard.component";
 import { useUserStore } from "@/shared/stores/userStore";
+import userService from "@/shared/services/userService";
 
 const CustomAvatar = () => {
-  const {user} = useUserStore()
+  const { user, setUser } = useUserStore()
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
+  const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
 
-  const handleConfirmAvatar = () => {
-    setSelectedAvatar(avatarIndex);
+  const handleConfirmAvatar = async () => {
+    try {
+      setSelectedAvatar(avatarIndex);
+
+      const {data} = await userService.updateUser({
+        ...user,
+        avatar: avatarImages[avatarIndex],
+      })
+
+      setUser(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  useEffect(() => {
+    const getAvatarsDefault = async () => {
+      try {
+        const { data } = await userService.getAvatars();
+        setAvatarImages(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getAvatarsDefault();
+  })
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
   return (
