@@ -9,7 +9,6 @@ import {
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
-import emptyPerson from "@/shared/assets/emptyPerson.jpg";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 
 interface ProfileProps {
@@ -17,7 +16,7 @@ interface ProfileProps {
   max_player: number;
 }
 
-const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
+const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
