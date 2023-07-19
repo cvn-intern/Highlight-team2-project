@@ -5,6 +5,11 @@ export interface IUser{
   nickname: string
   avatar: string
   language: 'en' | 'vn'
+  id_provider: string
+  is_guest: boolean
+  provider: string
+  created_at: Date;
+  updated_at: Date;
 }
 
 interface UserState {

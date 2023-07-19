@@ -1,14 +1,14 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Res, ValidationPipe } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserGuestDTO } from '../user/dto/createUserGuest';
-import { ResponseClient } from '../../common/types/responseClient';
-import { Response } from 'express';
-import { RedisService } from '../redis/redis.service';
+import { BadRequestException, Body, Controller, Get, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
+import { IdUser } from 'src/common/decorators/idUser';
+import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
+import { ResponseClient } from '../../common/types/responseClient';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
-import { UserInterface } from '../user/user.interface';
-import { UserService } from '../user/user.service';
+import { RedisService } from '../redis/redis.service';
 import { User } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
 
 @Controller('/auth')
 export class AuthController {
@@ -49,6 +49,35 @@ export class AuthController {
         success: false,
         data: {},
       } as ResponseClient);
+    }
+  }
+
+  @Post('google/login')
+  @UseGuards(AuthorizeJWT)
+  async handleGoogleLogin(@Body('token') token: string,
+    @IdUser() userId: number,
+    @Res() response: Response) {
+    try {
+      const tokenPayload = await this.authService.verifyGoogleLogin(token)
+      if (!tokenPayload) throw new BadRequestException("Login google failed")
+
+      const existingUser = await this .userService.getUserByIdProvider(tokenPayload.sub)
+      
+      if(existingUser)  return response.status(HttpStatus.OK).json(existingUser);
+
+      const updatedUser = await this.userService.updateUser({
+        id: userId,
+        nickname: tokenPayload.name,
+        avatar: tokenPayload.picture,
+        id_provider: tokenPayload.sub,
+        provider: 'google',
+        is_guest: false
+      })
+
+      return response.status(HttpStatus.OK).json(updatedUser);
+    } catch (error) {
+      this.logger.error(error)
+      return response.status(error.status).json(error);
     }
   }
 }

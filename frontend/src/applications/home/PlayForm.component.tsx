@@ -27,7 +27,7 @@ import playService from "@/shared/services/playService";
 import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import authService from "@/shared/services/authService";
-import React from "react";
+import React, { useEffect } from "react";
 
 const formSchema = z.object({
   nickname: z.string().min(2).max(50),
@@ -77,6 +77,12 @@ const PlayForm = () => {
       console.log({ error });
     }
   };
+
+  useEffect(() => {
+    if (!user) return
+    form.setValue("nickname", user.nickname)
+    form.setValue("language", user.language)
+  }, [user])
 
   return (
     <Form {...form}>
