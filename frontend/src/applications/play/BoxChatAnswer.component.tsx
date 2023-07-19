@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Edit2, LucideIcon, MessageCircle, Pencil } from "lucide-react"
+import { LucideIcon, MessageCircle, Pencil } from "lucide-react"
 import './styles/style.css'
 import { iconsMap } from './constants/icons'
 import { useSocketStore } from '@/shared/stores/socketStore'
@@ -118,12 +118,13 @@ const BoxChatAnswer = ({ }: Props) => {
       setListChat(pre => [...pre, data])
     })
 
-    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
-      setListChat(pre => [...pre, data])
+    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
+      console.log(data);
+      setListAnswer(pre => [...pre, data])
     })
 
-    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
-      setListAnswer(pre => [...pre, data])
+    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
+      setListChat(pre => [...pre, data])
     })
 
     return () => {
