@@ -9,14 +9,14 @@ import {
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
-import emptyPerson from "@/shared/assets/emptyPerson.jpg";
+import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
   max_player: number;
 }
 
-const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
+const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
@@ -98,27 +98,18 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
         </FlipMove>
         {/* Render empty slots */}
         {emptySlots > 0 && Array.from({ length: emptySlots }).map((_item, index) => (
-            <li key={index} className="flex py-3 sm:py-4">
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-4 w-[40px]"></div>
-                <div className="flex items-center w-full space-x-4">
-                  <Avatar className="relative flex items-center w-[60px] h-auto overflow-visible bg-yellow-300">
-                    <AvatarImage
-                      src={emptyPerson}
-                      alt="avatar"
-                      className="rounded-full"
-                    />
-                    <AvatarFallback>Avatar</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-2xl font-normal dark:text-white whitespace-nowrap">
-                      Empty Slot
-                    </p>
-                  </div>
+          <li key={index} className="flex py-3 sm:py-4">
+            <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-4 w-[40px]"></div>
+              <div className="flex items-center w-full space-x-4">
+                <Skeleton className="relative flex items-center w-[60px] h-[60px] overflow-visible bg-blue-200 rounded-full" />
+                <div className="flex-1 min-w-0">
+                <Skeleton className="relative flex items-center w-[100px] h-[20px] overflow-visible bg-blue-200" />
                 </div>
               </div>
-            </li>
-          ))}
+            </div>
+          </li>
+        ))}
       </>
     );
   };

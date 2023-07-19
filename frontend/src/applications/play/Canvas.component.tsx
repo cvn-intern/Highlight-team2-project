@@ -16,8 +16,8 @@ import {
 import { rgbaToHex } from "@/shared/lib/colors";
 import { Drawing, Point, StartDraw } from "./draw";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { useSocketEvents } from "@/shared/hooks/useSocketEvents";
-import { OTHER_DRAWING, OTHER_FINISH_DRAW, OTHER_START_DRAW } from "./constants/drawEvent";
+// import { useSocketEvents } from "@/shared/hooks/useSocketEvents";
+// import { OTHER_DRAWING, OTHER_FINISH_DRAW, OTHER_START_DRAW } from "./constants/drawEvent";
 
 export default function Canvas() {
   const variables = useContext(PaintContext);
@@ -125,13 +125,33 @@ export default function Canvas() {
     handleFinishDrawing()
   }
 
-  // useEffect(() => {
+  useEffect(() => {
 
-    useSocketEvents(OTHER_START_DRAW, (data: StartDraw) => handleStartDrawing(data))
-    useSocketEvents(OTHER_DRAWING, (data: Drawing) => handleDrawing(data))
-    useSocketEvents(OTHER_FINISH_DRAW, () => handleFinishDrawing())
- 
-  // }, [canvasRef, snapshot])
+    socket?.on("other-start-drawing", ({
+      point,
+      color,
+      penStyle,
+      brushSize,
+      }) => {    
+      handleStartDrawing({point, color, penStyle, brushSize})
+    });
+
+    socket?.on("other-drawing", ({currentPoint, color, penStyle, isFill})=> {
+      
+      snapshot && handleDrawing({currentPoint, color, penStyle, snapshot, isFill})
+    });
+
+    socket?.on("other-finish-drawing", () => {
+      handleFinishDrawing()
+    });
+
+
+    return () => {
+      socket?.off('other-start-drawing')
+      socket?.off('other-drawing')
+      socket?.off('other-finish-drawing')
+    }
+  }, [canvasRef, snapshot])
 
 
   return (
