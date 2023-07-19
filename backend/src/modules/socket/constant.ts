@@ -11,8 +11,13 @@ export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
 export const TEXT_GREEN = 'text-green-400';
 export const TEXT_BLUE = 'text-blue-400';
 export const TEXT_RED = 'text-red-400';
+export const TEXT_ORANGE = 'text-red-400';
+export const TEXT_ZINC = 'text-zinc-400';
 
 // icon
 export const INFO_ICON = 'Info';
 export const MESSAGECIRCLE_ICON = 'MessageCircle';
 export const LOGOUT_ICON = 'LogOut';
+export const CHECKCIRCLE_ICON = 'CheckCircle2';
+export const ZAP_ICON = 'Zap';
+export const XCIRLE_ICON = 'XCircle';

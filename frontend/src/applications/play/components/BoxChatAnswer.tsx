@@ -27,7 +27,7 @@ const Message = (props: MessageProps) => {
   const { icon: Icon } = props
 
   return (
-    <div className={cn(`text-blue-400 flex gap-2`, props.type)}>
+    <div className={cn('text-blue-400 flex gap-2', props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>
         {props.user}
@@ -58,12 +58,16 @@ const BoxChat = (props: BoxProps) => {
   const handleChat = (e: any) => {
     if (e.key === 'Enter') {
       if (inputChat.trim() !== '') {
-        if(props.label === 'chat') {
+        if (props.label === 'chat') {
           socket?.emit('chat-room', {
             codeRoom: codeRoom,
             message: inputChat,
           } as MessageBodyInterface)
         } else {
+          socket?.emit('answer-room', {
+            codeRoom: codeRoom,
+            message: inputChat,
+          } as MessageBodyInterface)
         }
 
         SetInputChat("")
@@ -111,18 +115,21 @@ const BoxChatAnswer = ({ }: Props) => {
     })
 
     socket?.on(`${codeRoom}-chat`, (data: Chat) => {
-      console.log(data);
       setListChat(pre => [...pre, data])
     })
 
     socket?.on(`${codeRoom}-leave`, (data: Chat) => {
-      console.log(data);
       setListChat(pre => [...pre, data])
+    })
+
+    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
+      setListAnswer(pre => [...pre, data])
     })
 
     return () => {
       socket?.off(codeRoom)
       socket?.off(`${codeRoom}-chat`)
+      socket?.off(`${codeRoom}-answer`)
       socket?.off(`${codeRoom}-leave`)
     }
   }, [socket])
