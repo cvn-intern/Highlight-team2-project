@@ -30,7 +30,7 @@ export default function RankingBoard() {
     if (!codeRoom) return;
     try {
       const { data } = await playService.roomParticipants(codeRoom);
-      console.log({ data });
+      console.log(data.data);
       setLeaderboardData(data.data);
     } catch (error) {
       console.log({ error });
