@@ -32,7 +32,6 @@ const CustomAvatar = () => {
   };
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
-  console.log({user})
   return (
     <div className="relative">
       <Avatar className="w-fit h-[180px]">

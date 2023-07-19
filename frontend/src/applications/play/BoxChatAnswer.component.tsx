@@ -119,7 +119,6 @@ const BoxChatAnswer = ({ }: Props) => {
     })
 
     socket?.on(`${codeRoom}-answer`, (data: Chat) => {
-      console.log(data);
       setListAnswer(pre => [...pre, data])
     })
 
