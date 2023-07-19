@@ -61,9 +61,13 @@ export class RoomController {
   ) {
     try {
       const idRoom: number = extractIdRoom(codeRoom);
+      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
       const users = await this.roomUserService.getListUserOfRoom(idRoom);
 
-      return response.status(HttpStatus.OK).json(JSON.parse(JSON.stringify(users).replaceAll('id_user', 'user')));
+      return response.status(HttpStatus.OK).json({
+        users: JSON.parse(JSON.stringify(users).replaceAll('id_user', 'user')),
+        max_player: room.max_player,
+      });
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);
