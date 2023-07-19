@@ -34,10 +34,6 @@ export default function RankingBoard() {
   });
   const { codeRoom } = useParams();
 
-  // const rankingOrder = (data: ILeaderboard[]) => {
-  //   return data.sort((a, b) => b.score - a.score);
-  // };
-
   const getRoomParticipants = async () => {
     if (!codeRoom) return;
     try {
