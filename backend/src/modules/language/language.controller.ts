@@ -30,7 +30,7 @@ export class LanguageController {
     try {
       await this.languageService.initLanguageForDb();
 
-      return response.status(HttpStatus.OK); 
+      return response.status(HttpStatus.OK).json(); 
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);

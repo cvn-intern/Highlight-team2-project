@@ -26,8 +26,8 @@ import { useUserStore } from "@/shared/stores/userStore";
 import playService from "@/shared/services/playService";
 import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import authService from "@/shared/services/authService";
 import { useEffect } from "react";
+import userService from "@/shared/services/userService";
 
 const formSchema = z.object({
   nickname: z.string().min(2).max(50),
@@ -59,7 +59,7 @@ const PlayForm = () => {
       const language = form.getValues("language");
 
       if (user?.nickname !== nickname || user?.language !== language) {
-        const { data } = await authService.updateUser({
+        const { data } = await userService.updateUser({
           ...user,
           nickname,
           language,

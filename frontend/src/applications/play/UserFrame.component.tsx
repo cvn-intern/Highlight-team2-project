@@ -29,7 +29,6 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
     triggerRef.current?.click();
   };
   const renderItem = (data: ProfileProps) => {
-
     const maxItems = data.max_player; // Maximum number of items to render
 
     // Calculate the number of empty slots
