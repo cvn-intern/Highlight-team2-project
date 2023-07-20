@@ -10,19 +10,21 @@ import {
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
-import { Home, PenLine } from "lucide-react";
+import { Home, Pencil, XCircle } from "lucide-react";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
   max_player: number;
-  host: boolean;
+  host_id: number;
   is_correct: boolean;
+  drawer_id: number
 }
 
 const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
+  const [isBlocked, setIsBlocked] = useState<boolean>(false);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const handleLinkClick = ({ user }: ILeaderboard) => {
     setUserSelected(user);
@@ -46,14 +48,14 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
               <li className="flex py-3 sm:py-4">
                 <div className="flex items-center w-full space-x-3">
                   <div
-                    className={"flex items-center space-x-4 w-[40px]"}>
-                    {!data.host && <PenLine color="#3f84f3" size={36} strokeWidth={3.5} />}
+                    className={"flex items-center space-x-4 w-[25px] 2xl:w-[40px]"}>
+                    {value.user.id === data.drawer_id && <Pencil color="#3f84f3" size={36} strokeWidth={3.5} />}
                   </div>
                   <div
                     className={cn(
                       "flex items-center space-x-4 justify-between w-full",
                       {
-                        "text-blue-600": data.host,
+                        "text-blue-600": data.drawer_id === value.user.id,
                         "text-green-500": data.is_correct,
                       }
                     )}
@@ -79,6 +81,8 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                             )}
                           ></div>
                         )}
+                        {isBlocked && <XCircle size={56} color="#f43e47" strokeWidth={2.5} className="h-4/5 w-4/5 rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />}
+                        
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <p className="text-lg font-medium text-truncate dark:text-white">
@@ -88,14 +92,14 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                           <strong>{value.score}</strong>
                           <span> pts</span>
                         </p>
-                        {data.host && (
+                        {false && (
                           <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">
                             <strong>{value.score}</strong><span> pts</span>
                           </p>
                         )}
                       </div>
                     </div>
-                    {data.host && <Home color="#2062fb" strokeWidth={2.5} size={36} />}
+                    {(value.user.id === data.host_id) && <Home color="#2062fb" strokeWidth={2.5} size={36} />}
                   </div>
                 </div>
               </li>
@@ -133,7 +137,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
       { }
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
-        <DialogDemo user={userSelected} />
+        <DialogDemo user={userSelected} isBlocked={isBlocked} setIsBlocked={setIsBlocked} />
       </Dialog>
     </div>
   );
