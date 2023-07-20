@@ -14,11 +14,11 @@ const Homepage = () => {
   return (
     <MainLayout>
       <div className="w-full h-fit flex flex-col items-center justify-center">
-        <Logo customClassname="max-md:mt-12"/>
-        <img src={SloganImg} alt="" className="slogan-width mt-5 slogan-responsive " />
+        <Logo customClassname="max-md:mt-12" />
+        <img src={SloganImg} alt="" className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5" />
 
-        <div className="w-[95%] h-full lg:w-[80%] lg:h-[70%] bg-white flex flex-col items-center mt-5 rounded-lg mb-5">
-          <img src={BannerImg} className="my-5 max-md:hidden " />
+        <div className="lg:w-[80%] lg:h-[70%] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%]   mt-5 rounded-2xl">
+          <img src={BannerImg} className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden" />
 
           <div className="flex items-center gap-4 home-content-responsive">
             <CustomAvatar />
@@ -30,10 +30,16 @@ const Homepage = () => {
               <DividerWithText className="mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
                 textClassname="text-lg w-20 h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
               <div className="flex items-center justify-center gap-4 mt-10 mb-8">
-                <GoogleLoginButton />
+                <DividerWithText className="mt-8 2xl:mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
+                  textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
+
+                <div className="flex items-center justify-center gap-4 mt-7 2xl:mt-10">
+                  <GoogleLoginButton />
+                </div>
               </div>
             </>
           )}
+
         </div>
       </div>
     </MainLayout>

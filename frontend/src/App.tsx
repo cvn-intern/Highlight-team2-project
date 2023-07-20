@@ -23,7 +23,6 @@ function App() {
       try {
         const { data } = await authService.newUser();
         setUser(data.user);
-
         JWTManager.setToken(data.accessToken);
         initSocket(data.accessToken);
       } catch (error) {
@@ -33,6 +32,7 @@ function App() {
 
     const token = JWTManager.getToken();
     const user = window.localStorage.getItem("user");
+    
     if (!token && !socket) {
       initUser();
     } else if (token && user) {

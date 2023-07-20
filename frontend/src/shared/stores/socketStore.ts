@@ -16,6 +16,7 @@ export const useSocketStore = create<SocketState>((set) => ({
       extraHeaders: {
         authorization: token,
       },
+      secure: true
     });
     return {...state, socket: socketInit}
   }),

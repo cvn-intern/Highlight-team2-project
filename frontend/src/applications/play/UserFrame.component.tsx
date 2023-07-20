@@ -45,7 +45,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
               <li className="flex py-3 sm:py-4">
                 <div className="flex items-center w-full space-x-3">
                   <div
-                    className={"flex items-center space-x-4 w-[40px]"}>
+                    className={"flex items-center space-x-4 w-[25px] 2xl:w-[40px]"}>
                     {!data.host && <PenLine color="#3f84f3" size={36} strokeWidth={3.5} />}
                   </div>
                   <div
@@ -80,7 +80,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                         )}
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-lg font-medium text-truncate dark:text-white">
+                        <p className="text-lg font-medium truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white">
                           {value.user.nickname}
                         </p>
                         <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">
