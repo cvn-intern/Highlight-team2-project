@@ -20,23 +20,21 @@ const Homepage = () => {
         <div className="lg:w-[80%] lg:h-[70%] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%]   mt-5 rounded-2xl">
           <img src={BannerImg} className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden" />
 
-          <div className="flex items-center gap-4 home-content-responsive">
+          <div className="flex items-center gap-4 md:gap-20 home-content-responsive">
             <CustomAvatar />
             <PlayForm />
           </div>
 
           {user?.is_guest && (
             <>
-              <DividerWithText className="mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
-                textClassname="text-lg w-20 h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
-              <div className="flex items-center justify-center gap-4 mt-10 mb-8">
-                <DividerWithText className="mt-8 2xl:mt-10 px-24 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
-                  textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
 
-                <div className="flex items-center justify-center gap-4 mt-7 2xl:mt-10">
-                  <GoogleLoginButton />
-                </div>
+              <DividerWithText className="mt-8 2xl:mt-10 md:px-24 px-10 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
+                textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
+
+              <div className="flex items-center justify-center gap-4 mt-7 2xl:mt-10 mb-10">
+                <GoogleLoginButton />
               </div>
+
             </>
           )}
 

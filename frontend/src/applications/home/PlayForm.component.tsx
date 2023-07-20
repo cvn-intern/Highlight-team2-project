@@ -137,7 +137,7 @@ const PlayForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-[205px] border-primaryTextColor border-2 h-12 font-bold text-lg rounded-xl">
+                  <SelectTrigger className="w-full border-primaryTextColor border-2 h-12 font-bold text-lg rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="border-primaryTextColor border-2 font-bold text-lg">
@@ -156,7 +156,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
@@ -166,7 +166,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />

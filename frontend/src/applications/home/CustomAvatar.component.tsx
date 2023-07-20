@@ -100,15 +100,15 @@ const CustomAvatar = () => {
         <DialogContent
           onCloseAutoFocus={handleResetAvatarIndex}
           onInteractOutside={handleResetAvatarIndex}
-          className="flex-col flex items-center sm:max-w-[955px]"
+          className="flex-col flex items-center max-w-[94vw] md:max-w-[955px] rounded-xl"
         >
           <DialogHeader>
             <DialogTitle className="text-5xl text-center text-headerTextColor mb-7">
-              <img src={AvatarHeader} className="w-52" alt=""></img>
+              <img src={AvatarHeader} className="w-44 md:w-52" alt=""></img>
             </DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto h-96 w-full">
-            <div className="grid grid-cols-5 gap-2 p-2 bg-gray-300">
+            <div className="grid md:grid-cols-5 grid-cols-2 gap-2 p-2 bg-gray-300">
               {avatarImages.map((img, index) => (
                 <AvatarCard
                   key={img}
