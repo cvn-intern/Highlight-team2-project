@@ -22,6 +22,8 @@ export interface ILeaderboard {
 interface RankingUser {
   users: ILeaderboard[],
   max_player: number;
+  host?: boolean;
+  is_correct?: boolean;
 }
 
 export default function RankingBoard() {
@@ -31,10 +33,6 @@ export default function RankingBoard() {
     max_player: 0,
   });
   const { codeRoom } = useParams();
-
-  const rankingOrder = (data: ILeaderboard[]) => {
-    return data.sort((a, b) => b.score - a.score);
-  };
 
   const getRoomParticipants = async () => {
     if (!codeRoom) return;
@@ -67,7 +65,7 @@ export default function RankingBoard() {
 
   return (
     <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full">
-      <UserFrame Leaderboard={rankingOrder(leaderboardData.users)} max_player={leaderboardData.max_player} />
+      <UserFrame Leaderboard={leaderboardData.users} max_player={leaderboardData.max_player} host={false} is_correct={false}/>
     </div>
   );
 }
