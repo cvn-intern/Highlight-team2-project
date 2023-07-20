@@ -72,7 +72,7 @@ const CustomAvatar = () => {
   }
   return (
     <div className="relative">
-      <Avatar className="w-fit h-[180px]">
+      <Avatar className="w-fit md:h-[180px] h-[120px]">
         <AvatarImage
           className="w-full h-full object-cover"
           src={user?.avatar ?? avatarImages[selectedAvatar]}
@@ -91,7 +91,7 @@ const CustomAvatar = () => {
           <Button
             variant="link"
             className={cn(
-              "w-10 h-10 rounded-full bg-[#22A699] hover:bg-[#148378] p-0 border-black absolute right-0 top-5"
+              "md:w-10 md:h-10 w-8 h-8 rounded-full bg-[#22A699] hover:bg-[#148378] p-0 border-black absolute right-0 md:top-5 top-4  "
             )}
           >
             <EditIcon fill="white" />
@@ -100,15 +100,15 @@ const CustomAvatar = () => {
         <DialogContent
           onCloseAutoFocus={handleResetAvatarIndex}
           onInteractOutside={handleResetAvatarIndex}
-          className="flex-col flex items-center sm:max-w-[955px]"
+          className="flex-col flex items-center max-w-[94vw] md:max-w-[955px] rounded-xl"
         >
           <DialogHeader>
             <DialogTitle className="text-5xl text-center text-headerTextColor mb-7">
-              <img src={AvatarHeader} className="w-52" alt=""></img>
+              <img src={AvatarHeader} className="w-44 md:w-52" alt=""></img>
             </DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto h-96 w-full">
-            <div className="grid grid-cols-5 gap-2 p-2 bg-gray-300">
+            <div className="grid md:grid-cols-5 grid-cols-2 gap-2 p-2 bg-gray-300">
               {avatarImages.map((img, index) => (
                 <AvatarCard
                   key={img}

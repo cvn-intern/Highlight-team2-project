@@ -139,6 +139,20 @@
   }
 }
 
+@layer components {
+  .slogan-width {
+    @apply w-[300px];
+  }
+
+  .slogan-responsive{
+    @apply max-md:hidden;
+  }
+
+  .home-content-responsive{
+    @apply max-md:flex-col md:gap-24 max-md:mt-10
+  }
+}
+
 #main-layout {
   background-image: url("./shared/assets/bg.png");
 }

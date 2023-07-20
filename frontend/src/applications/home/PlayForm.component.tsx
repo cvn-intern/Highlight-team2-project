@@ -52,7 +52,7 @@ const PlayForm = () => {
   });
 
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
-    if(formAction === 'quick-play') return handleQuickPlay()
+    if (formAction === 'quick-play') return handleQuickPlay()
   };
 
   const handleQuickPlay = async () => {
@@ -90,13 +90,13 @@ const PlayForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-5 2xl:space-y-8 w-[50%]"
+        className="space-y-2 md:space-y-5 2xl:space-y-8 md:w-[50%] w-[80%]"
       >
         <FormField
           control={form.control}
           name="nickname"
           render={({ field }) => (
-            <FormItem className="flex items-start text-slate-400">
+            <FormItem className="flex max-md:flex-col items-start text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-5">
                 <div>
                   <User2 size={28} strokeWidth={2} color={"#22A699"} />
@@ -123,7 +123,7 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex items-center text-slate-400">
+            <FormItem className="flex max-md:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />
@@ -137,7 +137,7 @@ const PlayForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-[205px] border-primaryTextColor border-2 h-12 font-bold text-lg rounded-xl">
+                  <SelectTrigger className="w-full border-primaryTextColor border-2 h-12 font-bold text-lg rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="border-primaryTextColor border-2 font-bold text-lg">
@@ -156,7 +156,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
@@ -166,7 +166,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
