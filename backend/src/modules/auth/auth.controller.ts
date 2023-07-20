@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { RedisService } from '../redis/redis.service';
 
-const DAY_OF_YEAR = 365;
+const DAYS_OF_YEAR = 365;
 
 @Controller('/auth')
 export class AuthController {
@@ -62,15 +62,15 @@ export class AuthController {
       const existingUser = await this.userService.getUserByIdProvider(tokenPayload.sub);
 
       if (existingUser) {
-        const accessToken = await this.authService.generateAccessToken({
-          id: existingUser.id
-        });
-
         const isLogin = await this.redisService.getObjectByKey(`USER:${existingUser.id}:ACCESSTOKEN`);
-
+        
         if (isLogin) {
           throw new HttpException('Logined in another device!', HttpStatus.NOT_ACCEPTABLE);
         }
+
+        const accessToken = await this.authService.generateAccessToken({
+          id: existingUser.id
+        });
 
         await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
 
@@ -113,7 +113,7 @@ export class AuthController {
   ) {
     try {
       const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-      await this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAY_OF_YEAR);
+      await this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
       await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
       await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
 

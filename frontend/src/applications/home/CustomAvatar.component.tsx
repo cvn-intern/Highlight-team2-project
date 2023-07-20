@@ -55,7 +55,7 @@ const CustomAvatar = () => {
     }
 
     getAvatarsDefault();
-  })
+  }, [])
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
 

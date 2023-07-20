@@ -1,10 +1,10 @@
-import { Column, Entity, PrimaryColumn, getConnection } from "typeorm";
+import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity('language')
 export class Language {
     @PrimaryColumn()
     code: string;
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     name: string;
 }

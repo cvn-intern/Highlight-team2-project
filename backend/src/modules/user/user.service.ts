@@ -68,10 +68,6 @@ export class UserService {
   async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
     const check = await this.redisService.getObjectByKey(`BLOCKLIST:${tokenUser}`);
 
-    if(!check) {
-      return false;
-    }
-
-    return true;
+    return check ? true : false;
   }
 }
