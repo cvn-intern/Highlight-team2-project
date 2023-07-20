@@ -87,6 +87,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -96,25 +97,48 @@
   .flexCenter {
     @apply flex items-center justify-center;
   }
+
   .flexBetween {
     @apply flex items-center justify-between;
   }
+
   .cursor-pencil {
     cursor: url("./shared/assets/icons/cursor/pencil.svg"), auto;
   }
+
   .cursor-eraser {
     cursor: url("./shared/assets/icons/cursor/eraser.svg"), auto;
   }
+
   .cursor-cross {
     cursor: url("./shared/assets/icons/cursor/cross.svg"), auto;
   }
+
   .cursor-bucket {
     cursor: url("./shared/assets/icons/cursor/bucket.svg"), auto;
   }
+
   .cursor-picker {
     cursor: url("./shared/assets/icons/cursor/picker.svg"), auto;
   }
+
+  @variants responsive {
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+  }
 }
+
 #main-layout {
   background-image: url("./shared/assets/bg.png");
 }

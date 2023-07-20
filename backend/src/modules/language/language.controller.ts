@@ -1,7 +1,6 @@
 import { Controller, Get, HttpStatus, Logger, Res } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { Response } from 'express';
-import { ResponseClient } from '../../common/types/responseClient';
 
 @Controller('languages')
 export class LanguageController {
@@ -20,11 +19,7 @@ export class LanguageController {
       return response.status(HttpStatus.OK).json(languages);
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        statusCode: error.statusCode | 500,
-        message: error,
-        success: false,
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 
@@ -35,15 +30,10 @@ export class LanguageController {
     try {
       await this.languageService.initLanguageForDb();
 
-      return response.status(HttpStatus.OK); 
+      return response.status(HttpStatus.OK).json(); 
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        statusCode: error.statusCode | 500,
-        message: 'Anything is wrong!',
-        success: false,
-        data: {},
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 }

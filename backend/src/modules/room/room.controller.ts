@@ -3,7 +3,6 @@ import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
-import { ResponseClient } from '../../common/types/responseClient';
 import { extractIdRoom } from '../../common/utils/helper';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
@@ -33,11 +32,7 @@ export class RoomController {
       return response.status(HttpStatus.OK).json(newRoom);
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        message: 'Something is wrong!',
-        statusCode: error.statusCode | 500,
-        success: false,
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 
@@ -53,11 +48,7 @@ export class RoomController {
       return response.status(HttpStatus.OK).json(room);
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        message: error,
-        statusCode: error.statusCode | 500,
-        success: false,
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 
@@ -70,21 +61,16 @@ export class RoomController {
   ) {
     try {
       const idRoom: number = extractIdRoom(codeRoom);
+      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
       const users = await this.roomUserService.getListUserOfRoom(idRoom);
 
       return response.status(HttpStatus.OK).json({
-        message: `Get list user of room ${codeRoom} successfully!`,
-        statusCode: HttpStatus.OK,
-        success: true,
-        data: JSON.parse(JSON.stringify(users).replaceAll('id_user', 'user')),
-      } as ResponseClient);
+        users: JSON.parse(JSON.stringify(users).replaceAll('id_user', 'user')),
+        max_player: room.max_player,
+      });
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | 500).json({
-        message: error,
-        statusCode: error.statusCode | 500,
-        success: false,
-      } as ResponseClient)
+      return response.status(error.status).json(error);
     }
   }
 }

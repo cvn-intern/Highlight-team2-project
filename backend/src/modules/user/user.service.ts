@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { UserInterface } from './user.interface';
 import { randomString } from '../../common/utils/helper';
 import { AVATAR_DEFAULT, LANGUAGE_DEFAULT } from './constant';
+import { RedisService } from '../redis/redis.service';
 
 const LENGTH_STRING_RANDOM: number = 6;
 
@@ -13,6 +14,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private redisService: RedisService,
   ) { }
 
   async getUserById(id: number): Promise<User> {
@@ -41,6 +43,16 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async getUserByIdProvider(idProvider: string): Promise<User> {
+    const userExisted = await this.userRepository.findOne({
+      where: {
+        id_provider: idProvider,
+      },
+    });
+
+    return userExisted;
+  }
+
   generateGuest(): UserInterface {
     const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = AVATAR_DEFAULT;
@@ -51,5 +63,11 @@ export class UserService {
       avatar: avatar,
       language: language,
     } as UserInterface;
+  }
+
+  async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
+    const check = await this.redisService.getObjectByKey(`BLOCKLIST:${tokenUser}`);
+
+    return check ? true : false;
   }
 }

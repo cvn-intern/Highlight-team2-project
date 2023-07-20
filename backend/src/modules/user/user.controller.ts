@@ -1,10 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Put, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Post, Put, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserGuestDTO } from './dto/createUserGuest';
-import { Response } from 'express';
-import { ResponseClient } from '../../common/types/responseClient';
+import { Response, Request } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
+import { getFileAvatars } from '../../common/utils/helper';
 
 @Controller('users')
 export class UserController {
@@ -25,11 +24,28 @@ export class UserController {
       return response.status(HttpStatus.OK).json(user);
     } catch (error) {
       this.logger.error(error);
-      return response.status(error.statusCode | HttpStatus.INTERNAL_SERVER_ERROR).json({
-        message: 'Something is wrong!',
-        success: false,
-        statusCode: error.statusCode | HttpStatus.INTERNAL_SERVER_ERROR,
-      } as ResponseClient);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @Get('/avatars')
+  async getAvatars(
+    @Res() response: Response,
+    @Req() request: Request,
+  ) {
+    try {
+      const hostBE: string = request.get('host');
+
+      const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
+        return `http://${hostBE}/${avatar}`;
+      });
+
+      return response.status(HttpStatus.OK).json(
+        avatars,
+      );
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status);
     }
   }
 }
