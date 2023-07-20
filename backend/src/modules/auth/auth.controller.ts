@@ -66,7 +66,7 @@ export class AuthController {
           id: existingUser.id
         });
 
-        const isLogin = await this.redisService.getObjectByKey(`USER:${existingUser.id}`);
+        const isLogin = await this.redisService.getObjectByKey(`USER:${existingUser.id}:ACCESSTOKEN`);
 
         if (isLogin) {
           throw new HttpException('Logined in another device!', HttpStatus.NOT_ACCEPTABLE);

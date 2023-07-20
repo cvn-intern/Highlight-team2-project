@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { RedisService } from "src/modules/redis/redis.service";
 import { UserService } from "src/modules/user/user.service";
 
 @Injectable()
