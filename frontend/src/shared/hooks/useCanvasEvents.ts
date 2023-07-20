@@ -19,7 +19,8 @@ const useDrawing = () => {
       setColor,
     } = variables;
   
-    const handleStartDraw = ({ point, color, penStyle, brushSize }: StartDraw): void => {
+    const handleStartDraw = ({ point, color, penStyle, brushSize, ctx }: StartDraw): void => {
+      
       if (!ctx) return;
       const canvas = ctx.canvas;
       if (penStyle === "bucket") {
@@ -38,11 +39,12 @@ const useDrawing = () => {
       }
       setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
       ctx.beginPath();
-      (penStyle === "brush" || penStyle === "circle") && drawFreeStyle(ctx, point, color);
+      (penStyle === "brush") && drawFreeStyle(ctx, point, color);
       penStyle === "eraser" && eraser(ctx, point);
     };
   
-    const handleDrawing = ({ currentPoint, color, penStyle, snapshot, isFill }: Drawing): void => {
+    const handleDrawing = ({ currentPoint, color, penStyle, snapshot, isFill, ctx }: Drawing): void => {
+      
       if (!ctx || !isDrawing) return;
       if (penStyle === "brush") {
         drawFreeStyle(ctx, currentPoint, color);

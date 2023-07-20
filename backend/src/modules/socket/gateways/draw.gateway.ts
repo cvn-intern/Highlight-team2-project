@@ -35,5 +35,20 @@ export class DrawGateway extends SocketGateway {
   ): void {
     client.broadcast.emit('other-clear-canvas')
   }
+
+  @SubscribeMessage('new-player')
+  handleNewPlayer(
+    @ConnectedSocket() client: Socket,
+  ): void {
+    client.broadcast.emit('get-other-canvas-state', client.id)
+  }
+
+  @SubscribeMessage('canvas-state')
+  handleGetCanvasState(
+    @MessageBody() {dataImg, id}: any,
+    @ConnectedSocket() client: Socket,
+  ): void {
+    this.server.to(id).emit('canvas-state-from-server', dataImg)
+  }
   
 }

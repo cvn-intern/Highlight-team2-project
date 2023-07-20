@@ -43,6 +43,7 @@ export type StartDraw = {
   color: RGBAColorType,
   penStyle: string,
   brushSize: number,
+  ctx: CanvasRenderingContext2D
 }
 
 export type Drawing = {
@@ -51,6 +52,7 @@ export type Drawing = {
   penStyle: string,
   snapshot: ImageData ,
   isFill: boolean,
+  ctx: CanvasRenderingContext2D
 }
 export type SocketStartDraw = {
   point: Point,
