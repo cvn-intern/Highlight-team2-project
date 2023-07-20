@@ -24,7 +24,7 @@ export function DialogDemo({ user, isBlocked, setIsBlocked }: Props) {
   if (!user) return null;
 
   function handleBlockClick(): void {
-    setIsBlocked(prev=>!prev);
+    setIsBlocked(prev => !prev);
   }
 
   return (
