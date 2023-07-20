@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react"
 import './styles/style.css'
 import { iconsMap } from './constants/icons'
@@ -55,24 +55,23 @@ const BoxChat = (props: BoxProps) => {
   const { socket } = useSocketStore()
   const codeRoom = window.location.href.split("/")[window.location.href.split("/").length - 1]
 
-  const handleChat = (e: any) => {
-    if (e.key === 'Enter') {
-      if (inputChat.trim() !== '') {
-        if (props.label === 'chat') {
-          socket?.emit('chat-room', {
-            codeRoom: codeRoom,
-            message: inputChat,
-          } as MessageBodyInterface)
-        } else {
-          socket?.emit('answer-room', {
-            codeRoom: codeRoom,
-            message: inputChat,
-          } as MessageBodyInterface)
-        }
-
-        SetInputChat("")
-      }
+  const handleSubmitMessage = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (inputChat.trim() === '') return
+    
+    if (props.label === 'chat') {
+      socket?.emit('chat-room', {
+        codeRoom: codeRoom,
+        message: inputChat,
+      } as MessageBodyInterface)
+    } else {
+      socket?.emit('answer-room', {
+        codeRoom: codeRoom,
+        message: inputChat,
+      } as MessageBodyInterface)
     }
+
+    SetInputChat("")
   }
 
   return (
@@ -88,12 +87,13 @@ const BoxChat = (props: BoxProps) => {
                 <Message key={index} user={ele.user} content={ele.content} type={ele.type} icon={iconsMap.get(ele.icon)} />
               ))
             }
-
           </div>
           <div className='relative'>
-            <input value={inputChat} onChange={(e) => SetInputChat(e.target.value)} onKeyDown={(e) => handleChat(e)}
-              id={'box-input-' + props.label} type="text" placeholder={props.placeholder}
-              className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 pl-10" />
+            <form onSubmit={handleSubmitMessage}>
+              <input value={inputChat} onChange={(e) => SetInputChat(e.target.value)}
+                id={'box-input-' + props.label} type="text" placeholder={props.placeholder}
+                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 pl-10" />
+            </form>
             <label htmlFor={'box-input-' + props.label} className='box-input-icon'>
               {Icon && <Icon />}
             </label>
