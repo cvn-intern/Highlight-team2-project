@@ -9,16 +9,22 @@ import DividerWithText from "@/shared/components/DividerWithText";
 import { useUserStore } from "@/shared/stores/userStore";
 
 const Homepage = () => {
-
-  const { user } = useUserStore()
+  const { user } = useUserStore();
   return (
     <MainLayout>
-      <div className="w-full h-fit flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center w-full">
         <Logo customClassname="max-md:mt-12" />
-        <img src={SloganImg} alt="" className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5" />
+        <img
+          src={SloganImg}
+          alt=""
+          className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
+        />
 
         <div className="lg:w-[80%] lg:h-[70%] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%]   mt-5 rounded-2xl">
-          <img src={BannerImg} className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden" />
+          <img
+            src={BannerImg}
+            className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden"
+          />
 
           <div className="flex items-center gap-4 md:gap-20 home-content-responsive">
             <CustomAvatar />
@@ -27,17 +33,18 @@ const Homepage = () => {
 
           {user?.is_guest && (
             <>
+              <DividerWithText
+                className="px-10 mt-8 2xl:mt-10 md:px-24 lg:px-40"
+                text="LOGIN"
+                dividerClassname="text-red-400"
+                textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor"
+              />
 
-              <DividerWithText className="mt-8 2xl:mt-10 md:px-24 px-10 lg:px-40" text="LOGIN" dividerClassname="text-red-400"
-                textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor" />
-
-              <div className="flex items-center justify-center gap-4 mt-7 2xl:mt-10 mb-10">
+              <div className="flex items-center justify-center gap-4 mb-10 mt-7 2xl:mt-10">
                 <GoogleLoginButton />
               </div>
-
             </>
           )}
-
         </div>
       </div>
     </MainLayout>

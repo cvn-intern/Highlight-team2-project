@@ -107,11 +107,15 @@
   }
 
   .cursor-eraser {
-    cursor: url("./shared/assets/icons/cursor/eraser.svg"), auto;
+    cursor:
+      url("./shared/assets/icons/cursor/eraser.svg") 2 22,
+      auto;
   }
 
   .cursor-cross {
-    cursor: url("./shared/assets/icons/cursor/cross.svg"), auto;
+    cursor:
+      url("./shared/assets/icons/cursor/cross.svg") 10 10,
+      auto;
   }
 
   .cursor-bucket {
@@ -119,11 +123,12 @@
   }
 
   .cursor-picker {
-    cursor: url("./shared/assets/icons/cursor/picker.svg"), auto;
+    cursor:
+      url("./shared/assets/icons/cursor/picker.svg") 2 22,
+      auto;
   }
 
   @variants responsive {
-
     /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -144,12 +149,12 @@
     @apply w-[300px];
   }
 
-  .slogan-responsive{
+  .slogan-responsive {
     @apply max-md:hidden;
   }
 
-  .home-content-responsive{
-    @apply max-md:flex-col md:gap-24 max-md:mt-10
+  .home-content-responsive {
+    @apply max-md:flex-col md:gap-24 max-md:mt-10;
   }
 }
 
