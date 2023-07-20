@@ -9,11 +9,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
-
 import { cn } from "@/shared/lib/utils";
-import { Check, Edit2 as EditIcon } from "lucide-react";
-import { useState } from "react";
-import { avatarImages } from "./constants";
+import { Check, Edit2 as EditIcon, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   AvatarFallback,
@@ -21,17 +19,57 @@ import {
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import AvatarCard from "./AvatarCard.component";
 import { useUserStore } from "@/shared/stores/userStore";
+import userService from "@/shared/services/userService";
+import authService from "@/shared/services/authService";
+import JWTManager from "@/shared/lib/jwt";
 
 const CustomAvatar = () => {
-  const {user} = useUserStore()
+  const { user, setUser, deleteUser } = useUserStore()
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
+  const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
 
-  const handleConfirmAvatar = () => {
-    setSelectedAvatar(avatarIndex);
+  const handleConfirmAvatar = async () => {
+    try {
+      setSelectedAvatar(avatarIndex);
+
+      const { data } = await userService.updateUser({
+        ...user,
+        avatar: avatarImages[avatarIndex],
+      })
+
+      setUser(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  useEffect(() => {
+    const getAvatarsDefault = async () => {
+      try {
+        const { data } = await userService.getAvatars();
+        setAvatarImages(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getAvatarsDefault();
+  }, [])
+
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
+
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+
+      JWTManager.deleteToken();
+      deleteUser();
+      window.location.reload();
+    } catch(error) {
+      console.log(error);
+    }
+  }
   return (
     <div className="relative">
       <Avatar className="w-fit h-[180px]">
@@ -41,6 +79,12 @@ const CustomAvatar = () => {
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
+      {!user?.is_guest && (
+        <Button className="flex items-center gap-2 bg-blue-700 h-9 mx-auto mt-2 hover:bg-red-400" style={{ borderRadius: '5px' }} onClick={handleLogout}>
+          <LogOut />
+          <span>LOG OUT</span>
+        </Button>
+      )}
 
       <Dialog>
         <DialogTrigger asChild>
