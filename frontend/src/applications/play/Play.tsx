@@ -88,7 +88,7 @@ export default function PlayingGameScreen() {
     >
       <MainLayout>
         <div
-          className={`w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[0.8] 2xl:scale-100 select-none`}
+          className={`w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
         >
           <RankingBoard />
           <div className="w-[var(--canvas-width)] flex flex-col gap-6">

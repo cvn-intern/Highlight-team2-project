@@ -26,7 +26,7 @@ import { useUserStore } from "@/shared/stores/userStore";
 import playService from "@/shared/services/playService";
 import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import userService from "@/shared/services/userService";
 
 const formSchema = z.object({
@@ -41,6 +41,8 @@ const PlayForm = () => {
   const { socket } = useSocketStore();
   const navigate = useNavigate();
 
+  const [formAction, setFormAction] = useState<"quick-play" | "find-room">("quick-play")
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,8 +51,8 @@ const PlayForm = () => {
     },
   });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log({ values });
+  const handleSubmit = (_: z.infer<typeof formSchema>) => {
+    if(formAction === 'quick-play') return handleQuickPlay()
   };
 
   const handleQuickPlay = async () => {
@@ -88,7 +90,7 @@ const PlayForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-8 w-[50%]"
+        className="space-y-5 2xl:space-y-8 w-[50%]"
       >
         <FormField
           control={form.control}
@@ -108,11 +110,11 @@ const PlayForm = () => {
                   <Input
                     {...field}
                     className={
-                      "font-bold text-lg border-primaryTextColor border-2 h-12"
+                      "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl"
                     }
                   />
                 </FormControl>
-                <FormMessage className="absolute bottom-[-32px] left-0 w-[120%] leading-4" />
+                <FormMessage className="text-xs absolute bottom-[-20px] 2xl:bottom-[-32px] left-0 w-[140%] 2xl:w-[120%] leading-4" />
               </div>
             </FormItem>
           )}
@@ -135,7 +137,7 @@ const PlayForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-[205px] border-primaryTextColor border-2 h-12 font-bold text-lg">
+                  <SelectTrigger className="w-[205px] border-primaryTextColor border-2 h-12 font-bold text-lg rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="border-primaryTextColor border-2 font-bold text-lg">
@@ -155,6 +157,7 @@ const PlayForm = () => {
             type="submit"
             variant="opacityHover"
             className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
             <p>ROOMS</p>
@@ -164,7 +167,7 @@ const PlayForm = () => {
             type="submit"
             variant="opacityHover"
             className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
-            onClick={handleQuickPlay}
+            onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
             <p>PLAY</p>
