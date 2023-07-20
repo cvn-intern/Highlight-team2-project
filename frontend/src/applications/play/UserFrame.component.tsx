@@ -31,7 +31,6 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
     triggerRef.current?.click();
   };
   const renderItem = (data: ProfileProps) => {
-
     const maxItems = data.max_player; // Maximum number of items to render
 
     // Calculate the number of empty slots
@@ -85,7 +84,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                         
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-lg font-medium text-truncate dark:text-white">
+                        <p className="text-lg font-medium truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white">
                           {value.user.nickname}
                         </p>
                         <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">

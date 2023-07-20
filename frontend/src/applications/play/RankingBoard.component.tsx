@@ -38,7 +38,6 @@ export default function RankingBoard() {
     if (!codeRoom) return;
     try {
       const { data } = await playService.roomParticipants(codeRoom);
-
       setLeaderboardData(data);
     } catch (error) {
       console.log({ error });
@@ -47,9 +46,6 @@ export default function RankingBoard() {
 
   useEffect(() => {
     socket?.on(`${codeRoom}-leave`, async () => {
-      // console.log({leaderboardData, data})
-      // const newUsersArray = leaderboardData.filter(item => item.user.nickname !== data.user)
-      // setLeaderboardData(newUsersArray)
       await getRoomParticipants();
     });
 
