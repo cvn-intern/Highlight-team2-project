@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Query, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Query, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
@@ -15,6 +15,21 @@ export class RoomController {
     private logger: Logger = new Logger(RoomController.name),
     private roomUserService: RoomUserService,
   ) { }
+
+   // @UseGuards(AuthorizeJWT)
+   @Get()
+   getRooms(
+     @Req() request: Request
+   ) {
+     try {
+       console.log("room list")
+       this.logger.log("room list")
+       return "this"
+ 
+     } catch (error) {
+       this.logger.error(error);      
+     }
+   }
 
   @UseGuards(AuthorizeJWT)
   @Post()
@@ -35,6 +50,8 @@ export class RoomController {
       return response.status(error.status).json(error);
     }
   }
+
+ 
 
   @UseGuards(AuthorizeJWT)
   @Get('/quick-play')
@@ -74,3 +91,5 @@ export class RoomController {
     }
   }
 }
+
+

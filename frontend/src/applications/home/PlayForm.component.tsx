@@ -88,13 +88,13 @@ const PlayForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-8 w-[50%]"
+        className="md:space-y-8 space-y-2 md:w-[50%] w-[80%]"
       >
         <FormField
           control={form.control}
           name="nickname"
           render={({ field }) => (
-            <FormItem className="flex items-start text-slate-400">
+            <FormItem className="flex max-md:flex-col items-start text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-5">
                 <div>
                   <User2 size={28} strokeWidth={2} color={"#22A699"} />
@@ -121,7 +121,7 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex items-center text-slate-400">
+            <FormItem className="flex max-md:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />
@@ -133,9 +133,9 @@ const PlayForm = () => {
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={field.value}                  
                 >
-                  <SelectTrigger className="w-[205px] border-primaryTextColor border-2 h-12 font-bold text-lg">
+                  <SelectTrigger className="w-full border-primaryTextColor border-2 h-12 font-bold text-lg">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="border-primaryTextColor border-2 font-bold text-lg">

@@ -72,7 +72,7 @@ const CustomAvatar = () => {
   }
   return (
     <div className="relative">
-      <Avatar className="w-fit h-[180px]">
+      <Avatar className="w-fit md:h-[180px] h-[120px]">
         <AvatarImage
           className="w-full h-full object-cover"
           src={user?.avatar ?? avatarImages[selectedAvatar]}
@@ -91,7 +91,7 @@ const CustomAvatar = () => {
           <Button
             variant="link"
             className={cn(
-              "w-10 h-10 rounded-full bg-[#22A699] hover:bg-[#148378] p-0 border-black absolute right-0 top-5"
+              "md:w-10 md:h-10 w-8 h-8 rounded-full bg-[#22A699] hover:bg-[#148378] p-0 border-black absolute right-0 md:top-5 top-4  "
             )}
           >
             <EditIcon fill="white" />

@@ -7,7 +7,7 @@ type LogoProps = {
 
 const Logo = ({ customClassname = "" }: LogoProps) => {
   return (
-    <img src={LogoImg} alt="" className={cn("w-[380px]", customClassname)} />
+    <img src={LogoImg} alt="" className={cn("md:w-[380px] w-[200px]", customClassname)} />
   );
 };
 
