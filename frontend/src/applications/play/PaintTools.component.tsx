@@ -20,7 +20,7 @@ import { useSocket } from "@/shared/hooks/useSocketEvents";
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);
-  const { handleClickClearCanvas } = useSocket() as {handleClickClearCanvas(): void}
+  const { handleClickClearCanvas } = useSocket()
   if (!variables) return null;
   const {
     ctx,

@@ -4,6 +4,7 @@ import './styles/style.css'
 import { iconsMap } from './constants/icons'
 import { useSocketStore } from '@/shared/stores/socketStore'
 import { cn } from '@/shared/lib/utils'
+import { useParams } from 'react-router'
 
 type Props = {
 }
@@ -53,7 +54,7 @@ const BoxChat = (props: BoxProps) => {
   const { icon: Icon } = props;
   const [inputChat, SetInputChat] = useState("")
   const { socket } = useSocketStore()
-  const codeRoom = window.location.href.split("/")[window.location.href.split("/").length - 1]
+  const { codeRoom } = useParams()
 
   const handleSubmitMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -105,12 +106,12 @@ const BoxChat = (props: BoxProps) => {
 }
 const BoxChatAnswer = ({ }: Props) => {
   const { socket } = useSocketStore()
-  const codeRoom = window.location.href.split("/")[window.location.href.split("/").length - 1]
+  const { codeRoom } = useParams()
   const [listChat, setListChat] = useState<Array<Chat>>([])
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([])
 
   useEffect(() => {
-    socket?.on(codeRoom, (data: Chat) => {
+    socket?.on(`${codeRoom}`, (data: Chat) => {
       setListChat(pre => [...pre, data])
     })
 

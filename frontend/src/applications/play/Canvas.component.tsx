@@ -6,15 +6,10 @@ import {
   getPointFromEvent,
 } from "@/applications/play/draw.helper";
 import { useSocket} from "@/shared/hooks/useSocketEvents";
-import { Point } from "./draw";
 
  const Canvas = () => {
   const variables = useContext(PaintContext);
-  const {handleMouseDown, handleMouseMove, handleMouseUpOrLeave} = useSocket() as {
-    handleMouseDown(point: Point): void;
-    handleMouseMove(point: Point): void;
-    handleMouseUpOrLeave(): void;
-  }
+  const {handleMouseDown, handleMouseMove, handleMouseUpOrLeave} = useSocket()
 
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;

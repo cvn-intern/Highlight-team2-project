@@ -1,15 +1,20 @@
-
 import { useContext, useEffect } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { PaintContext } from "@/applications/play/Play";
-import { Drawing, Point, SocketDrawing, SocketStartDraw, StartDraw } from "@/applications/play/draw";
+import { Drawing, Point, SocketDrawing, SocketGetCanvasState, SocketStartDraw, StartDraw, UseSocketCustomHook } from "@/applications/play/draw";
 import useDrawing from "./useCanvasEvents";
-import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, CLEAR_CANVAS, DRAWING, FINISH_DRAW, GET_OTHER_CANVAS_STATE, NEW_PLAYER, OTHER_CLEAR_CANVAS, OTHER_DRAWING, OTHER_FINISH_DRAW, OTHER_START_DRAW, START_DRAW } from "@/applications/play/constants/drawEvent";
+import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, CLEAR_CANVAS, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "@/applications/play/constants/drawEvent";
+import { useParams } from "react-router";
 
 
-export function useSocket() {
+export function useSocket(): UseSocketCustomHook {
+  let handleMouseDown = (_: Point) => {}
+  let handleMouseMove = (_: Point) => {}
+  let handleMouseUpOrLeave = () => {}
+  let handleClickClearCanvas = () => {}
+
     const variables = useContext(PaintContext);
-    if (!variables) return null;
+    if (!variables) return { handleMouseDown, handleMouseMove, handleMouseUpOrLeave, handleClickClearCanvas };
     const {
         ctx,
         canvasRef,
@@ -21,6 +26,7 @@ export function useSocket() {
         brushSize,
     } = variables;
     const { socket } = useSocketStore();
+    const { codeRoom } = useParams()
 
     const { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas } = useDrawing() as {
         handleStartDraw(data: StartDraw): void;
@@ -29,54 +35,55 @@ export function useSocket() {
         handleClearCanvas(): void;
     }
   
-    const handleMouseDown = (point: Point) => {
-      socket?.emit(START_DRAW, { point, color, penStyle, brushSize } as SocketStartDraw);
+    handleMouseDown = (point: Point) => {
+      socket?.emit(START_DRAW, { codeRoom, point, color, penStyle, brushSize } as SocketStartDraw);
       handleStartDraw({ point, color, penStyle, brushSize, ctx } as StartDraw);
     };
   
-    const handleMouseMove = (currentPoint: Point) => {
+    handleMouseMove = (currentPoint: Point) => {
       if (isDrawing) {
-        socket?.emit(DRAWING, { currentPoint, penStyle, color, isFill } as SocketDrawing);
+        socket?.emit(DRAWING, { codeRoom, currentPoint, penStyle, color, isFill } as SocketDrawing);
         snapshot && handleDrawing({ currentPoint, color, penStyle, snapshot, isFill, ctx } as Drawing);
       }
     };
   
-    const handleMouseUpOrLeave = () => {
-      socket?.emit(FINISH_DRAW);
+    handleMouseUpOrLeave = () => {
+      socket?.emit(FINISH_DRAW, codeRoom);
       handleFinishDraw();
     };
 
-    const handleClickClearCanvas = () => {
-        socket?.emit(CLEAR_CANVAS)
+    handleClickClearCanvas = () => {
+        socket?.emit(CLEAR_CANVAS, codeRoom)
         handleClearCanvas()
     }
   
     useEffect(() => {
-      socket?.emit(NEW_PLAYER)
+      socket?.emit(NEW_PLAYER, codeRoom)
 
-      socket?.on(OTHER_START_DRAW, ({ point, color, penStyle, brushSize }: StartDraw) => {
+      socket?.on(DRAWER_START_DRAWING, ({ point, color, penStyle, brushSize }: StartDraw) => {
        ctx && handleStartDraw({ point, color, penStyle, brushSize, ctx });
       });
 
-      socket?.on(OTHER_DRAWING, ({ currentPoint, color, penStyle, isFill }: Drawing) => {
+      socket?.on(DRAWER_DRAWING, ({ currentPoint, color, penStyle, isFill }: Drawing) => {
         snapshot && ctx && handleDrawing({ currentPoint, color, penStyle, snapshot, isFill, ctx });
       });
 
-      socket?.on(OTHER_FINISH_DRAW, () => {
+      socket?.on(DRAWER_FINISH_DRAWING, () => {
         handleFinishDraw()
       });
 
-      socket?.on(OTHER_CLEAR_CANVAS, () => {
+      socket?.on(DRAWER_CLEAR_CANVAS, () => {
         handleClearCanvas()
       });
 
-      socket?.on(GET_OTHER_CANVAS_STATE, (id: string) => {
+      socket?.on(GET_CANVAS_STATE, (id: string) => {
         const dataImg = canvasRef.current.toDataURL()
-        socket?.emit(CANVAS_STATE, {dataImg, id})
+        socket?.emit(CANVAS_STATE, {codeRoom, dataImg, id} as SocketGetCanvasState)
       })
 
       socket?.on(CANVAS_STATE_FROM_SERVER, (dataImg: string) => {
         const img = new Image()
+        
         img.src = dataImg
         img.onload = () => {
           ctx?.drawImage(img, 0, 0)
@@ -85,11 +92,11 @@ export function useSocket() {
 
   
       return () => {
-        socket?.off(OTHER_START_DRAW);
-        socket?.off(OTHER_DRAWING);
-        socket?.off(OTHER_FINISH_DRAW);
-        socket?.off(OTHER_CLEAR_CANVAS);
-        socket?.off(GET_OTHER_CANVAS_STATE)
+        socket?.off(DRAWER_START_DRAWING);
+        socket?.off(DRAWER_DRAWING);
+        socket?.off(DRAWER_FINISH_DRAWING);
+        socket?.off(DRAWER_CLEAR_CANVAS);
+        socket?.off(GET_CANVAS_STATE)
         socket?.off(CANVAS_STATE_FROM_SERVER)
       };
     }, [canvasRef, snapshot, ctx]);

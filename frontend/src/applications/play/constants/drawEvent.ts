@@ -1,9 +1,9 @@
 //socket events receive from server
-export const OTHER_START_DRAW: string = 'other-start-drawing'
-export const OTHER_DRAWING: string = 'other-drawing'
-export const OTHER_FINISH_DRAW: string = 'other-finish-drawing'
-export const OTHER_CLEAR_CANVAS: string = 'other-clear-canvas'
-export const GET_OTHER_CANVAS_STATE: string = 'get-other-canvas-state'
+export const DRAWER_START_DRAWING: string = 'drawer-start-drawing'
+export const DRAWER_DRAWING: string = 'drawer-drawing'
+export const DRAWER_FINISH_DRAWING: string = 'drawer-finish-drawing'
+export const DRAWER_CLEAR_CANVAS: string = 'drawer-clear-canvas'
+export const GET_CANVAS_STATE: string = 'get-canvas-state'
 export const CANVAS_STATE_FROM_SERVER: string = 'canvas-state-from-server'
 
 //socket event emit to server

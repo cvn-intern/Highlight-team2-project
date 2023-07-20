@@ -11,6 +11,7 @@ type RGBAColorType = {
 };
 
 export type StartDraw = {
+  codeRoom: string,
     point: Point,
     color: RGBAColorType,
     penStyle: string,
@@ -18,8 +19,15 @@ export type StartDraw = {
   }
   
   export type Drawing = {
+    codeRoom: string,
     currentPoint: Point,
     color: RGBAColorType,
     penStyle: string,
     isFill: boolean,
+  }
+
+  export type GetCanvasState = {
+    codeRoom: string,
+    dataImg: string,
+    id: string
   }

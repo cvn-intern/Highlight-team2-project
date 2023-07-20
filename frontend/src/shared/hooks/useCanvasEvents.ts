@@ -2,13 +2,17 @@ import { PaintContext } from "@/applications/play/Play";
 import { drawCircle, drawFreeStyle, drawLine, drawRectangle, drawTriangle, eraser, fillWithColor, pickColor, resetCanvas } from "@/applications/play/draw.helper";
 import { useContext } from "react";
 import { rgbaToHex } from "../lib/colors";
-import { Drawing, StartDraw } from "@/applications/play/draw";
+import { Drawing, StartDraw, useDrawingCustomHook } from "@/applications/play/draw";
 
 
-const useDrawing = () => {
-    const variables = useContext(PaintContext);
+const useDrawing = (): useDrawingCustomHook => {
+  let handleStartDraw = (_: StartDraw) => {}
+  let handleDrawing = (_: Drawing) => {}
+  let handleFinishDraw = () => {}
+  let handleClearCanvas = () => {}
   
-    if (!variables) return;
+    const variables = useContext(PaintContext);
+    if (!variables) return { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas };
     const {
       ctx,
       isDrawing,
@@ -17,9 +21,9 @@ const useDrawing = () => {
       setIsDrawing,
       setPreviousPoint,
       setColor,
-    } = variables;
+    } = variables || {};
   
-    const handleStartDraw = ({ point, color, penStyle, brushSize, ctx }: StartDraw): void => {
+    handleStartDraw = ({ point, color, penStyle, brushSize, ctx }: StartDraw): void => {
       
       if (!ctx) return;
       const canvas = ctx.canvas;
@@ -43,7 +47,7 @@ const useDrawing = () => {
       penStyle === "eraser" && eraser(ctx, point);
     };
   
-    const handleDrawing = ({ currentPoint, color, penStyle, snapshot, isFill, ctx }: Drawing): void => {
+    handleDrawing = ({ currentPoint, color, penStyle, snapshot, isFill, ctx }: Drawing): void => {
       
       if (!ctx || !isDrawing) return;
       if (penStyle === "brush") {
@@ -67,14 +71,14 @@ const useDrawing = () => {
       }
     };
   
-    const handleFinishDraw = (): void => {
+    handleFinishDraw = (): void => {
       if (!ctx) return;
       const canvas = ctx.canvas;
       setIsDrawing(false);
       setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
     };
 
-    const handleClearCanvas = (): void => {
+    handleClearCanvas = (): void => {
         if (!ctx) return;
         resetCanvas(ctx);
     }
