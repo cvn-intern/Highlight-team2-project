@@ -32,7 +32,7 @@ export default function PaintTools() {
     setIsFill,
     setBrushSize,
   } = variables;
-  
+
   // Handlers
   const handleChoseBrush = () => {
     setPenStyle("brush");
