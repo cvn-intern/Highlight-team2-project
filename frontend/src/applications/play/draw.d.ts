@@ -85,7 +85,7 @@ export type UseSocketCustomHook = {
   handleClickClearCanvas(): void
 }
 
-export type useDrawingCustomHook = {
+export type UseDrawingCustomHook = {
   handleStartDraw(data: StartDraw): void;
   handleDrawing(data: Drawing): void;
   handleFinishDraw(): void;

@@ -5,12 +5,12 @@ import cursorsIconMap from "./constants/cursorsIconMap";
 import {
   getPointFromEvent,
 } from "@/applications/play/draw.helper";
-import { useSocket} from "@/shared/hooks/useSocketEvents";
+import { useSocketEvents} from "@/shared/hooks/useSocketEvents";
 
  const Canvas = () => {
   const variables = useContext(PaintContext);
-  const {handleMouseDown, handleMouseMove, handleMouseUpOrLeave} = useSocket()
-
+  const {handleMouseDown, handleMouseMove, handleMouseUpOrLeave} = useSocketEvents()
+ 
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;
 

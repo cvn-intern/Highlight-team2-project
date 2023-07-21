@@ -2,10 +2,10 @@ import { PaintContext } from "@/applications/play/Play";
 import { drawCircle, drawFreeStyle, drawLine, drawRectangle, drawTriangle, eraser, fillWithColor, pickColor, resetCanvas } from "@/applications/play/draw.helper";
 import { useContext } from "react";
 import { rgbaToHex } from "../lib/colors";
-import { Drawing, StartDraw, useDrawingCustomHook } from "@/applications/play/draw";
+import { Drawing, StartDraw, UseDrawingCustomHook } from "@/applications/play/draw";
 
 
-const useDrawing = (): useDrawingCustomHook => {
+const useDrawing = (): UseDrawingCustomHook => {
   let handleStartDraw = (_: StartDraw) => {}
   let handleDrawing = (_: Drawing) => {}
   let handleFinishDraw = () => {}

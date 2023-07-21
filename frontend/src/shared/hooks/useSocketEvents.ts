@@ -2,12 +2,12 @@ import { useContext, useEffect } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { PaintContext } from "@/applications/play/Play";
 import { Drawing, Point, SocketDrawing, SocketGetCanvasState, SocketStartDraw, StartDraw, UseSocketCustomHook } from "@/applications/play/draw";
-import useDrawing from "./useCanvasEvents";
+import useDrawing from "./useDrawing";
 import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, CLEAR_CANVAS, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "@/applications/play/constants/drawEvent";
 import { useParams } from "react-router";
 
 
-export function useSocket(): UseSocketCustomHook {
+export function useSocketEvents(): UseSocketCustomHook {
   let handleMouseDown = (_: Point) => {}
   let handleMouseMove = (_: Point) => {}
   let handleMouseUpOrLeave = () => {}

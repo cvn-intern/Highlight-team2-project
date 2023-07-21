@@ -16,11 +16,12 @@ import {
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 import ColorPicker from "./ColorPicker.component";
-import { useSocket } from "@/shared/hooks/useSocketEvents";
+import { useSocketEvents } from "@/shared/hooks/useSocketEvents";
 
 export default function PaintTools() {
+  const { handleClickClearCanvas } = useSocketEvents()
+
   const variables = useContext(PaintContext);
-  const { handleClickClearCanvas } = useSocket()
   if (!variables) return null;
   const {
     ctx,
@@ -31,6 +32,7 @@ export default function PaintTools() {
     setIsFill,
     setBrushSize,
   } = variables;
+  
   // Handlers
   const handleChoseBrush = () => {
     setPenStyle("brush");

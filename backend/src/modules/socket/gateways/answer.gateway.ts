@@ -4,7 +4,7 @@ import { ANSWER_ROOM_CHANNEL, CHECKCIRCLE_ICON, TEXT_GREEN, TEXT_ORANGE, TEXT_ZI
 import { SocketClass } from "../socket.class";
 import { MessageBodyType } from "../types/messageBody";
 import { checkTypeAnswer } from "../../../common/utils/helper";
-import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, ANSWER_WRONG } from "src/common/variables/constVariable";
+import { ANSWER_APPROXIMATELY, ANSWER_APPROXIMATELY_CONTENT, ANSWER_CORRECTLY_CONTENT, ANSWER_CORRETLY, ANSWER_WRONG } from "src/common/variables/constVariable";
 import { Chat } from "../types/chat";
 
 export class AnswerGateway extends SocketGateway {
@@ -27,13 +27,13 @@ export class AnswerGateway extends SocketGateway {
 
             switch (typeAnswer) {
                 case ANSWER_CORRETLY:
-                    answerContent.content = 'hit!';
+                    answerContent.content = ANSWER_CORRECTLY_CONTENT;
                     answerContent.type = TEXT_GREEN;
                     answerContent.icon = CHECKCIRCLE_ICON;
 
                     break;
                 case ANSWER_APPROXIMATELY:
-                    answerContent.content = 'answer is close!';
+                    answerContent.content = ANSWER_APPROXIMATELY_CONTENT;
                     answerContent.type = TEXT_ORANGE;
                     answerContent.icon = ZAP_ICON;
 
