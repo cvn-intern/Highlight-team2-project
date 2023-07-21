@@ -10,7 +10,7 @@ import {
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
 import { Skeleton } from "@/shared/components/shadcn-ui/skeleton";
-import { Home, Pencil, XCircle } from "lucide-react";
+import { BadgeCheck, Home, Pencil, XCircle } from "lucide-react";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
@@ -24,7 +24,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
-  const [isBlocked, setIsBlocked] = useState<boolean>(false);
+  const [blockedIdArray, setBlockedIdArray] = useState<number[]>([]);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const handleLinkClick = (user: ILeaderboard["user"]) => {
     setUserSelected(user);
@@ -48,7 +48,8 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                 <div className="flex items-center w-full space-x-3">
                   <div
                     className={"flex items-center space-x-4 w-[25px] 2xl:w-[40px]"}>
-                    {user.id === data.drawer_id && <Pencil color="#3f84f3" size={36} strokeWidth={3.5} />}
+                    {(user.id === data.drawer_id) && <Pencil color="#3f84f3" size={36} strokeWidth={3.5} />}
+                    {data.is_correct && <BadgeCheck size={36} color="#12d94d" strokeWidth={2.5} />}
                   </div>
                   <div
                     className={cn(
@@ -80,11 +81,11 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                             )}
                           ></div>
                         )}
-                        {isBlocked && <XCircle size={56} color="#f43e47" strokeWidth={2.5} className="h-4/5 w-4/5 rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />}
+                        {blockedIdArray.find(id => id === user.id) && <XCircle size={56} color="#f43e47" strokeWidth={2.5} className="h-4/5 w-4/5 rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />}
                         
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-lg font-medium truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white">
+                        <p className="text-lg font-medium text-left truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white">
                           {user.nickname}
                         </p>
                         <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">
@@ -92,8 +93,8 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
                           <span> pts</span>
                         </p>
                         {false && (
-                          <p className="font-medium truncate text-left text-md text-textBlueColor dark:text-gray-400">
-                            <strong>{score}</strong><span> pts</span>
+                          <p className="font-medium truncate text-left text-md text-blue-500 dark:text-gray-400">
+                            Next to draw
                           </p>
                         )}
                       </div>
@@ -136,7 +137,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, _max_player) => {
       { }
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
-        <DialogDemo user={userSelected} isBlocked={isBlocked} setIsBlocked={setIsBlocked} />
+        <DialogDemo user={userSelected} blockedIdArray={blockedIdArray} setBlockedIdArray={setBlockedIdArray} />
       </Dialog>
     </div>
   );
