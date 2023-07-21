@@ -58,8 +58,6 @@ export function useSocketEvents(): UseSocketCustomHook {
   }
 
   useEffect(() => {
-    socket?.emit(NEW_PLAYER, codeRoom)
-
     socket?.on(DRAWER_START_DRAWING, ({ point, color, penStyle, brushSize }: StartDraw) => {
       ctx && handleStartDraw({ point, color, penStyle, brushSize, ctx });
     });
@@ -76,6 +74,17 @@ export function useSocketEvents(): UseSocketCustomHook {
       handleClearCanvas()
     });
 
+    return () => {
+      socket?.off(DRAWER_START_DRAWING);
+      socket?.off(DRAWER_DRAWING);
+      socket?.off(DRAWER_FINISH_DRAWING);
+      socket?.off(DRAWER_CLEAR_CANVAS);
+    };
+  }, [canvasRef, snapshot]);
+
+  useEffect(() => {
+    socket?.emit(NEW_PLAYER, codeRoom)
+
     socket?.on(GET_CANVAS_STATE, (id: string) => {
       const dataImg = canvasRef.current.toDataURL()
       socket?.emit(CANVAS_STATE, { codeRoom, dataImg, id } as SocketGetCanvasState)
@@ -89,17 +98,11 @@ export function useSocketEvents(): UseSocketCustomHook {
         ctx?.drawImage(img, 0, 0)
       }
     })
-
-
     return () => {
-      socket?.off(DRAWER_START_DRAWING);
-      socket?.off(DRAWER_DRAWING);
-      socket?.off(DRAWER_FINISH_DRAWING);
-      socket?.off(DRAWER_CLEAR_CANVAS);
       socket?.off(GET_CANVAS_STATE)
       socket?.off(CANVAS_STATE_FROM_SERVER)
-    };
-  }, [canvasRef, snapshot, ctx]);
+    }
+  }, [ctx])
 
 
   return { handleMouseDown, handleMouseMove, handleMouseUpOrLeave, handleClickClearCanvas };
