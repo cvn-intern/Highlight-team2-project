@@ -20,7 +20,7 @@ const Homepage = () => {
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
 
-        <div className="lg:w-[80%] lg:h-[70%] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%]   mt-5 rounded-2xl">
+        <div className="lg:w-[80%] lg:h-[70%] min-h-[50vh] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%]   mt-5 rounded-2xl">
           <img
             src={BannerImg}
             className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden"
