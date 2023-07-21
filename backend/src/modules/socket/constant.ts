@@ -1,11 +1,24 @@
+//socket chat event receive from client
 export const JOIN_ROOM_CHANNEL: string = 'join-room';
 export const CHAT_ROOM_CHANNEL: string = 'chat-room';
 export const LEAVE_ROOM_CHANNEL: string = 'leave-room';
+export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
+
+//socket draw event receive from client
+export const NEW_PLAYER_CHANNEL: string = 'new-player'
+export const CANVAS_STATE_CHANNEL: string = 'canvas-state'
 export const START_DRAWING_CHANNEL: string = 'start-drawing';
 export const DRAWING_CHANNEL: string = 'drawing';
 export const FINISH_DRAWING_CHANNEL: string = 'finish-drawing';
-export const RESET_CANVAS_CHANNEL: string = 'reset-canvas';
-export const ANSWER_ROOM_CHANNEL: string = 'answer-room'
+export const CLEAR_CANVAS_CHANNEL: string = 'clear-canvas';
+
+//socket draw event emit to client
+export const DRAWER_START_DRAWING: string = 'drawer-start-drawing'
+export const DRAWER_DRAWING: string = 'drawer-drawing'
+export const DRAWER_FINISH_DRAWING: string = 'drawer-finish-drawing'
+export const DRAWER_CLEAR_CANVAS: string = 'drawer-clear-canvas'
+export const GET_CANVAS_STATE: string = 'get-canvas-state'
+export const CANVAS_STATE_FROM_SERVER: string = 'canvas-state-from-server'
 
 // type message
 export const TEXT_GREEN = 'text-green-400';
