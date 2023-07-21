@@ -7,6 +7,7 @@ import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
+import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -15,7 +16,7 @@ function App() {
 
   useEffect(() => {
     const initSocket = (token: string) => {
-      createSocketInstance(token)
+      createSocketInstance(token);
       setLoading(false);
     };
 
@@ -32,7 +33,7 @@ function App() {
 
     const token = JWTManager.getToken();
     const user = window.localStorage.getItem("user");
-    
+
     if (!token && !socket) {
       initUser();
     } else if (token && user) {
@@ -49,11 +50,18 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:codeRoom" element={<PlayingGameScreen />} />
+            <Route
+              path="/:codeRoom"
+              element={
+                <CheckSocketDisconnectedRoute>
+                  <PlayingGameScreen />
+                </CheckSocketDisconnectedRoute>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </Providers>
-    </Suspense >
+    </Suspense>
   );
 }
 

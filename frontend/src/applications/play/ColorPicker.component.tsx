@@ -41,7 +41,7 @@ export default function ColorPicker() {
       </div>
       <div className="grid grid-cols-2 gap-2">
         <div
-          className={`border-2 rounded-md shadow-md aspect-square border-blue-400`}
+          className={`border-2 rounded-[4px] shadow-md aspect-square border-blue-400`}
           style={{ backgroundColor: hexColor }}
         ></div>
         <div className="relative cursor-pointer aspect-square" ref={pickerRef}>
