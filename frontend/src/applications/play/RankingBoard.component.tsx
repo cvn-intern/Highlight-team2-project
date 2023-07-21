@@ -61,7 +61,7 @@ export default function RankingBoard() {
 
   return (
     <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full">
-      <UserFrame Leaderboard={leaderboardData.users} max_player={leaderboardData.max_player} is_correct={false} host_id={143} drawer_id={160}/>
+      <UserFrame Leaderboard={leaderboardData.users} max_player={leaderboardData.max_player} is_correct={false} host_id={-1} drawer_id={-1}/>
     </div>
   );
 }
