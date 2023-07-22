@@ -5,13 +5,13 @@ FROM node:18 as build
 WORKDIR /app
 
 # Copy the frontend application files to the container
-COPY ./frontend/package.json ./frontend/package-lock.json ./
+COPY ./package.json ./package-lock.json ./
 
 # Install frontend dependencies
 RUN npm install
 
 # Copy the rest of the frontend application files to the container
-COPY ./frontend ./
+COPY . ./
 
 # Build the frontend (you may need to adjust this based on your frontend setup)
 RUN npm run build
