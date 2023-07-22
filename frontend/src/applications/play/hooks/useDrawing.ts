@@ -12,7 +12,7 @@ import {
   resetCanvas,
 } from "@/applications/play/draw.helper";
 import { useContext } from "react";
-import { rgbaToHex } from "../lib/colors";
+import { rgbaToHex } from "../../../shared/lib/colors";
 import {
   Drawing,
   StartDraw,

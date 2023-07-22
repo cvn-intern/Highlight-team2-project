@@ -56,8 +56,7 @@ export default function RankingBoard() {
       socket?.off(codeRoom);
     };
   }, [socket]);
-  const remain_number_of_available_players =
-    leaderboardData.max_player - leaderboardData.users.length;
+  const number_of_players = leaderboardData.users.length;
   return (
     <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full relative">
       <UserFrame
@@ -68,7 +67,7 @@ export default function RankingBoard() {
         drawer_id={-1}
       />
       <div className="absolute w-[44px] h-[44px] text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-2 right-2 flexCenter bg-white">
-        <span>{remain_number_of_available_players}</span>/
+        <span>{number_of_players}</span>/
         <span>{leaderboardData.max_player}</span>
       </div>
     </div>

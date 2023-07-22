@@ -22,7 +22,7 @@ interface ProfileProps {
   drawer_id: number;
 }
 
-const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
+const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
   const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
     null
   );
