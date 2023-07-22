@@ -66,7 +66,6 @@ const BoxChat = (props: BoxProps) => {
   const { codeRoom } = useParams();
 
   const sendMessages = (message: string) => {
-    console.log(message);
     if (message.trim() === "") return;
 
     if (props.label === "chat") {

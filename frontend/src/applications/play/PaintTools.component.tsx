@@ -19,7 +19,7 @@ import ColorPicker from "./ColorPicker.component";
 import { useSocketEvents } from "@/shared/hooks/useSocketEvents";
 
 export default function PaintTools() {
-  const { handleClickClearCanvas } = useSocketEvents()
+  const { handleClickClearCanvas } = useSocketEvents();
 
   const variables = useContext(PaintContext);
   if (!variables) return null;
@@ -77,7 +77,6 @@ export default function PaintTools() {
         active={penStyle === "brush"}
         onChange={() => {
           handleChoseBrush();
-          console.log(penStyle);
         }}
         value="brush"
         type="radio"
