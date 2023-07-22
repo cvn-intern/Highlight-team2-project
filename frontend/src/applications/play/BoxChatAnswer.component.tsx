@@ -1,12 +1,11 @@
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
 import { iconsMap } from "./constants/icons";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
-
-type Props = {};
+import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 
 interface BoxProps {
   label: string;
@@ -50,6 +49,12 @@ interface Chat {
 const BoxChat = (props: BoxProps) => {
   const { icon: Icon } = props;
   const [inputChat, SetInputChat] = useState("");
+  const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
+    MAX_NUMBER_OF_CHARACTER
+  );
+  useEffect(() => {
+    setNumberOfCharactersLeft(MAX_NUMBER_OF_CHARACTER - inputChat.length);
+  }, [inputChat]);
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
 
@@ -72,10 +77,15 @@ const BoxChat = (props: BoxProps) => {
     SetInputChat("");
   };
 
+  const handleInputText = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > MAX_NUMBER_OF_CHARACTER) return;
+    SetInputChat(e.target.value);
+  };
+
   return (
     <>
       <div className="box relative w-[100%]">
-        <div className="box-label shadow-lg">
+        <div className="shadow-lg box-label">
           <span>{props.label.toLocaleUpperCase()}</span>
         </div>
         <div>
@@ -91,15 +101,18 @@ const BoxChat = (props: BoxProps) => {
             ))}
           </div>
           <div className="relative">
-            <form onSubmit={handleSubmitMessage}>
+            <form onSubmit={handleSubmitMessage} className="relative">
               <input
                 value={inputChat}
-                onChange={(e) => SetInputChat(e.target.value)}
+                onChange={handleInputText}
                 id={"box-input-" + props.label}
                 type="text"
                 placeholder={props.placeholder}
-                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 pl-10"
+                className="block w-full py-2 pl-10 pr-20 mt-1 bg-white border rounded-md shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1"
               />
+              <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
+                {numberOfCharactersLeft} chars left
+              </span>
             </form>
             <label
               htmlFor={"box-input-" + props.label}
@@ -113,7 +126,7 @@ const BoxChat = (props: BoxProps) => {
     </>
   );
 };
-const BoxChatAnswer = ({}: Props) => {
+const BoxChatAnswer = () => {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const [listChat, setListChat] = useState<Array<Chat>>([]);
