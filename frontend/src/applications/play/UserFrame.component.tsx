@@ -12,6 +12,7 @@ import {
 import { ILeaderboard } from "./RankingBoard.component";
 import { BadgeCheck, Home, Pencil, XCircle } from "lucide-react";
 import { User2 } from "lucide-react";
+import { handleStringThatIsTooLong } from "@/shared/lib/string";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
@@ -95,8 +96,11 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard, max_player) => {
                         )}
                       </Avatar>
                       <div className="flex-1 min-w-0">
-                        <p className="text-lg font-medium text-left truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white">
-                          {user.nickname}
+                        <p
+                          className="text-lg font-medium text-left truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white"
+                          title={user.nickname}
+                        >
+                          {handleStringThatIsTooLong(user.nickname, 10)}
                         </p>
                         <p className="font-medium text-left truncate text-md text-textBlueColor dark:text-gray-400">
                           <strong>{score}</strong>
