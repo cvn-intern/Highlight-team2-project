@@ -1,4 +1,10 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
 import { iconsMap } from "./constants/icons";
@@ -6,6 +12,7 @@ import { useSocketStore } from "@/shared/stores/socketStore";
 import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
+import { throttle } from "lodash";
 
 interface BoxProps {
   label: string;
@@ -58,23 +65,30 @@ const BoxChat = (props: BoxProps) => {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
 
-  const handleSubmitMessage = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (inputChat.trim() === "") return;
+  const sendMessages = (message: string) => {
+    console.log(message);
+    if (message.trim() === "") return;
 
     if (props.label === "chat") {
       socket?.emit("chat-room", {
         codeRoom: codeRoom,
-        message: inputChat,
+        message: message,
       } as MessageBodyInterface);
     } else {
       socket?.emit("answer-room", {
         codeRoom: codeRoom,
-        message: inputChat,
+        message: message,
       } as MessageBodyInterface);
     }
 
     SetInputChat("");
+  };
+
+  const throttledSendMessages = useCallback(throttle(sendMessages, 300), []);
+
+  const handleSubmitForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    throttledSendMessages(inputChat);
   };
 
   const handleInputText = (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +115,7 @@ const BoxChat = (props: BoxProps) => {
             ))}
           </div>
           <div className="relative">
-            <form onSubmit={handleSubmitMessage} className="relative">
+            <form onSubmit={handleSubmitForm} className="relative">
               <input
                 value={inputChat}
                 onChange={handleInputText}
