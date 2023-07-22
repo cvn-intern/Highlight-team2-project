@@ -122,7 +122,7 @@ const BoxChat = (props: BoxProps) => {
                 id={"box-input-" + props.label}
                 type="text"
                 placeholder={props.placeholder}
-                className="block w-full py-2 pl-10 pr-20 mt-1 bg-white border rounded-md shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1"
+                className="block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]"
               />
               <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
                 {numberOfCharactersLeft} chars left

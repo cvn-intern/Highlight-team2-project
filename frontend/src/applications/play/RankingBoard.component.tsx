@@ -5,8 +5,6 @@ import { useParams } from "react-router-dom";
 import playService from "@/shared/services/playService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 
-
-
 export interface ILeaderboard {
   user: {
     id: number;
@@ -20,7 +18,7 @@ export interface ILeaderboard {
 }
 
 interface RankingUser {
-  users: ILeaderboard[],
+  users: ILeaderboard[];
   max_player: number;
   host?: number;
   is_correct?: boolean;
@@ -60,8 +58,14 @@ export default function RankingBoard() {
   }, [socket]);
 
   return (
-    <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full">
-      <UserFrame Leaderboard={leaderboardData.users} max_player={leaderboardData.max_player} is_correct={false} host_id={-1} drawer_id={-1}/>
+    <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full relative">
+      <UserFrame
+        Leaderboard={leaderboardData.users}
+        max_player={leaderboardData.max_player}
+        is_correct={false}
+        host_id={-1}
+        drawer_id={-1}
+      />
     </div>
   );
 }
