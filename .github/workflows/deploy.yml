@@ -1,0 +1,54 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - deploy #Change to main branch when merging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Deployment for Backend and Socket Instance
+      - name: Set up SSH for Backend and Socket
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install Docker Compose on Backend and Socket
+        run: |
+          ssh ubuntu@YOUR_BACKEND_INSTANCE_PUBLIC_IP 'sudo apt-get update && sudo apt-get install -y docker-compose'
+
+      - name: Copy Docker Compose File to Backend and Socket
+        run: |
+          scp docker-compose-backend.yaml ubuntu@YOUR_BACKEND_INSTANCE_PUBLIC_IP:/home/ubuntu/docker-compose.yaml
+
+      - name: Deploy Backend and Socket
+        run: |
+          ssh ubuntu@YOUR_BACKEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml down'
+          ssh ubuntu@YOUR_BACKEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml pull'
+          ssh ubuntu@YOUR_BACKEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml up -d'
+
+      # Deployment for Frontend Instance
+      - name: Set up SSH for Frontend
+        uses: webfactory/ssh-agent@v0.5.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Install Docker Compose on Frontend
+        run: |
+          ssh ubuntu@YOUR_FRONTEND_INSTANCE_PUBLIC_IP 'sudo apt-get update && sudo apt-get install -y docker-compose'
+
+      - name: Copy Docker Compose File to Frontend
+        run: |
+          scp docker-compose-frontend.yaml ubuntu@YOUR_FRONTEND_INSTANCE_PUBLIC_IP:/home/ubuntu/docker-compose.yaml
+
+      - name: Deploy Frontend
+        run: |
+          ssh ubuntu@YOUR_FRONTEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml down'
+          ssh ubuntu@YOUR_FRONTEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml pull'
+          ssh ubuntu@YOUR_FRONTEND_INSTANCE_PUBLIC_IP 'cd /home/ubuntu && docker-compose -f docker-compose.yaml up -d'
