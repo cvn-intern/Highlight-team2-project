@@ -2,11 +2,9 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 
-
 @Injectable()
 export class RedisService {
   constructor(
-    private logger: Logger = new Logger(RedisService.name),
     @Inject(CACHE_MANAGER)
     private redisCache: Cache,
   ) { }
@@ -17,7 +15,7 @@ export class RedisService {
 
   async setObjectByKeyValue(key: string, value: any, ttl: number): Promise<any> {
     return await this.redisCache.set(key, value, {
-      ttl: ttl,
+      ttl
     } as any);
   }
 

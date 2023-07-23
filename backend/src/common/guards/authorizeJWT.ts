@@ -14,22 +14,26 @@ export class AuthorizeJWT implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-
     const authHeader = request.header('Authorization');
     const jwtToken = authHeader && authHeader.split(' ')[1];
+    const isInBlocklist = await this.userService.checkAccessTokenOfUserInBlocklist(jwtToken);
 
+    if(isInBlocklist) {
+      return false;
+    }
+    
     try {
-      const payload = await this.jwtService.verify(jwtToken, {
-        secret: this.configService.get<string>('JWT_ACCESSKEY'),
-      });
+      const secret = this.configService.get<string>('JWT_ACCESSKEY');
+      const payload = await this.jwtService.verify(jwtToken, { secret: secret, });
+      const currentUser = await this.userService.getUserById(payload.id);
 
-      const curUser = await this.userService.getUserById(payload.id);
-
-      if (curUser) {
-        request.idUser = curUser.id;
+      if (!currentUser) {
+        return false;
       }
 
-      return curUser ? true : false;
+      request.idUser = currentUser.id;
+
+      return true;
     } catch (error) {
       this.logger.error(error);
       return false;

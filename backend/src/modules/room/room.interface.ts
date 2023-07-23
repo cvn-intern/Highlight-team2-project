@@ -11,4 +11,5 @@ export interface RoomInterface {
   code_room?: string;
   created_at?: string;
   updated_at?: string;
+  users?: [];
 }

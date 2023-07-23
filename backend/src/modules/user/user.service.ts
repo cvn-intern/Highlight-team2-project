@@ -1,21 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { UserInterface } from './user.interface';
 import { randomString } from '../../common/utils/helper';
+import { AVATAR_DEFAULT, LANGUAGE_DEFAULT } from './constant';
+import { RedisService } from '../redis/redis.service';
 
 const LENGTH_STRING_RANDOM: number = 6;
-const AVATAR_DEFAULT: string = "https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private redisService: RedisService,
   ) { }
 
-  async getUserById(id: number) {
+  async getUserById(id: number): Promise<User> {
     return await this.userRepository.findOne({
       where: {
         id: id,
@@ -23,23 +25,49 @@ export class UserService {
     });
   }
 
-  async createUser(user: UserInterface) {
+  async createUser(user: UserInterface): Promise<User> {
     return this.userRepository.save(user);
   }
 
-  async updateUser(user: UserInterface) {
+  async updateUser(user: UserInterface): Promise<User> {
+    const userExisted = await this.userRepository.find({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!userExisted) {
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    }
+
     return this.userRepository.save(user);
   }
 
-  generateGuest() {
+  async getUserByIdProvider(idProvider: string): Promise<User> {
+    const userExisted = await this.userRepository.findOne({
+      where: {
+        id_provider: idProvider,
+      },
+    });
+
+    return userExisted;
+  }
+
+  generateGuest(): UserInterface {
     const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = AVATAR_DEFAULT;
-    const language: string = 'en';
+    const language: string = LANGUAGE_DEFAULT;
 
     return {
       nickname: nicknameGuest,
       avatar: avatar,
       language: language,
     } as UserInterface;
+  }
+
+  async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
+    const check = await this.redisService.getObjectByKey(`BLOCKLIST:${tokenUser}`);
+
+    return check ? true : false;
   }
 }

@@ -5,6 +5,6 @@ export class Language {
     @PrimaryColumn()
     code: string;
 
-    @Column({nullable: false})
+    @Column({ nullable: false })
     name: string;
 }

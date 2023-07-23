@@ -1,0 +1,172 @@
+import { FormEvent, useEffect, useState } from "react";
+import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
+import "./styles/style.css";
+import { iconsMap } from "./constants/icons";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { cn } from "@/shared/lib/utils";
+import { useParams } from "react-router-dom";
+
+type Props = {};
+
+interface BoxProps {
+  label: string;
+  placeholder: string;
+  listChat: any;
+  custumClassName?: string;
+  icon?: LucideIcon;
+}
+
+interface MessageProps {
+  user: string;
+  content: string;
+  type?: string;
+  icon?: LucideIcon;
+}
+
+const Message = (props: MessageProps) => {
+  const { icon: Icon } = props;
+
+  return (
+    <div className={cn("text-green-400 flex gap-2", props.type)}>
+      {Icon && <Icon strokeWidth={3} />}
+      <strong>{props.user}</strong>
+      <span> {props.content}</span>
+    </div>
+  );
+};
+
+interface MessageBodyInterface {
+  codeRoom: string;
+  message: string;
+}
+
+interface Chat {
+  user: string;
+  content: string;
+  type: string;
+  icon: string;
+}
+
+const BoxChat = (props: BoxProps) => {
+  const { icon: Icon } = props;
+  const [inputChat, SetInputChat] = useState("");
+  const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
+
+  const handleSubmitMessage = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (inputChat.trim() === "") return;
+
+    if (props.label === "chat") {
+      socket?.emit("chat-room", {
+        codeRoom: codeRoom,
+        message: inputChat,
+      } as MessageBodyInterface);
+    } else {
+      socket?.emit("answer-room", {
+        codeRoom: codeRoom,
+        message: inputChat,
+      } as MessageBodyInterface);
+    }
+
+    SetInputChat("");
+  };
+
+  return (
+    <>
+      <div className="box relative w-[100%]">
+        <div className="box-label shadow-lg">
+          <span>{props.label.toLocaleUpperCase()}</span>
+        </div>
+        <div>
+          <div className="h-[--chat-content-heigth] overflow-auto pr-2 scrollbar-thin  scrollbar-thumb-slate-400  scrollbar-thumb-rounded-md">
+            {props.listChat.map((ele: any, index: number) => (
+              <Message
+                key={index}
+                user={ele.user}
+                content={ele.content}
+                type={ele.type}
+                icon={iconsMap.get(ele.icon)}
+              />
+            ))}
+          </div>
+          <div className="relative">
+            <form onSubmit={handleSubmitMessage}>
+              <input
+                value={inputChat}
+                onChange={(e) => SetInputChat(e.target.value)}
+                id={"box-input-" + props.label}
+                type="text"
+                placeholder={props.placeholder}
+                className="mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 pl-10"
+              />
+            </form>
+            <label
+              htmlFor={"box-input-" + props.label}
+              className="box-input-icon"
+            >
+              {Icon && <Icon />}
+            </label>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+const BoxChatAnswer = ({}: Props) => {
+  const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
+  const [listChat, setListChat] = useState<Array<Chat>>([]);
+  const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
+
+  useEffect(() => {
+    if (!codeRoom) return;
+    socket?.on(codeRoom, (data: Chat) => {
+      setListChat((pre) => [...pre, data]);
+    });
+
+    socket?.on(`${codeRoom}-chat`, (data: Chat) => {
+      setListChat((pre) => [...pre, data]);
+    });
+
+    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
+      setListAnswer((pre) => [...pre, data]);
+    });
+
+    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
+      setListChat((pre) => [...pre, data]);
+    });
+
+    return () => {
+      socket?.off(codeRoom);
+      socket?.off(`${codeRoom}-chat`);
+      socket?.off(`${codeRoom}-answer`);
+      socket?.off(`${codeRoom}-leave`);
+    };
+  }, [socket]);
+
+  return (
+    <>
+      <div className="w-[var(--canvas-width)] flex-1 flex item-center bg-white rounded-[10px] mt-2 relative">
+        <div className="pr-2 border-r w-[50%]">
+          <BoxChat
+            label="answer"
+            placeholder="Hit answer here!"
+            icon={Pencil}
+            listChat={listAnswer}
+          />
+        </div>
+        <div className="pl-2 border-l w-[50%]">
+          <BoxChat
+            label="chat"
+            placeholder="Hit chat here!"
+            icon={MessageCircle}
+            listChat={listChat}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default BoxChatAnswer;

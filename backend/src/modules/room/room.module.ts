@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Room } from './room.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from '../user/user.module';
-import { RoomRoundModule } from '../roomRound/roomRound.module';
-import { RoomUserModule } from '../roomUser/roomUser.module';
-import { RoomUserService } from '../roomUser/roomUser.service';
-import { RoomUser } from '../roomUser/roomUser.entity';
+import { RoomUserModule } from '../room-user/roomUser.module';
+import { RoomRoundModule } from '../room-round/roomRound.module';
+import { RoomUser } from '../room-user/roomUser.entity';
+import { RoomUserService } from '../room-user/roomUser.service';
+import { RoomRepository } from './room.repository';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { RoomUser } from '../roomUser/roomUser.entity';
     RoomUserModule,
   ],
   controllers: [RoomController],
-  providers: [RoomService, Logger, RoomUserService],
+  providers: [RoomService, Logger, RoomUserService, RoomRepository],
   exports: [RoomService],
 })
 export class RoomModule {}
