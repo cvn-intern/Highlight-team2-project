@@ -19,7 +19,7 @@ export class RoomUserService {
     });
 
     if(roomUser) {
-      throw new HttpException('Duplicated!', HttpStatus.CONFLICT);
+      await this.deleteRoomUser(id_room, id_user);
     }
 
     return await this.roomUserRepository.save({
@@ -43,5 +43,16 @@ export class RoomUserService {
 
   async getListUserOfRoom(id_room: number) {
     return await this.roomUserRepository.getParticipantsOfRoom(id_room);
+  }
+
+  async checkUserInRoom(id_user: number, id_room: number): Promise<boolean> {
+    const participant = await this.roomUserRepository.findOne({
+      where: {
+        id_room: id_room,
+        id_user: id_user,
+      },
+    });
+
+    return participant ? true : false;
   }
 }

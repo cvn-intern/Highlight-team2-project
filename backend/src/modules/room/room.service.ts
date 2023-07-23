@@ -7,6 +7,7 @@ import { randomString } from '../../common/utils/helper';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
+import { RoomUser } from '../room-user/roomUser.entity';
 
 const MAX_LENGTH_RANDOM = 5;
 
@@ -37,7 +38,7 @@ export class RoomService {
     rooms = rooms.filter((room: RoomInterface) => room.users.length < room.max_player)
 
     if(rooms.length === 0) {
-      throw new HttpException('Can not found available room!', HttpStatus.NOT_FOUND);
+      throw new HttpException('Can not found available room!', HttpStatus.BAD_REQUEST);
     } 
 
     return rooms[0].code_room;
@@ -47,9 +48,19 @@ export class RoomService {
     const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
 
     if(!room) {
-      throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
+      throw new HttpException('Not found room!', HttpStatus.BAD_REQUEST);
     }
 
     return room;
+  }
+
+  async checkUserInRoom(idUser: number, idRoom: number): Promise<boolean> {
+    return await this.roomUserService.checkUserInRoom(idUser, idRoom);
+  }
+
+  async joinRoom(idRoom: number, idUser: number): Promise<RoomUser> {
+    const participant = await this.roomUserService.createNewRoomUser(idRoom, idUser);
+
+    return participant;
   }
 }

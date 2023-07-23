@@ -7,6 +7,7 @@ import { SocketClass } from '../socket.class';
 import { Socket } from 'socket.io';
 import { Chat } from '../types/chat';
 import { MessageBodyType } from '../types/messageBody';
+import { Room } from 'src/modules/room/room.entity';
 
 export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
@@ -50,8 +51,15 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
     }
   }
 
-  handleConnection(@ConnectedSocket() client: Socket) {
+  async handleConnection(@ConnectedSocket() client: Socket) {
     try {
+      const isValidToken = await this.socketService.checkTokenValidSocket(client);
+      
+      if(!isValidToken) {
+        await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
+        throw new WsException('Token is not valid with this user!');
+      }
+
       this.socketService.storeClientConnection(client);
     } catch (error) {
       this.logger.error(error);
@@ -64,13 +72,23 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
     @ConnectedSocket() client: SocketClass,
   ) {
     try {
-      await this.roomService.getRoomByCodeRoom(codeRoom);
+      const idRoom: number = extractIdRoom(codeRoom);
+      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
+
+      if(!room) {
+        throw new WsException('Room not found!');
+      }
+      
+      const participant = await this.roomService.joinRoom(idRoom, client.user.id);
+      
+      if(!participant) {
+        throw new WsException('Can not join this room!');
+      }
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       client.join(codeRoom);
 
-      const idRoom = extractIdRoom(codeRoom);
       await this.roomUserService.createNewRoomUser(idRoom, client.user.id);
 
       const chatContent: Chat = {

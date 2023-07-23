@@ -1,6 +1,9 @@
 import {
   Logger,
+  UseFilters,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   WebSocketGateway,
@@ -14,6 +17,7 @@ import { RoomUserService } from '../../../modules/room-user/roomUser.service';
 import { ConfigService } from '@nestjs/config';
 import { RoomService } from 'src/modules/room/room.service';
 import { AuthorizeSocket } from 'src/common/guards/authorizeSocket';
+import { WebsocketExceptionsFilter } from '../socket.filter';
 
 const configService: ConfigService = new ConfigService();
 const SOCKET_PORT = 3001;
@@ -22,6 +26,8 @@ const SOCKET_PORT = 3001;
   cors: true,
 })
 @UseGuards(AuthorizeSocket)
+@UseFilters(WebsocketExceptionsFilter)
+@UsePipes(new ValidationPipe({ transform: true }))
 export class SocketGateway  {
   constructor(
     public socketService: SocketService,

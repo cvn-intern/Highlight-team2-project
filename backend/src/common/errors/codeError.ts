@@ -1,5 +1,7 @@
-const errosMap = new Map<string, string>;
+type ErrorDF = {
+    errorName: string;
+}
 
-// errosMap.set('NOT')
+const errosMap = new Map<string, ErrorDF>;
 
 export default errosMap;
