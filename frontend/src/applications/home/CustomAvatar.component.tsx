@@ -24,7 +24,7 @@ import authService from "@/shared/services/authService";
 import JWTManager from "@/shared/lib/jwt";
 
 const CustomAvatar = () => {
-  const { user, setUser, deleteUser } = useUserStore()
+  const { user, setUser, deleteUser } = useUserStore();
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
   const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
@@ -36,7 +36,7 @@ const CustomAvatar = () => {
       const { data } = await userService.updateUser({
         ...user,
         avatar: avatarImages[avatarIndex],
-      })
+      });
 
       setUser(data);
     } catch (error) {
@@ -52,10 +52,10 @@ const CustomAvatar = () => {
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
     getAvatarsDefault();
-  }, [])
+  }, []);
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
 
@@ -66,21 +66,25 @@ const CustomAvatar = () => {
       JWTManager.deleteToken();
       deleteUser();
       window.location.reload();
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <div className="relative">
-      <Avatar className="w-fit md:h-[180px] h-[120px]">
+      <Avatar className="w-fit md:h-[150px] xl:h-[180px] h-[120px]">
         <AvatarImage
-          className="w-full h-full object-cover"
+          className="object-cover w-full h-full"
           src={user?.avatar ?? avatarImages[selectedAvatar]}
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
       {!user?.is_guest && (
-        <Button className="flex items-center gap-2 bg-blue-700 h-9 mx-auto mt-2 hover:bg-red-400" style={{ borderRadius: '5px' }} onClick={handleLogout}>
+        <Button
+          className="flex items-center gap-2 mx-auto mt-2 bg-blue-700 h-9 hover:bg-red-400"
+          style={{ borderRadius: "5px" }}
+          onClick={handleLogout}
+        >
           <LogOut />
           <span>LOG OUT</span>
         </Button>
@@ -107,8 +111,8 @@ const CustomAvatar = () => {
               <img src={AvatarHeader} className="w-44 md:w-52" alt=""></img>
             </DialogTitle>
           </DialogHeader>
-          <div className="overflow-y-auto h-96 w-full">
-            <div className="grid md:grid-cols-5 grid-cols-2 gap-2 p-2 bg-gray-300">
+          <div className="w-full overflow-y-auto h-96">
+            <div className="grid grid-cols-2 gap-2 p-2 bg-gray-300 md:grid-cols-5">
               {avatarImages.map((img, index) => (
                 <AvatarCard
                   key={img}

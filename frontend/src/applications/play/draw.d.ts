@@ -1,5 +1,3 @@
-import { type } from "os";
-
 export type PaintContextType = {
   canvasRef: MutableRefObject<HTMLCanvasElement | null>;
   ctx: CanvasRenderingContext2D | null;
@@ -38,57 +36,64 @@ export type Point = {
   y: number;
 };
 
-export type PenStyleType = "circle" | "line" | "bucket" | "picker" | "brush" | "eraser" | "rectangle" | "triangle";
+export type PenStyleType =
+  | "circle"
+  | "line"
+  | "bucket"
+  | "picker"
+  | "brush"
+  | "eraser"
+  | "rectangle"
+  | "triangle";
 
 export type StartDraw = {
-  point: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  brushSize: number,
-  ctx: CanvasRenderingContext2D
-}
+  point: Point;
+  color: RGBAColorType;
+  penStyle: PenStyleType;
+  brushSize: number;
+  ctx: CanvasRenderingContext2D;
+};
 
 export type Drawing = {
-  currentPoint: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  snapshot: ImageData ,
-  isFill: boolean,
-  ctx: CanvasRenderingContext2D
-}
+  currentPoint: Point;
+  color: RGBAColorType;
+  penStyle: PenStyleType;
+  snapshot: ImageData;
+  isFill: boolean;
+  ctx: CanvasRenderingContext2D;
+};
 export type SocketStartDraw = {
-  codeRoom: string,
-  point: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  brushSize: number,
-}
+  codeRoom: string;
+  point: Point;
+  color: RGBAColorType;
+  penStyle: PenStyleType;
+  brushSize: number;
+};
 
 export type SocketDrawing = {
-  codeRoom: string,
-  currentPoint: Point,
-  color: RGBAColorType,
-  penStyle: string,
-  isFill: boolean,
-}
+  codeRoom: string;
+  currentPoint: Point;
+  color: RGBAColorType;
+  penStyle: PenStyleType;
+  isFill: boolean;
+};
 
 export type SocketGetCanvasState = {
-  codeRoom: string,
-  dataImg: string,
-  id: string
-}
+  codeRoom: string;
+  dataImg: string;
+  id: string;
+};
 
 export type UseSocketCustomHook = {
   handleMouseDown(point: Point): void;
   handleMouseMove(point: Point): void;
   handleMouseUpOrLeave(): void;
-  handleClickClearCanvas(): void
-}
+  handleClickClearCanvas(): void;
+};
 
 export type UseDrawingCustomHook = {
   handleStartDraw(data: StartDraw): void;
   handleDrawing(data: Drawing): void;
   handleFinishDraw(): void;
   handleClearCanvas(): void;
-}
-
+};

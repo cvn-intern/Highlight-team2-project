@@ -1,18 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { PaintContext } from "@/applications/play/Play";
-import { drawCircle, drawFreeStyle, drawLine, drawRectangle, drawTriangle, eraser, fillWithColor, pickColor, resetCanvas } from "@/applications/play/draw.helper";
+import {
+  drawCircle,
+  drawFreeStyle,
+  drawLine,
+  drawRectangle,
+  drawTriangle,
+  eraser,
+  fillWithColor,
+  pickColor,
+  resetCanvas,
+} from "@/applications/play/draw.helper";
 import { useContext } from "react";
-import { rgbaToHex } from "../lib/colors";
-import { Drawing, StartDraw, UseDrawingCustomHook } from "@/applications/play/draw";
-
+import { rgbaToHex } from "../../../shared/lib/colors";
+import {
+  Drawing,
+  StartDraw,
+  UseDrawingCustomHook,
+} from "@/applications/play/draw";
 
 const useDrawing = (): UseDrawingCustomHook => {
-  let handleStartDraw = (_: StartDraw) => { }
-  let handleDrawing = (_: Drawing) => { }
-  let handleFinishDraw = () => { }
-  let handleClearCanvas = () => { }
+  let handleStartDraw = (_: StartDraw) => {};
+  let handleDrawing = (_: Drawing) => {};
+  let handleFinishDraw = () => {};
+  let handleClearCanvas = () => {};
 
   const variables = useContext(PaintContext);
-  if (!variables) return { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas };
+  if (!variables)
+    return {
+      handleStartDraw,
+      handleDrawing,
+      handleFinishDraw,
+      handleClearCanvas,
+    };
   const {
     ctx,
     isDrawing,
@@ -23,8 +43,13 @@ const useDrawing = (): UseDrawingCustomHook => {
     setColor,
   } = variables || {};
 
-  handleStartDraw = ({ point, color, penStyle, brushSize, ctx }: StartDraw): void => {
-
+  handleStartDraw = ({
+    point,
+    color,
+    penStyle,
+    brushSize,
+    ctx,
+  }: StartDraw): void => {
     if (!ctx) return;
     const canvas = ctx.canvas;
     if (penStyle === "bucket") {
@@ -43,12 +68,18 @@ const useDrawing = (): UseDrawingCustomHook => {
     }
     setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
     ctx.beginPath();
-    (penStyle === "brush") && drawFreeStyle(ctx, point, color);
+    penStyle === "brush" && drawFreeStyle(ctx, point, color);
     penStyle === "eraser" && eraser(ctx, point);
   };
 
-  handleDrawing = ({ currentPoint, color, penStyle, snapshot, isFill, ctx }: Drawing): void => {
-
+  handleDrawing = ({
+    currentPoint,
+    color,
+    penStyle,
+    snapshot,
+    isFill,
+    ctx,
+  }: Drawing): void => {
     if (!ctx || !isDrawing) return;
     if (penStyle === "brush") {
       drawFreeStyle(ctx, currentPoint, color);
@@ -81,9 +112,14 @@ const useDrawing = (): UseDrawingCustomHook => {
   handleClearCanvas = (): void => {
     if (!ctx) return;
     resetCanvas(ctx);
-  }
+  };
 
-  return { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas };
-}
+  return {
+    handleStartDraw,
+    handleDrawing,
+    handleFinishDraw,
+    handleClearCanvas,
+  };
+};
 
-export default useDrawing
+export default useDrawing;
