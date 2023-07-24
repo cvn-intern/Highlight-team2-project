@@ -8,6 +8,7 @@ import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
 import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
+import WaitingRoom from "./applications/waitingRoom/WaitingRoom";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -49,6 +50,7 @@ function App() {
       <Providers>
         <BrowserRouter>
           <Routes>
+            <Route path="/123" element={<WaitingRoom />} />
             <Route path="/" element={<Homepage />} />
             <Route
               path="/:codeRoom"
