@@ -6,6 +6,7 @@ import cursorsIconMap from "./constants/cursorsIconMap";
 import { getPointFromEvent } from "@/applications/play/draw.helper";
 import { useSocketEvents } from "@/applications/play/hooks/useSocketEvents";
 import useDrawing from "@/applications/play/hooks/useDrawing";
+import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
 
 const Canvas = () => {
   const variables = useContext(PaintContext);
@@ -47,6 +48,7 @@ const Canvas = () => {
         onMouseUp={handleMouseUpOrLeave}
         onMouseLeave={handleMouseUpOrLeave}
       ></canvas>
+      <ProgressPlayTime />
     </div>
   );
 };

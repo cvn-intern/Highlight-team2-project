@@ -33,8 +33,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
     triggerRef.current?.click();
   };
   const renderItem = (data: ProfileProps) => {
-    const maxItems = data.max_player; // Maximum number of items to render
-    // Calculate the number of empty slots
+    const maxItems = data.max_player;
     const emptySlots = maxItems - data.Leaderboard.length;
     return (
       <>
@@ -69,7 +68,13 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     )}
                   >
                     <div className="flex items-center space-x-4">
-                      <Avatar className="relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid border-blue-500">
+                      <Avatar className={cn("relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
+                        {
+                          "border-blue-600": data.drawer_id === user.id,
+                          "border-green-500": data.is_correct,
+                        }
+                      )}
+                      >
                         <AvatarImage
                           src={user.avatar}
                           alt="avatar"
@@ -170,7 +175,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       <div className="flow-root w-full h-full px-4 overflow-auto no-scrollbar">
         <ul role="list">{renderItem(Leaderboard)}</ul>
       </div>
-      {}
+      { }
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
         <DialogDemo
