@@ -13,10 +13,10 @@ import { RedisModule } from '../modules/redis/redis.module';
 import { AuthModule } from '../modules/auth/auth.module';
 import { RoomUserModule } from 'src/modules/room-user/roomUser.module';
 import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
-import { UserWordModule } from 'src/modules/user-word/userWord.module';
+import { WordsCollectionModule } from 'src/modules/words-collection/wordsCollection.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
-const USE_SSL: boolean = process.env.NODE_ENV === "production";
+const USE_SSL: boolean = process.env.NODE_ENV === 'production';
 
 @Module({
   imports: [
@@ -30,7 +30,7 @@ const USE_SSL: boolean = process.env.NODE_ENV === "production";
     SocketModule,
     RedisModule,
     AuthModule,
-    UserWordModule,
+    WordsCollectionModule,
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -39,19 +39,17 @@ const USE_SSL: boolean = process.env.NODE_ENV === "production";
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => (
-        {
-          type: 'postgres',
-          host: configService.get<string>('DATABASE_HOST'),
-          port: configService.get<number>('DATABASE_PORT'),
-          username: configService.get<string>('DATABASE_USERNAME'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE_NAME'),
-          synchronize: true,
-          autoLoadEntities: true,
-          ssl: USE_SSL,
-        }
-      )
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        synchronize: true,
+        autoLoadEntities: true,
+        ssl: USE_SSL,
+      }),
     }),
     ServeStaticModule.forRoot({
       rootPath: process.cwd() + '/src/common/public',
@@ -60,4 +58,4 @@ const USE_SSL: boolean = process.env.NODE_ENV === "production";
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

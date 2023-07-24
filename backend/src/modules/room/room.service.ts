@@ -1,6 +1,4 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Room } from './room.entity';
 import { RoomInterface } from './room.interface';
 import { randomString } from '../../common/utils/helper';
@@ -17,11 +15,11 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
-  ) { }
-
+  ) {}
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
-    const codeRoom: string = randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
+    const codeRoom: string =
+      randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
     const idRoom: number = await this.roomRepository.generateIdRoom();
 
     const room: Room = this.roomRepository.create({
@@ -35,11 +33,16 @@ export class RoomService {
 
   async randomRoomForQuickPlay(): Promise<string> {
     let rooms = await this.roomRepository.getAvailableRooms();
-    rooms = rooms.filter((room: RoomInterface) => room.users.length < room.max_player)
+    rooms = rooms.filter(
+      (room: RoomInterface) => room.users.length < room.max_player,
+    );
 
-    if(rooms.length === 0) {
-      throw new HttpException('Can not found available room!', HttpStatus.BAD_REQUEST);
-    } 
+    if (rooms.length === 0) {
+      throw new HttpException(
+        'Can not found available room!',
+        HttpStatus.NOT_FOUND,
+      );
+    }
 
     return rooms[0].code_room;
   }
@@ -47,8 +50,8 @@ export class RoomService {
   async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
     const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
 
-    if(!room) {
-      throw new HttpException('Not found room!', HttpStatus.BAD_REQUEST);
+    if (!room) {
+      throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
     }
 
     return room;

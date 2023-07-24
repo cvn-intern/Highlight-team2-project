@@ -1,7 +1,6 @@
 export interface RoomUserInterface {
-    id_user?: number;
-    id_room?: number;
-    score?: number;
-    answered_at?: Date;
-  }
-  
+  user_id?: number;
+  room_id?: number;
+  score?: number;
+  answered_at?: Date;
+}
