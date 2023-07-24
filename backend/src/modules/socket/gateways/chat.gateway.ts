@@ -8,11 +8,18 @@ import { Socket } from 'socket.io';
 import { Chat } from '../types/chat';
 import { MessageBodyType } from '../types/messageBody';
 import { Room } from 'src/modules/room/room.entity';
+import errosMap from 'src/common/errors/codeError';
 
 export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(@ConnectedSocket() client: any) {
     try {
+      const isBlock = await this.socketService.checkInBlockList(client);
+
+      if (isBlock) {
+        return;
+      }
+      
       this.socketService.removeClientDisconnection(client);
 
       const payload = await this.socketService.extractPayload(client);
@@ -54,10 +61,19 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   async handleConnection(@ConnectedSocket() client: Socket) {
     try {
       const isValidToken = await this.socketService.checkTokenValidSocket(client);
-      
-      if(!isValidToken) {
+
+      if (!isValidToken) {
         await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        throw new WsException('Token is not valid with this user!');
+        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTVALIDTOKEN')));
+        return;
+      }
+
+      const isMultipleTab = await this.socketService.checkLoginMultipleTab(client);
+
+      if (isMultipleTab) {
+        await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
+        this.socketService.sendError(client, JSON.stringify(errosMap.get('MULTIPLETAB')));
+        return;
       }
 
       this.socketService.storeClientConnection(client);
@@ -75,14 +91,14 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       const idRoom: number = extractIdRoom(codeRoom);
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
-      if(!room) {
-        throw new WsException('Room not found!');
+      if (!room) {
+        throw new WsException(JSON.stringify(errosMap.get('NOTFOUNDROOM')));
       }
-      
+
       const participant = await this.roomService.joinRoom(idRoom, client.user.id);
-      
-      if(!participant) {
-        throw new WsException('Can not join this room!');
+
+      if (!participant) {
+        throw new WsException(JSON.stringify(errosMap.get('CANNOTJOIN')));
       }
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
@@ -110,7 +126,6 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
     @ConnectedSocket() client: SocketClass,
   ) {
     try {
-      
       const ROOM_CHAT: string = `${msgBody.codeRoom}-chat`;
 
       const chatContent: Chat = {
@@ -119,7 +134,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         type: TEXT_BLUE,
         icon: MESSAGECIRCLE_ICON,
       };
-      
+
       this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent)
     } catch (error) {
       this.logger.error(error);

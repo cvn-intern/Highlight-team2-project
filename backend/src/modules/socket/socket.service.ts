@@ -24,7 +24,7 @@ export class SocketService {
       this.logger.log(`Client ${client.id} connected!`);
       const token = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
       await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
-      
+
       return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay);
     } catch (error) {
       this.logger.error(error);
@@ -34,7 +34,7 @@ export class SocketService {
   async checkTokenValidSocket(client: Socket): Promise<boolean> {
     const userId = this.getUserIdFromSocket(client)
     const tokenOfSocket: string = await this.getTokenFromSocket(client);
-    const validToken: string =await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
+    const validToken: string = await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
 
     return tokenOfSocket === validToken ? true : false;
   }
@@ -55,7 +55,7 @@ export class SocketService {
   async extractPayload(socket: Socket): Promise<any> {
     try {
       const token: string = socket.handshake.headers.authorization;
-      
+
       return await this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_ACCESSKEY'),
       });
@@ -73,7 +73,7 @@ export class SocketService {
   getUserIdFromSocket(client: Socket): number {
     const userId = client.handshake.headers.user as string;
 
-    if(!userId) {
+    if (!userId) {
       throw new WsException('Unauthorize socket!');
     }
 
@@ -84,5 +84,20 @@ export class SocketService {
     const check: string = await this.redisService.getObjectByKey(`BLOCKLIST:SOCKET:${client.id}`);
 
     return check ? true : false;
+  }
+
+  async checkLoginMultipleTab(client: Socket): Promise<boolean> {
+    const userId = this.getUserIdFromSocket(client)
+    const socketId: string = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
+
+    if (socketId && socketId !== client.id) {
+      return true;
+    }
+
+    return false;
+  }
+
+  sendError(client: Socket, error: string) {
+    client.emit('error', error);
   }
 }

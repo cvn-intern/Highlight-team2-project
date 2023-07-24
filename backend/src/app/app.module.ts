@@ -15,7 +15,6 @@ import { RoomUserModule } from 'src/modules/room-user/roomUser.module';
 import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
 import { UserWordModule } from 'src/modules/user-word/userWord.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
 
 const USE_SSL: boolean = process.env.NODE_ENV === "production";
 
