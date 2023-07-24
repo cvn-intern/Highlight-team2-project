@@ -32,7 +32,7 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 
 const formSchema = z.object({
-  nickname: z.string().min(2).max(50),
+  nickname: z.string().min(2).max(50).trim(),
   language: z.string({
     required_error: "Please select an language.",
   }),
