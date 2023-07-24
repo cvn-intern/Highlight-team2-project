@@ -71,12 +71,12 @@ const BoxChat = (props: BoxProps) => {
     if (props.label === "chat") {
       socket?.emit("chat-room", {
         codeRoom: codeRoom,
-        message: message,
+        message,
       } as MessageBodyInterface);
     } else {
       socket?.emit("answer-room", {
         codeRoom: codeRoom,
-        message: message,
+        message,
       } as MessageBodyInterface);
     }
 
