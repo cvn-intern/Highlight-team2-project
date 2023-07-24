@@ -19,16 +19,16 @@ export interface ILeaderboard {
 
 interface RankingUser {
   users: ILeaderboard[];
-  max_player: number;
-  host?: number;
-  is_correct?: boolean;
+  maxPlayer: number;
+  hostId?: number;
+  isCorrect?: boolean;
 }
 
 export default function RankingBoard() {
   const { socket } = useSocketStore();
   const [leaderboardData, setLeaderboardData] = useState<RankingUser>({
     users: [],
-    max_player: 0,
+    maxPlayer: 0,
   });
   const { codeRoom } = useParams();
 
@@ -61,14 +61,14 @@ export default function RankingBoard() {
     <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full relative">
       <UserFrame
         Leaderboard={leaderboardData.users}
-        max_player={leaderboardData.max_player}
-        is_correct={false}
-        host_id={-1}
-        drawer_id={-1}
+        maxPlayer={leaderboardData.maxPlayer}
+        isCorrect={false}
+        hostId={-1}
+        drawerId={-1}
       />
       <div className="absolute w-[44px] h-[44px] text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-2 right-2 flexCenter bg-white">
         <span>{number_of_players}</span>/
-        <span>{leaderboardData.max_player}</span>
+        <span>{leaderboardData.maxPlayer}</span>
       </div>
     </div>
   );

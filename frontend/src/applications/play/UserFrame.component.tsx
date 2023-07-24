@@ -10,16 +10,15 @@ import {
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
-import { BadgeCheck, Home, Pencil, XCircle } from "lucide-react";
-import { User2 } from "lucide-react";
+import { BadgeCheck, Home, Pencil, XCircle, User2 as UserIcon } from "lucide-react";
 import { handleStringThatIsTooLong } from "@/shared/lib/string";
 
 interface ProfileProps {
   Leaderboard: ILeaderboard[];
-  max_player: number;
-  host_id: number;
-  is_correct: boolean;
-  drawer_id: number;
+  maxPlayer: number;
+  hostId: number;
+  isCorrect: boolean;
+  drawerId: number;
 }
 
 const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
@@ -33,7 +32,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
     triggerRef.current?.click();
   };
   const renderItem = (data: ProfileProps) => {
-    const maxItems = data.max_player;
+    const maxItems = data.maxPlayer;
     const emptySlots = maxItems - data.Leaderboard.length;
     return (
       <>
@@ -51,10 +50,10 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
                     }
                   >
-                    {user.id === data.drawer_id && (
+                    {user.id === data.drawerId && (
                       <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                     )}
-                    {data.is_correct && (
+                    {data.isCorrect && (
                       <BadgeCheck size={32} color="#12d94d" strokeWidth={2.5} />
                     )}
                   </div>
@@ -62,16 +61,16 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     className={cn(
                       "flex items-center space-x-4 justify-between w-full",
                       {
-                        "text-blue-600": data.drawer_id === user.id,
-                        "text-green-500": data.is_correct,
+                        "text-blue-600": data.drawerId === user.id,
+                        "text-green-500": data.isCorrect,
                       }
                     )}
                   >
                     <div className="flex items-center space-x-4">
                       <Avatar className={cn("relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
                         {
-                          "border-blue-600": data.drawer_id === user.id,
-                          "border-green-500": data.is_correct,
+                          "border-blue-600": data.drawerId === user.id,
+                          "border-green-500": data.isCorrect,
                         }
                       )}
                       >
@@ -118,7 +117,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                         )}
                       </div>
                     </div>
-                    {user.id === data.host_id && (
+                    {user.id === data.hostId && (
                       <Home
                         className="text-blue-500"
                         strokeWidth={2.5}
@@ -149,7 +148,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-[68px] h-[68px] rounded-full border-4 border-solid border-gray-400 flexCenter">
-                      <User2
+                      <UserIcon
                         size={46}
                         strokeWidth={2.5}
                         className="text-gray-400"
