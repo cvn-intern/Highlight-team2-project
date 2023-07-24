@@ -49,7 +49,7 @@ export type PenStyleType =
 export type StartDraw = {
   point: Point;
   color: RGBAColorType;
-  penStyle: string;
+  penStyle: PenStyleType;
   brushSize: number;
   ctx: CanvasRenderingContext2D;
 };
@@ -57,7 +57,7 @@ export type StartDraw = {
 export type Drawing = {
   currentPoint: Point;
   color: RGBAColorType;
-  penStyle: string;
+  penStyle: PenStyleType;
   snapshot: ImageData;
   isFill: boolean;
   ctx: CanvasRenderingContext2D;
@@ -66,7 +66,7 @@ export type SocketStartDraw = {
   codeRoom: string;
   point: Point;
   color: RGBAColorType;
-  penStyle: string;
+  penStyle: PenStyleType;
   brushSize: number;
 };
 
@@ -74,7 +74,7 @@ export type SocketDrawing = {
   codeRoom: string;
   currentPoint: Point;
   color: RGBAColorType;
-  penStyle: string;
+  penStyle: PenStyleType;
   isFill: boolean;
 };
 
