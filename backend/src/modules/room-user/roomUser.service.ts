@@ -1,47 +1,48 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { RoomUser } from "./roomUser.entity";
-import { Repository } from "typeorm";
-import { RoomUserRepository } from "./roomUser.repository";
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RoomUser } from './roomUser.entity';
+import { Repository } from 'typeorm';
+import { RoomUserRepository } from './roomUser.repository';
 
 @Injectable()
 export class RoomUserService {
-  constructor(
-    private roomUserRepository: RoomUserRepository,
-  ) { }
+  constructor(private roomUserRepository: RoomUserRepository) {}
 
-  async createNewRoomUser(id_room: number, id_user: number): Promise<RoomUser> {
+  async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
       where: {
-        id_room: id_room,
-      id_user: id_user,
-      }
+        room_id: room_id,
+        user_id: user_id,
+      },
     });
 
-    if(roomUser) {
+    if (roomUser) {
       throw new HttpException('Duplicated!', HttpStatus.CONFLICT);
     }
 
     return await this.roomUserRepository.save({
-      id_room: id_room,
-      id_user: id_user,
+      room_id: room_id,
+      user_id: user_id,
     });
   }
 
-  async deleteRoomUser(id_room: number, id_user: number) {
-    const participant: RoomUser = await this.roomUserRepository.getParticipant(id_room, id_user);
+  async deleteRoomUser(room_id: number, user_id: number) {
+    const participant: RoomUser = await this.roomUserRepository.getParticipant(
+      room_id,
+      user_id,
+    );
 
     if (!participant) {
       throw new HttpException('Not found user', HttpStatus.NOT_FOUND);
     }
 
     return await this.roomUserRepository.delete({
-      id_room: id_room,
-      id_user: id_user,
+      room_id: room_id,
+      user_id: user_id,
     });
   }
 
-  async getListUserOfRoom(id_room: number) {
-    return await this.roomUserRepository.getParticipantsOfRoom(id_room);
+  async getListUserOfRoom(room_id: number) {
+    return await this.roomUserRepository.getParticipantsOfRoom(room_id);
   }
 }

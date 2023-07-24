@@ -5,7 +5,7 @@ export interface UserInterface {
   provider?: string;
   id_provider?: string;
   nickname?: string;
-  language?: string;
+  language_code?: string;
   created_at?: Date;
   updated_at?: Date;
 }

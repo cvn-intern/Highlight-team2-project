@@ -1,4 +1,15 @@
-import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Query, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Logger,
+  Param,
+  Post,
+  Res,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
@@ -14,7 +25,7 @@ export class RoomController {
     private roomService: RoomService,
     private logger: Logger = new Logger(RoomController.name),
     private roomUserService: RoomUserService,
-  ) { }
+  ) {}
 
   @UseGuards(AuthorizeJWT)
   @Post()
@@ -26,7 +37,7 @@ export class RoomController {
     try {
       const newRoom: Room = await this.roomService.createNewRoom({
         ...roomInformation,
-        host: idUser,
+        host_id: idUser,
       });
 
       return response.status(HttpStatus.OK).json(newRoom);
@@ -38,10 +49,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/quick-play')
-  async getRoomQuickPlay(
-    @Res() response: Response,
-    @IdUser() IdUser: number,
-  ) {
+  async getRoomQuickPlay(@Res() response: Response, @IdUser() IdUser: number) {
     try {
       const room = await this.roomService.randomRoomForQuickPlay();
 
@@ -65,7 +73,7 @@ export class RoomController {
       const users = await this.roomUserService.getListUserOfRoom(idRoom);
 
       return response.status(HttpStatus.OK).json({
-        users: JSON.parse(JSON.stringify(users).replaceAll('id_user', 'user')),
+        users: JSON.parse(JSON.stringify(users).replaceAll('user_id', 'user')),
         max_player: room.max_player,
       });
     } catch (error) {
