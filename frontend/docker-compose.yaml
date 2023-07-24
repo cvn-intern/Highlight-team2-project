@@ -5,4 +5,4 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "80:80" # Frontend port
+      - "8080:80" # Port 80 of container --> port 8080 of host

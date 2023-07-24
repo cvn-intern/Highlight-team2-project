@@ -5,7 +5,7 @@ FROM node:18 as build
 WORKDIR /app
 
 # Copy the frontend application files to the container
-COPY ./package.json ./package-lock.json ./
+COPY ./package.json ./
 
 # Install frontend dependencies
 RUN npm install
@@ -20,9 +20,8 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copy the frontend build files to the Nginx directory
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Expose the port Nginx is listening on (usually 80)
 EXPOSE 80
 
 # Start Nginx when the container runs

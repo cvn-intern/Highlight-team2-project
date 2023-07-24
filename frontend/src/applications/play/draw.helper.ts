@@ -80,7 +80,6 @@ export const drawTriangle = (
   const { x: previousX, y: previousY } = previousPoint;
   const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
-  console.log(snapshot.data.length);
   snapshot && ctx.putImageData(snapshot, 0, 0);
   ctx.moveTo(previousX, previousY);
   ctx.lineTo(currentX, currentY);
