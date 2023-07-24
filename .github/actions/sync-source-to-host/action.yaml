@@ -21,10 +21,10 @@ runs:
     - name: Remove the current source
       shell: bash
       run: |
-        sudo chown -R ubuntu ${{ inputs.destination-folder }}
-        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} "whoami and sudo mkdir /var/www/thanhlenhat"
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} "sudo chown -R ${{ inputs.ssh-username }} ${{ inputs.destination-folder }}"
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} "sudo rm -rf ${{ inputs.destination-folder }}/*"
 
     - name: Sync the new source
       shell: bash
       run: |
-        scp -r ${{ inputs.source-folder }} ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:${{ inputs.destination-folder }}
+        scp -r ${{ inputs.source-folder }}/* ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:${{ inputs.destination-folder }}

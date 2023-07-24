@@ -45,8 +45,10 @@ jobs:
           ssh-username: ubuntu
           ssh-host: ec2-13-215-153-89.ap-southeast-1.compute.amazonaws.com
           source-folder: ./backend
-          destination-folder: /home/ubuntu/
+          destination-folder: /home/ubuntu/backend
 
       - uses: ./.github/actions/backend-build
         with:
           variables-env: ${{ secrets.BACKEND_ENV }}
+          ssh-username: ubuntu
+          ssh-host: ec2-13-215-153-89.ap-southeast-1.compute.amazonaws.com
