@@ -52,7 +52,7 @@ export default function PlayingGameScreen() {
   }, []);
   useEffect(() => {
     if (!canvasRef.current) return;
-    setCtx(canvasRef.current.getContext("2d"));
+    setCtx(canvasRef.current.getContext("2d", { willReadFrequently: true }));
   }, [canvasRef]);
 
   useEffect(() => {

@@ -40,10 +40,25 @@ export class RoomController {
   @Get('/quick-play')
   async getRoomQuickPlay(
     @Res() response: Response,
-    @IdUser() IdUser: number,
   ) {
     try {
       const room = await this.roomService.randomRoomForQuickPlay();
+
+      return response.status(HttpStatus.OK).json(room);
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Get('/:codeRoom')
+  async getRoom(
+    @Param('codeRoom') codeRoom: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       return response.status(HttpStatus.OK).json(room);
     } catch (error) {
