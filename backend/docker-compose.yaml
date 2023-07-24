@@ -1,8 +1,54 @@
 services:
-   draw-and-guess:
+  backend:
     build: .
-    ports: 
-      - 3000:3000
-      - 3001:3001
     env_file:
       - .docker.env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      my_custom_network:
+        ipv4_address: 172.19.0.2
+  redis:
+    container_name: cache
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/data
+    networks:
+      my_custom_network:
+        ipv4_address: 172.19.0.3
+  postgres:
+    container_name: db_postgres
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=DRAWANDGUESS
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - 5432:5432
+    volumes:
+      - docker-nest-postgres:/var/lib/postgresql/data
+    networks:
+      my_custom_network:
+        ipv4_address: 172.19.0.4
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - "8080:8080"
+    networks:
+      my_custom_network:
+        ipv4_address: 172.19.0.5
+volumes:
+  redis:
+    driver: local
+  docker-nest-postgres:
+networks:
+  my_custom_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.19.0.0/16
