@@ -1,7 +1,7 @@
-import { Repository } from "typeorm";
-import { RoomUser } from "./roomUser.entity";
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from 'typeorm';
+import { RoomUser } from './roomUser.entity';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class RoomUserRepository extends Repository<RoomUser> {
@@ -12,25 +12,25 @@ export class RoomUserRepository extends Repository<RoomUser> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
-  async getParticipantsOfRoom(id_room: number): Promise<RoomUser[]> {
+  async getParticipantsOfRoom(room_id: number): Promise<RoomUser[]> {
     return await this.createQueryBuilder('roomuser')
-      .where('id_room = :id_room', { id_room })
-      .innerJoin('roomuser.id_user', 'user')
+      .where('room_id = :room_id', { room_id })
+      .innerJoin('roomuser.user_id', 'user')
       .addSelect(['user.id', 'user.nickname', 'user.avatar'])
       .orderBy('roomuser.score', 'ASC')
       .getMany();
   }
 
-  async getParticipant(id_room: number, id_user: number): Promise<RoomUser> {
+  async getParticipant(room_id: number, user_id: number): Promise<RoomUser> {
     return await this.findOne({
       where: {
-        id_room: id_room,
-        id_user: id_user,
+        room_id: room_id,
+        user_id: user_id,
       },
     });
   }
 
-  async countParticipantInRoom(id_room: number): Promise<Number> {
+  async countParticipantInRoom(room_id: number): Promise<Number> {
     return 0;
   }
 }

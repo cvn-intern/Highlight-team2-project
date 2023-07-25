@@ -1,5 +1,5 @@
 services:
-  backend:
+   draw-and-guess:
     build: .
     env_file:
       - .docker.env

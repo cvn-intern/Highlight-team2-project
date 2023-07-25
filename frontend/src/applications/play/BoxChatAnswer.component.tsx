@@ -3,6 +3,7 @@ import {
   FormEvent,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
@@ -33,10 +34,10 @@ const Message = (props: MessageProps) => {
   const { icon: Icon } = props;
 
   return (
-    <div className={cn("text-green-400 flex gap-2", props.type)}>
+    <div className={cn("text-green-400 flex gap-2 break-words", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>{props.user}</strong>
-      <span> {props.content}</span>
+      <span className='max-w-[190px]'> {props.content}</span>
     </div>
   );
 };
@@ -59,6 +60,7 @@ const BoxChat = (props: BoxProps) => {
   const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
     MAX_NUMBER_OF_CHARACTER
   );
+  const messagesEndRef = useRef<any>(null)
   useEffect(() => {
     setNumberOfCharactersLeft(MAX_NUMBER_OF_CHARACTER - inputChat.length);
   }, [inputChat]);
@@ -95,6 +97,10 @@ const BoxChat = (props: BoxProps) => {
     SetInputChat(e.target.value);
   };
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [props.listChat])
+
   return (
     <>
       <div className="box relative w-[100%]">
@@ -112,6 +118,7 @@ const BoxChat = (props: BoxProps) => {
                 icon={iconsMap.get(ele.icon)}
               />
             ))}
+            <div ref={messagesEndRef} />
           </div>
           <div className="relative">
             <form onSubmit={handleSubmitForm} className="relative">
