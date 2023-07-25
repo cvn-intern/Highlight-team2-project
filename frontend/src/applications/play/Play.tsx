@@ -34,7 +34,7 @@ export default function PlayingGameScreen() {
   const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
-  const [roomInfo, setRoomInfo] = useState<RoomInfo>()
+  const [roomInfo, setRoomInfo] = useState<RoomType>()
 
   // Side Effects
   useEffect(() => {

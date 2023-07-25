@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useNavigate } from "react-router-dom"
 
 type ActionButtonsProps = {
-    roomInfo?: RoomInfo
+    roomInfo?: RoomType
 }
 
 const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
@@ -47,7 +47,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Rounds:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo.max_player_round} rounds</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.max_player} rounds</p>
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Language:</p>

@@ -47,12 +47,14 @@ export class RoomService {
     return rooms[0].code_room;
   }
 
-  async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
-    const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
-
-    if (!room) {
+  async getRoomByCodeRoom(codeRoom: string) {
+    const isExisted = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+    
+    if(!isExisted) {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
-    }
+    } 
+
+    const room = await this.roomRepository.getInformationRoom(codeRoom);
 
     return room;
   }
@@ -65,5 +67,12 @@ export class RoomService {
     const participant = await this.roomUserService.createNewRoomUser(idRoom, idUser);
 
     return participant;
+  }
+
+  async checkRoomAvailability(codeRoom: string): Promise<boolean> {
+    const room = await this.roomRepository.getInformationRoom(codeRoom);
+
+
+    return room.max_player > room.participants;
   }
 }

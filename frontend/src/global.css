@@ -152,7 +152,7 @@
   }
 
   .home-content-responsive {
-    @apply max-md:flex-col md:gap-24 max-md:mt-10;
+    @apply max-lg:flex-col md:gap-24 max-md:mt-10;
   }
 }
 

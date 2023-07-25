@@ -1,18 +1,21 @@
-type RoomInfo = {
-    id: number
-    code_room: string
-    is_public: boolean
-    max_player_round: number
-    thumbnail: string
-    time_per_round: number
+type RoomType = {
+    code_room: string;
+    created_at: Date;
+    id: number;
+    is_public: boolean;
     language: {
-        name: string
-    }
+        name: string;
+    };
+    max_player: number;
+    participants: number;
+    thumbnail: string;
+    time_per_round: number;
+    number_of_round: number;
+    updated_at: Date;
     words_collection: {
-        id: number
+        id: number;
         theme: {
-            name: string
+            name: string;
         }
-    }
-    participants: number
+    };
 }

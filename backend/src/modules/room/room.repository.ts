@@ -3,6 +3,9 @@ import { Room } from './room.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RoomUser } from '../room-user/roomUser.entity';
+import { Language } from '../language/language.entity';
+import { WordsCollection } from '../words-collection/wordsCollection.entity';
+import { Theme } from '../theme/theme.entity';
 
 @Injectable()
 export class RoomRepository extends Repository<Room> {
@@ -41,5 +44,37 @@ export class RoomRepository extends Repository<Room> {
         code_room: codeRoom,
       },
     });
+  }
+
+  async getInformationRoom(codeRoom: string) {
+    const room: any = await this.createQueryBuilder('room')
+    .where('room.code_room = :codeRoom', {codeRoom})
+    .leftJoinAndMapOne(
+      'room.language', Language, 'language', 'language.code = room.language_code'
+    )
+    .leftJoinAndMapOne(
+      'room.words_collection', WordsCollection, 'wordcollection', 'room.words_collection_id = wordcollection.id'
+    )
+    .leftJoinAndMapOne(
+      'wordcollection.theme', Theme, 'theme', 'wordcollection.theme_id = theme.id'
+    )
+    .leftJoinAndMapMany(
+      'room.participants',
+      RoomUser,
+      'roomuser',
+      'roomuser.room_id = room.id',
+    )
+    .select(['room'])
+    .addSelect([
+      'theme.name',
+      'wordcollection.id',
+      'language.name',
+      'roomuser',
+    ])
+    .getOne();
+    
+    room.participants = room.participants.length;
+
+    return room;
   }
 }

@@ -8,6 +8,7 @@ import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
 import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
+import WaitingRoom from "./applications/waitingRoom/WaitingRoom";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 
@@ -51,7 +52,8 @@ function App() {
       <Providers>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage/>} />
+            <Route path="/" element={<Homepage />} />
+            <Route path="/:codeRoom/waiting" element={<WaitingRoom />} />
             <Route
               path="/:codeRoom"
               element={
