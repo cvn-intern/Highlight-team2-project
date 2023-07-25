@@ -42,10 +42,10 @@ const PlayForm = () => {
   const { user, setUser } = useUserStore();
   const { socket } = useSocketStore();
   const navigate = useNavigate();
-
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
   );
+  const [isDisablePlayBtn, setIsDisablePlayBtn] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -73,14 +73,18 @@ const PlayForm = () => {
 
         setUser(data);
       }
-
       const { data } = await playService.quickPlay();
+      socket?.emit("join-room", data);
+
+      socket?.on('error', (data: any) => {
+        setIsDisablePlayBtn(true);
+        console.log(data);
+      });
 
       navigate("/" + data);
 
-      socket?.emit("join-room", data);
-    } catch (error) {
-      console.log({ error });
+    } catch (error: any) {
+      alert(error.response.data.response)
     }
   };
 
@@ -178,6 +182,7 @@ const PlayForm = () => {
           </Button>
 
           <Button
+            disabled={isDisablePlayBtn}
             type="submit"
             variant="opacityHover"
             className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"

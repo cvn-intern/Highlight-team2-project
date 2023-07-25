@@ -15,8 +15,8 @@ function App() {
   const { setUser } = useUserStore();
 
   useEffect(() => {
-    const initSocket = (token: string) => {
-      createSocketInstance(token);
+    const initSocket = (token: string, userId: number) => {
+      createSocketInstance(token, userId);
       setLoading(false);
     };
 
@@ -25,7 +25,7 @@ function App() {
         const { data } = await authService.newUser();
         setUser(data.user);
         JWTManager.setToken(data.accessToken);
-        initSocket(data.accessToken);
+        initSocket(data.accessToken, data.user.id);
       } catch (error) {
         console.log(error);
       }
@@ -37,8 +37,8 @@ function App() {
     if (!token && !socket) {
       initUser();
     } else if (token && user) {
-      initSocket(token);
       setUser(JSON.parse(user));
+      initSocket(token, (JSON.parse(user)).id);
     }
   }, []);
 
