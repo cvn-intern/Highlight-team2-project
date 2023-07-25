@@ -13,6 +13,8 @@ import { RGBAColorType, PaintContextType, Point, PenStyleType } from "./draw";
 import { resetCanvas } from "./draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
 import { useNavigate } from "react-router";
+import ActionButtons from "./ActionButtons.component";
+import Logo from "@/shared/components/Logo";
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -92,10 +94,14 @@ export default function PlayingGameScreen() {
     >
       <MainLayout>
         <div
-          className={`w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
+          className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
         >
+          <div className="absolute top-1 left-20 lg:left-28 2xl:left-24">
+            <Logo customClassname="md:w-[180px] 2xl:w-[205px] w-[250px]" />
+          </div>
           <RankingBoard />
-          <div className="w-[var(--canvas-width)] flex flex-col gap-6">
+          <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
+            <ActionButtons/>
             <Canvas />
             <BoxChatAnswer />
           </div>
