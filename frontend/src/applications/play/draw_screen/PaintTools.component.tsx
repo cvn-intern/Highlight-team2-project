@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { PaintContext } from "@/applications/play/Page";
+import { PaintContext } from "@/applications/play/PlayingGameScreen";
 // Components
 import ColorPicker from "./ColorPicker.component";
 import ToolBtns from "./ToolBtns.component";

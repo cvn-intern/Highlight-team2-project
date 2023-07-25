@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PlayingGameScreen from "@/applications/play/Page";
+import PlayingPage from "@/applications/play/Page";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import authService from "@/shared/services/authService";
@@ -7,7 +7,7 @@ import { useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
+// import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
 import WaitingRoom from "./applications/waitingRoom/WaitingRoom";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
@@ -43,6 +43,7 @@ function App() {
       setUser(JSON.parse(user));
       initSocket(token, JSON.parse(user).id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) return null;
@@ -54,14 +55,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/:codeRoom/waiting" element={<WaitingRoom />} />
-            <Route
-              path="/:codeRoom"
-              element={
-                <CheckSocketDisconnectedRoute>
-                  <PlayingGameScreen />
-                </CheckSocketDisconnectedRoute>
-              }
-            />
+            <Route path="/:codeRoom" element={<PlayingPage />} />
             <Route
               path="/user/existing"
               element={<UserExistsInBrowserPage />}

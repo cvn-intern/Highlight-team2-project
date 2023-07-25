@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvents";
-import { PaintContext } from "../Page";
+import { PaintContext } from "@/applications/play/PlayingGameScreen";
 import BtnChosePenStyle from "./BtnChosePenStyle.component";
 import {
   Edit,

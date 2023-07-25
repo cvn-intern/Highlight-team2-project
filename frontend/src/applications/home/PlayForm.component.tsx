@@ -76,14 +76,13 @@ const PlayForm = () => {
       const { data } = await playService.quickPlay();
       socket?.emit("join-room", data);
 
-      socket?.on('error', () => {
+      socket?.on("error", () => {
         setIsDisablePlayBtn(true);
       });
 
-      navigate("/" + data);
-
+      navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      alert(error.response.data.response)
+      alert(error.response.data.response);
     }
   };
 

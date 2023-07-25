@@ -16,12 +16,12 @@ const Homepage = () => {
   const { socket } = useSocketStore();
 
   useEffect(() => {
-    socket?.on('error', (data: string) => {
+    socket?.on("error", (data: string) => {
       const errorSocket: ErrorSocketType = JSON.parse(data);
       alert(errorSocket.message);
-      window.location.href = 'https://google.com';
+      window.location.href = "https://google.com";
     });
-  }, [])
+  }, []);
 
   return (
     <MainLayout>
