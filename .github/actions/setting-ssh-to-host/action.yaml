@@ -16,7 +16,7 @@ runs:
   using: composite
   steps:
     - name: Setup SSH agent on the runner
-      uses: webfactory/ssh-agent@v0.5.0
+      uses: webfactory/ssh-agent@v0.7.0
       with:
         ssh-private-key: ${{ inputs.ssh-private-key }}
 
