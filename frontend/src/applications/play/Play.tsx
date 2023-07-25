@@ -32,8 +32,6 @@ export default function PlayingGameScreen() {
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
 
-  const navigate = useNavigate()
-
   // Side Effects
   useEffect(() => {
     const resetState = () => {
