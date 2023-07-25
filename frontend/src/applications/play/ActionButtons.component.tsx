@@ -7,13 +7,19 @@ import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/components/shadcn-ui/dialog"
 import { useNavigate } from "react-router-dom"
 
-const ActionButtons = () => {
+type ActionButtonsProps = {
+    roomInfo?: RoomInfo
+}
+
+const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
 
     const [isSound, setIsSound] = useState(true)
 
     const navigate = useNavigate()
 
     const toggleSound = () => setIsSound(prev => !prev)
+
+    if (!roomInfo) return null
 
     return (
         <div className="w-full absolute top-[-45px]"
@@ -37,15 +43,15 @@ const ActionButtons = () => {
                             <div className="grid gap-4 py-4 grid-cols-3">
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Theme:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">General</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.words_collection.theme.name}</p>
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Rounds:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">12 rounds</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo.max_player_round} rounds</p>
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Language:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">English</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.language.name}</p>
                                 </div>
                             </div>
                         </DialogContent>
