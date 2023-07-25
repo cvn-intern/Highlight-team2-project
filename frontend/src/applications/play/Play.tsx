@@ -14,6 +14,8 @@ import { resetCanvas } from "./draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
 import ActionButtons from "./ActionButtons.component";
 import Logo from "@/shared/components/Logo";
+import roomService from "@/shared/services/roomService";
+import { useParams } from "react-router-dom";
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -21,6 +23,8 @@ export const PaintContext = createContext<PaintContextType | null>(null);
 export default function PlayingGameScreen() {
   const isDrawer = true;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const {codeRoom} = useParams()
+
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [snapshot, setSnapshot] = useState<ImageData>();
@@ -30,6 +34,8 @@ export default function PlayingGameScreen() {
   const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
+  const [roomInfo, setRoomInfo] = useState<RoomInfo>()
+
   // Side Effects
   useEffect(() => {
     const resetState = () => {
@@ -66,6 +72,20 @@ export default function PlayingGameScreen() {
     canvas.height = canvas.offsetHeight;
     resetCanvas(ctx);
   }, [ctx]);
+
+  useEffect(() => {
+   const getRoomInfo = async () => {
+    if(!codeRoom) return
+    try {
+      const {data} = await roomService.getRoom(codeRoom)
+      setRoomInfo(data)
+    } catch (error) {
+      console.log({error})
+    }
+   }
+   getRoomInfo()
+  }, [codeRoom]);
+
   return (
     <PaintContext.Provider
       value={{
@@ -97,7 +117,7 @@ export default function PlayingGameScreen() {
           </div>
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
-            <ActionButtons/>
+            <ActionButtons roomInfo={roomInfo}/>
             <Canvas />
             <BoxChatAnswer />
           </div>
