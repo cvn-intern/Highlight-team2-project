@@ -27,5 +27,5 @@ runs:
       shell: bash
       run: |
         ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend && sudo docker compose down'
-        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend && sudo docker compose pull'
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend/script && sudo sh ./remove-unused-docker-resources.sh'
         ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend && sudo docker compose up --detach'
