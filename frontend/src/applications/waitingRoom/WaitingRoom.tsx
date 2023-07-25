@@ -3,8 +3,7 @@ import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import PlayForm from "../home/PlayForm.component";
-import PlayerInfomation from "./PlayerInfomation.component";
+import PlayerInfomation from "./PlayerInformation.component";
 import { useNavigate } from "react-router-dom";
 import ControllerIcon from "@/shared/assets/controller-icon.svg"
 import { useUserStore } from "@/shared/stores/userStore";
