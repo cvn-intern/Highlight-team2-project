@@ -6,8 +6,8 @@ export function ProgressPlayTime() {
 
     const MIN_PROGRESS_PERCENTAGE = 0
     const MAX_PROGRESS_PERCENTAGE = 100
-    const PROGRESS_STEP = 0.006
-    const PROGRESS_MILI_PER_SECOND = 10
+    const PROGRESS_STEP = 0.0006
+    const PROGRESS_MILI_PER_SECOND = 1
 
     React.useEffect(() => {
         const timer = setInterval(() => {
@@ -20,5 +20,5 @@ export function ProgressPlayTime() {
         }
     }, [])
 
-    return <Progress value={progress} color="red" className="absolute bottom-1 w-[98%] h-3 left-1/2 -translate-x-1/2 bg-slate-200" />
+    return <Progress value={progress} className="absolute bottom-1 w-[98%] h-2.5 left-1/2 -translate-x-1/2 bg-blue-900 border-2 border-black" />
 }

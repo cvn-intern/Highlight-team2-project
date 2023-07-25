@@ -8,6 +8,8 @@ import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
 import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
+import NotFoundPage from "./shared/pages/NotFoundPage";
+import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -49,15 +51,17 @@ function App() {
       <Providers>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Homepage />} />
+            <Route path="/" element={<Homepage/>} />
             <Route
               path="/:codeRoom"
               element={
                 <CheckSocketDisconnectedRoute>
-                  <PlayingGameScreen />
+                  <PlayingGameScreen/>
                 </CheckSocketDisconnectedRoute>
               }
             />
+            <Route path="/user/existing" element={<UserExistsInBrowserPage/>} />
+            <Route path="*" element={<NotFoundPage/>} />
           </Routes>
         </BrowserRouter>
       </Providers>
