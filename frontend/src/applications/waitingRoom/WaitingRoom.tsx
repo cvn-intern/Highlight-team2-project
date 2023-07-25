@@ -4,20 +4,21 @@ import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import PlayerInfomation from "./PlayerInformation.component";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ControllerIcon from "@/shared/assets/controller-icon.svg"
 import { useUserStore } from "@/shared/stores/userStore";
 import { useEffect, useState } from "react";
 import userService from "@/shared/services/userService";
-import playService from "@/shared/services/playService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import RoomInformation from "./RoomInformation.component";
+import ErrorSocketType from "@/shared/types/errorSocket";
 
 const WaitingRoom = () => {
   const { user, setUser } = useUserStore();
   const [nickname, setNickname] = useState<string>("");
   const navigate = useNavigate();
   const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
 
   const handleJoinRoom = async () => {
     if (!nickname) alert("Please enter your nickname");
@@ -32,11 +33,13 @@ const WaitingRoom = () => {
         setUser(data);
       }
 
-      const { data } = await playService.quickPlay();
-
-      navigate("/" + data);
-
-      socket?.emit("join-room", data);
+      socket?.emit("join-room", codeRoom);
+      socket?.on('error', (data: string) => {
+        const error: ErrorSocketType = JSON.parse(data);
+        alert(error.message);
+        navigate("/");
+      });
+      navigate("/" + codeRoom);
     } catch (error) {
       console.log({ error });
     }

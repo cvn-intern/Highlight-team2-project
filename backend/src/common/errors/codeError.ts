@@ -25,4 +25,9 @@ errosMap.set('CANNOTJOIN', {
   message: 'Can not join this room!',
 });
 
+errosMap.set('ROOMFULL', {
+  type: 'ROOMFULL',
+  message: 'Room is full!',
+});
+
 export default errosMap;

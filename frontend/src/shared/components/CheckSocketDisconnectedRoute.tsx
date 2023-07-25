@@ -18,16 +18,13 @@ export default function CheckSocketDisconnectedRoute({ children }: Props) {
       const getRoom = async (codeRoom: string) => {
         try {
           const { data } = await roomService.getRoom(codeRoom);
+          
           if(data) {
-            socket?.emit("join-room", codeRoom);
+            navigate(`/${codeRoom}/waiting`);
           }
-
-          socket?.on('error', (data: any) => {
-            console.log(data);
-          });
         } catch (error: any) {
           alert(error.response.data.response);
-          navigate("/:codeRoom/waiting");
+          navigate("/")
         }
       }
       if (codeRoom) {

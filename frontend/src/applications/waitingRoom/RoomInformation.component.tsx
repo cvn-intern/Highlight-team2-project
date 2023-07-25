@@ -1,59 +1,56 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import playService from "@/shared/services/playService";
+import roomService from "@/shared/services/roomService";
+import RoomType from "@/shared/types/room";
 import { Globe, Swords, User2 as UserIcon } from "lucide-react";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-
-interface WaitingRoomProps {
-    "code_room": string,
-    "max_player": number,
-    "number_of_round": number,
-    "thumbnail": string,
-}
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const RoomInformation = () => {
     const { codeRoom } = useParams();
-    const [roomData, setRoomData] = useState<WaitingRoomProps>({
-        "code_room": "000000",
-        "max_player": 0,
-        "number_of_round": 0,
-        "thumbnail": "https://scontent.fsgn2-7.fna.fbcdn.net/v/t1.6435-1/108183626_2708185066093656_2321218826465342306_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&cb=99be929b-59f725be&ccb=1-7&_nc_sid=7206a8&_nc_ohc=v8CiEr2-bLEAX-MJd2v&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDTck5bjeB2zzDz1pf4kpWKxMTHU6zChm5pw7mvtIzDMg&oe=64E694C4",
-    })
+    const navigate = useNavigate();
+    const [roomData, setRoomData] = useState<RoomType>();
 
-    const getRoomInformation = async () => {
-        if (!codeRoom) return;
-        try {
-            const { data } = await playService.roomInformation(codeRoom);
-            setRoomData(data);
-        } catch (error) {
-            console.log({ error });
-        }
-    };
-    getRoomInformation();
+    useEffect(() => {
+        const getRoomInformation = async () => {
+            if (!codeRoom) return;
+            try {
+                const { data } = await roomService.getRoom(codeRoom);
+                
+                setRoomData(data);
+            } catch (error) {
+                alert('Room not found!');
+                navigate('/')
+                console.log({ error });
+            }
+        };
+
+        getRoomInformation();
+    }, [])
+
 
     return (
         <div className="flex flex-col items-center justify-center basis-1/2 flex-1 bg-slate-300 rounded-2xl p-2 ">
             <div className=" bg-white flex flex-col items-center m-2 rounded-2xl p-5  h-full">
                 <p className="text-xl font-medium text-blue-500 ">
-                    <strong>CHỖ NÀY ĐỂ TÊN THEME VỚI MÃ PHÒNG</strong>
+                    <strong>{roomData && roomData.words_collection.theme.name.toUpperCase()} #{roomData && roomData.code_room}</strong>
                 </p>
                 <div className="bg-white flex flex-col md:flex-row text-left m-2 rounded-2xl p-2 md:p-8 h-full">
                     <div className="flex flex-col text-left gap-4 m-5 md:gap-10 xl:gap-20 home-content-responsive h-full">
                         <div className="flex flex-row items-center space-x-4">
                             <Avatar className="relative flex items-center bg-yellow-300 w-[80px] h-auto overflow-visible border-4 border-solid">
                                 <AvatarImage
-                                    src="https://scontent.fsgn2-7.fna.fbcdn.net/v/t1.6435-1/108183626_2708185066093656_2321218826465342306_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&cb=99be929b-59f725be&ccb=1-7&_nc_sid=7206a8&_nc_ohc=v8CiEr2-bLEAX-MJd2v&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDTck5bjeB2zzDz1pf4kpWKxMTHU6zChm5pw7mvtIzDMg&oe=64E694C4"
+                                    src={roomData && roomData.thumbnail}
                                     alt="thumbnail"
                                     className="border-2 border-white border-solid rounded-full"
                                 />
-                                <AvatarFallback>{roomData.thumbnail}</AvatarFallback>
+                                <AvatarFallback>{roomData && roomData.thumbnail}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col items-center justify-center">
                                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
                                     THEME
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>General</strong>
+                                    <strong>{roomData && roomData.words_collection.theme.name}</strong>
                                 </p>
                             </div>
                         </div>
@@ -70,7 +67,7 @@ const RoomInformation = () => {
                                     LANGUAGE
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>Engrisk</strong>
+                                    <strong>{roomData && roomData.language.name}</strong>
                                 </p>
                             </div>
                         </div>
@@ -89,7 +86,7 @@ const RoomInformation = () => {
                                     ROUND
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>{roomData.number_of_round}</strong>
+                                    <strong>{roomData && roomData.number_of_round}</strong>
                                 </p>
                             </div>
                         </div>
@@ -106,7 +103,7 @@ const RoomInformation = () => {
                                     PLAYERS
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>{roomData.max_player}</strong>
+                                    <strong>{roomData && roomData.participants}/{roomData && roomData.max_player}</strong>
                                 </p>
                             </div>
                         </div>

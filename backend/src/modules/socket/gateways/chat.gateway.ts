@@ -19,7 +19,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       if (isBlock) {
         return;
       }
-      
+
       this.socketService.removeClientDisconnection(client);
 
       const payload = await this.socketService.extractPayload(client);
@@ -51,7 +51,10 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           type: TEXT_RED,
           icon: LOGOUT_ICON,
         });
+
         await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
+        await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`)
       }
     } catch (error) {
       this.logger.error(error);
@@ -92,20 +95,27 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       if (!room) {
+        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTFOUNDROOM')));
         throw new WsException(JSON.stringify(errosMap.get('NOTFOUNDROOM')));
+      }
+
+      const isAvailableRoom: boolean = await this.roomService.checkRoomAvailability(codeRoom);
+
+      if(!isAvailableRoom) {
+        this.socketService.sendError(client, JSON.stringify(errosMap.get('ROOMFULL')));
+        throw new WsException(JSON.stringify(errosMap.get('ROOMFULL')));
       }
 
       const participant = await this.roomService.joinRoom(idRoom, client.user.id);
 
       if (!participant) {
+        this.socketService.sendError(client, JSON.stringify(errosMap.get('CANNOTJOIN')));
         throw new WsException(JSON.stringify(errosMap.get('CANNOTJOIN')));
       }
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       client.join(codeRoom);
-
-      await this.roomUserService.createNewRoomUser(idRoom, client.user.id);
 
       const chatContent: Chat = {
         user: client.user.nickname,

@@ -9,7 +9,7 @@ type PlayerInfomationProps = {
   setNickname: (nickname: string) => void
 };
 
-const PlayerInfomation = ({nickname,setNickname}: PlayerInfomationProps) => {
+const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
   const { user } = useUserStore();
 
   return (
