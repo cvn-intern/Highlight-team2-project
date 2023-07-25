@@ -31,13 +31,13 @@ const PlayerInfomation = ({nickname,setNickname}: PlayerInfomationProps) => {
       {user?.is_guest && (
         <>
           <DividerWithText
-            className="px-10 2xl:mt-5 md:px-12 lg:px-40"
+            className="px-10 2xl:mt-1"
             text="LOGIN"
             dividerClassname="text-red-400"
-            textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor"
+            textClassname="2xl:text-md w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor"
           />
 
-          <div className="flex items-center justify-center gap-4 mb-10 mt-7 2xl:mt-10">
+          <div className="flex items-center justify-center gap-2 mb-2 mt-2 2xl:mt-5">
             <GoogleLoginButton />
           </div>
         </>

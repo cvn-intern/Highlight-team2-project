@@ -58,13 +58,13 @@ const WaitingRoom = () => {
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
 
-        <div className="lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] min-h-[70vh] mt-5 rounded-2xl p-8">
+        <div className="lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] sm:w-[80vw] min-h-[70vh] mt-5 rounded-2xl pb-8">
           <img
             src={JoinRoomBanner}
-            className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden"
+            className="mt-1 mb-1 2xl:my-5 w-[500px] max-md:hidden"
           />
 
-          <div className="flex items-stretch justify-center gap-4 mb-8 ml-8 home-content-responsive bg-white h-full" >
+          <div className="flex items-stretch justify-center gap-4 mb-8 home-content-responsive bg-white h-full p-8 md:p-0" >
             <PlayerInfomation nickname={nickname} setNickname={setNickname} />
             <RoomInformation />
           </div>
