@@ -18,4 +18,9 @@ server {
         allow all;
         root /var/www/html;
     }
+
+    # Any route that doesn't have a file extension (e.g. /devices)
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
 }
