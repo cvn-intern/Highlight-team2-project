@@ -43,7 +43,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
                             <div className="grid gap-4 py-4 grid-cols-3">
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Theme:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.words_collection.theme.name}</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.words_collection?.theme?.name}</p>
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Rounds:</p>
@@ -51,7 +51,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
                                 </div>
                                 <div className="flex flex-col items-center justify-center">
                                     <p className="text-[#334d50] font-semibold text-lg">Language:</p>
-                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.language.name}</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">{roomInfo?.language?.name}</p>
                                 </div>
                             </div>
                         </DialogContent>
