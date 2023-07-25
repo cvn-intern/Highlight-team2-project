@@ -1,8 +1,10 @@
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo"
 import TooltipIcon from "@/shared/components/TooltipIcon"
 import ExitImg from "@/shared/assets/exit.png"
-import { AlertCircle, CopyX, LogOut, Volume2, VolumeX, X } from "lucide-react"
+import { AlertCircle, LogOut, Volume2, VolumeX, X } from "lucide-react"
+import SettingIcon from "@/shared/assets/icons/setting-icon.png"
 import { useState } from "react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/components/shadcn-ui/dialog"
 
 const ActionButtons = () => {
 
@@ -16,7 +18,36 @@ const ActionButtons = () => {
             <div className="w-full flex items-center justify-between text-white">
                 <TooltipIcon icon={isSound ? Volume2 : VolumeX} text="Sound" onClick={toggleSound} />
                 <div className="flex items-center gap-3">
-                    <TooltipIcon icon={AlertCircle} text="Info" iconSize={28} />
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <TooltipIcon icon={AlertCircle} text="Info" iconSize={28} />
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[550px]">
+                            <DialogHeader>
+                                <DialogTitle className="text-center text-4xl uppercase mb-8 bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">Room Infomation</DialogTitle>
+                                <DialogDescription>
+                                    <div className="p-3 bg-gradient-to-r from-[#BBD2C5] to-[#536976] w-fit mx-auto rounded-full border-4 border-black shadow-md">
+                                        <img alt="" src={SettingIcon} className="w-32 h-32 object-cover" />
+                                    </div>
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4 grid-cols-3">
+                                <div className="flex flex-col items-center justify-center">
+                                    <p className="text-[#334d50] font-semibold text-lg">Theme:</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">General</p>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <p className="text-[#334d50] font-semibold text-lg">Rounds:</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">12 rounds</p>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <p className="text-[#334d50] font-semibold text-lg">Language:</p>
+                                    <p className="bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent font-bold text-xl">English</p>
+                                </div>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+
                     <AlertDialogYesNo
                         buttonContent={<TooltipIcon icon={X} text="Exit" />}
                         buttonVariant={"link"}
