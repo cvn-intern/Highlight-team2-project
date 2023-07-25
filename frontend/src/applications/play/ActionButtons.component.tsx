@@ -59,9 +59,9 @@ const ActionButtons = () => {
                         headerChildren={<img src={ExitImg} alt="" className="w-32 h-32 object-cover mb-2" />}
                         alertMessage="Do you want to leave the game?"
                         messageClassName="text-xl font-bold text-black"
-                        cancelClassName="rounded-full border-8 border-black font-black bg-blue-500 p-5 w-[150px] text-xl text-black hover:text-white"
-                        confirmClassName="rounded-full border-8 border-black font-black bg-[#FFE569] p-5 w-[150px] text-xl text-black hover:text-white"
-                        containerClassName="h-[400px] flex flex-col items-center justify-center gap-10  border-8 border-blue-500"
+                        cancelClassName="rounded-full border-8 border-black font-black bg-gradient-to-r from-[#00416A] to-[#E4E5E6] p-5 w-[150px] text-xl text-black hover:text-white"
+                        confirmClassName="rounded-full border-8 border-black font-black bg-gradient-to-r from-[#ffd452] to-[#E4E5E6] p-5 w-[150px] text-xl text-black hover:text-white"
+                        containerClassName="h-[400px] flex flex-col items-center justify-center gap-10  border-8 border-[#00416A]/90"
                     />
                 </div>
             </div>
