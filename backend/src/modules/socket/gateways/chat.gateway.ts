@@ -164,6 +164,9 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         icon: LOGOUT_ICON,
       };
 
+      await this.redisService.deleteObjectByKey(`USER:${client.user.id}:ROOM`);
+      const roomId = extractIdRoom(codeRoom);
+      await this.roomUserService.deleteRoomUser(roomId, client.user.id);
       client.to(codeRoom).emit(`${codeRoom}-leave`, chatContent);
       client.leave(codeRoom);
     } catch (error) {
