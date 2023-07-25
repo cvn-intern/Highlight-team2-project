@@ -1,46 +1,78 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
 import { RoomInterface } from './room.interface';
 import { randomString } from '../../common/utils/helper';
-import { RoomRoundService } from '../roomRound/roomRound.service';
+import { RoomRoundService } from '../room-round/roomRound.service';
+import { RoomRepository } from './room.repository';
+import { RoomUserService } from '../room-user/roomUser.service';
+import { RoomUser } from '../room-user/roomUser.entity';
 
 const MAX_LENGTH_RANDOM = 5;
 
 @Injectable()
 export class RoomService {
   constructor(
-    @InjectRepository(Room)
-    private roomRepository: Repository<Room>,
+    private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
-  ) { }
+    private roomUserService: RoomUserService,
+  ) {}
 
-  async createNewRoom(roomInformation: RoomInterface) {
-    const codeRoom: string = randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
+  async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
+    const codeRoom: string =
+      randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
+    const idRoom: number = await this.roomRepository.generateIdRoom();
 
-    const room = await this.roomRepository.save({
+    const room: Room = this.roomRepository.create({
       ...roomInformation,
-      code_room: codeRoom,
+      code_room: `${codeRoom}_${idRoom}`,
+      id: idRoom,
     });
 
-    return await this.roomRepository.save({
-      ...room,
-      code_room: `${room.code_room}_${room.id}`,
-    });
+    return await this.roomRepository.save(room);
   }
 
-  async randomRoomForQuickPlay() {
-    const listRoomAvailable = await this.roomRepository.manager.query(
-      `
-        select r.code_room
-        from public.room as r left join public.roomuser as ru on r.id = ru.id_room
-        where is_public = true
-        group by r.code_room, r.max_player
-        having count(ru.id_user) < r.max_player
-      `
+  async randomRoomForQuickPlay(): Promise<string> {
+    let rooms = await this.roomRepository.getAvailableRooms();
+    rooms = rooms.filter(
+      (room: RoomInterface) => room.users.length < room.max_player,
     );
 
-    return listRoomAvailable.length !== 0 ? listRoomAvailable[0] : null;
+    if (rooms.length === 0) {
+      throw new HttpException(
+        'Can not found available room!',
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return rooms[0].code_room;
+  }
+
+  async getRoomByCodeRoom(codeRoom: string) {
+    const isExisted = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+    
+    if(!isExisted) {
+      throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
+    } 
+
+    const room = await this.roomRepository.getInformationRoom(codeRoom);
+
+    return room;
+  }
+
+  async checkUserInRoom(idUser: number, idRoom: number): Promise<boolean> {
+    return await this.roomUserService.checkUserInRoom(idUser, idRoom);
+  }
+
+  async joinRoom(idRoom: number, idUser: number): Promise<RoomUser> {
+    const participant = await this.roomUserService.createNewRoomUser(idRoom, idUser);
+
+    return participant;
+  }
+
+  async checkRoomAvailability(codeRoom: string): Promise<boolean> {
+    const room = await this.roomRepository.getInformationRoom(codeRoom);
+
+
+    return room.max_player > room.participants;
   }
 }

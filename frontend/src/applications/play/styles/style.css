@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .box-label {
+    color: white;
+    background-color: #0b2990;
+    border-radius: 10px;
+    padding: 8px 12px;
+    text-align: center;
+    width: fit-content;
+    position: absolute;
+    top: 0;
+    right: 50%;
+    transform: translate(50%, -50%);
+  }
+
+  .box-content {
+    padding: 25px 0;
+  }
+
+  .box-input-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+  }
+
+  .box {
+    padding: 20px;
+  }
+}

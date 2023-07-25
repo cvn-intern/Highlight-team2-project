@@ -33,7 +33,15 @@
 
     --ring: 215 20.2% 65.1%;
 
-    --radius: 0.5rem;
+    --radius: 0.5rem2;
+
+    --play-window-width: calc(1366px * 1);
+    --play-window-height: calc(760px * 1);
+    --ranking-board-width: calc(448px * 1);
+    --canvas-width: calc(760px * 1);
+    --canvas-height: calc(390px * 1);
+    --tool-section-width: calc(158px * 1);
+    --chat-content-heigth: calc(154px * 1);
 
     --bg-color: #22a699;
     --color-gray-cc: #cccccc;
@@ -79,6 +87,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -88,10 +97,65 @@
   .flexCenter {
     @apply flex items-center justify-center;
   }
+
   .flexBetween {
     @apply flex items-center justify-between;
   }
+
+  .cursor-pencil {
+    cursor: url("./shared/assets/icons/cursor/pencil.svg"), auto;
+  }
+
+  .cursor-eraser {
+    cursor:
+      url("./shared/assets/icons/cursor/eraser.svg") 2 22,
+      auto;
+  }
+
+  .cursor-cross {
+    cursor:
+      url("./shared/assets/icons/cursor/cross.svg") 10 10,
+      auto;
+  }
+
+  .cursor-bucket {
+    cursor: url("./shared/assets/icons/cursor/bucket.svg"), auto;
+  }
+
+  .cursor-picker {
+    cursor:
+      url("./shared/assets/icons/cursor/picker.svg") 2 22,
+      auto;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
 }
-#main-layout{
-  background-image: url("./common//assets//bg.png");
+
+@layer components {
+  .slogan-width {
+    @apply w-[300px];
+  }
+
+  .slogan-responsive {
+    @apply max-md:hidden;
+  }
+
+  .home-content-responsive {
+    @apply max-lg:flex-col md:gap-24 max-md:mt-10;
+  }
+}
+
+#main-layout {
+  background-image: url("./shared/assets/bg.png");
 }

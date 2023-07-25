@@ -6,15 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LanguageModule } from '../modules/language/language.module';
 import { UserModule } from '../modules/user/user.module';
 import { RoomModule } from '../modules/room/room.module';
-import { RoomUserModule } from '../modules/roomUser/roomUser.module';
-import { RoomRoundModule } from '../modules/roomRound/roomRound.module';
 import { WordModule } from '../modules/word/word.module';
 import { ThemeModule } from '../modules/theme/theme.module';
 import { SocketModule } from '../modules/socket/socket.module';
 import { RedisModule } from '../modules/redis/redis.module';
 import { AuthModule } from '../modules/auth/auth.module';
-
-const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
+import { RoomUserModule } from 'src/modules/room-user/roomUser.module';
+import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
+import { WordsCollectionModule } from 'src/modules/words-collection/wordsCollection.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
@@ -28,6 +28,7 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
     SocketModule,
     RedisModule,
     AuthModule,
+    WordsCollectionModule,
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -36,20 +37,20 @@ const is_ssl: boolean = process.env.NODE_ENV === "production" ? true : false;
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => (
-        {
-          type: 'postgres',
-          host: configService.get<string>('DATABASE_HOST'),
-          port: configService.get<number>('DATABASE_PORT'),
-          username: configService.get<string>('DATABASE_USERNAME'),
-          password: configService.get<string>('DATABASE_PASSWORD'),
-          database: configService.get<string>('DATABASE_NAME'),
-          synchronize: true,
-          autoLoadEntities: true,
-          ssl: is_ssl,
-        }
-      )  
-    })
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DATABASE_HOST'),
+        port: configService.get<number>('DATABASE_PORT'),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        synchronize: true,
+        autoLoadEntities: true,
+      }),
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: process.cwd() + '/src/common/public',
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

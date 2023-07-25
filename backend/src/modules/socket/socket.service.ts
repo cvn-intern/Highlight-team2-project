@@ -4,6 +4,8 @@ import { Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
+import { SocketClass } from './socket.class';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class SocketService {
@@ -18,17 +20,31 @@ export class SocketService {
     try {
       const payload = await this.extractPayload(client);
       const idUser: number = payload.id;
-      
-      return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay)
+
+      this.logger.log(`Client ${client.id} connected!`);
+      const token = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
+      await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
+
+      return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay);
     } catch (error) {
       this.logger.error(error);
     }
   }
 
-  async removeClientDisconnection(client: Socket) {
+  async checkTokenValidSocket(client: Socket): Promise<boolean> {
+    const userId = this.getUserIdFromSocket(client)
+    const tokenOfSocket: string = await this.getTokenFromSocket(client);
+    const validToken: string = await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
+
+    return tokenOfSocket === validToken ? true : false;
+  }
+
+  async removeClientDisconnection(client: SocketClass) {
     try {
       const payload = await this.extractPayload(client);
       const idUser: number = payload.id;
+
+      this.logger.log(`Client ${client.id} disconnected!`);
 
       return await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
     } catch (error) {
@@ -46,5 +62,42 @@ export class SocketService {
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  async getTokenFromSocket(client: Socket): Promise<string> {
+    const token: string = client.handshake.headers.authorization;
+
+    return token;
+  }
+
+  getUserIdFromSocket(client: Socket): number {
+    const userId = client.handshake.headers.user as string;
+
+    if (!userId) {
+      throw new WsException('Unauthorize socket!');
+    }
+
+    return Number.parseInt(userId);
+  }
+
+  async checkInBlockList(client: Socket): Promise<boolean> {
+    const check: string = await this.redisService.getObjectByKey(`BLOCKLIST:SOCKET:${client.id}`);
+
+    return check ? true : false;
+  }
+
+  async checkLoginMultipleTab(client: Socket): Promise<boolean> {
+    const userId = this.getUserIdFromSocket(client)
+    const socketId: string = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
+
+    if (socketId && socketId !== client.id) {
+      return true;
+    }
+
+    return false;
+  }
+
+  sendError(client: Socket, error: string) {
+    client.emit('error', error);
   }
 }
