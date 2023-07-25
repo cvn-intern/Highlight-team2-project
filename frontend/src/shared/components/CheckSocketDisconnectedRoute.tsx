@@ -27,7 +27,7 @@ export default function CheckSocketDisconnectedRoute({ children }: Props) {
           });
         } catch (error: any) {
           alert(error.response.data.response);
-          navigate("/");
+          navigate("/:codeRoom/waiting");
         }
       }
       if (codeRoom) {

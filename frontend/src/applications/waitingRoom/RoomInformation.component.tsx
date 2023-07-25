@@ -1,7 +1,36 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
+import playService from "@/shared/services/playService";
 import { Globe, Swords, User2 as UserIcon } from "lucide-react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+
+interface WaitingRoomProps {
+    "code_room": string,
+    "max_player": number,
+    "number_of_round": number,
+    "thumbnail": string,
+}
 
 const RoomInformation = () => {
+    const { codeRoom } = useParams();
+    const [roomData, setRoomData] = useState<WaitingRoomProps>({
+        "code_room": "000000",
+        "max_player": 0,
+        "number_of_round": 0,
+        "thumbnail": "https://scontent.fsgn2-7.fna.fbcdn.net/v/t1.6435-1/108183626_2708185066093656_2321218826465342306_n.jpg?stp=dst-jpg_p200x200&_nc_cat=100&cb=99be929b-59f725be&ccb=1-7&_nc_sid=7206a8&_nc_ohc=v8CiEr2-bLEAX-MJd2v&_nc_ht=scontent.fsgn2-7.fna&oh=00_AfDTck5bjeB2zzDz1pf4kpWKxMTHU6zChm5pw7mvtIzDMg&oe=64E694C4",
+    })
+
+    const getRoomInformation = async () => {
+        if (!codeRoom) return;
+        try {
+            const { data } = await playService.roomInformation(codeRoom);
+            setRoomData(data);
+        } catch (error) {
+            console.log({ error });
+        }
+    };
+    getRoomInformation();
+
     return (
         <div className="flex flex-col items-center justify-center basis-1/2 flex-1 bg-slate-300 rounded-2xl p-2 ">
             <div className=" bg-white flex flex-col items-center m-2 rounded-2xl p-5  h-full">
@@ -17,7 +46,7 @@ const RoomInformation = () => {
                                     alt="thumbnail"
                                     className="border-2 border-white border-solid rounded-full"
                                 />
-                                <AvatarFallback>thumbnail</AvatarFallback>
+                                <AvatarFallback>{roomData.thumbnail}</AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col items-center justify-center">
                                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
@@ -60,7 +89,7 @@ const RoomInformation = () => {
                                     ROUND
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>5</strong>
+                                    <strong>{roomData.number_of_round}</strong>
                                 </p>
                             </div>
                         </div>
@@ -77,7 +106,7 @@ const RoomInformation = () => {
                                     PLAYERS
                                 </p>
                                 <p className="font-medium text-2xl text-center text-slate-500 dark:text-gray-400">
-                                    <strong>5/5</strong>
+                                    <strong>{roomData.max_player}</strong>
                                 </p>
                             </div>
                         </div>

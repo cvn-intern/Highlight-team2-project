@@ -12,6 +12,7 @@ import { RGBAColorType, PaintContextType, Point, PenStyleType } from "./draw";
 // Funtions
 import { resetCanvas } from "./draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
+import { useNavigate } from "react-router";
 
 // type Props = {};
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -28,6 +29,9 @@ export default function PlayingGameScreen() {
   const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
+
+  const navigate = useNavigate()
+
   // Side Effects
   useEffect(() => {
     const resetState = () => {

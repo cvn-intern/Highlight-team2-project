@@ -50,7 +50,7 @@ function App() {
       <Providers>
         <BrowserRouter>
           <Routes>
-            <Route path="/123" element={<WaitingRoom />} />
+            <Route path="/:codeRoom/waiting" element={<WaitingRoom />} />
             <Route path="/" element={<Homepage />} />
             <Route
               path="/:codeRoom"
