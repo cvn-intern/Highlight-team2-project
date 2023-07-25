@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useContext } from "react";
-import { PaintContext } from "@/applications/play/Play";
-import cursorsIconMap from "./constants/cursorsIconMap";
+import { PaintContext } from "@/applications/play/Page";
+import cursorsIconMap from "../shared/constants/cursorsIconMap";
 // Functions
-import { getPointFromEvent } from "@/applications/play/draw.helper";
-import { useSocketEvents } from "@/applications/play/hooks/useSocketEvents";
-import useDrawing from "@/applications/play/hooks/useDrawing";
+import { getPointFromEvent } from "@/applications/play/draw_screen/draw.helper";
+import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvents";
+import useDrawing from "@/applications/play/shared/hooks/useDrawing";
 import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
 
 const Canvas = () => {

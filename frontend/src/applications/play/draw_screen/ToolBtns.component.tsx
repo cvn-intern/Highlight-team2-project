@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { useSocketEvents } from "@/applications/play/hooks/useSocketEvents";
-import { PaintContext } from "./Play";
+import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvents";
+import { PaintContext } from "../Page";
 import BtnChosePenStyle from "./BtnChosePenStyle.component";
 import {
   Edit,
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
-import useDrawing from "@/applications/play/hooks/useDrawing";
+import useDrawing from "@/applications/play/shared/hooks/useDrawing";
 
 export default function ToolBtns() {
   const variables = useContext(PaintContext);

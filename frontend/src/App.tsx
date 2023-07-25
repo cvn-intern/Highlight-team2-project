@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PlayingGameScreen from "@/applications/play/Play";
+import PlayingGameScreen from "@/applications/play/Page";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import authService from "@/shared/services/authService";
@@ -41,7 +41,7 @@ function App() {
       initUser();
     } else if (token && user) {
       setUser(JSON.parse(user));
-      initSocket(token, (JSON.parse(user)).id);
+      initSocket(token, JSON.parse(user).id);
     }
   }, []);
 
@@ -58,12 +58,15 @@ function App() {
               path="/:codeRoom"
               element={
                 <CheckSocketDisconnectedRoute>
-                  <PlayingGameScreen/>
+                  <PlayingGameScreen />
                 </CheckSocketDisconnectedRoute>
               }
             />
-            <Route path="/user/existing" element={<UserExistsInBrowserPage/>} />
-            <Route path="*" element={<NotFoundPage/>} />
+            <Route
+              path="/user/existing"
+              element={<UserExistsInBrowserPage />}
+            />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
       </Providers>

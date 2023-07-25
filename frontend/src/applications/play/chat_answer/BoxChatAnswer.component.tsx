@@ -8,7 +8,7 @@ import {
 } from "react";
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
-import { iconsMap } from "./constants/icons";
+import { iconsMap } from "../shared/constants/icons";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
@@ -37,7 +37,7 @@ const Message = (props: MessageProps) => {
     <div className={cn("text-green-400 flex gap-2 break-words", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>{props.user}</strong>
-      <span className='max-w-[190px]'> {props.content}</span>
+      <span className="max-w-[190px]"> {props.content}</span>
     </div>
   );
 };
@@ -60,7 +60,7 @@ const BoxChat = (props: BoxProps) => {
   const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
     MAX_NUMBER_OF_CHARACTER
   );
-  const messagesEndRef = useRef<any>(null)
+  const messagesEndRef = useRef<any>(null);
   useEffect(() => {
     setNumberOfCharactersLeft(MAX_NUMBER_OF_CHARACTER - inputChat.length);
   }, [inputChat]);
@@ -98,8 +98,8 @@ const BoxChat = (props: BoxProps) => {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [props.listChat])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [props.listChat]);
 
   return (
     <>

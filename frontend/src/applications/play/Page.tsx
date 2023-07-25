@@ -1,18 +1,23 @@
 import { useRef, useState, useEffect, createContext } from "react";
 // Variables
-import { DEFAULT_BLACK } from "./constants/color";
+import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./RankingBoard.component";
-import Canvas from "./Canvas.component";
-import BoxChatAnswer from "./BoxChatAnswer.component";
-import PaintTools from "./PaintTools.component";
+import RankingBoard from "./ranking_board/RankingBoard.component";
+import Canvas from "./draw_screen/Canvas.component";
+import BoxChatAnswer from "./chat_answer/BoxChatAnswer.component";
+import PaintTools from "./draw_screen/PaintTools.component";
 // Types
-import { RGBAColorType, PaintContextType, Point, PenStyleType } from "./draw";
+import {
+  RGBAColorType,
+  PaintContextType,
+  Point,
+  PenStyleType,
+} from "./draw_screen/draw";
 // Funtions
-import { resetCanvas } from "./draw.helper";
+import { resetCanvas } from "./draw_screen/draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
-import ActionButtons from "./ActionButtons.component";
+import ActionButtons from "./action_buttons/ActionButtons.component";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
@@ -23,7 +28,7 @@ export const PaintContext = createContext<PaintContextType | null>(null);
 export default function PlayingGameScreen() {
   const isDrawer = true;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const {codeRoom} = useParams()
+  const { codeRoom } = useParams();
 
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -34,7 +39,7 @@ export default function PlayingGameScreen() {
   const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
-  const [roomInfo, setRoomInfo] = useState<RoomType>()
+  const [roomInfo, setRoomInfo] = useState<RoomType>();
 
   // Side Effects
   useEffect(() => {
@@ -74,16 +79,16 @@ export default function PlayingGameScreen() {
   }, [ctx]);
 
   useEffect(() => {
-   const getRoomInfo = async () => {
-    if(!codeRoom) return
-    try {
-      const {data} = await roomService.getRoom(codeRoom)
-      setRoomInfo(data)
-    } catch (error) {
-      console.log({error})
-    }
-   }
-   getRoomInfo()
+    const getRoomInfo = async () => {
+      if (!codeRoom) return;
+      try {
+        const { data } = await roomService.getRoom(codeRoom);
+        setRoomInfo(data);
+      } catch (error) {
+        console.log({ error });
+      }
+    };
+    getRoomInfo();
   }, [codeRoom]);
 
   return (
@@ -117,7 +122,7 @@ export default function PlayingGameScreen() {
           </div>
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
-            <ActionButtons roomInfo={roomInfo}/>
+            <ActionButtons roomInfo={roomInfo} />
             <Canvas />
             <BoxChatAnswer />
           </div>
