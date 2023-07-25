@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import roomService from "@/shared/services/roomService";
-import RoomType from "@/shared/types/room";
 import { Globe, Swords, User2 as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
