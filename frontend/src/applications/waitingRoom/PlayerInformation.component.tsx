@@ -14,7 +14,7 @@ const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
 
   return (
     <div className="relative flex flex-col items-center justify-center gap-5">
-      <p className="text-xl font-medium text-blue-500 ">
+      <p className="text-xl font-medium bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent ">
         <strong>YOUR INFORMATION</strong>
       </p>
       <div className="relative w-fit">

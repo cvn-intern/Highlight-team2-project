@@ -12,6 +12,7 @@ import userService from "@/shared/services/userService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import RoomInformation from "./RoomInformation.component";
 import ErrorSocketType from "@/shared/types/errorSocket";
+import { Triangle } from "lucide-react";
 
 const WaitingRoom = () => {
   const { user, setUser } = useUserStore();
@@ -19,6 +20,10 @@ const WaitingRoom = () => {
   const navigate = useNavigate();
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
+
+  const handleBackButton = () => {
+    navigate("/");
+  };
 
   const handleJoinRoom = async () => {
     if (!nickname) alert("Please enter your nickname");
@@ -60,11 +65,14 @@ const WaitingRoom = () => {
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
 
-        <div className="lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] sm:w-[80vw] min-h-[70vh] mt-5 rounded-2xl pb-8">
+        <div className="relative lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] sm:w-[80vw] min-h-[70vh] mt-5 rounded-2xl pb-8">
           <img
             src={JoinRoomBanner}
             className="mt-1 mb-1 2xl:my-5 w-[500px] max-md:hidden"
           />
+          <button className="absolute top-1 left-4 md:left-10 mt-5 mr-5" onClick={handleBackButton}>
+            <Triangle size={40} strokeWidth={2.5} className="-rotate-90 fill-[#f7b733] hover:opacity-80" />
+          </button>
 
           <div className="flex items-stretch justify-center gap-4 mb-8 home-content-responsive bg-white h-full p-8 md:p-0" >
             <PlayerInfomation nickname={nickname} setNickname={setNickname} />
@@ -74,7 +82,7 @@ const WaitingRoom = () => {
             <Button
               type="submit"
               variant="opacityHover"
-              className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+              className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
               onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
