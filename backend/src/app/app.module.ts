@@ -16,8 +16,6 @@ import { RoomRoundModule } from 'src/modules/room-round/roomRound.module';
 import { WordsCollectionModule } from 'src/modules/words-collection/wordsCollection.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
-const USE_SSL: boolean = process.env.NODE_ENV === 'production';
-
 @Module({
   imports: [
     LanguageModule,
@@ -48,7 +46,6 @@ const USE_SSL: boolean = process.env.NODE_ENV === 'production';
         database: configService.get<string>('DATABASE_NAME'),
         synchronize: true,
         autoLoadEntities: true,
-        ssl: USE_SSL,
       }),
     }),
     ServeStaticModule.forRoot({

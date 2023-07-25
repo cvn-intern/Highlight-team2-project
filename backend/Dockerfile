@@ -13,9 +13,12 @@ RUN npm install
 # Copy the rest of the backend application files to the container
 COPY . ./
 
-# Build and start the backend application for production
+# Build the backend application for production
 RUN npm run build
 
 # Expose the port your backend application
 EXPOSE 3000
 EXPOSE 3001
+
+# Start the backend application when the container runs
+CMD ["npm", "run", "start:prod"]
