@@ -7,9 +7,22 @@ import CustomAvatar from "./CustomAvatar.component";
 import GoogleLoginButton from "./GoogleLoginButton";
 import DividerWithText from "@/shared/components/DividerWithText";
 import { useUserStore } from "@/shared/stores/userStore";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { useEffect } from "react";
+import ErrorSocketType from "@/shared/types/errorSocket";
 
 const Homepage = () => {
   const { user } = useUserStore();
+  const { socket } = useSocketStore();
+
+  useEffect(() => {
+    socket?.on('error', (data: string) => {
+      const errorSocket: ErrorSocketType = JSON.parse(data);
+      alert(errorSocket.message);
+      window.location.href = 'https://google.com';
+    });
+  }, [])
+
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-center w-full">

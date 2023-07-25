@@ -18,8 +18,8 @@ const GoogleLoginButton = () => {
                 try {
                     const { data } = await authService.loginWithGoogle(credentialResponse.credential)
                     setUser({ ...user, ...data.user })
-                    JWTManager.setToken(data.accessToken);
-                    createSocketInstance(data.accessToken)
+                    JWTManager.setToken(data.accessToken)
+                    createSocketInstance(data.accessToken, data.user.id)
                 } catch (error: any) {
                     alert(error.response.data.response)
                 }
