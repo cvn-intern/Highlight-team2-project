@@ -19,5 +19,3 @@ type RoomType = {
         }
     };
 }
-
-export default RoomType;
