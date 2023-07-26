@@ -10,14 +10,14 @@ import {
   fillWithColor,
   pickColor,
   resetCanvas,
-} from "@/applications/play/draw_screen/draw.helper";
+} from "@/applications/play/draw-screen/draw.helper";
 import { useContext } from "react";
 import { rgbaToHex } from "@/shared/lib/colors";
 import {
   Drawing,
   StartDraw,
   UseDrawingCustomHook,
-} from "@/applications/play/draw_screen/draw";
+} from "@/applications/play/draw-screen/draw";
 
 const useDrawing = (): UseDrawingCustomHook => {
   let handleStartDraw = (_: StartDraw) => {};

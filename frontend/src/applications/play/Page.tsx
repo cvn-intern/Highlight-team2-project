@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PlayingGameScreen from "./PlayingGameScreen.component";
-import WaitingRoom from "../waitingRoom/WaitingRoom.component";
+import WaitingRoom from "../waiting-room/Page";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 

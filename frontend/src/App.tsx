@@ -3,46 +3,36 @@ import PlayingPage from "@/applications/play/Page";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import authService from "@/shared/services/authService";
-import { useUserStore } from "@/shared/stores/userStore";
+import { IUser, useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-// import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
-import WaitingRoom from "./applications/waitingRoom/WaitingRoom.component";
+import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const { socket, createSocketInstance } = useSocketStore();
-  const { setUser } = useUserStore();
+  const { user, setUser } = useUserStore();
+
+  const createNewToken = async () => {
+    const { data: { user, accessToken } } = await authService.newUser();
+    setUser(user);
+    JWTManager.setToken(accessToken);
+    return accessToken;
+  }
 
   useEffect(() => {
-    const initSocket = (token: string, userId: number) => {
-      createSocketInstance(token, userId);
+    const initPlayer = async () => {
+      let token = JWTManager.getToken() ?? await createNewToken();
+      const savedUser = JSON.parse(window.sessionStorage.getItem("user")!) as IUser
+      !user && setUser(savedUser)
+      !socket && createSocketInstance(token, savedUser!.id);
       setLoading(false);
-    };
-
-    const initUser = async () => {
-      try {
-        const { data } = await authService.newUser();
-        setUser(data.user);
-        JWTManager.setToken(data.accessToken);
-        initSocket(data.accessToken, data.user.id);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    const token = JWTManager.getToken();
-    const user = window.sessionStorage.getItem("user");
-
-    if (!token && !socket) {
-      initUser();
-    } else if (token && user) {
-      setUser(JSON.parse(user));
-      initSocket(token, JSON.parse(user).id);
     }
+
+    initPlayer()
   }, []);
 
   if (loading) return null;

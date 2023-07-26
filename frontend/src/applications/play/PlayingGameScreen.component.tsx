@@ -3,21 +3,21 @@ import { useRef, useState, useEffect, createContext } from "react";
 import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./ranking_board/RankingBoard.component";
-import Canvas from "./draw_screen/Canvas.component";
-import BoxChatAnswer from "./chat_answer/BoxChatAnswer.component";
-import PaintTools from "./draw_screen/PaintTools.component";
+import RankingBoard from "./ranking-board/RankingBoard.component";
+import Canvas from "./draw-screen/Canvas.component";
+import BoxChatAnswer from "./chat-answer/BoxChatAnswer.component";
+import PaintTools from "./draw-screen/PaintTools.component";
 // Types
 import {
   RGBAColorType,
   PaintContextType,
   Point,
   PenStyleType,
-} from "./draw_screen/draw";
+} from "./draw-screen/draw";
 // Funtions
-import { resetCanvas } from "./draw_screen/draw.helper";
+import { resetCanvas } from "./draw-screen/draw.helper";
 import { rgbaToHex } from "@/shared/lib/colors";
-import ActionButtons from "./action_buttons/ActionButtons.component";
+import ActionButtons from "../../shared/components/ActionButtons";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
