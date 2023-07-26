@@ -26,7 +26,7 @@ const Homepage = () => {
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-center w-full">
-        <Logo customClassname="max-md:mt-12" />
+        <Logo customClassname="max-lg:mt-12" />
         <img
           src={SloganImg}
           alt=""
@@ -36,7 +36,7 @@ const Homepage = () => {
         <div className="lg:w-[80%] lg:h-[70%] min-h-[50vh] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%] mt-5 rounded-2xl p-8">
           <img
             src={BannerImg}
-            className="mt-5 mb-2 2xl:my-5 w-[500px] max-md:hidden"
+            className="mt-5 mb-2 2xl:my-5 w-[500px] max-lg:hidden"
           />
 
           <div className="flex items-center gap-4 mb-8 md:gap-10 xl:gap-20 home-content-responsive">

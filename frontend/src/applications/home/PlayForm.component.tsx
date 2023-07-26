@@ -96,7 +96,7 @@ const PlayForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-2 md:space-y-5 2xl:space-y-8 md:w-[50%] w-[80%] flex flex-1 flex-col items-center justify-stretch"
+        className="space-y-2 md:space-y-5 2xl:space-y-8 w-[80%] flex flex-1 flex-col items-center justify-stretch"
       >
         <FormField
           control={form.control}
@@ -105,7 +105,7 @@ const PlayForm = () => {
             const numberOfCharactersLeft =
               MAX_LENGHT_OF_NICKNAME - field.value.length;
             return (
-              <FormItem className="flex items-start flex-1 max-md:flex-col text-slate-400">
+              <FormItem className="flex items-start flex-1 max-lg:flex-col text-slate-400">
                 <FormLabel className="flex items-center gap-3 mt-5">
                   <div>
                     <User2 size={28} strokeWidth={2} color={"#22A699"} />
@@ -139,7 +139,7 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-1 w-full max-md:flex-col md:items-center text-slate-400">
+            <FormItem className="flex flex-1 w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />
