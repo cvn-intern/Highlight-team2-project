@@ -44,7 +44,6 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
-            <Route path="/:codeRoom/waiting" element={<WaitingRoom />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
             <Route
               path="/user/existing"

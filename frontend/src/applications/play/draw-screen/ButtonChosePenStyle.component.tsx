@@ -8,8 +8,7 @@ type Props = {
   active: boolean;
   type: "radio" | "checkbox";
 };
-
-export default function BtnChosePenStyle({
+export default function ButtonChosePenStyle({
   Icon,
   onChange,
   name = "penStyle",

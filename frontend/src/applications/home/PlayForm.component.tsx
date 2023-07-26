@@ -96,14 +96,14 @@ const PlayForm = () => {
   }, [user]);
 
   useEffect(() => {
-    socket?.on('error', () => {
-      navigate("/user/existing")
+    socket?.on("error", () => {
+      navigate("/user/existing");
     });
 
     return () => {
-      socket?.off('error');
-    }
-  }, [socket])
+      socket?.off("error");
+    };
+  }, [socket]);
 
   return (
     <Form {...form}>

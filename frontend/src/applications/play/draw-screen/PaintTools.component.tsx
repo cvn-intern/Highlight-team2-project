@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 // Components
 import ColorPicker from "./ColorPicker.component";
-import ToolBtns from "./ToolBtns.component";
+import PaintToolButtons from "./PaintToolButtons.component";
 
 export default function PaintTools() {
   const variables = useContext(PaintContext);
@@ -18,7 +18,7 @@ export default function PaintTools() {
   };
   return (
     <div className="w-[var(--tool-section-width)] rounded-[10px] bg-white h-full p-4 flex flex-col justify-between">
-      <ToolBtns />
+      <PaintToolButtons />
       <ColorPicker />
       <input
         type="range"
