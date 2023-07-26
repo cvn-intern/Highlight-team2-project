@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { rgbaToHex } from "@/shared/lib/colors";
-import { DEFAULT_WHITE } from "./constants/color";
+import { DEFAULT_WHITE } from "../shared/constants/color";
 import { Point, RGBAColorType } from "./draw";
 import { MouseEvent } from "react";
 

@@ -1,5 +1,5 @@
+import { TEXT_BLUE, TEXT_GREEN, TEXT_ORANGE, TEXT_RED, TEXT_ZINC } from "../shared/constants/color";
 import { Chat, MessageReceiver } from "./chatAnswer";
-import { TEXT_BLUE, TEXT_GREEN, TEXT_ORANGE, TEXT_RED, TEXT_ZINC } from "./constants/color";
 
 const JOIN_ROOM_TYPE = 0;
 const LEAVE_ROOM_TYPE = 1;

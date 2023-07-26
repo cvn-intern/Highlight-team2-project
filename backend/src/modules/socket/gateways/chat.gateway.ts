@@ -8,7 +8,7 @@ import { Socket } from 'socket.io';
 import { Chat } from '../types/chat';
 import { MessageBodyType } from '../types/messageBody';
 import { Room } from 'src/modules/room/room.entity';
-import errosMap from 'src/common/errors/codeError';
+import { errorsSocket } from 'src/common/errors/errorCode';
 
 export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
@@ -68,7 +68,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
       if (!isValidToken) {
         await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTVALIDTOKEN')));
+        this.socketService.sendError(client, errorsSocket.INVALID_TOKEN);
         return;
       }
 
@@ -76,7 +76,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
       if (isMultipleTab) {
         await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('MULTIPLETAB')));
+        this.socketService.sendError(client, errorsSocket.MULTIPLE_TAB);
         return;
       }
 
@@ -96,22 +96,22 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       if (!room) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTFOUNDROOM')));
-        throw new WsException(JSON.stringify(errosMap.get('NOTFOUNDROOM')));
+        this.socketService.sendError(client, errorsSocket.ROOM_NOT_FOUND);
+        throw new WsException(errorsSocket.ROOM_NOT_FOUND);
       }
 
       const isAvailableRoom: boolean = await this.roomService.checkRoomAvailability(codeRoom);
 
       if (!isAvailableRoom) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('ROOMFULL')));
-        throw new WsException(JSON.stringify(errosMap.get('ROOMFULL')));
+        this.socketService.sendError(client, errorsSocket.ROOM_FULL);
+        throw new WsException(errorsSocket.ROOM_FULL);
       }
 
       const participant = await this.roomService.joinRoom(idRoom, client.user.id);
 
       if (!participant) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('CANNOTJOIN')));
-        throw new WsException(JSON.stringify(errosMap.get('CANNOTJOIN')));
+        this.socketService.sendError(client, errorsSocket.CAN_NOT_JOIN);
+        throw new WsException(errorsSocket.CAN_NOT_JOIN);
       }
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);

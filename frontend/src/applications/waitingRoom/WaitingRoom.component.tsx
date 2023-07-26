@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import userService from "@/shared/services/userService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import RoomInformation from "./RoomInformation.component";
-import ErrorSocketType from "@/shared/types/errorSocket";
 import { Triangle } from "lucide-react";
 
 const WaitingRoom = () => {
@@ -39,12 +38,11 @@ const WaitingRoom = () => {
       }
 
       socket?.emit("join-room", codeRoom);
-      socket?.on('error', (data: string) => {
-        const error: ErrorSocketType = JSON.parse(data);
-        alert(error.message);
+      socket?.on('error', () => {
         navigate("/");
       });
-      navigate("/" + codeRoom);
+
+      navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
       console.log({ error });
     }
