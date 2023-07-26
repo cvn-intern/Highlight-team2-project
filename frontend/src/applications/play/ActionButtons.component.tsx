@@ -5,19 +5,26 @@ import { AlertCircle, LogOut, Volume2, VolumeX, X } from "lucide-react"
 import SettingIcon from "@/shared/assets/icons/setting-icon.png"
 import { useState } from "react"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/components/shadcn-ui/dialog"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
+import { useSocketStore } from "@/shared/stores/socketStore"
 
 type ActionButtonsProps = {
     roomInfo?: RoomType
 }
 
 const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
-
+    const { socket } = useSocketStore();
     const [isSound, setIsSound] = useState(true)
-
+    const { codeRoom } = useParams();
     const navigate = useNavigate()
 
     const toggleSound = () => setIsSound(prev => !prev)
+
+    const handleOutRoom = () => {
+        socket?.emit("leave-room", codeRoom);
+        socket?.off('leave-room');
+        navigate("/");
+    }
 
     if (!roomInfo) return null
 
@@ -65,7 +72,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
                         iconSize={50}
                         confirmText="Yes"
                         cancelText="No"
-                        onYesClick={() => navigate("/")}
+                        onYesClick={handleOutRoom}
                         headerChildren={<img src={ExitImg} alt="" className="w-32 h-32 object-cover mb-2" />}
                         alertMessage="Do you want to leave the game?"
                         messageClassName="text-xl font-bold text-black"
