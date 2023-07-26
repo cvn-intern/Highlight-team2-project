@@ -21,6 +21,7 @@ import ActionButtons from "../../shared/components/ActionButtons";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import IntervalCanvas from "./IntervalCanvas.componetnt";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 

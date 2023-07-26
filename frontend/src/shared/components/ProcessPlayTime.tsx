@@ -1,12 +1,12 @@
 import React from "react"
 import { Progress } from "./shadcn-ui/progress"
 
-export function ProgressPlayTime() {
+export function ProgressPlayTime({step = 0.0006}) {
     const [progress, setProgress] = React.useState(100)
 
     const MIN_PROGRESS_PERCENTAGE = 0
     const MAX_PROGRESS_PERCENTAGE = 100
-    const PROGRESS_STEP = 0.0006
+    const PROGRESS_STEP = step
     const PROGRESS_MILI_PER_SECOND = 1
 
     React.useEffect(() => {
