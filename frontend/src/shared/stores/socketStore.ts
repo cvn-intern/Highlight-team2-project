@@ -20,11 +20,6 @@ export const useSocketStore = create<SocketState>((set) => ({
       secure: true
     });
 
-    // socketInit.on('message', (data: any) => {
-    //   alert('ăn trộm token à bạn ơi?')
-    //   window.location.href = '/';
-    // });
-
     return {...state, socket: socketInit}
   }),
 }));
