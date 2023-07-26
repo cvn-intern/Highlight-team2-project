@@ -7,7 +7,6 @@ import { IUser, useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-// import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
 import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
@@ -28,7 +27,7 @@ function App() {
   useEffect(() => {
     const initPlayer = async () => {
       let token = JWTManager.getToken() ?? await createNewToken();
-      const savedUser = JSON.parse(window.localStorage.getItem("user")!) as IUser
+      const savedUser = JSON.parse(window.sessionStorage.getItem("user")!) as IUser
       !user && setUser(savedUser)
       !socket && createSocketInstance(token, savedUser!.id);
       setLoading(false);
