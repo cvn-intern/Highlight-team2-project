@@ -29,7 +29,6 @@ const RoomInformation = () => {
                     }
                 })
                 navigate('/')
-                console.log({ error });
             }
         };
 

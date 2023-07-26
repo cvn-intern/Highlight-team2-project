@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
-import { WARNING_ICON } from "@/shared/constants";
+import { ERROR_ICON, WARNING_ICON } from "@/shared/constants";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const WaitingRoom = () => {
@@ -57,14 +57,22 @@ const WaitingRoom = () => {
 
       navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
-      console.log({ error });
+      useToaster({
+        type: "error",
+        message: "Join room failed!",
+        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+        icon: ERROR_ICON,
+        progressStyle: {
+          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+        }
+      })
     }
   }
 
   useEffect(() => {
     if (!user) return;
     setNickname(user.nickname);
-  }, [user]);       
+  }, [user]);
 
   useDisableBackButton();
 

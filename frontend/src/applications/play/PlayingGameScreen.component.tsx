@@ -21,6 +21,8 @@ import ActionButtons from "./action_buttons/ActionButtons.component";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import useToaster from "@/shared/hooks/useToaster";
+import { ERROR_ICON } from "@/shared/constants";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -84,7 +86,15 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
-        console.log({ error });
+        useToaster({
+          type: "error",
+          message: "Get room info failed!",
+          bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+          icon: ERROR_ICON,
+          progressStyle: {
+            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+          }
+        })
       }
     };
     getRoomInfo();
