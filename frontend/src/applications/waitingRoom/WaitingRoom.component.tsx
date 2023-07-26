@@ -29,7 +29,7 @@ const WaitingRoom = () => {
   const handleJoinRoom = async () => {
     if (!nickname.trim()) {
       useToaster({
-        type: "error",
+        type: "warning",
         message: "Please enter your nickname!",
         bodyClassName: "text-lg font-semibold text-slate-600 text-center",
         icon: WARNING_ICON,

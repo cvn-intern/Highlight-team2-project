@@ -1,4 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
+import { ERROR_ICON } from "@/shared/constants";
+import useToaster from "@/shared/hooks/useToaster";
 import roomService from "@/shared/services/roomService";
 import { Globe, Swords, User2 as UserIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -17,7 +19,15 @@ const RoomInformation = () => {
                 
                 setRoomData(data);
             } catch (error) {
-                alert('Room not found!');
+                useToaster({
+                    type: "error",
+                    message: "Room not found!",
+                    bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+                    icon: ERROR_ICON,
+                    progressStyle: {
+                        background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+                    }
+                })
                 navigate('/')
                 console.log({ error });
             }

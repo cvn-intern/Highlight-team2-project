@@ -8,7 +8,7 @@ import { ERROR_ICON } from '@/shared/constants';
 
 const GoogleLoginButton = () => {
     const { user, setUser } = useUserStore()
-    const {createSocketInstance} = useSocketStore()
+    const { createSocketInstance } = useSocketStore()
 
     return (
         <GoogleLogin
@@ -16,16 +16,35 @@ const GoogleLoginButton = () => {
             locale='en'
             auto_select={false}
             onSuccess={async (credentialResponse) => {
-                if (!credentialResponse.credential) return alert("Login Failed");
+                if (!credentialResponse.credential) {
+                    useToaster({
+                        type: "error",
+                        message: "Login Failed!",
+                        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+                        icon: ERROR_ICON,
+                        progressStyle: {
+                            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+                        }
+                    })
+                    return;
+                };
                 try {
                     const { data } = await authService.loginWithGoogle(credentialResponse.credential)
                     setUser({ ...user, ...data.user })
                     JWTManager.setToken(data.accessToken)
                     createSocketInstance(data.accessToken, data.user.id)
                 } catch (error: any) {
-                    alert(error.response.data.response)
+                    useToaster({
+                        type: "error",
+                        message: error.response.data.response || "Some error occurred!",
+                        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+                        icon: ERROR_ICON,
+                        progressStyle: {
+                            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+                        }
+                    })
                 }
-               
+
             }}
             onError={() => {
                 useToaster({
@@ -34,9 +53,9 @@ const GoogleLoginButton = () => {
                     bodyClassName: "text-lg font-semibold text-slate-600 text-center",
                     icon: ERROR_ICON,
                     progressStyle: {
-                      background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+                        background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
                     }
-                  })
+                })
             }}
         />
     )

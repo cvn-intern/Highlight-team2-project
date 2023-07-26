@@ -63,7 +63,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
-        <ToastContainer role="alert" limit={3} closeButton={false}/>
+        <ToastContainer role="alert" closeButton={false}/>
       </Providers>
     </Suspense>
   );
