@@ -10,10 +10,6 @@ export default function Page() {
   }, []);
   // wait variable is passed from HomePage
   const { state } = useLocation();
-  // const { socket } = useSocketStore();
-  // console.log(window.history);
-  // console.log(document.title);
-  // console.log(socket);
   // If 'wait' is undefinded, 'isRenderWaiting' still be true
   const isRenderWaiting = state === null ? true : !!state.wait;
   if (isRenderWaiting) return <WaitingRoom />;
