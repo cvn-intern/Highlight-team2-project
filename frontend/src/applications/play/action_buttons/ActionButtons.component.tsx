@@ -28,7 +28,6 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
   const toggleSound = () => setIsSound((prev) => !prev);
   const handleOutRoom = () => {
     socket?.emit("leave-room", codeRoom);
-    socket?.off('leave-room');
     navigate("/");
   }
 

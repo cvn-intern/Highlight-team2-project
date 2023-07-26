@@ -21,22 +21,22 @@ export class AnswerGateway extends SocketGateway {
 
       switch (typeAnswer) {
         case ANSWER_CORRETLY:
-          const correctedAnswer: Chat = {
+          const correctAnswer: Chat = {
             user: client.user.nickname,
             type: ANSWER_CORRETLY,
             message: ANSWER_CORRECTLY_CONTENT,
           }
 
-          this.server.in(msgBody.codeRoom).emit(ROOM_ANSWER, correctedAnswer)
+          this.server.in(msgBody.codeRoom).emit(ROOM_ANSWER, correctAnswer)
           break;
         case ANSWER_APPROXIMATELY:
-          const approximatelyAnswer: Chat = {
+          const approximateAnswer: Chat = {
             user: client.user.nickname,
             type: ANSWER_APPROXIMATELY,
             message: ANSWER_APPROXIMATELY_CONTENT,
           }
 
-          this.server.in(msgBody.codeRoom).emit(ROOM_ANSWER, approximatelyAnswer)
+          this.server.in(msgBody.codeRoom).emit(ROOM_ANSWER, approximateAnswer)
           break;
         case ANSWER_WRONG:
           const wrongAnswer: Chat = {

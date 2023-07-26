@@ -44,7 +44,6 @@ const PlayForm = () => {
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
   );
-  const [isDisablePlayBtn, setIsDisablePlayBtn] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,15 +84,17 @@ const PlayForm = () => {
     if (!user) return;
     form.setValue("nickname", user.nickname);
     form.setValue("language", user.language);
+  }, [user]);
 
+  useEffect(() => {
     socket?.on('error', () => {
-      setIsDisablePlayBtn(true);
+      navigate("/user/existing")
     });
 
     return () => {
       socket?.off('error');
     }
-  }, [user]);
+  }, [socket])
 
   return (
     <Form {...form}>
@@ -183,7 +184,6 @@ const PlayForm = () => {
           </Button>
 
           <Button
-            disabled={isDisablePlayBtn}
             type="submit"
             variant="opacityHover"
             className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
