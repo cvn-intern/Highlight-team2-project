@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useContext } from "react";
-import { PaintContext } from "@/applications/play/PlayingGameScreen";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import cursorsIconMap from "../shared/constants/cursorsIconMap";
 // Functions
 import { getPointFromEvent } from "@/applications/play/draw_screen/draw.helper";

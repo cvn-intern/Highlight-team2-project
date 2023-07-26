@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PaintContext } from "@/applications/play/PlayingGameScreen";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import {
   drawCircle,
   drawFreeStyle,

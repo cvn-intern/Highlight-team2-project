@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { PaintContext } from "@/applications/play/PlayingGameScreen";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import {
   Drawing,
   Point,

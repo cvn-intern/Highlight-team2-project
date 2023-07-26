@@ -1,13 +1,11 @@
 import { useContext, useRef, useState } from "react";
 import paletteImage from "@/shared/assets/palette.svg";
 import { palette } from "../shared/constants/color";
-import { PaintContext } from "@/applications/play/PlayingGameScreen";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import { hexToRGBA, rgbaToHex } from "@/shared/lib/colors";
 import { RgbaColorPicker } from "react-colorful";
 import classNames from "classnames";
 import useOnClickOutside from "@/shared/hooks/useOnClickOutSide";
-
-// type Props = {}
 
 export default function ColorPicker() {
   const pickerRef = useRef<HTMLDivElement | null>(null);
