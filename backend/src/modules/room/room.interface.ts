@@ -9,7 +9,17 @@ export interface RoomInterface {
   is_public?: boolean;
   thumbnail?: string;
   code_room?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
   users?: [];
+  langage?: {
+    name: string,
+  },
+  words_collection?: {
+    id: number;
+    theme: {
+      name: string,
+    },
+  },
+  participants?: number,
 }

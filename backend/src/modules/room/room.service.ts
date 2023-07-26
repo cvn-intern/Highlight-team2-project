@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
 import { RoomInterface } from './room.interface';
-import { randomString } from '../../common/utils/helper';
+import { extractIdRoom, randomString } from '../../common/utils/helper';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
@@ -15,7 +15,7 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
-  ) {}
+  ) { }
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
     const codeRoom: string =
@@ -48,15 +48,18 @@ export class RoomService {
   }
 
   async getRoomByCodeRoom(codeRoom: string) {
-    const isExisted = await this.roomRepository.getRoomByCodeRoom(codeRoom);
-    
-    if(!isExisted) {
+    const isExisted: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+
+    if (!isExisted) {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
-    } 
+    }
 
     const room = await this.roomRepository.getInformationRoom(codeRoom);
 
-    return room;
+    return {
+      ...room,
+      host_id: isExisted.host_id,
+    };
   }
 
   async checkUserInRoom(idUser: number, idRoom: number): Promise<boolean> {
@@ -74,5 +77,61 @@ export class RoomService {
 
 
     return room.max_player > room.participants;
+  }
+
+  async qualifiedToStart(codeRoom: string): Promise<boolean> {
+    const room = await this.roomRepository.getInformationRoom(codeRoom);
+
+    return room.participants >= 2;
+  }
+
+  async checkHostInRoom(roomId: number, hostId: number): Promise<Boolean> {
+    const isInRoom = await this.roomUserService.checkUserInRoom(hostId, roomId);
+
+    return !!isInRoom;
+  }
+
+  async updateRoom(room: RoomInterface): Promise<Room> {
+    await this.roomRepository.update({ id: room.id }, { ...room });
+
+    const roomUpdate: Room = await this.roomRepository.findOne({
+      where: {
+        id: room.id,
+      },
+      select: {
+        host_id: true,
+      },
+    });
+    return roomUpdate;
+  }
+
+  async changeHost(codeRoom: string): Promise<Room> {
+    const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+
+    if (!room) {
+      throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
+    }
+
+    const isHostInRoom = await this.checkHostInRoom(room.host_id, room.id);
+
+    if (isHostInRoom) {
+      return;
+    }
+
+    const userId: number = await this.roomUserService.getUserInRoomRandom(room.id);
+
+    if (!userId) {
+      throw new HttpException('Nobody in room!', HttpStatus.BAD_REQUEST);
+    }
+
+    const updateRoom = await this.updateRoom({ ...room, host_id: userId });
+    
+    return updateRoom;
+  }
+
+  async checkStartGame(roomId: number): Promise<boolean> {
+    const isStart = await this.roomRoundService.getRoundOfRoom(roomId);
+
+    return !!isStart;
   }
 }

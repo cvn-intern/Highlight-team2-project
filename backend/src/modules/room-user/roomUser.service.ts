@@ -54,6 +54,16 @@ export class RoomUserService {
      }
     });
 
-    return participant ? true : false;
+    return !!participant;
+  }
+
+  async getUserInRoomRandom(roomId: number): Promise<number> {
+    const participant: RoomUser = await this.roomUserRepository.findOne({
+      where: {
+        room_id: roomId,
+      },
+    });
+
+    return participant ? participant.user_id : null;
   }
 }

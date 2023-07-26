@@ -39,11 +39,9 @@ export class RoomRepository extends Repository<Room> {
   }
 
   async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
-    return await this.findOne({
-      where: {
-        code_room: codeRoom,
-      },
-    });
+    return await this.createQueryBuilder('room')
+    .where('code_room = :codeRoom', {codeRoom})
+    .getOne();
   }
 
   async getInformationRoom(codeRoom: string) {
@@ -64,7 +62,7 @@ export class RoomRepository extends Repository<Room> {
       'roomuser',
       'roomuser.room_id = room.id',
     )
-    .select(['room'])
+    .select(['room', 'room.host_id'])
     .addSelect([
       'theme.name',
       'wordcollection.id',

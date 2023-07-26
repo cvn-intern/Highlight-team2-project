@@ -14,8 +14,13 @@ export default function Page() {
       navigate("/user/existing");
     });
 
+    socket?.on('qualify-to-start', (data: any) => {
+      alert(data);
+    })
+
     return () => {
       socket?.off("error");
+      socket?.off("qualify-to-start");
     };
   }, [socket]);
 
