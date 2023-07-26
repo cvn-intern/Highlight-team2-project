@@ -11,6 +11,7 @@ import Providers from "./Providers";
 import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
+        <ToastContainer role="alert" closeButton={false}/>
       </Providers>
     </Suspense>
   );
