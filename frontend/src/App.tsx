@@ -7,10 +7,9 @@ import { IUser, useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -18,22 +17,26 @@ function App() {
   const { user, setUser } = useUserStore();
 
   const createNewToken = async () => {
-    const { data: { user, accessToken } } = await authService.newUser();
+    const {
+      data: { user, accessToken },
+    } = await authService.newUser();
     setUser(user);
     JWTManager.setToken(accessToken);
     return accessToken;
-  }
+  };
 
   useEffect(() => {
     const initPlayer = async () => {
-      let token = JWTManager.getToken() ?? await createNewToken();
-      const savedUser = JSON.parse(window.sessionStorage.getItem("user")!) as IUser
-      !user && setUser(savedUser)
+      let token = JWTManager.getToken() ?? (await createNewToken());
+      const savedUser = JSON.parse(
+        window.sessionStorage.getItem("user")!
+      ) as IUser;
+      !user && setUser(savedUser);
       !socket && createSocketInstance(token, savedUser!.id);
       setLoading(false);
-    }
+    };
 
-    initPlayer()
+    initPlayer();
   }, []);
 
   if (loading) return null;
@@ -52,7 +55,7 @@ function App() {
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
-        <ToastContainer role="alert" closeButton={false}/>
+        <ToastContainer role="alert" closeButton={false} />
       </Providers>
     </Suspense>
   );
