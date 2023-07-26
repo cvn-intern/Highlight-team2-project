@@ -55,6 +55,7 @@ export default function RankingBoard() {
       socket?.off(`${codeRoom}-leave`);
       socket?.off(codeRoom);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   const numberOfPlayers = leaderboardData.users.length;
@@ -69,8 +70,7 @@ export default function RankingBoard() {
         drawerId={-1}
       />
       <div className="absolute w-[44px] h-[44px] text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-2 right-2 flexCenter bg-white">
-        <span>{numberOfPlayers}</span>/
-        <span>{leaderboardData.max_player}</span>
+        <span>{numberOfPlayers}</span>/<span>{leaderboardData.max_player}</span>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { PaintContext } from "@/applications/play/Play";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import {
   drawCircle,
   drawFreeStyle,
@@ -10,14 +10,14 @@ import {
   fillWithColor,
   pickColor,
   resetCanvas,
-} from "@/applications/play/draw.helper";
+} from "@/applications/play/draw_screen/draw.helper";
 import { useContext } from "react";
-import { rgbaToHex } from "../../../shared/lib/colors";
+import { rgbaToHex } from "@/shared/lib/colors";
 import {
   Drawing,
   StartDraw,
   UseDrawingCustomHook,
-} from "@/applications/play/draw";
+} from "@/applications/play/draw_screen/draw";
 
 const useDrawing = (): UseDrawingCustomHook => {
   let handleStartDraw = (_: StartDraw) => {};
