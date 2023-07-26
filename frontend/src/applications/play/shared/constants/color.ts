@@ -12,7 +12,7 @@ export const DEFAULT_BLACK = {
   a: 1,
 };
 
-export const palette = [
+export const PALETTE = [
   "#f44336",
   "#e91e63",
   "#9c27b0",
@@ -35,8 +35,8 @@ export const palette = [
   "#ffffff",
 ];
 
-export const TEXT_GREEN = 'text-green-400';
-export const TEXT_BLUE = 'text-blue-400';
-export const TEXT_RED = 'text-red-400';
-export const TEXT_ORANGE = 'text-red-400';
-export const TEXT_ZINC = 'text-zinc-400'
+export const TEXT_GREEN = "text-green-400";
+export const TEXT_BLUE = "text-blue-400";
+export const TEXT_RED = "text-red-400";
+export const TEXT_ORANGE = "text-red-400";
+export const TEXT_ZINC = "text-zinc-400";

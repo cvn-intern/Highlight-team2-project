@@ -21,6 +21,7 @@ import ActionButtons from "../../shared/components/ActionButtons";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
 import { ERROR_ICON } from "@/shared/constants";
 import IntervalCanvas from "./IntervalCanvas.componetnt";
@@ -39,7 +40,7 @@ export default function PlayingGameScreen() {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
-  const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
+  const [penStyle, setPenStyle] = useState<PenStyleType>(PEN_STYLE_BRUSH);
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
@@ -94,9 +95,10 @@ export default function PlayingGameScreen() {
           bodyClassName: "text-lg font-semibold text-slate-600 text-center",
           icon: ERROR_ICON,
           progressStyle: {
-            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-          }
-        })
+            background:
+              "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+          },
+        });
       }
     };
     getRoomInfo();

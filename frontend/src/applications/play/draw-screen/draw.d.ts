@@ -25,7 +25,7 @@ export type RGBAColorType = {
   a: number;
 };
 
-export type PaintToolBtnType = {
+export type PaintToolButtonType = {
   Icon: LucideIcon;
   onChange: string;
   value: string;
