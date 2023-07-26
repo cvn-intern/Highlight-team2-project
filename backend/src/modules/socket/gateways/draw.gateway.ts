@@ -4,6 +4,10 @@ import { SocketGateway } from './socket.gateway';
 import { DRAWING_CHANNEL, FINISH_DRAWING_CHANNEL, CLEAR_CANVAS_CHANNEL, START_DRAWING_CHANNEL, DRAWER_START_DRAWING, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_CLEAR_CANVAS, NEW_PLAYER_CHANNEL, CANVAS_STATE_CHANNEL, GET_CANVAS_STATE, CANVAS_STATE_FROM_SERVER } from '../constant';
 import { Drawing, GetCanvasState, StartDraw } from '../types/drawBody';
 
+interface Clients {
+  socketId: string,
+  data: Set<string>
+}
 
 export class DrawGateway extends SocketGateway {
   @SubscribeMessage(START_DRAWING_CHANNEL)
@@ -46,12 +50,19 @@ export class DrawGateway extends SocketGateway {
     @ConnectedSocket() client: Socket,
   ): void {
     const roomSockets = this.server.of('/').in(codeRoom)
-    const listClients: string[] = Array.from(roomSockets[`adapter`].sids)
+    const listClients: Clients[] = Array.from(roomSockets[`adapter`].sids)
     
-    console.log("🚀 ~ file: draw.gateway.ts:51 ~ DrawGateway ~ listClients:", listClients)
+    const inRoomClient = listClients.find((item: Clients) => 
+    {
+      const test: IterableIterator<string> = item[1].values()
+      const socketId = test.next().value
+      const roomId = test.next().value
+      if(roomId){
+        return roomId
+      }
+      
+    })
     
-    const inRoomClient = listClients.filter((item) => item[1])
-    console.log(inRoomClient);
     if(listClients.length > 1 && inRoomClient){
       client.broadcast.to(inRoomClient[0]).emit(GET_CANVAS_STATE, client.id)
     }
