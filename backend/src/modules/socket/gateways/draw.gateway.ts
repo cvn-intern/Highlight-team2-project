@@ -40,12 +40,21 @@ export class DrawGateway extends SocketGateway {
     client.broadcast.to(codeRoom).emit(DRAWER_CLEAR_CANVAS)
   }
 
-  @SubscribeMessage(NEW_PLAYER_CHANNEL)
+  @SubscribeMessage(NEW_PLAYER_CHANNEL) 
   handleNewPlayer(
     @MessageBody() codeRoom: string,
     @ConnectedSocket() client: Socket,
   ): void {
-    client.broadcast.to(codeRoom).emit(GET_CANVAS_STATE, client.id)
+    const roomSockets = this.server.of('/').in(codeRoom)
+    const listClients: string[] = Array.from(roomSockets[`adapter`].sids)
+    
+    console.log("🚀 ~ file: draw.gateway.ts:51 ~ DrawGateway ~ listClients:", listClients)
+    
+    const inRoomClient = listClients.filter((item) => item[1])
+    console.log(inRoomClient);
+    if(listClients.length > 1 && inRoomClient){
+      client.broadcast.to(inRoomClient[0]).emit(GET_CANVAS_STATE, client.id)
+    }
   }
 
   @SubscribeMessage(CANVAS_STATE_CHANNEL)
@@ -53,8 +62,8 @@ export class DrawGateway extends SocketGateway {
     @MessageBody() data: GetCanvasState,
     @ConnectedSocket() client: Socket,
   ): void {
-    const {codeRoom, dataImg, id} = data
-    this.server.in(codeRoom).to(id).emit(CANVAS_STATE_FROM_SERVER, dataImg)
+    const {dataImg, id} = data
+    client.to(id).emit(CANVAS_STATE_FROM_SERVER, dataImg)
   }
   
 }

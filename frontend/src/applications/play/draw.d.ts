@@ -79,21 +79,23 @@ export type SocketDrawing = {
 };
 
 export type SocketGetCanvasState = {
-  codeRoom: string;
   dataImg: string;
   id: string;
 };
 
-export type UseSocketCustomHook = {
+export type UseCustomHookHandleCanvasEvents = {
   handleMouseDown(point: Point): void;
   handleMouseMove(point: Point): void;
   handleMouseUpOrLeave(): void;
-  handleClickClearCanvas(): void;
-};
+}
+
+export type UseCustomHookClearCanvasEvent = {
+  handleClickClearCanvas(): void
+}
 
 export type UseDrawingCustomHook = {
   handleStartDraw(data: StartDraw): void;
   handleDrawing(data: Drawing): void;
   handleFinishDraw(): void;
   handleClearCanvas(): void;
-};
+}

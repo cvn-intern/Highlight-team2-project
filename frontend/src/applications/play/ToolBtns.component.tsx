@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { useSocketEvents } from "@/applications/play/hooks/useSocketEvents";
 import { PaintContext } from "./Play";
 import BtnChosePenStyle from "./BtnChosePenStyle.component";
 import {
@@ -15,23 +14,12 @@ import {
 } from "lucide-react";
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
-import useDrawing from "@/applications/play/hooks/useDrawing";
+import { useSocketClearCanvasEvent } from "./hooks/useSocketClearCanvasEvent";
 
 export default function ToolBtns() {
-  const variables = useContext(PaintContext);
-  const {
-    handleStartDraw,
-    handleDrawing,
-    handleFinishDraw,
-    handleClearCanvas,
-  } = useDrawing();
-  const { handleClickClearCanvas } = useSocketEvents({
-    handleStartDraw,
-    handleDrawing,
-    handleFinishDraw,
-    handleClearCanvas,
-  });
+  const { handleClickClearCanvas } = useSocketClearCanvasEvent()
 
+  const variables = useContext(PaintContext);
   if (!variables) return null;
   const { penStyle, isFill, setPenStyle, setIsFill } = variables;
   // Handlers
