@@ -8,7 +8,7 @@ import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
 // import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconnectedRoute";
-import WaitingRoom from "./applications/waiting_room/Page";
+import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from 'react-toastify';
