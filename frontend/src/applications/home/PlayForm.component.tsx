@@ -54,6 +54,7 @@ const PlayForm = () => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
     if (formAction === "quick-play") return handleQuickPlay();
   };
@@ -77,15 +78,17 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",
         bodyClassName: "text-lg font-semibold text-slate-600 text-center",
         icon: ERROR_ICON,
         progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
-      })
+          background:
+            "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+        },
+      });
     }
   };
 
