@@ -8,12 +8,13 @@ import {
 } from "react";
 import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import "./styles/style.css";
-import { iconsMap } from "./constants/icons";
+import { iconsMap } from "../shared/constants/icons";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
+import { covertMessage } from "./chatAnswer.helper";
 
 interface BoxProps {
   label: string;
@@ -37,7 +38,7 @@ const Message = (props: MessageProps) => {
     <div className={cn("text-green-400 flex gap-2 break-words", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>{props.user}</strong>
-      <span className='max-w-[190px]'> {props.content}</span>
+      <span className="max-w-[190px]"> {props.content}</span>
     </div>
   );
 };
@@ -47,20 +48,13 @@ interface MessageBodyInterface {
   message: string;
 }
 
-interface Chat {
-  user: string;
-  content: string;
-  type: string;
-  icon: string;
-}
-
 const BoxChat = (props: BoxProps) => {
   const { icon: Icon } = props;
   const [inputChat, SetInputChat] = useState("");
   const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
     MAX_NUMBER_OF_CHARACTER
   );
-  const messagesEndRef = useRef<any>(null)
+  const messagesEndRef = useRef<any>(null);
   useEffect(() => {
     setNumberOfCharactersLeft(MAX_NUMBER_OF_CHARACTER - inputChat.length);
   }, [inputChat]);
@@ -98,8 +92,8 @@ const BoxChat = (props: BoxProps) => {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [props.listChat])
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [props.listChat]);
 
   return (
     <>
@@ -146,6 +140,7 @@ const BoxChat = (props: BoxProps) => {
     </>
   );
 };
+
 const BoxChatAnswer = () => {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
@@ -154,20 +149,24 @@ const BoxChatAnswer = () => {
 
   useEffect(() => {
     if (!codeRoom) return;
-    socket?.on(codeRoom, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(codeRoom, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-chat`, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-chat`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
-      setListAnswer((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListAnswer((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-leave`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
     return () => {

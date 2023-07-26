@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useContext, useEffect } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { PaintContext } from "@/applications/play/Play";
+import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import {
   Drawing,
   Point,
   StartDraw,
   UseDrawingCustomHook,
   UseSocketCustomHook,
-} from "@/applications/play/draw";
+} from "@/applications/play/draw_screen/draw";
 import {
   CANVAS_STATE,
   CANVAS_STATE_FROM_SERVER,
@@ -23,7 +23,7 @@ import {
   GET_CANVAS_STATE,
   NEW_PLAYER,
   START_DRAW,
-} from "@/applications/play/constants/drawEvent";
+} from "@/applications/play/shared/constants/drawEvent";
 import { useParams } from "react-router";
 
 export function useSocketEvents({

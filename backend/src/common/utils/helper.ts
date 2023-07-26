@@ -1,5 +1,5 @@
 import { open } from 'node:fs/promises';
-import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, ANSWER_WRONG, MINIMUM_CHAR_WRONG } from '../variables/constVariable';
+import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, ANSWER_WRONG, MINIMUM_CHAR_WRONG } from 'src/modules/socket/constant';
 const fs = require('fs');
 
 const PATH_FILE_LANGUAGE = 'src/common/files/language.txt';

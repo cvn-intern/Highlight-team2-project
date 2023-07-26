@@ -1,13 +1,13 @@
 import { useUserStore } from "@/shared/stores/userStore";
 import DividerWithText from "@/shared/components/DividerWithText";
-import GoogleLoginButton from "../home/GoogleLoginButton";
+import GoogleLoginButton from "../home/GoogleLoginButton.component";
 import CustomAvatar from "../home/CustomAvatar.component";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 
 type PlayerInfomationProps = {
-  nickname: string
-  setNickname: (nickname: string) => void
+  nickname: string;
+  setNickname: (nickname: string) => void;
 };
 
 const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
@@ -45,7 +45,6 @@ const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
           </div>
         </>
       )}
-
     </div>
   );
 };

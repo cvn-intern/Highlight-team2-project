@@ -7,7 +7,6 @@ import { Button } from "@/shared/components/shadcn-ui/Button";
 import userService from "@/shared/services/userService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useUserStore } from "@/shared/stores/userStore";
-import ErrorSocketType from "@/shared/types/errorSocket";
 import { Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -51,12 +50,11 @@ const WaitingRoom = () => {
       }
 
       socket?.emit("join-room", codeRoom);
-      socket?.on('error', (data: string) => {
-        const error: ErrorSocketType = JSON.parse(data);
-        alert(error.message);
+      socket?.on('error', () => {
         navigate("/");
       });
-      navigate("/" + codeRoom);
+
+      navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
       console.log({ error });
     }
