@@ -13,7 +13,7 @@ const IntervalCanvasHeader = ({ status = 'interval-show-word' }) => {
             return (
                 <>
                     <p className="text-[3rem] text-red-500">INACTIVE</p>
-                    <p className="text-xl text-slate-400">You've lose your turn :(</p>
+                    <p className="text-xl text-slate-400">You've lost your turn :(</p>
                 </>
             );
     }

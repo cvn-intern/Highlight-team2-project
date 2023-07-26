@@ -27,6 +27,7 @@ export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const isDrawer = true;
+  const isInterval = false;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
@@ -123,8 +124,8 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            {/* <Canvas /> */}
-            <IntervalCanvas status="inactive"/>
+            <Canvas hidden={isInterval}/>
+            <IntervalCanvas status="inactive" hidden={!isInterval}/>
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}
