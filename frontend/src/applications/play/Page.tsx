@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import PlayingGameScreen from "./PlayingGameScreen.component";
-import WaitingRoom from "../waitingRoom/WaitingRoom.component";
+import WaitingRoom from "../waiting-room/Page";
 import { useLocation } from "react-router-dom";
 
 export default function Page() {

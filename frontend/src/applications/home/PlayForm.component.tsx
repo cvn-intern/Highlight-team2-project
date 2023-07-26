@@ -32,7 +32,7 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 
 const formSchema = z.object({
-  nickname: z.string().min(2).max(50).trim(),
+  nickname: z.string().trim().min(2).max(50),
   language: z.string({
     required_error: "Please select an language.",
   }),
@@ -91,6 +91,7 @@ const PlayForm = () => {
     form.setValue("nickname", user.nickname);
     form.setValue("language", user.language);
   }, [user]);
+  console.log({user})
 
   return (
     <Form {...form}>

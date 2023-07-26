@@ -17,7 +17,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import AvatarCard from "./AvatarCard.component";
+import AvatarCard from "@/shared/components/AvatarCard";
 import { useUserStore } from "@/shared/stores/userStore";
 import userService from "@/shared/services/userService";
 import authService from "@/shared/services/authService";
