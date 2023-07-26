@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import {
@@ -45,7 +44,6 @@ const PlayForm = () => {
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
   );
-  const [isDisablePlayBtn, setIsDisablePlayBtn] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -76,10 +74,6 @@ const PlayForm = () => {
       const { data } = await playService.quickPlay();
       socket?.emit("join-room", data);
 
-      socket?.on("error", () => {
-        setIsDisablePlayBtn(true);
-      });
-
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
       alert(error.response.data.response);
@@ -92,6 +86,16 @@ const PlayForm = () => {
     form.setValue("language", user.language);
   }, [user]);
   console.log({user})
+
+  useEffect(() => {
+    socket?.on('error', () => {
+      navigate("/user/existing")
+    });
+
+    return () => {
+      socket?.off('error');
+    }
+  }, [socket])
 
   return (
     <Form {...form}>
@@ -181,7 +185,6 @@ const PlayForm = () => {
           </Button>
 
           <Button
-            disabled={isDisablePlayBtn}
             type="submit"
             variant="opacityHover"
             className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"

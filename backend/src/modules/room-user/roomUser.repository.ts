@@ -24,13 +24,9 @@ export class RoomUserRepository extends Repository<RoomUser> {
   async getParticipant(room_id: number, user_id: number): Promise<RoomUser> {
     return await this.findOne({
       where: {
-        room_id: room_id,
-        user_id: user_id,
+        room_id,
+        user_id,
       },
     });
-  }
-
-  async countParticipantInRoom(room_id: number): Promise<Number> {
-    return 0;
   }
 }

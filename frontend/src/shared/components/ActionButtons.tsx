@@ -12,7 +12,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSocketStore } from "@/shared/stores/socketStore";
 
 type ActionButtonsProps = {
   roomInfo?: RoomType;
@@ -20,10 +21,15 @@ type ActionButtonsProps = {
 
 const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
   const [isSound, setIsSound] = useState(true);
-
+  const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
   const navigate = useNavigate();
 
   const toggleSound = () => setIsSound((prev) => !prev);
+  const handleOutRoom = () => {
+    socket?.emit("leave-room", codeRoom);
+    navigate("/");
+  }
 
   if (!roomInfo) return null;
 
@@ -90,7 +96,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
             iconSize={50}
             confirmText="Yes"
             cancelText="No"
-            onYesClick={() => navigate("/")}
+            onYesClick={handleOutRoom}
             headerChildren={
               <img
                 src={ExitImg}

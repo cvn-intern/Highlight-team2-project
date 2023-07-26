@@ -2,13 +2,13 @@ import { SubscribeMessage, MessageBody, ConnectedSocket, WsException, OnGatewayC
 import { SocketGateway } from './socket.gateway';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { extractIdRoom } from '../../../common/utils/helper';
-import { ANSWER_ROOM_CHANNEL, CHAT_ROOM_CHANNEL, INFO_ICON, JOIN_ROOM_CHANNEL, LEAVE_ROOM_CHANNEL, LOGOUT_ICON, MESSAGECIRCLE_ICON, TEXT_BLUE, TEXT_GREEN, TEXT_RED } from '../constant';
-import { SocketClass } from '../socket.class';
+import { CHAT_ROOM_CHANNEL, CHAT_ROOM_TYPE, JOIN_ROOM_CHANNEL, JOIN_ROOM_CONTENT, JOIN_ROOM_TYPE, LEAVE_ROOM_CHANNEL, LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
+import { SocketClient } from '../socket.class';
 import { Socket } from 'socket.io';
 import { Chat } from '../types/chat';
 import { MessageBodyType } from '../types/messageBody';
 import { Room } from 'src/modules/room/room.entity';
-import errosMap from 'src/common/errors/codeError';
+import { errorsSocket } from 'src/common/errors/errorCode';
 
 export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
@@ -47,14 +47,15 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
         this.server.in(codeRoom).emit(ROOM_LEAVE, {
           user: user.nickname,
-          content: 'left',
-          type: TEXT_RED,
-          icon: LOGOUT_ICON,
+          type: LEAVE_ROOM_TYPE,
+          message: LEAVE_ROOM_CONTENT,
         });
 
-        await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
-        await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
-        await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`)
+        await Promise.all([
+          this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`),
+          this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`),
+          this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`),
+        ]);
       }
     } catch (error) {
       this.logger.error(error);
@@ -67,7 +68,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
       if (!isValidToken) {
         await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTVALIDTOKEN')));
+        this.socketService.sendError(client, errorsSocket.INVALID_TOKEN);
         return;
       }
 
@@ -75,7 +76,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
       if (isMultipleTab) {
         await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('MULTIPLETAB')));
+        this.socketService.sendError(client, errorsSocket.MULTIPLE_TAB);
         return;
       }
 
@@ -88,29 +89,29 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   @SubscribeMessage(JOIN_ROOM_CHANNEL)
   async handleJoinRoom(
     @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: SocketClass,
+    @ConnectedSocket() client: SocketClient,
   ) {
     try {
       const idRoom: number = extractIdRoom(codeRoom);
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       if (!room) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('NOTFOUNDROOM')));
-        throw new WsException(JSON.stringify(errosMap.get('NOTFOUNDROOM')));
+        this.socketService.sendError(client, errorsSocket.ROOM_NOT_FOUND);
+        throw new WsException(errorsSocket.ROOM_NOT_FOUND);
       }
 
       const isAvailableRoom: boolean = await this.roomService.checkRoomAvailability(codeRoom);
 
-      if(!isAvailableRoom) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('ROOMFULL')));
-        throw new WsException(JSON.stringify(errosMap.get('ROOMFULL')));
+      if (!isAvailableRoom) {
+        this.socketService.sendError(client, errorsSocket.ROOM_FULL);
+        throw new WsException(errorsSocket.ROOM_FULL);
       }
 
       const participant = await this.roomService.joinRoom(idRoom, client.user.id);
 
       if (!participant) {
-        this.socketService.sendError(client, JSON.stringify(errosMap.get('CANNOTJOIN')));
-        throw new WsException(JSON.stringify(errosMap.get('CANNOTJOIN')));
+        this.socketService.sendError(client, errorsSocket.CAN_NOT_JOIN);
+        throw new WsException(errorsSocket.CAN_NOT_JOIN);
       }
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
@@ -119,9 +120,8 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
       const chatContent: Chat = {
         user: client.user.nickname,
-        content: 'joined',
-        type: TEXT_GREEN,
-        icon: INFO_ICON,
+        type: JOIN_ROOM_TYPE,
+        message: JOIN_ROOM_CONTENT,
       };
 
       this.server.in(codeRoom).emit(codeRoom, chatContent);
@@ -133,16 +133,15 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(
     @MessageBody() msgBody: MessageBodyType,
-    @ConnectedSocket() client: SocketClass,
+    @ConnectedSocket() client: SocketClient,
   ) {
     try {
       const ROOM_CHAT: string = `${msgBody.codeRoom}-chat`;
 
       const chatContent: Chat = {
         user: client.user.nickname,
-        content: msgBody.message,
-        type: TEXT_BLUE,
-        icon: MESSAGECIRCLE_ICON,
+        type: CHAT_ROOM_TYPE,
+        message: msgBody.message,
       };
 
       this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent)
@@ -154,19 +153,22 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   @SubscribeMessage(LEAVE_ROOM_CHANNEL)
   async handleLeaveRoom(
     @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: SocketClass,
+    @ConnectedSocket() client: SocketClient,
   ) {
     try {
       const chatContent: Chat = {
         user: client.user.nickname,
-        content: 'left',
-        type: TEXT_RED,
-        icon: LOGOUT_ICON,
+        type: LEAVE_ROOM_TYPE,
+        message: LEAVE_ROOM_CONTENT,
       };
 
-      await this.redisService.deleteObjectByKey(`USER:${client.user.id}:ROOM`);
       const roomId = extractIdRoom(codeRoom);
-      await this.roomUserService.deleteRoomUser(roomId, client.user.id);
+
+      await Promise.all([
+        this.redisService.deleteObjectByKey(`USER:${client.user.id}:ROOM`),
+        this.roomUserService.deleteRoomUser(roomId, client.user.id),
+      ]);
+
       client.to(codeRoom).emit(`${codeRoom}-leave`, chatContent);
       client.leave(codeRoom);
     } catch (error) {
