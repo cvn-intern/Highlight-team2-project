@@ -43,7 +43,6 @@ function App() {
       setUser(JSON.parse(user));
       initSocket(token, JSON.parse(user).id);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) return null;
