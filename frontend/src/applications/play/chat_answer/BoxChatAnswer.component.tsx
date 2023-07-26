@@ -14,7 +14,6 @@ import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
-import { Chat, MessageReceiver } from "./chatAnswer";
 import { covertMessage } from "./chatAnswer.helper";
 
 interface BoxProps {
