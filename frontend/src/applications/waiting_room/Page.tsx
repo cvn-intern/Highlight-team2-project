@@ -14,6 +14,7 @@ import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
 import { WARNING_ICON } from "@/shared/constants";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const WaitingRoom = () => {
   const { user, setUser } = useUserStore();
@@ -63,7 +64,9 @@ const WaitingRoom = () => {
   useEffect(() => {
     if (!user) return;
     setNickname(user.nickname);
-  }, [user]);
+  }, [user]);       
+
+  useDisableBackButton();
 
   return (
     <MainLayout>
