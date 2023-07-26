@@ -3,6 +3,7 @@ import DividerWithText from "@/shared/components/DividerWithText";
 import GoogleLoginButton from "../home/GoogleLoginButton";
 import CustomAvatar from "../home/CustomAvatar.component";
 import { Input } from "@/shared/components/shadcn-ui/Input";
+import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 
 type PlayerInfomationProps = {
   nickname: string
@@ -20,11 +21,13 @@ const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
       <div className="relative w-fit">
         <CustomAvatar />
       </div>
+      
       <Input
         className={
           "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10 w-[60%]"
         }
         value={nickname}
+        maxLength={MAX_LENGHT_OF_NICKNAME}
         onChange={(e) => setNickname(e.target.value)}
       />
 

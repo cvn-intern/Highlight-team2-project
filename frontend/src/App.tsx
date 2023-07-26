@@ -11,6 +11,7 @@ import CheckSocketDisconnectedRoute from "./shared/components/CheckSocketDisconn
 import WaitingRoom from "./applications/waitingRoom/WaitingRoom";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -66,6 +67,7 @@ function App() {
             <Route path="*" element={<NotFoundPage/>} />
           </Routes>
         </BrowserRouter>
+        <ToastContainer role="alert" limit={3} closeButton={false}/>
       </Providers>
     </Suspense>
   );
