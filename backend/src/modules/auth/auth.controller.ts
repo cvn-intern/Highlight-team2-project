@@ -1,5 +1,4 @@
-import { BadRequestException, Body, Controller, Get, HttpCode, HttpException, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Body, Controller, Get, HttpStatus, Logger, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { IdUser } from 'src/common/decorators/idUser';
 import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
@@ -8,6 +7,7 @@ import { User } from '../user/user.entity';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { RedisService } from '../redis/redis.service';
+import { UserToken } from './types/userToken';
 
 const DAYS_OF_YEAR = 365;
 
@@ -17,7 +17,6 @@ export class AuthController {
     private authService: AuthService,
     private logger: Logger = new Logger(AuthController.name),
     private redisService: RedisService,
-    private configService: ConfigService,
     private userService: UserService,
   ) { }
 
@@ -56,49 +55,9 @@ export class AuthController {
     @Res() response: Response,
   ) {
     try {
-      const tokenPayload = await this.authService.verifyGoogleLogin(token);
-      if (!tokenPayload) throw new BadRequestException("Login google failed");
+      const userToken: UserToken = await this.authService.googleLogin(token, userId);
 
-      const existingUser = await this.userService.getUserByIdProvider(tokenPayload.sub);
-
-      if (existingUser) {
-        const isLogin = await this.redisService.getObjectByKey(`USER:${existingUser.id}:ACCESSTOKEN`);
-        
-        if (isLogin) {
-          throw new HttpException('Logined in another device!', HttpStatus.NOT_ACCEPTABLE);
-        }
-
-        const accessToken = await this.authService.generateAccessToken({
-          id: existingUser.id
-        });
-
-        await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
-
-        return response.status(HttpStatus.OK).json({
-          user: existingUser,
-          accessToken: accessToken,
-        });
-      }
-
-      const updatedUser = await this.userService.updateUser({
-        id: userId,
-        nickname: tokenPayload.name,
-        avatar: tokenPayload.picture,
-        id_provider: tokenPayload.sub,
-        provider: 'google',
-        is_guest: false,
-      });
-
-      const accessToken = await this.authService.generateAccessToken({
-        id: userId,
-      });
-
-      await this.redisService.setObjectByKeyValue(`USER:${updatedUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);
-
-      return response.status(HttpStatus.OK).json({
-        user: updatedUser,
-        accessToken: accessToken,
-      });
+      return response.status(HttpStatus.OK).json(userToken);
     } catch (error) {
       this.logger.error(error)
       return response.status(error.status).json(error);
@@ -113,9 +72,16 @@ export class AuthController {
   ) {
     try {
       const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-      await this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
+
+      this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
+      const socketId = await this.redisService.getObjectByKey(`USER:${idUser}:SOCKET`);
+
+      if(socketId) {
+        this.redisService.deleteObjectByKey(`${socketId}:ACCESSTOKEN`);
+      }
+      
+      this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
 
       return response.status(HttpStatus.OK).json();
     } catch (error) {

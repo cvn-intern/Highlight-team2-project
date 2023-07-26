@@ -159,3 +159,7 @@
 #main-layout {
   background-image: url("./shared/assets/bg.png");
 }
+
+#interval-layout{
+  background-image: url("./shared/assets/logo-no-background.png");
+}
