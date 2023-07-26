@@ -1,7 +1,7 @@
-const IntervalCanvasHeader = ({ status='interval-show-word' }) => {
+const IntervalCanvasHeader = ({ status = 'interval-show-word' }) => {
     const userName = "User123"
 
-    switch (status){
+    switch (status) {
         case 'new-turn':
             return (
                 <>
@@ -9,9 +9,15 @@ const IntervalCanvasHeader = ({ status='interval-show-word' }) => {
                     <p className="text-xl text-slate-400">It's the turn of <span className="text-slate-900">{userName}</span></p>
                 </>
             );
-        case 'inac'
+        case 'inactive':
+            return (
+                <>
+                    <p className="text-[3rem] text-red-500">INACTIVE</p>
+                    <p className="text-xl text-slate-400">You've lose your turn :(</p>
+                </>
+            );
     }
-   
+
     return (
         <>
             <p className="text-[3rem] text-sky-700">INTERVAL</p>

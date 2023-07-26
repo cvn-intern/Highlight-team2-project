@@ -123,8 +123,8 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            <Canvas />
-            <IntervalCanvas showWord={true} newTurn={false}/>
+            {/* <Canvas /> */}
+            <IntervalCanvas status="inactive"/>
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}
