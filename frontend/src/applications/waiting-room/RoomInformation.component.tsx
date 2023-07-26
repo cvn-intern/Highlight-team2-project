@@ -14,18 +14,17 @@ const RoomInformation = () => {
             if (!codeRoom) return;
             try {
                 const { data } = await roomService.getRoom(codeRoom);
-                
                 setRoomData(data);
             } catch (error) {
                 alert('Room not found!');
                 navigate('/')
-                console.log({ error });
             }
         };
 
         getRoomInformation();
     }, [])
 
+    if(!roomData) return null;
 
     return (
         <div className="flex flex-col items-center justify-center basis-1/2 flex-1 bg-[#00416A]/50 rounded-2xl p-2 ">

@@ -1,6 +1,6 @@
 import { useUserStore } from "@/shared/stores/userStore";
 import DividerWithText from "@/shared/components/DividerWithText";
-import GoogleLoginButton from "../home/GoogleLoginButton.component";
+import GoogleLoginButton from "../../shared/components/GoogleLoginButton";
 import CustomAvatar from "../home/CustomAvatar.component";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 
