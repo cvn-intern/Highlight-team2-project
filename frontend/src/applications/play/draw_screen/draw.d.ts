@@ -25,7 +25,7 @@ export type RGBAColorType = {
   a: number;
 };
 
-export type PaintToolBtnType = {
+export type PaintToolButtonType = {
   Icon: LucideIcon;
   onChange: string;
   value: string;
@@ -37,14 +37,14 @@ export type Point = {
 };
 
 export type PenStyleType =
-  | PEN_STYLE_CIRCLE
-  | PEN_STYLE_LINE
+  | "circle"
+  | "line"
   | "bucket"
   | "picker"
-  | PEN_STYLE_BRUSH
-  | PEN_STYLE_ERASER
-  | PEN_STYLE_RECTANGLE
-  | PEN_STYLE_TRIANGLE;
+  | "brush"
+  | "eraser"
+  | "rectangle"
+  | "triangle";
 
 export type StartDraw = {
   point: Point;

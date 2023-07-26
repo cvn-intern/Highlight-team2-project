@@ -12,7 +12,7 @@ export const DEFAULT_BLACK = {
   a: 1,
 };
 
-export const palette = [
+export const PALETTE = [
   "#f44336",
   "#e91e63",
   "#9c27b0",

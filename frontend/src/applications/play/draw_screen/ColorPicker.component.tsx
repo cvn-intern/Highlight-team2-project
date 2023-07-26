@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import paletteImage from "@/shared/assets/palette.svg";
-import { palette } from "../shared/constants/color";
+import { PALETTE } from "../shared/constants/color";
 import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
 import { hexToRGBA, rgbaToHex } from "@/shared/lib/colors";
 import { RgbaColorPicker } from "react-colorful";
@@ -20,7 +20,7 @@ export default function ColorPicker() {
   return (
     <>
       <div className="grid grid-cols-4 gap-1">
-        {palette.map((colour) => {
+        {PALETTE.map((colour) => {
           const isActive = colour === hexColor.slice(0, 7);
           return (
             <div

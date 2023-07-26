@@ -10,7 +10,7 @@ export default function Page() {
   useEffect(() => {
     window.history.replaceState({}, document.title);
   }, []);
-  // If 'wait' is undefinded, 'isRenderWaiting' still be true
+  // If 'wait' is undefinded, 'isRenderWaiting' is still be true
   const isRenderWaiting = state === null ? true : !!state.wait;
   if (isRenderWaiting) return <WaitingRoom />;
   return <PlayingGameScreen />;

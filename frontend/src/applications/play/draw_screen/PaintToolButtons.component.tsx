@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvents";
 import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
-import BtnChosePenStyle from "./BtnChosePenStyle.component";
+import ButtonChosePenStyle from "./ButtonChosePenStyle.component";
 import {
   Edit,
   Eraser,
@@ -25,7 +25,7 @@ import {
   PEN_STYLE_LINE,
 } from "@/applications/play/shared/constants/penStyles";
 
-export default function ToolBtns() {
+export default function PaintToolButtons() {
   const variables = useContext(PaintContext);
   const {
     handleStartDraw,
@@ -72,7 +72,7 @@ export default function ToolBtns() {
   };
   return (
     <div className="grid grid-cols-2 auto-rows-[44px] gap-[1px] bg-[var(--color-gray-cc)]">
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Edit}
         active={penStyle === PEN_STYLE_BRUSH}
         onChange={() => {
@@ -81,35 +81,35 @@ export default function ToolBtns() {
         value={PEN_STYLE_BRUSH}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Eraser}
         active={penStyle === PEN_STYLE_ERASER}
         onChange={handleChoseEraser}
         value={PEN_STYLE_ERASER}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Square}
         active={penStyle === PEN_STYLE_RECTANGLE}
         onChange={handleChoseRectangle}
         value={PEN_STYLE_RECTANGLE}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Circle}
         active={penStyle === PEN_STYLE_CIRCLE}
         onChange={handleChoseCircle}
         value={PEN_STYLE_CIRCLE}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Triangle}
         active={penStyle === PEN_STYLE_TRIANGLE}
         onChange={handleChoseTriangle}
         value={PEN_STYLE_TRIANGLE}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={"fill"}
         active={isFill}
         onChange={handleToggleFill}
@@ -117,21 +117,21 @@ export default function ToolBtns() {
         value="fill"
         type="checkbox"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Minus}
         active={penStyle === PEN_STYLE_LINE}
         onChange={handleChoseLine}
         value={PEN_STYLE_LINE}
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={PaintBucket}
         active={penStyle === "bucket"}
         onChange={handleChoseBucket}
         value="bucket"
         type="radio"
       />
-      <BtnChosePenStyle
+      <ButtonChosePenStyle
         Icon={Pipette}
         active={penStyle === "picker"}
         onChange={handleChoseColorPicker}
