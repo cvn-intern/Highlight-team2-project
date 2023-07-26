@@ -4,7 +4,7 @@ import { Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
-import { SocketClass } from './socket.class';
+import { SocketClient } from './socket.class';
 import { WsException } from '@nestjs/websockets';
 
 @Injectable()
@@ -39,7 +39,7 @@ export class SocketService {
     return tokenOfSocket === validToken ? true : false;
   }
 
-  async removeClientDisconnection(client: SocketClass) {
+  async removeClientDisconnection(client: SocketClient) {
     try {
       const payload = await this.extractPayload(client);
       const idUser: number = payload.id;
