@@ -8,7 +8,7 @@ import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvent
 import useDrawing from "@/applications/play/shared/hooks/useDrawing";
 import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
 
-const Canvas = () => {
+const Canvas = ({hidden = false}) => {
   const variables = useContext(PaintContext);
   const {
     handleStartDraw,
@@ -30,6 +30,7 @@ const Canvas = () => {
   return (
     <div
       className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0`}
+      hidden={hidden}
     >
       <canvas
         ref={canvasRef}
