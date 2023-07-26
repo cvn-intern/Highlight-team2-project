@@ -194,27 +194,20 @@ export const fillColorIntoCanvas = (
         break;
       }
       colorPixel(pixel_pos);
-      if (x > 0) {
-        if (matchesStartColor(prevPixel(pixel_pos))) {
-          if (!reach_left) {
-            stack.push([x - 1, y]);
-            reach_left = true;
-          }
-        } else if (reach_left) {
-          reach_left = false;
-        }
-      }
 
-      if (x < canvas_width - 1) {
-        if (matchesStartColor(nextPixel(pixel_pos))) {
-          if (!reach_right) {
-            stack.push([x + 1, y]);
-            reach_right = true;
-          }
-        } else if (reach_right) {
-          reach_right = false;
-        }
+      if (x > 0 && matchesStartColor(prevPixel(pixel_pos)) && !reach_left) {
+        stack.push([x - 1, y]);
       }
+      reach_left = !reach_left;
+
+      if (
+        x < canvas_width - 1 &&
+        matchesStartColor(nextPixel(pixel_pos)) &&
+        !reach_right
+      ) {
+        stack.push([x + 1, y]);
+      }
+      reach_right = !reach_right;
 
       pixel_pos += canvas_width * ONE_PIXEL_DATA_LENGTH;
     }
