@@ -43,7 +43,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
         />
         <div className="flex items-center gap-3">
           <Dialog>
-            <DialogTrigger asChild>
+            <DialogTrigger>
               <TooltipIcon icon={AlertCircle} text="Info" iconSize={28} />
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px]">

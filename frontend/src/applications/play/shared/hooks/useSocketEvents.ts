@@ -9,7 +9,7 @@ import {
   StartDraw,
   UseDrawingCustomHook,
   UseSocketCustomHook,
-} from "@/applications/play/draw_screen/draw";
+} from "@/applications/play/draw-screen/draw";
 import {
   CANVAS_STATE,
   CANVAS_STATE_FROM_SERVER,

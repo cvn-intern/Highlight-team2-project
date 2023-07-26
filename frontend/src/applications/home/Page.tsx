@@ -4,7 +4,7 @@ import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
 import PlayForm from "./PlayForm.component";
 import CustomAvatar from "./CustomAvatar.component";
-import GoogleLoginButton from "./GoogleLoginButton.component";
+import GoogleLoginButton from "@/shared/components/GoogleLoginButton";
 import DividerWithText from "@/shared/components/DividerWithText";
 import { useUserStore } from "@/shared/stores/userStore";
 

@@ -32,7 +32,7 @@ import { ERROR_ICON, MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 
 const formSchema = z.object({
-  nickname: z.string().min(2).max(50).trim(),
+  nickname: z.string().trim().min(2).max(50),
   language: z.string({
     required_error: "Please select an language.",
   }),
