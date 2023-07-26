@@ -27,7 +27,7 @@ function App() {
 
   useEffect(() => {
     const initPlayer = async () => {
-      let token = JWTManager.getToken() ?? (await createNewToken());
+      const token = JWTManager.getToken() ?? (await createNewToken());
       const savedUser = JSON.parse(
         window.sessionStorage.getItem("user")!
       ) as IUser;

@@ -52,9 +52,6 @@ const WaitingRoom = () => {
         setUser(data);
       }
       socket?.emit("join-room", codeRoom);
-      socket?.on("error", () => {
-        navigate("/");
-      });
 
       navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
@@ -76,6 +73,24 @@ const WaitingRoom = () => {
     if (!user) return;
     setNickname(user.nickname);
   }, [user]);
+
+  // useEffect(() => {
+  //   socket?.on("error", () => {
+  //     useToaster({
+  //       type: "success",
+  //       message: "Reloading!",
+  //       bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+  //       icon: SUCCESS_ICON,
+  //       progressStyle: {
+  //         background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
+  //       }
+  //     })
+  //   });
+
+  //   return () => {
+  //     socket?.off("error");
+  //   };
+  // }, [socket])
 
   useDisableBackButton();
 
