@@ -34,3 +34,9 @@ export const palette = [
   "#000000",
   "#ffffff",
 ];
+
+export const TEXT_GREEN = 'text-green-400';
+export const TEXT_BLUE = 'text-blue-400';
+export const TEXT_RED = 'text-red-400';
+export const TEXT_ORANGE = 'text-red-400';
+export const TEXT_ZINC = 'text-zinc-400'

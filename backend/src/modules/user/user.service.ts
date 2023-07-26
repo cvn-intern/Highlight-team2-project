@@ -17,10 +17,10 @@ export class UserService {
     private redisService: RedisService,
   ) { }
 
-  async getUserById(id: number): Promise<User> {
+  async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
       where: {
-        id: id,
+        id: userId,
       },
     });
   }
@@ -30,13 +30,13 @@ export class UserService {
   }
 
   async updateUser(user: UserInterface): Promise<User> {
-    const userExisted = await this.userRepository.find({
+    const isUserExisted = await this.userRepository.find({
       where: {
         id: user.id,
       },
     });
 
-    if (!userExisted) {
+    if (!isUserExisted) {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
 
@@ -44,13 +44,13 @@ export class UserService {
   }
 
   async getUserByIdProvider(idProvider: string): Promise<User> {
-    const userExisted = await this.userRepository.findOne({
+    const isUserExisted = await this.userRepository.findOne({
       where: {
         id_provider: idProvider,
       },
     });
 
-    return userExisted;
+    return isUserExisted;
   }
 
   generateGuest(): UserInterface {
@@ -68,6 +68,6 @@ export class UserService {
   async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
     const check = await this.redisService.getObjectByKey(`BLOCKLIST:${tokenUser}`);
 
-    return check ? true : false;
+    return !!check;
   }
 }

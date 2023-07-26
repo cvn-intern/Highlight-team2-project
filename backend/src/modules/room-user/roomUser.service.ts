@@ -11,8 +11,8 @@ export class RoomUserService {
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
       where: {
-        room_id: room_id,
-        user_id: user_id,
+        room_id,
+        user_id,
       },
     });
 
@@ -21,8 +21,8 @@ export class RoomUserService {
     }
 
     return await this.roomUserRepository.save({
-      room_id: room_id,
-      user_id: user_id,
+      room_id,
+      user_id,
     });
   }
 
@@ -37,8 +37,8 @@ export class RoomUserService {
     }
 
     return await this.roomUserRepository.delete({
-      room_id: room_id,
-      user_id: user_id,
+      room_id,
+      user_id,
     });
   }
 
@@ -49,8 +49,8 @@ export class RoomUserService {
   async checkUserInRoom(user_id: number, room_id: number): Promise<boolean> {
     const participant = await this.roomUserRepository.findOne({
      where: {
-      room_id: room_id,
-      user_id: user_id,
+      room_id,
+      user_id,
      }
     });
 

@@ -14,6 +14,8 @@ import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
+import { Chat, MessageReceiver } from "./chatAnswer";
+import { covertMessage } from "./chatAnswer.helper";
 
 interface BoxProps {
   label: string;
@@ -45,13 +47,6 @@ const Message = (props: MessageProps) => {
 interface MessageBodyInterface {
   codeRoom: string;
   message: string;
-}
-
-interface Chat {
-  user: string;
-  content: string;
-  type: string;
-  icon: string;
 }
 
 const BoxChat = (props: BoxProps) => {
@@ -146,6 +141,7 @@ const BoxChat = (props: BoxProps) => {
     </>
   );
 };
+
 const BoxChatAnswer = () => {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
@@ -154,20 +150,24 @@ const BoxChatAnswer = () => {
 
   useEffect(() => {
     if (!codeRoom) return;
-    socket?.on(codeRoom, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(codeRoom, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-chat`, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-chat`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-answer`, (data: Chat) => {
-      setListAnswer((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListAnswer((pre) => [...pre, convertData]);
     });
 
-    socket?.on(`${codeRoom}-leave`, (data: Chat) => {
-      setListChat((pre) => [...pre, data]);
+    socket?.on(`${codeRoom}-leave`, (data: MessageReceiver) => {
+      const convertData: Chat = covertMessage(data);
+      setListChat((pre) => [...pre, convertData]);
     });
 
     return () => {
