@@ -52,12 +52,6 @@ export class AuthService {
     const existingUser = await this.userService.getUserByIdProvider(tokenPayload.sub);
 
     if (existingUser) {
-      const isLogin = await this.redisService.getObjectByKey(`USER:${existingUser.id}:ACCESSTOKEN`);
-
-      if (isLogin) {
-        throw new HttpException('Logined in another device!', HttpStatus.NOT_ACCEPTABLE);
-      }
-
       const accessToken = await this.generateAccessToken({
         id: existingUser.id
       });

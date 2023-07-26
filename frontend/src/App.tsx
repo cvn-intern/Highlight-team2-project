@@ -35,7 +35,7 @@ function App() {
     };
 
     const token = JWTManager.getToken();
-    const user = window.localStorage.getItem("user");
+    const user = window.sessionStorage.getItem("user");
 
     if (!token && !socket) {
       initUser();

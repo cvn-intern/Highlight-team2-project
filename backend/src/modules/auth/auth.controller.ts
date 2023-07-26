@@ -72,9 +72,16 @@ export class AuthController {
   ) {
     try {
       const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-      await this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
+
+      this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
+      const socketId = await this.redisService.getObjectByKey(`USER:${idUser}:SOCKET`);
+
+      if(socketId) {
+        this.redisService.deleteObjectByKey(`${socketId}:ACCESSTOKEN`);
+      }
+      
+      this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
 
       return response.status(HttpStatus.OK).json();
     } catch (error) {
