@@ -3,9 +3,13 @@ import NobodyHitsImg from "@/shared/assets/nobody-hits-answer.png";
 import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png"
 
+const INTERVAL_SHOW_WORD = 'interval-show-word'
+const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word'
+const INTERVAL_NEW_TURN = 'new-turn'
+
 const IntervalCanvasContent = ({status = 'interval-show-word' }) => {
     switch (status) {
-        case 'interval-show-word':
+        case INTERVAL_SHOW_WORD:
             return (
                 <div className="flex justify-between gap-x-20 ">
                     <div className="flex flex-col items-center place-content-center">
@@ -20,7 +24,7 @@ const IntervalCanvasContent = ({status = 'interval-show-word' }) => {
                     </div>
                 </div>
             );
-        case 'interval-not-show-word':
+        case INTERVAL_NOT_SHOW_WORD :
             return (
                 <div className="flex flex-col items-center gap-y-3">
                     <div className="w-[130px] mt-5 ">
@@ -31,7 +35,7 @@ const IntervalCanvasContent = ({status = 'interval-show-word' }) => {
                     </div>
                 </div>
             );
-        case 'new-turn':
+        case 'INTERVAL_NEW_TURN':
             return (
                 <div className="flex items-center mt-7">
                     <img className="w-[200px]" src={NewTurnUserImg} />
