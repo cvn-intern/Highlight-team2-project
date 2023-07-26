@@ -29,15 +29,17 @@ const WaitingRoom = () => {
 
   const handleJoinRoom = async () => {
     if (!nickname.trim()) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useToaster({
         type: "warning",
         message: "Please enter your nickname!",
         bodyClassName: "text-lg font-semibold text-slate-600 text-center",
         icon: WARNING_ICON,
         progressStyle: {
-          background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-        }
-      })
+          background:
+            "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
+        },
+      });
       return;
     }
     try {
@@ -49,22 +51,23 @@ const WaitingRoom = () => {
 
         setUser(data);
       }
-
       socket?.emit("join-room", codeRoom);
 
       navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useToaster({
         type: "error",
         message: "Join room failed!",
         bodyClassName: "text-lg font-semibold text-slate-600 text-center",
         icon: ERROR_ICON,
         progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
-      })
+          background:
+            "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
+        },
+      });
     }
-  }
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -106,11 +109,18 @@ const WaitingRoom = () => {
             src={JoinRoomBanner}
             className="mt-1 mb-1 2xl:my-5 w-[500px] max-md:hidden"
           />
-          <button className="absolute top-1 left-4 md:left-10 mt-5 mr-5" onClick={handleBackButton}>
-            <Triangle size={40} strokeWidth={2.5} className="-rotate-90 fill-[#f7b733] hover:opacity-80" />
+          <button
+            className="absolute mt-5 mr-5 top-1 left-4 md:left-10"
+            onClick={handleBackButton}
+          >
+            <Triangle
+              size={40}
+              strokeWidth={2.5}
+              className="-rotate-90 fill-[#f7b733] hover:opacity-80"
+            />
           </button>
 
-          <div className="flex items-stretch justify-center gap-4 mb-8 home-content-responsive bg-white h-full p-8 md:p-0" >
+          <div className="flex items-stretch justify-center h-full gap-4 p-8 mb-8 bg-white home-content-responsive md:p-0">
             <PlayerInfomation nickname={nickname} setNickname={setNickname} />
             <RoomInformation />
           </div>
@@ -132,5 +142,3 @@ const WaitingRoom = () => {
 };
 
 export default WaitingRoom;
-
-

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, createContext } from "react";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 // Variables
 import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
@@ -47,6 +48,7 @@ export default function PlayingGameScreen() {
   const [roomInfo, setRoomInfo] = useState<RoomType>();
 
   // Side Effects
+  useDisableBackButton();
   useEffect(() => {
     const resetState = () => {
       if (!ctx) return;
@@ -90,6 +92,7 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useToaster({
           type: "error",
           message: "Get room info failed!",
