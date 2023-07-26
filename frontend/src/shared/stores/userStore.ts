@@ -22,10 +22,10 @@ export const useUserStore = create<UserState>((set) => ({
   user: null,
   setUser: (data) => {
     set((state) => ({ ...state, user: data }))
-    window.localStorage.setItem('user',JSON.stringify(data))
+    window.sessionStorage.setItem('user',JSON.stringify(data))
   },
   deleteUser: () => {
     set((state) => ({ ...state, user: null }));
-    window.localStorage.removeItem('user');
+    window.sessionStorage.removeItem('user');
   },
 }));
