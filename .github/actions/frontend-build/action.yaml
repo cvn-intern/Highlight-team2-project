@@ -1,0 +1,19 @@
+name: frontend-build
+description: Build the frontend source code
+
+inputs:
+  variables-env:
+    description: Variables in .env file
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build frontend source
+      shell: bash
+      run: |
+        cd ./frontend
+        npm install
+        echo "${{ inputs.variables-env }}" > .env.production
+        npm run build
+        cd ..
