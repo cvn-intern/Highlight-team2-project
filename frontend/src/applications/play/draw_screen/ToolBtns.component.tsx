@@ -16,6 +16,14 @@ import {
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 import useDrawing from "@/applications/play/shared/hooks/useDrawing";
+import {
+  PEN_STYLE_BRUSH,
+  PEN_STYLE_ERASER,
+  PEN_STYLE_RECTANGLE,
+  PEN_STYLE_CIRCLE,
+  PEN_STYLE_TRIANGLE,
+  PEN_STYLE_LINE,
+} from "@/applications/play/shared/constants/penStyles";
 
 export default function ToolBtns() {
   const variables = useContext(PaintContext);
@@ -36,25 +44,25 @@ export default function ToolBtns() {
   const { penStyle, isFill, setPenStyle, setIsFill } = variables;
   // Handlers
   const handleChoseBrush = () => {
-    setPenStyle("brush");
+    setPenStyle(PEN_STYLE_BRUSH);
   };
   const handleChoseEraser = () => {
-    setPenStyle("eraser");
+    setPenStyle(PEN_STYLE_ERASER);
   };
   const handleChoseRectangle = () => {
-    setPenStyle("rectangle");
+    setPenStyle(PEN_STYLE_RECTANGLE);
   };
   const handleChoseCircle = () => {
-    setPenStyle("circle");
+    setPenStyle(PEN_STYLE_CIRCLE);
   };
   const handleChoseTriangle = () => {
-    setPenStyle("triangle");
+    setPenStyle(PEN_STYLE_TRIANGLE);
   };
   const handleToggleFill = () => {
     setIsFill((prev: boolean) => !prev);
   };
   const handleChoseLine = () => {
-    setPenStyle("line");
+    setPenStyle(PEN_STYLE_LINE);
   };
   const handleChoseBucket = () => {
     setPenStyle("bucket");
@@ -66,39 +74,39 @@ export default function ToolBtns() {
     <div className="grid grid-cols-2 auto-rows-[44px] gap-[1px] bg-[var(--color-gray-cc)]">
       <BtnChosePenStyle
         Icon={Edit}
-        active={penStyle === "brush"}
+        active={penStyle === PEN_STYLE_BRUSH}
         onChange={() => {
           handleChoseBrush();
         }}
-        value="brush"
+        value={PEN_STYLE_BRUSH}
         type="radio"
       />
       <BtnChosePenStyle
         Icon={Eraser}
-        active={penStyle === "eraser"}
+        active={penStyle === PEN_STYLE_ERASER}
         onChange={handleChoseEraser}
-        value="eraser"
+        value={PEN_STYLE_ERASER}
         type="radio"
       />
       <BtnChosePenStyle
         Icon={Square}
-        active={penStyle === "rectangle"}
+        active={penStyle === PEN_STYLE_RECTANGLE}
         onChange={handleChoseRectangle}
-        value="rectangle"
+        value={PEN_STYLE_RECTANGLE}
         type="radio"
       />
       <BtnChosePenStyle
         Icon={Circle}
-        active={penStyle === "circle"}
+        active={penStyle === PEN_STYLE_CIRCLE}
         onChange={handleChoseCircle}
-        value="circle"
+        value={PEN_STYLE_CIRCLE}
         type="radio"
       />
       <BtnChosePenStyle
         Icon={Triangle}
-        active={penStyle === "triangle"}
+        active={penStyle === PEN_STYLE_TRIANGLE}
         onChange={handleChoseTriangle}
-        value="triangle"
+        value={PEN_STYLE_TRIANGLE}
         type="radio"
       />
       <BtnChosePenStyle
@@ -111,9 +119,9 @@ export default function ToolBtns() {
       />
       <BtnChosePenStyle
         Icon={Minus}
-        active={penStyle === "line"}
+        active={penStyle === PEN_STYLE_LINE}
         onChange={handleChoseLine}
-        value="line"
+        value={PEN_STYLE_LINE}
         type="radio"
       />
       <BtnChosePenStyle

@@ -1,8 +1,22 @@
+const START_X_CANVAS = 0;
+const START_Y_CANVAS = 0;
+const ONE_PIXEL_DATA_LENGTH = 4;
+const RED_INDEX_OF_ONE_PIXEL = 0;
+const GREEN_INDEX_OF_ONE_PIXEL = 1;
+const BLUE_INDEX_OF_ONE_PIXEL = 2;
+const ALPHA_INDEX_OF_ONE_PIXEL = 3;
+const MAX_ALPHA_IN_RANGE_255 = 255;
+
 /* eslint-disable prefer-const */
 import { rgbaToHex } from "@/shared/lib/colors";
 import { DEFAULT_WHITE } from "../shared/constants/color";
 import { Point, RGBAColorType } from "./draw";
 import { MouseEvent } from "react";
+
+const scaleAlphaFromRange255ToRange1 = (alpha: number) =>
+  alpha / MAX_ALPHA_IN_RANGE_255;
+const scaleAlphaFromRange1ToRange255 = (alpha: number) =>
+  alpha * MAX_ALPHA_IN_RANGE_255;
 
 export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
   if (!ctx) return;
@@ -13,7 +27,12 @@ export const resetCanvas = (ctx: CanvasRenderingContext2D) => {
     DEFAULT_WHITE.a
   );
   ctx.fillStyle = hexColor;
-  ctx?.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  ctx?.fillRect(
+    START_X_CANVAS,
+    START_Y_CANVAS,
+    ctx.canvas.width,
+    ctx.canvas.height
+  );
 };
 
 export const drawLine = (
@@ -26,7 +45,7 @@ export const drawLine = (
   const { x: previousX, y: previousY } = previousPoint;
   const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
-  snapshot && ctx.putImageData(snapshot, 0, 0);
+  snapshot && ctx.putImageData(snapshot, START_X_CANVAS, START_Y_CANVAS);
   ctx.moveTo(previousX, previousY);
   ctx.lineTo(currentX, currentY);
   ctx.lineCap = "round";
@@ -44,7 +63,7 @@ export const drawRectangle = (
   const { x: previousX, y: previousY } = previousPoint;
   const { x: currentX, y: currentY } = currentPoint;
   ctx.beginPath();
-  snapshot && ctx.putImageData(snapshot, 0, 0);
+  snapshot && ctx.putImageData(snapshot, START_X_CANVAS, START_Y_CANVAS);
   ctx.rect(previousX, previousY, currentX - previousX, currentY - previousY);
   isFill ? ctx.fill() : ctx.stroke();
 };
@@ -56,16 +75,18 @@ export const drawCircle = (
   previousPoint: Point,
   isFill: boolean
 ) => {
+  const ROTATION_START = 0;
+  const ROTATION_RANGE = 2 * Math.PI;
   if (!ctx) return;
   const { x: previousX, y: previousY } = previousPoint;
   const { x: currentX, y: currentY } = currentPoint;
-  snapshot && ctx.putImageData(snapshot, 0, 0);
+  snapshot && ctx.putImageData(snapshot, START_X_CANVAS, START_Y_CANVAS);
   ctx.moveTo(previousX, previousY);
   ctx.beginPath();
   const radius = Math.sqrt(
     Math.pow(currentX - previousX, 2) + Math.pow(currentY - previousY, 2)
   );
-  ctx.arc(previousX, previousY, radius, 0, 2 * Math.PI);
+  ctx.arc(previousX, previousY, radius, ROTATION_START, ROTATION_RANGE);
   isFill ? ctx.fill() : ctx.stroke();
 };
 
@@ -79,11 +100,12 @@ export const drawTriangle = (
   if (!ctx) return;
   const { x: previousX, y: previousY } = previousPoint;
   const { x: currentX, y: currentY } = currentPoint;
+  const THIRD_POINT_X = previousX * 2 - currentX;
   ctx.beginPath();
-  snapshot && ctx.putImageData(snapshot, 0, 0);
+  snapshot && ctx.putImageData(snapshot, START_X_CANVAS, START_Y_CANVAS);
   ctx.moveTo(previousX, previousY);
   ctx.lineTo(currentX, currentY);
-  ctx.lineTo(previousX * 2 - currentX, currentY);
+  ctx.lineTo(THIRD_POINT_X, currentY);
   ctx.closePath();
   isFill ? ctx.fill() : ctx.stroke();
 };
@@ -124,14 +146,19 @@ export const fillColorIntoCanvas = (
 ) => {
   const { x, y } = point;
   const canvas = ctx.canvas;
-  const c_width = canvas.width;
-  const c_height = canvas.height;
-  const id = ctx.getImageData(0, 0, c_width, c_height);
-  const pixel_pos = (y * c_width + x) * 4;
-  const start_r = id.data[pixel_pos + 0];
-  const start_g = id.data[pixel_pos + 1];
-  const start_b = id.data[pixel_pos + 2];
-  const start_a = id.data[pixel_pos + 3];
+  const canvas_width = canvas.width;
+  const canvas_height = canvas.height;
+  const id = ctx.getImageData(
+    START_X_CANVAS,
+    START_Y_CANVAS,
+    canvas_width,
+    canvas_height
+  );
+  const pixel_pos = convertFromCoordinatesToIndex(x, y, canvas_width);
+  const start_r = id.data[pixel_pos + RED_INDEX_OF_ONE_PIXEL];
+  const start_g = id.data[pixel_pos + GREEN_INDEX_OF_ONE_PIXEL];
+  const start_b = id.data[pixel_pos + BLUE_INDEX_OF_ONE_PIXEL];
+  const start_a = id.data[pixel_pos + ALPHA_INDEX_OF_ONE_PIXEL];
 
   if (
     fill_r === start_r &&
@@ -151,24 +178,24 @@ export const fillColorIntoCanvas = (
     x = new_pos[0];
     y = new_pos[1];
 
-    pixel_pos = (y * c_width + x) * 4;
-    while (matches_start_color(pixel_pos)) {
+    pixel_pos = convertFromCoordinatesToIndex(x, y, canvas_width);
+    while (matchesStartColor(pixel_pos)) {
       y--;
-      pixel_pos = (y * c_width + x) * 4;
+      pixel_pos = convertFromCoordinatesToIndex(x, y, canvas_width);
     }
     reach_left = false;
     reach_right = false;
     // eslint-disable-next-line no-constant-condition
     while (true) {
       y++;
-      pixel_pos = (y * c_width + x) * 4;
+      pixel_pos = convertFromCoordinatesToIndex(x, y, canvas_width);
 
-      if (!(y < c_height && matches_start_color(pixel_pos))) {
+      if (!(y < canvas_height && matchesStartColor(pixel_pos))) {
         break;
       }
-      color_pixel(pixel_pos);
+      colorPixel(pixel_pos);
       if (x > 0) {
-        if (matches_start_color(pixel_pos - 4)) {
+        if (matchesStartColor(prevPixel(pixel_pos))) {
           if (!reach_left) {
             stack.push([x - 1, y]);
             reach_left = true;
@@ -178,8 +205,8 @@ export const fillColorIntoCanvas = (
         }
       }
 
-      if (x < c_width - 1) {
-        if (matches_start_color(pixel_pos + 4)) {
+      if (x < canvas_width - 1) {
+        if (matchesStartColor(nextPixel(pixel_pos))) {
           if (!reach_right) {
             stack.push([x + 1, y]);
             reach_right = true;
@@ -189,25 +216,41 @@ export const fillColorIntoCanvas = (
         }
       }
 
-      pixel_pos += c_width * 4;
+      pixel_pos += canvas_width * ONE_PIXEL_DATA_LENGTH;
     }
   }
-  ctx.putImageData(id, 0, 0);
+  ctx.putImageData(id, START_X_CANVAS, START_Y_CANVAS);
 
-  function matches_start_color(pixel_pos: number): boolean {
+  function matchesStartColor(pixel_pos: number): boolean {
     return (
-      id.data[pixel_pos + 0] === start_r &&
-      id.data[pixel_pos + 1] === start_g &&
-      id.data[pixel_pos + 2] === start_b &&
-      id.data[pixel_pos + 3] === start_a
+      id.data[pixel_pos + RED_INDEX_OF_ONE_PIXEL] === start_r &&
+      id.data[pixel_pos + GREEN_INDEX_OF_ONE_PIXEL] === start_g &&
+      id.data[pixel_pos + BLUE_INDEX_OF_ONE_PIXEL] === start_b &&
+      id.data[pixel_pos + ALPHA_INDEX_OF_ONE_PIXEL] === start_a
     );
   }
 
-  function color_pixel(pixel_pos: number): void {
-    id.data[pixel_pos + 0] = fill_r;
-    id.data[pixel_pos + 1] = fill_g;
-    id.data[pixel_pos + 2] = fill_b;
-    id.data[pixel_pos + 3] = fill_a;
+  function colorPixel(pixel_pos: number): void {
+    id.data[pixel_pos + RED_INDEX_OF_ONE_PIXEL] = fill_r;
+    id.data[pixel_pos + GREEN_INDEX_OF_ONE_PIXEL] = fill_g;
+    id.data[pixel_pos + BLUE_INDEX_OF_ONE_PIXEL] = fill_b;
+    id.data[pixel_pos + ALPHA_INDEX_OF_ONE_PIXEL] = fill_a;
+  }
+
+  function nextPixel(pixel_pos: number): number {
+    return pixel_pos + ONE_PIXEL_DATA_LENGTH;
+  }
+
+  function prevPixel(pixel_pos: number): number {
+    return pixel_pos - ONE_PIXEL_DATA_LENGTH;
+  }
+
+  function convertFromCoordinatesToIndex(
+    x: number,
+    y: number,
+    canvas_width: number
+  ): number {
+    return (y * canvas_width + x) * ONE_PIXEL_DATA_LENGTH;
   }
 };
 
@@ -225,7 +268,7 @@ export const fillWithColor = (
     color.r,
     color.g,
     color.b,
-    color.a * 255 || 255
+    scaleAlphaFromRange1ToRange255(color.a) || MAX_ALPHA_IN_RANGE_255
   );
 };
 
@@ -234,13 +277,17 @@ export const pickColor = (
   point: Point,
   setColor: (color: RGBAColorType) => void
 ) => {
+  const IMAGE_LENGTH = 1;
+  const IMAGE_HEIGHT = 1;
   if (!ctx) return;
   const { x, y } = point;
-  const dataImage = ctx.getImageData(x, y, 1, 1);
-  const r = dataImage.data[0];
-  const g = dataImage.data[1];
-  const b = dataImage.data[2];
-  const a = dataImage.data[3] / 255;
+  const dataImage = ctx.getImageData(x, y, IMAGE_LENGTH, IMAGE_HEIGHT);
+  const r = dataImage.data[RED_INDEX_OF_ONE_PIXEL];
+  const g = dataImage.data[GREEN_INDEX_OF_ONE_PIXEL];
+  const b = dataImage.data[BLUE_INDEX_OF_ONE_PIXEL];
+  const a = scaleAlphaFromRange255ToRange1(
+    dataImage.data[ALPHA_INDEX_OF_ONE_PIXEL]
+  );
   const color = { r, g, b, a };
   setColor(color);
 };
@@ -248,7 +295,7 @@ export const pickColor = (
 export const getPointFromEvent = (
   e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
 ): Point => {
-  const x = e.nativeEvent.offsetX;
-  const y = e.nativeEvent.offsetY;
-  return { x, y };
+  const X_COMPARE_TO_CANVAS = e.nativeEvent.offsetX;
+  const Y_COMPARE_TO_CANVAS = e.nativeEvent.offsetY;
+  return { x: X_COMPARE_TO_CANVAS, y: Y_COMPARE_TO_CANVAS };
 };

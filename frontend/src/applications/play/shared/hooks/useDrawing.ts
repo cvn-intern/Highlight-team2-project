@@ -18,6 +18,14 @@ import {
   StartDraw,
   UseDrawingCustomHook,
 } from "@/applications/play/draw_screen/draw";
+import {
+  PEN_STYLE_BRUSH,
+  PEN_STYLE_ERASER,
+  PEN_STYLE_RECTANGLE,
+  PEN_STYLE_CIRCLE,
+  PEN_STYLE_TRIANGLE,
+  PEN_STYLE_LINE,
+} from "@/applications/play/shared/constants/penStyles";
 
 const useDrawing = (): UseDrawingCustomHook => {
   let handleStartDraw = (_: StartDraw) => {};
@@ -68,8 +76,8 @@ const useDrawing = (): UseDrawingCustomHook => {
     }
     setSnapshot(ctx.getImageData(0, 0, canvas.width, canvas.height));
     ctx.beginPath();
-    penStyle === "brush" && drawFreeStyle(ctx, point, color);
-    penStyle === "eraser" && eraser(ctx, point);
+    penStyle === PEN_STYLE_BRUSH && drawFreeStyle(ctx, point, color);
+    penStyle === PEN_STYLE_ERASER && eraser(ctx, point);
   };
 
   handleDrawing = ({
@@ -81,23 +89,23 @@ const useDrawing = (): UseDrawingCustomHook => {
     ctx,
   }: Drawing): void => {
     if (!ctx || !isDrawing) return;
-    if (penStyle === "brush") {
+    if (penStyle === PEN_STYLE_BRUSH) {
       drawFreeStyle(ctx, currentPoint, color);
     }
-    if (penStyle === "eraser") {
+    if (penStyle === PEN_STYLE_ERASER) {
       eraser(ctx, currentPoint);
     }
     if (!snapshot) return;
-    if (penStyle === "rectangle") {
+    if (penStyle === PEN_STYLE_RECTANGLE) {
       drawRectangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
-    if (penStyle === "circle") {
+    if (penStyle === PEN_STYLE_CIRCLE) {
       drawCircle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
-    if (penStyle === "triangle") {
+    if (penStyle === PEN_STYLE_TRIANGLE) {
       drawTriangle(ctx, snapshot, currentPoint, previousPoint, isFill);
     }
-    if (penStyle === "line") {
+    if (penStyle === PEN_STYLE_LINE) {
       drawLine(ctx, snapshot, currentPoint, previousPoint);
     }
   };

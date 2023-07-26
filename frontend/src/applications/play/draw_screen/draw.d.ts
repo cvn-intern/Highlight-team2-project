@@ -37,14 +37,14 @@ export type Point = {
 };
 
 export type PenStyleType =
-  | "circle"
-  | "line"
+  | PEN_STYLE_CIRCLE
+  | PEN_STYLE_LINE
   | "bucket"
   | "picker"
-  | "brush"
-  | "eraser"
-  | "rectangle"
-  | "triangle";
+  | PEN_STYLE_BRUSH
+  | PEN_STYLE_ERASER
+  | PEN_STYLE_RECTANGLE
+  | PEN_STYLE_TRIANGLE;
 
 export type StartDraw = {
   point: Point;

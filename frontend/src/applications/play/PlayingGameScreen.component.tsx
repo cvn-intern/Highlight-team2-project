@@ -21,6 +21,7 @@ import ActionButtons from "./action_buttons/ActionButtons.component";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -35,7 +36,7 @@ export default function PlayingGameScreen() {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
-  const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
+  const [penStyle, setPenStyle] = useState<PenStyleType>(PEN_STYLE_BRUSH);
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
