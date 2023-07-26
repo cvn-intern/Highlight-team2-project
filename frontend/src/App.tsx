@@ -7,10 +7,10 @@ import { IUser, useUserStore } from "@/shared/stores/userStore";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
 import Providers from "./Providers";
-import WaitingRoom from "./applications/waiting-room/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from 'react-toastify';
+import WaitingRoom from "./applications/waiting-room/Page";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -45,6 +45,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
+            <Route path="/:codeRoom/waiting" element={<WaitingRoom />} />
             <Route
               path="/user/existing"
               element={<UserExistsInBrowserPage />}
