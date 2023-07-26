@@ -2,12 +2,9 @@ import AnswerHitImg from "@/shared/assets/answer-hit-img.png";
 import NobodyHitsImg from "@/shared/assets/nobody-hits-answer.png";
 import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png"
+import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
 
-const INTERVAL_SHOW_WORD = 'interval-show-word'
-const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word'
-const INTERVAL_NEW_TURN = 'new-turn'
-
-const IntervalCanvasContent = ({status = 'interval-show-word' }) => {
+const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
     switch (status) {
         case INTERVAL_SHOW_WORD:
             return (
@@ -35,7 +32,7 @@ const IntervalCanvasContent = ({status = 'interval-show-word' }) => {
                     </div>
                 </div>
             );
-        case 'INTERVAL_NEW_TURN':
+        case INTERVAL_NEW_TURN:
             return (
                 <div className="flex items-center mt-7">
                     <img className="w-[200px]" src={NewTurnUserImg} />
