@@ -1,6 +1,6 @@
-import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN, INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
+import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./shared/constants/intervalStatus";
 
-const IntervalCanvasHeader = ({ status = INTERVAL_SHOW_WORD }) => {   
+const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {   
     const userName = "User123"
 
     switch (status) {
@@ -18,15 +18,16 @@ const IntervalCanvasHeader = ({ status = INTERVAL_SHOW_WORD }) => {
                     <p className="text-xl text-slate-400">You've lost your turn :(</p>
                 </>
             );
+        default:
+            return (
+                <>
+                    <p className="text-[3rem] text-sky-700">INTERVAL</p>
+                    <p className="text-xl text-slate-400">Take a while to relax</p>
+                </>
+        
+            );
+
     }
-
-    return (
-        <>
-            <p className="text-[3rem] text-sky-700">INTERVAL</p>
-            <p className="text-xl text-slate-400">Take a while to relax</p>
-        </>
-
-    );
 };
 
 
