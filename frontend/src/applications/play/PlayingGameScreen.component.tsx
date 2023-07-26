@@ -124,6 +124,7 @@ export default function PlayingGameScreen() {
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
             <Canvas />
+            <IntervalCanvas showWord={true} newTurn={false}/>
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}
