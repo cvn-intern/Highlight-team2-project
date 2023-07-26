@@ -85,7 +85,6 @@ const PlayForm = () => {
     form.setValue("nickname", user.nickname);
     form.setValue("language", user.language);
   }, [user]);
-  console.log({user})
 
   useEffect(() => {
     socket?.on('error', () => {

@@ -24,8 +24,6 @@ const RoomInformation = () => {
         getRoomInformation();
     }, [])
 
-    console.log({roomData})
-
     if(!roomData) return null;
 
     return (
