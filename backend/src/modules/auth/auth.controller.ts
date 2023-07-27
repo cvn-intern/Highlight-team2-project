@@ -9,7 +9,7 @@ import { AuthService } from './auth.service';
 import { RedisService } from '../redis/redis.service';
 import { UserToken } from './types/userToken';
 
-const DAYS_OF_YEAR = 365;
+
 
 @Controller('/auth')
 export class AuthController {
@@ -71,18 +71,8 @@ export class AuthController {
     @IdUser() idUser: number,
   ) {
     try {
-      const userToken = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-
-      this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay * DAYS_OF_YEAR);
-      const socketId = await this.redisService.getObjectByKey(`USER:${idUser}:SOCKET`);
-
-      if(socketId) {
-        this.redisService.deleteObjectByKey(`${socketId}:ACCESSTOKEN`);
-      }
+      await this.authService.logoutGoogle(idUser);
       
-      this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
-      this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-
       return response.status(HttpStatus.OK).json();
     } catch (error) {
       this.logger.error(error)
