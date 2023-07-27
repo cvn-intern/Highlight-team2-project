@@ -72,7 +72,9 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           await this.socketService.sendListParticipantsInRoom(this.server, room);
         }
 
+        const userToken = await this.redisService.getObjectByKey(`USER:${user.id}:ACCESSTOKEN`);
         await Promise.all([
+          this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay),
           this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`),
           this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`),
           this.redisService.deleteObjectByKey(`USER:${user.id}:ACCESSTOKEN`),
