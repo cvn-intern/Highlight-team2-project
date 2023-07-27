@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
 import { covertMessage } from "./chatAnswer.helper";
+import { useUserStore } from "@/shared/stores/userStore";
 
 interface BoxProps {
   label: string;
@@ -156,6 +157,7 @@ const BoxChatAnswer = () => {
   const [listChat, setListChat] = useState<Array<Chat>>([]);
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
   const [isDisabledInput, setIsDisabledInput] = useState<boolean>(false);
+  const {user} = useUserStore();
 
   useEffect(() => {
     if (!codeRoom) return;
@@ -170,7 +172,8 @@ const BoxChatAnswer = () => {
     });
 
     socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
-      if (data.type === 3) {
+      const ANSWER_CORRETLY: number = 3;
+      if (data.type === ANSWER_CORRETLY && data.user === user?.nickname) {
         setIsDisabledInput(true);
       }
 
