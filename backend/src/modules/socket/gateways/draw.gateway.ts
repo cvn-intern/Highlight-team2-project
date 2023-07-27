@@ -52,16 +52,10 @@ export class DrawGateway extends SocketGateway {
     const roomSockets = this.server.of('/').in(codeRoom)
     const listClients: Clients[] = Array.from(roomSockets[`adapter`].sids)
     
-    const inRoomClient = listClients.find((item: Clients) => 
-    {
-      const test: IterableIterator<string> = item[1].values()
-      const socketId = test.next().value
-      const roomId = test.next().value
-      if(roomId){
-        return roomId
-      }
-      
-    })
+    const inRoomClient = listClients.find((item: Clients) => {
+      const [socketId, roomId] = Array.from(item[1].values());
+      return !!roomId;
+    });
     
     if(listClients.length > 1 && inRoomClient){
       client.broadcast.to(inRoomClient[0]).emit(GET_CANVAS_STATE, client.id)
