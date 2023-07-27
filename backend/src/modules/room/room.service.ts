@@ -115,10 +115,10 @@ export class RoomService {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
     }
 
-    const isHostInRoom = await this.checkHostInRoom(room.host_id, room.id);
+    const isHostInRoom = await this.checkHostInRoom(room.id, room.host_id);
 
     if (isHostInRoom) {
-      return;
+      return room;
     }
 
     const userId: number = await this.roomUserService.getUserInRoomRandom(room.id);
