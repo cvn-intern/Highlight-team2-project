@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Progress } from "./shadcn-ui/progress";
+import { useGameStore } from "../stores/gameStore";
 
 interface Props {
   maximumTimeInMiliSeconds?: number;
@@ -16,6 +17,11 @@ export function ProgressPlayTime({
   const MIN_PROGRESS_PERCENTAGE = 0;
   const MAX_PROGRESS_PERCENTAGE = 100;
   const TIME_PERSTEP = 100;
+  const { gameStatus } = useGameStore();
+
+  useEffect(() => {
+    if (gameStatus !== "game-start") setProgress(100);
+  }, [gameStatus]);
 
   const number_percentage_to_decrease_per_step =
     (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / maximumTimeInMiliSeconds;
@@ -32,7 +38,7 @@ export function ProgressPlayTime({
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [gameStatus]);
 
   return (
     <Progress

@@ -19,7 +19,7 @@ import { useParams } from "react-router-dom";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { setGameStatus } = useGameStore();
+  const { setGameStatus, roomRound } = useGameStore();
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
@@ -33,7 +33,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
         <div className="flex justify-between gap-x-20 ">
           <div className="flex flex-col items-center place-content-center">
             <p className="text-lg text-slate-300">The answer was:</p>
-            <p className="text-[2.5rem]">Animal</p>
+            <p className="text-[2.5rem]">{roomRound?.word}</p>
           </div>
           <div className="w-[180px] mt-9 ">
             <img src={AnswerHitImg} />
