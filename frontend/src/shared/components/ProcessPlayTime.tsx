@@ -1,24 +1,43 @@
-import React from "react"
-import { Progress } from "./shadcn-ui/progress"
+import React from "react";
+import { Progress } from "./shadcn-ui/progress";
 
-export function ProgressPlayTime({step = 0.0006}) {
-    const [progress, setProgress] = React.useState(100)
+interface Props {
+  maximumTimeInMiliSeconds?: number;
+  hanldeWhenTimeOut?: () => void;
+}
 
-    const MIN_PROGRESS_PERCENTAGE = 0
-    const MAX_PROGRESS_PERCENTAGE = 100
-    const PROGRESS_STEP = step
-    const PROGRESS_MILI_PER_SECOND = 1
+export function ProgressPlayTime({
+  maximumTimeInMiliSeconds = 5000,
+  hanldeWhenTimeOut = () => {
+    console.log("hihii");
+  },
+}: Props) {
+  const [progress, setProgress] = React.useState(100);
+  const MIN_PROGRESS_PERCENTAGE = 0;
+  const MAX_PROGRESS_PERCENTAGE = 100;
+  const TIME_PERSTEP = 100;
 
-    React.useEffect(() => {
-        const timer = setInterval(() => {
-            setProgress((prevProgress) =>
-                prevProgress <= MIN_PROGRESS_PERCENTAGE ? MAX_PROGRESS_PERCENTAGE : prevProgress - PROGRESS_STEP
-            )
-        }, PROGRESS_MILI_PER_SECOND)
-        return () => {
-            clearInterval(timer)
+  const number_percentage_to_decrease_per_step =
+    (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / maximumTimeInMiliSeconds;
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress <= MIN_PROGRESS_PERCENTAGE) {
+          clearInterval(timer);
+          hanldeWhenTimeOut();
         }
-    }, [])
+        return prevProgress - number_percentage_to_decrease_per_step;
+      });
+    }, TIME_PERSTEP);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
-    return <Progress value={progress} className="absolute bottom-1 w-[98%] h-2.5 left-1/2 -translate-x-1/2 bg-blue-900 border-2 border-black" />
+  return (
+    <Progress
+      value={progress}
+      className="absolute bottom-1 w-[98%] h-2.5 left-1/2 -translate-x-1/2 bg-blue-900 border-2 border-black"
+    />
+  );
 }
