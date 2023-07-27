@@ -6,7 +6,7 @@ import { Module } from "@nestjs/common";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([RoomRound])
+        TypeOrmModule.forFeature([RoomRound]),
     ],
     controllers: [RoomRoundController],
     providers: [RoomRoundService],

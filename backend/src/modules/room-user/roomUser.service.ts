@@ -7,7 +7,7 @@ import { Room } from '../room/room.entity';
 
 @Injectable()
 export class RoomUserService {
-  constructor(private roomUserRepository: RoomUserRepository) {}
+  constructor(private roomUserRepository: RoomUserRepository) { }
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -79,5 +79,20 @@ export class RoomUserService {
     });
 
     return participant ? participant.user_id : null;
+  }
+
+  async assignPainterAndNextPainter(room: Room): Promise<PainterRound> {
+    const participants: Array<Participant> = await this.getListUserOfRoom(room);
+
+    const painterIndex: number = Math.floor(Math.random() * participants.length);
+    const painter: Participant = participants[painterIndex];
+    const participantsExcept: Array<Participant> = participants.filter((participant: Participant) => participant.id !== painter.id);
+    const nextPainterIndex: number = Math.floor(Math.random() * participantsExcept.length);
+    const nextPainter: Participant = participantsExcept[nextPainterIndex];
+
+    return {
+      painter: painter.id,
+      next_painter: nextPainter.id,
+    } as PainterRound;
   }
 }

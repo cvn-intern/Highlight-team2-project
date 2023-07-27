@@ -22,14 +22,6 @@ export class RoomRoundService {
       ...data,
     });
   }
-  async getRoomRoundByCodeRoom(roomId: number): Promise<boolean> {
-    const roomRound = await this.roomRoundRepository.findOne({
-      where: {
-        room_id: roomId,
-      },
-    });
-    return !!roomRound;
-  }
 
   async updateRoomRound(roomRound: RoomRoundInterface): Promise<RoomRound> {
     await this.roomRoundRepository.update(
@@ -44,5 +36,11 @@ export class RoomRoundService {
     });
 
     return roomUpdate;
+  }
+
+  async deleteRoomRound(roomId: number) {
+    return await this.roomRoundRepository.delete({
+      room_id: roomId,
+    });
   }
 }
