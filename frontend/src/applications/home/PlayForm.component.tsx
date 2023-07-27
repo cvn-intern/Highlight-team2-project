@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useState, useEffect } from "react";
 import userService from "@/shared/services/userService";
-import { ERROR_ICON, MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
+import { ERROR_ICON, MAX_LENGHT_OF_NICKNAME, WARNING_ICON } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 
 const formSchema = z.object({

@@ -13,7 +13,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON, WARNING_ICON } from "@/shared/constants";
+import { ERROR_ICON, SUCCESS_ICON, WARNING_ICON } from "@/shared/constants";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const WaitingRoom = () => {
@@ -61,23 +61,21 @@ const WaitingRoom = () => {
     setNickname(user.nickname);
   }, [user]);
 
-  // useEffect(() => {
-  //   socket?.on("error", () => {
-  //     useToaster({
-  //       type: "success",
-  //       message: "Reloading!",
-  //       bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-  //       icon: SUCCESS_ICON,
-  //       progressStyle: {
-  //         background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-  //       }
-  //     })
-  //   });
+  useEffect(() => {
+    socket?.on("error", () => {
+      useToaster({
+        type: "error",
+        message: "Room is full!",
+        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
+        icon: SUCCESS_ICON,
+        progressStyle: {
+          background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
+        }
+      })
 
-  //   return () => {
-  //     socket?.off("error");
-  //   };
-  // }, [socket])
+      navigate("/");
+    });
+  }, [socket])
 
   useDisableBackButton();
 
