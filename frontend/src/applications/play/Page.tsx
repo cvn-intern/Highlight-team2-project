@@ -11,9 +11,6 @@ export default function Page() {
 
   useEffect(() => {
     socket?.on('qualify-to-start', (data: boolean) => {
-      alert(data);
-      console.log(typeof data);
-      console.log(data);
       useToaster({
         type: data ? "success" : "error",
         message: data ? "You can start the game now!" : "You can't start the game now!",
