@@ -78,7 +78,7 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",

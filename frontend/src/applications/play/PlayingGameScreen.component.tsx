@@ -92,7 +92,7 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
+        
         useToaster({
           type: "error",
           message: "Get room info failed!",
