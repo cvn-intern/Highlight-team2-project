@@ -27,7 +27,6 @@ import {
 
 export default function PaintToolButtons() {
   const variables = useContext(PaintContext);
-
   const { handleClickClearCanvas } = useSocketClearCanvasEvent();
 
   if (!variables) return null;
