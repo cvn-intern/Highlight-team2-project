@@ -13,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON, SUCCESS_ICON, WARNING_ICON } from "@/shared/constants";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const WaitingRoom = () => {
@@ -62,10 +61,10 @@ const WaitingRoom = () => {
   }, [user]);
 
   useEffect(() => {
-    socket?.on("error", () => {
+    socket?.on("error", (data: string) => {
       useToaster({
         type: "error",
-        message: "Room is full!",
+        message: data,
       })
 
       navigate("/");

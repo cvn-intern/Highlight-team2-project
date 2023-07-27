@@ -3,7 +3,6 @@ import { useSocketStore } from "@/shared/stores/socketStore";
 import { useNavigate, useParams } from "react-router-dom";
 import roomService from "../services/roomService";
 import useToaster from "../hooks/useToaster";
-import { ERROR_ICON } from "../constants";
 
 type Props = {
   children: React.ReactNode;

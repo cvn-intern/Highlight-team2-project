@@ -23,7 +23,6 @@ import userService from "@/shared/services/userService";
 import authService from "@/shared/services/authService";
 import JWTManager from "@/shared/lib/jwt";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
 
 const CustomAvatar = () => {
   const { user, setUser, deleteUser } = useUserStore();

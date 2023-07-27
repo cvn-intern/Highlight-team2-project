@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import playService from "@/shared/services/playService";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
 
 export interface ILeaderboard {
   user: {
