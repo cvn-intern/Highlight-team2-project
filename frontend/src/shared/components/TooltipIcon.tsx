@@ -18,13 +18,13 @@ type Props = {
 
 const TooltipIcon = (props: Props) => {
 
-    const { icon: Icon, text, iconSize = 35, onClick = () => { }, iconClassName = "", tooltipClassName = "" } = props
+    const { icon: Icon, text, iconSize = 40, onClick = () => { }, iconClassName = "", tooltipClassName = "" } = props
 
     return (
         <TooltipProvider>
             <Tooltip>
-                <TooltipTrigger asChild onClick={onClick} className={cn("hover:opacity-80", iconClassName)}><Icon size={iconSize} /></TooltipTrigger>
-                <TooltipContent asChild className={cn("bg-black/70 border-none rounded-xl text-white font-medium", tooltipClassName)}>
+                <TooltipTrigger asChild onClick={onClick} className={cn("hover:opacity-80 cursor-pointer", iconClassName)}><Icon size={iconSize} /></TooltipTrigger>
+                <TooltipContent className={cn("bg-black/70 border-none rounded-xl text-white font-medium", tooltipClassName)}>
                     {text}
                 </TooltipContent>
             </Tooltip>
