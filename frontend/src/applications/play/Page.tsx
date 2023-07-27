@@ -3,14 +3,21 @@ import PlayingGameScreen from "./PlayingGameScreen.component";
 import WaitingRoom from "../waiting-room/Page";
 import { useLocation } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
+import useToaster from "@/shared/hooks/useToaster";
 
 export default function Page() {
   const { state } = useLocation();
   const { socket } = useSocketStore();
 
   useEffect(() => {
-    socket?.on('qualify-to-start', (data: any) => {
+    socket?.on('qualify-to-start', (data: boolean) => {
       alert(data);
+      console.log(typeof data);
+      console.log(data);
+      useToaster({
+        type: data ? "success" : "error",
+        message: data ? "You can start the game now!" : "You can't start the game now!",
+      })
     })
 
     return () => {

@@ -66,11 +66,6 @@ const WaitingRoom = () => {
       useToaster({
         type: "error",
         message: "Room is full!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: SUCCESS_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-        }
       })
 
       navigate("/");
