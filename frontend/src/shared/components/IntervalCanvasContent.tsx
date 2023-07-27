@@ -1,10 +1,13 @@
 import AnswerHitImg from "@/shared/assets/answer-hit-img.png";
 import NobodyHitsImg from "@/shared/assets/nobody-hits-answer.png";
+import WaitingImg from "@/shared/assets/pencil-0.jpg";
 import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png"
-import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD } from "./IntervalCanvas";
+import ControllerIcon from "@/shared/assets/controller-icon.svg";
+import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD, START_GAME, WAIT_FOR_OTHER_PLAYERS } from "./IntervalCanvas";
+import { Button } from "./shadcn-ui/Button";
 
-const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
+const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
     switch (status) {
         case INTERVAL_SHOW_WORD:
             return (
@@ -21,7 +24,7 @@ const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
                     </div>
                 </div>
             );
-        case INTERVAL_NOT_SHOW_WORD :
+        case INTERVAL_NOT_SHOW_WORD:
             return (
                 <div className="flex flex-col items-center gap-y-3">
                     <div className="w-[130px] mt-5 ">
@@ -36,6 +39,38 @@ const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
             return (
                 <div className="flex items-center mt-7">
                     <img className="w-[200px]" src={NewTurnUserImg} />
+                </div>
+            )
+        case WAIT_FOR_OTHER_PLAYERS:
+            return (
+                <div className="flex flex-col items-center gap-y-3">
+                    <div className="w-[70px] my-6 ">
+                        <img src={WaitingImg} />
+                    </div>
+                    <div className="place-content-center flex flex-col">
+                        <p className="text-[1.5rem] text-slate-300" > Wait for other players</p>
+                    </div>
+                </div>
+            )
+        case START_GAME:
+            return (
+                <div className="flex flex-col items-center gap-y-3">
+                    <div className="w-[70px] my-1 ">
+                        <img src={WaitingImg} />
+                    </div>
+                    <div className="place-content-center flex flex-col">
+                        <p className="text-[1.5rem] text-slate-300" > Wait for other players</p>
+                    </div>
+                    <div className="place-content-center flex flex-col">
+                        <Button
+                            type="submit"
+                            variant="opacityHover"
+                            className="gap-4 rounded-full border-8 border-black font-black bg-[#FFE569] p-4"                            
+                        >
+                            <img src={ControllerIcon} alt="" className="w-[20%]" />
+                            <p>START GAME</p>
+                        </Button>
+                    </div>
                 </div>
             )
         default:

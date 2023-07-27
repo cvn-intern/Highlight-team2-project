@@ -24,14 +24,14 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas, { INTERVAL_SHOW_WORD } from "@/shared/components/IntervalCanvas";
+import IntervalCanvas, { INTERVAL_SHOW_WORD, START_GAME, WAIT_FOR_OTHER_PLAYERS } from "@/shared/components/IntervalCanvas";
 
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const isDrawer = true;
-  const isInterval = false;
+  const isInterval = true;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
@@ -134,7 +134,7 @@ export default function PlayingGameScreen() {
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
             <Canvas hidden={isInterval}/>
-            <IntervalCanvas status={INTERVAL_SHOW_WORD} hidden={!isInterval}/>
+            <IntervalCanvas status={START_GAME} hidden={!isInterval}/>
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}
