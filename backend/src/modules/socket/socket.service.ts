@@ -102,7 +102,7 @@ export class SocketService {
     return false;
   }
 
-  sendError(client: Socket, error: string) {
+  sendError(client: Socket, error: ErrorSocket) {
     client.emit('error', error);
   }
 
