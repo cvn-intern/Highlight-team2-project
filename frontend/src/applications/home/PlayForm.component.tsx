@@ -30,6 +30,7 @@ import { useState, useEffect } from "react";
 import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
+import { MULTIPLE_TAB } from "@/shared/types/errorCode";
 
 const formSchema = z.object({
   nickname: z.string().trim().min(2).max(50),
@@ -93,8 +94,10 @@ const PlayForm = () => {
   }, [user]);
 
   useEffect(() => {
-    socket?.on("error", () => {
-      navigate("/user/existing");
+    socket?.on("error", (error: ErrorSocket) => {
+      if(error.code === MULTIPLE_TAB) {
+        navigate("/user/existing");
+      }
     });
 
     return () => {

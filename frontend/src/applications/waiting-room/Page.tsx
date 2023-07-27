@@ -14,6 +14,7 @@ import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { MULTIPLE_TAB } from "@/shared/types/errorCode";
 
 const WaitingRoom = () => {
   const { user, setUser } = useUserStore();
@@ -61,13 +62,17 @@ const WaitingRoom = () => {
   }, [user]);
 
   useEffect(() => {
-    socket?.on("error", (data: string) => {
-      useToaster({
-        type: "error",
-        message: data,
-      })
+    socket?.on("error", (error: ErrorSocket) => {
+      if(error.code === MULTIPLE_TAB) {
+        navigate("/user/existing");
+      } else {
+        useToaster({
+          type: "error",
+          message: error.message,
+        })
 
-      navigate("/");
+        navigate("/");
+      }
     });
   }, [socket])
 
