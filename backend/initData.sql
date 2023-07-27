@@ -122,3 +122,23 @@ INSERT INTO public.words_collection(id, is_created_by_system, theme_id) VALUES (
 -- init data room
 INSERT INTO public.room(id, code_room, max_player, time_per_round, number_of_round, thumbnail, is_public, host_id, words_collection_id, language_code)
 VALUES (1, 'ULSKJSH_1', 8, 60, 3, 'https://media.istockphoto.com/vectors/animal-circle-pattern-vector-id175606088?k=6&m=175606088&s=170667a&w=0&h=h8NFINyj_616W34sy_2bSq7s_NfVQhOzJHiU6p1NkGc=', true, 1, 1, 'en');
+
+-- init word
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('dog', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('cat', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('bird', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('buffalo', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('chicken', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('dolphin', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('elephant', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('fox', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('frog', 'easy', 1);

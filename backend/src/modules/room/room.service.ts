@@ -1,11 +1,15 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
 import { RoomInterface } from './room.interface';
-import { extractIdRoom, randomString } from '../../common/utils/helper';
+import { randomString } from '../../common/utils/helper';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
+import { RoomRound } from '../room-round/roomRound.entity';
+import { Word } from '../word/word.entity';
+import { WordService } from '../word/word.service';
+const moment = require('moment');
 
 const MAX_LENGTH_RANDOM = 5;
 
@@ -15,6 +19,7 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
+    private wordService: WordService,
   ) { }
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
@@ -119,11 +124,12 @@ export class RoomService {
     const userId: number = await this.roomUserService.getUserInRoomRandom(room.id);
 
     if (!userId) {
+      await this.roomRoundService.deleteRoomRound(room.id);
       throw new HttpException('Nobody in room!', HttpStatus.BAD_REQUEST);
     }
 
     const updateRoom = await this.updateRoom({ ...room, host_id: userId });
-    
+
     return updateRoom;
   }
 
@@ -135,5 +141,22 @@ export class RoomService {
 
   async getPartipantsInRoom(room: Room): Promise<Array<Participant>> {
     return await this.roomUserService.getListUserOfRoom(room);
-  } 
+  }
+
+  async initRoomRound(room: Room): Promise<RoomRound> {
+    const word: Word = await this.wordService.getWordRandom(room.words_collection_id);
+    const painterRound: PainterRound = await this.roomUserService.assignPainterAndNextPainter(room);
+    const startedAt: Date = new Date();
+    const endedAt = moment(startedAt).add(room.time_per_round, 'seconds');
+
+    const roomRound: RoomRound = await this.roomRoundService.createRoundOfRoom({
+      room_id: room.id,
+      current_round: 1,
+      word: word.word,
+      started_at: startedAt,
+      ended_at: endedAt.toDate(),
+      ...painterRound,
+    })
+    return roomRound;
+  }
 }
