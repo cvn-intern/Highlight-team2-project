@@ -24,10 +24,7 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas, {
-  PLAY_GAME,
-  START_GAME,
-} from "@/shared/components/IntervalCanvas";
+import IntervalCanvas, { PLAY_GAME } from "@/shared/components/IntervalCanvas";
 import { useGameStore } from "@/shared/stores/gameStore";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useUserStore } from "@/shared/stores/userStore";
@@ -49,8 +46,14 @@ export default function PlayingGameScreen() {
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
 
-  const { gameStatus, setRoomRound, setGameStatus, isDrawer, setIsDrawer } =
-    useGameStore();
+  const {
+    gameStatus,
+    setRoomRound,
+    setGameStatus,
+    roomRound,
+    isDrawer,
+    setIsDrawer,
+  } = useGameStore();
   const { socket } = useSocketStore();
   const { user } = useUserStore();
 
@@ -112,7 +115,6 @@ export default function PlayingGameScreen() {
     socket?.on("game-play", (data: any) => {
       setGameStatus(PLAY_GAME);
       setRoomRound(data);
-      console.log({ data, user });
       setIsDrawer(data.painter === user?.id);
     });
     return () => {
@@ -121,7 +123,6 @@ export default function PlayingGameScreen() {
   }, [socket]);
 
   const isInterval = gameStatus !== PLAY_GAME;
-  console.log({ isDrawer });
 
   return (
     <PaintContext.Provider
@@ -155,6 +156,11 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
+            {isDrawer && (
+              <div className="absolute w-[250px] text-center py-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
+                {roomRound?.word}
+              </div>
+            )}
             <Canvas isDrawer={isDrawer} hidden={isInterval} />
             <IntervalCanvas status={gameStatus} hidden={!isInterval} />
             <BoxChatAnswer />

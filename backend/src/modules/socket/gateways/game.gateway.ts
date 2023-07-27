@@ -24,7 +24,7 @@ export class GameGateway extends SocketGateway {
     const roomRoundData: RoomRoundInterface = {
       room_id: roomId,
       current_round: 1,
-      word: 'animal',
+      word: 'dog',
       started_at: new Date(),
       painter: room.host_id,
       next_painter: 2,
