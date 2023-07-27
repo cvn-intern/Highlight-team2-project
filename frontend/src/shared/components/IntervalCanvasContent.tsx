@@ -2,7 +2,8 @@ import AnswerHitImg from "@/shared/assets/answer-hit-img.png";
 import NobodyHitsImg from "@/shared/assets/nobody-hits-answer.png";
 import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png"
-import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
+import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD } from "./IntervalCanvas";
+
 
 const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
     switch (status) {

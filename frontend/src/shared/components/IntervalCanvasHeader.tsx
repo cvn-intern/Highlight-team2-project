@@ -1,4 +1,5 @@
-import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./shared/constants/intervalStatus";
+import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./IntervalCanvas";
+
 
 const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {   
     const userName = "User123"
