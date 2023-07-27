@@ -4,7 +4,6 @@ import { GoogleLogin } from '@react-oauth/google';
 import JWTManager from '@/shared/lib/jwt';
 import { useSocketStore } from '@/shared/stores/socketStore';
 import useToaster from '@/shared/hooks/useToaster';
-import { ERROR_ICON } from '@/shared/constants';
 
 const GoogleLoginButton = () => {
     const { user, setUser } = useUserStore()

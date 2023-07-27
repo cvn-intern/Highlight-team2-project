@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { ERROR_ICON } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 import roomService from "@/shared/services/roomService";
 import { Globe, Swords, User2 as UserIcon } from "lucide-react";
