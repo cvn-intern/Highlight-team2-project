@@ -92,16 +92,6 @@ const PlayForm = () => {
     form.setValue("language", user.language);
   }, [user]);
 
-  useEffect(() => {
-    socket?.on("error", () => {
-      navigate("/user/existing");
-    });
-
-    return () => {
-      socket?.off("error");
-    };
-  }, [socket]);
-
   return (
     <Form {...form}>
       <form
