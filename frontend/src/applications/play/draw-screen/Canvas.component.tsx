@@ -6,6 +6,8 @@ import cursorsIconMap from "../shared/constants/cursorsIconMap";
 import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
 import { useSocketHandleCanvasEvent } from "../shared/hooks/useSocketHandleCanvasEvents";
 import { getPointFromEvent } from "./draw.helper";
+import { useGameStore } from "@/shared/stores/gameStore";
+import { INTERVAL_SHOW_WORD } from "@/shared/components/IntervalCanvas";
 
 const Canvas = ({ hidden = false, isDrawer = false }) => {
   const variables = useContext(PaintContext);
@@ -14,6 +16,13 @@ const Canvas = ({ hidden = false, isDrawer = false }) => {
 
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
     useSocketHandleCanvasEvent();
+
+  const { setGameStatus, setIsDrawer, gameStatus } = useGameStore();
+
+  const hanldeWhenTimeOut = () => {
+    setGameStatus(INTERVAL_SHOW_WORD);
+    setIsDrawer(false);
+  };
 
   return (
     <div
@@ -46,7 +55,9 @@ const Canvas = ({ hidden = false, isDrawer = false }) => {
           handleMouseUpOrLeave();
         }}
       ></canvas>
-      <ProgressPlayTime />
+      {gameStatus === "game-start" && (
+        <ProgressPlayTime hanldeWhenTimeOut={hanldeWhenTimeOut} />
+      )}
     </div>
   );
 };
