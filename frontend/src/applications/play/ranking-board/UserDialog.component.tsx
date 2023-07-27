@@ -12,7 +12,7 @@ import {
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { ILeaderboard } from "./RankingBoard.component";
-import ProfileLabel from "@/shared/assets/ProfileLabel.png";
+import ProfileLabel from "@/shared/assets/profile-label.png";
 
 type Props = {
   user: ILeaderboard["user"] | null;
