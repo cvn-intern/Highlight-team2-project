@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useState, useEffect } from "react";
 import userService from "@/shared/services/userService";
-import { ERROR_ICON, MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
+import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 
 const formSchema = z.object({
@@ -54,6 +54,7 @@ const PlayForm = () => {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
     if (formAction === "quick-play") return handleQuickPlay();
   };
@@ -77,15 +78,11 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: ERROR_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
-      })
+      });
     }
   };
 

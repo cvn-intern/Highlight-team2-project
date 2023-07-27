@@ -1,6 +1,7 @@
-import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
-import IntervalCanvasHeader from "./IntervalCanvasHeader";
-import IntervalCanvasContent from "./IntervalCanvasContent";
+import IntervalCanvasContent from './IntervalCanvasContent'
+import IntervalCanvasHeader from './IntervalCanvasHeader'
+import {ProgressPlayTime} from './ProcessPlayTime'
+
 
 export const INTERVAL_SHOW_WORD = 'interval-show-word'
 export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word'
@@ -15,6 +16,7 @@ const IntervalCanvas = ({ status=INTERVAL_SHOW_WORD, hidden=true }) => {
                 <IntervalCanvasContent status={status} />
             </div>
             <ProgressPlayTime step={0.06} />
+            
         </div>
     );
 

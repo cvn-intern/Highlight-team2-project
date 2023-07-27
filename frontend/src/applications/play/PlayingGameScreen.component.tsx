@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, createContext } from "react";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 // Variables
 import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
@@ -23,9 +24,8 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
-import IntervalCanvas from "../../shared/components/IntervalCanvas";
-import {INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
+import IntervalCanvas, { INTERVAL_SHOW_WORD } from "@/shared/components/IntervalCanvas";
+
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -47,6 +47,7 @@ export default function PlayingGameScreen() {
   const [roomInfo, setRoomInfo] = useState<RoomType>();
 
   // Side Effects
+  useDisableBackButton();
   useEffect(() => {
     const resetState = () => {
       if (!ctx) return;
@@ -90,15 +91,10 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useToaster({
           type: "error",
           message: "Get room info failed!",
-          bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-          icon: ERROR_ICON,
-          progressStyle: {
-            background:
-              "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-          },
         });
       }
     };
