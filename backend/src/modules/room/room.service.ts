@@ -98,10 +98,8 @@ export class RoomService {
       where: {
         id: room.id,
       },
-      select: {
-        host_id: true,
-      },
     });
+
     return roomUpdate;
   }
 
@@ -134,4 +132,8 @@ export class RoomService {
 
     return !!isStart;
   }
+
+  async getPartipantsInRoom(room: Room): Promise<Array<Participant>> {
+    return await this.roomUserService.getListUserOfRoom(room);
+  } 
 }

@@ -27,13 +27,6 @@ export class RoomController {
     private roomUserService: RoomUserService,
   ) {}
 
-  @Get('/test/:codeRoom')
-  async handleTest(
-    @Param('codeRoom') codeRoom: string,
-  ) {
-    await this.roomService.changeHost(codeRoom);
-  }
-
   @UseGuards(AuthorizeJWT)
   @Post()
   async createRoom(
@@ -88,15 +81,13 @@ export class RoomController {
   async getListUserOfRoom(
     @Param('codeRoom') codeRoom: string,
     @Res() response: Response,
-    @IdUser() idUser: number,
   ) {
     try {
-      const idRoom: number = extractIdRoom(codeRoom);
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
-      const users = await this.roomUserService.getListUserOfRoom(idRoom);
-
+      const users = await this.roomUserService.getListUserOfRoom(room);
+      
       return response.status(HttpStatus.OK).json({
-        users: JSON.parse(JSON.stringify(users).replaceAll('user_id', 'user')),
+        participants: users,
         max_player: room.max_player,
       });
     } catch (error) {

@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import { RoomUser } from './roomUser.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class RoomUserRepository extends Repository<RoomUser> {
@@ -15,8 +16,18 @@ export class RoomUserRepository extends Repository<RoomUser> {
   async getParticipantsOfRoom(room_id: number): Promise<RoomUser[]> {
     return await this.createQueryBuilder('roomuser')
       .where('room_id = :room_id', { room_id })
-      .innerJoin('roomuser.user_id', 'user')
-      .addSelect(['user.id', 'user.nickname', 'user.avatar'])
+      .leftJoinAndMapOne(
+        'roomuser.user', User, 'user', 'user.id = roomuser.user_id'
+      )
+      .select([
+        'roomuser.score',
+        'roomuser.answered_at',
+      ])
+      .addSelect([
+        'user.id',
+        'user.avatar',
+        'user.nickname'
+      ])
       .orderBy('roomuser.score', 'ASC')
       .getMany();
   }

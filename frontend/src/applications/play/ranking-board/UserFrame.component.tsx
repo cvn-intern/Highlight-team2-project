@@ -9,25 +9,20 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { ILeaderboard } from "./RankingBoard.component";
 import { BadgeCheck, Home, Pencil, XCircle, User2 as UserIcon } from "lucide-react";
 import { handleStringThatIsTooLong } from "@/shared/lib/string";
 
 interface ProfileProps {
-  Leaderboard: ILeaderboard[];
+  Leaderboard: Array<Participant>;
   maxPlayer: number;
-  hostId: number;
   isCorrect: boolean;
-  drawerId: number;
 }
 
 const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
-  const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
-    null
-  );
+  const [userSelected, setUserSelected] = useState<Participant>();
   const [blockedIdArray, setBlockedIdArray] = useState<number[]>([]);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const handleLinkClick = (user: ILeaderboard["user"]) => {
+  const handleLinkClick = (user: Participant) => {
     setUserSelected(user);
     triggerRef.current?.click();
   };
@@ -38,7 +33,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       <>
         <FlipMove className="flip-wrapper">
           {data.Leaderboard.slice(0, maxItems).map(
-            ({ user, score }, _index) => (
+            (user: Participant, _index) => (
               <li
                 key={_index}
                 className="flex w-full py-3 border-b-2 border-gray-100 cursor-pointer sm:py-4 group"
@@ -50,7 +45,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
                     }
                   >
-                    {user.id === data.drawerId && (
+                    {user.is_painter && (
                       <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                     )}
                     {data.isCorrect && (
@@ -61,7 +56,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     className={cn(
                       "flex items-center space-x-4 justify-between w-full",
                       {
-                        "text-blue-600": data.drawerId === user.id,
+                        "text-blue-600": user.is_painter,
                         "text-green-500": data.isCorrect,
                       }
                     )}
@@ -69,7 +64,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     <div className="flex items-center space-x-4">
                       <Avatar className={cn("relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
                         {
-                          "border-blue-600": data.drawerId === user.id,
+                          "border-blue-600": user.is_painter,
                           "border-green-500": data.isCorrect,
                         }
                       )}
@@ -107,7 +102,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                           {handleStringThatIsTooLong(user.nickname, 10)}
                         </p>
                         <p className="font-medium text-left truncate text-md text-textBlueColor dark:text-gray-400">
-                          <strong>{score}</strong>
+                          <strong>{user.score}</strong>
                           <span> pts</span>
                         </p>
                         {false && (
@@ -117,7 +112,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                         )}
                       </div>
                     </div>
-                    {user.id === data.hostId && (
+                    {user.is_host && (
                       <Home
                         className="text-blue-500"
                         strokeWidth={2.5}
@@ -178,7 +173,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
         <DialogDemo
-          user={userSelected}
+          user={userSelected ? userSelected : null}
           blockedIdArray={blockedIdArray}
           setBlockedIdArray={setBlockedIdArray}
         />

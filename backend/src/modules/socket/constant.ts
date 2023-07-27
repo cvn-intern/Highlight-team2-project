@@ -36,3 +36,4 @@ export const LEAVE_ROOM_CONTENT = 'left';
 
 // channel for host
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
+export const PARTICIPANTS_CHANNEL = 'participants';

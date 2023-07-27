@@ -36,11 +36,11 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           `USER:${user.id}:ROOM`,
         );
 
-        const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
+        let room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
         client.leave(codeRoom);
 
-        if (codeRoom !== null) {
+        if (codeRoom) {
           const idRoom = extractIdRoom(codeRoom);
           await this.roomUserService.deleteRoomUser(idRoom, user.id);
         }
@@ -54,7 +54,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         });
 
         if (client.user.id === room.host_id) {
-          await this.roomService.changeHost(codeRoom);
+          room = await this.roomService.changeHost(codeRoom);
         }
   
         const isPlayingRoom = await this.roomService.checkStartGame(room.id);
@@ -68,7 +68,8 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
             this.server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
           }
         } else {
-          this.socketService.checkAndEmitToHostRoom(this.server, room);
+          await this.socketService.checkAndEmitToHostRoom(this.server, room);
+          await this.socketService.sendListParticipantsInRoom(this.server, room);
         }
 
         await Promise.all([
@@ -113,7 +114,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   ) {
     try {
       const idRoom: number = extractIdRoom(codeRoom);
-      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
+      let room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       if (!room) {
         this.socketService.sendError(client, errorsSocket.ROOM_NOT_FOUND);
@@ -144,11 +145,11 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         message: JOIN_ROOM_CONTENT,
       };
 
-      await this.roomService.changeHost(codeRoom);
-
+      room = await this.roomService.changeHost(codeRoom);
+      
       this.server.in(codeRoom).emit(codeRoom, chatContent);
-
-      this.socketService.checkAndEmitToHostRoom(this.server, room);
+      await this.socketService.checkAndEmitToHostRoom(this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);  
     } catch (error) {
       this.logger.error(error);
     }
@@ -180,7 +181,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
     @ConnectedSocket() client: SocketClient,
   ) {
     try {
-      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
+      let room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
       if (!room) {
         this.socketService.sendError(client, errorsSocket.ROOM_NOT_FOUND);
@@ -204,7 +205,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       client.leave(codeRoom);
 
       if (client.user.id === room.host_id) {
-        await this.roomService.changeHost(codeRoom);
+        room = await this.roomService.changeHost(codeRoom);
       }
 
       const isPlayingRoom = await this.roomService.checkStartGame(room.id);
@@ -218,8 +219,10 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           this.server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
         }
       } else {
-        this.socketService.checkAndEmitToHostRoom(this.server, room);
+        await this.socketService.checkAndEmitToHostRoom(this.server, room);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);  
       }
+
     } catch (error) {
       this.logger.error(error);
     }
