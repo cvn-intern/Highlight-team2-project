@@ -27,7 +27,7 @@ import { ERROR_ICON } from "@/shared/constants";
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
-  const isDrawer = true;
+  const isDrawer = false;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 

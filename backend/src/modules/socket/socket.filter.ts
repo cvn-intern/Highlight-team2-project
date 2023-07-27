@@ -8,7 +8,6 @@ export class WebsocketExceptionsFilter extends BaseWsExceptionFilter {
     const client = host.switchToWs().getClient() as Socket;
     const error = exception instanceof WsException ? exception.getError() : exception.getResponse();
     const details = error instanceof Object ? { ...error } : { message: error };
-    console.log(JSON.stringify({...details}))
     client.emit('error', JSON.stringify({...details}));
   }
 }

@@ -29,7 +29,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
   const { codeRoom } = useParams()
   const [isNewPlayer, setIsNewPlayer] = useState<boolean>(true)
 
-  const { handleStartDraw, handleDrawing, handleFinishDraw } = useDrawing() 
+  const { handleStartDraw, handleDrawing, handleFinishDraw } = useDrawing()
 
   handleMouseDown = (point: Point) => {
     socket?.emit(START_DRAW, { codeRoom, point, color, penStyle, brushSize } as SocketStartDraw);
@@ -37,14 +37,13 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
   };
 
   handleMouseMove = (currentPoint: Point) => {
-    if (isDrawing) {
+    if (!isDrawing) return
       socket?.emit(DRAWING, { codeRoom, currentPoint, penStyle, color, isFill } as SocketDrawing);
       snapshot && handleDrawing({ currentPoint, color, penStyle, snapshot, isFill, ctx } as Drawing);
-    }
   };
 
   handleMouseUpOrLeave = () => {
-    if(!isDrawing) return
+    if (!isDrawing) return
     socket?.emit(FINISH_DRAW, codeRoom);
     handleFinishDraw();
   };
@@ -69,18 +68,17 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       socket?.off(DRAWER_FINISH_DRAWING);
     };
   }, [canvasRef, snapshot, ctx]);
-  
+
   useEffect(() => {
-    
-      if(isNewPlayer){
-        socket?.emit(NEW_PLAYER, codeRoom)
-        setIsNewPlayer(false)
-      }
-      
-      socket?.on(GET_CANVAS_STATE, (id: string) => {
-        const dataImg = canvasRef.current.toDataURL()
-        socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
-      })
+    if (isNewPlayer) {
+      socket?.emit(NEW_PLAYER, codeRoom)
+      setIsNewPlayer(false)
+    }
+
+    socket?.on(GET_CANVAS_STATE, (id: string) => {
+      const dataImg = canvasRef.current.toDataURL()
+      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
+    })
 
     socket?.on(CANVAS_STATE_FROM_SERVER, (dataImg: string) => {
       const img = new Image()
