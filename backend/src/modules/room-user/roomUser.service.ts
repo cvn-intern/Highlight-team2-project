@@ -17,7 +17,7 @@ export class RoomUserService {
       },
     });
 
-    if(roomUser) {
+    if (roomUser) {
       await this.deleteRoomUser(room_id, user_id);
     }
 
@@ -45,16 +45,16 @@ export class RoomUserService {
 
   async getListUserOfRoom(room: Room): Promise<Array<Participant>> {
     const users = await this.roomUserRepository.getParticipantsOfRoom(room.id);
-    const result: Array<Participant> = users.map((user: any) => {
-      user = {...user, ...user.user};
+    const result: Array<Participant> = users.map((user: any, index: number) => {
+      user = { ...user, ...user.user };
       delete user.user;
 
       return {
         ...user,
         is_host: user.id === room.host_id,
-        is_painter: false,
+        is_painter: index === 0,
         is_next_painter: false,
-      }
+      };
     });
 
     return result;
@@ -62,10 +62,10 @@ export class RoomUserService {
 
   async checkUserInRoom(user_id: number, room_id: number): Promise<boolean> {
     const participant = await this.roomUserRepository.findOne({
-     where: {
-      room_id,
-      user_id,
-     }
+      where: {
+        room_id,
+        user_id,
+      },
     });
 
     return !!participant;

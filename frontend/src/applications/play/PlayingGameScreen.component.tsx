@@ -24,14 +24,17 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas, { START_GAME } from "@/shared/components/IntervalCanvas";
-
+import IntervalCanvas, {
+  PLAY_GAME,
+  START_GAME,
+} from "@/shared/components/IntervalCanvas";
+import { useGameStore } from "@/shared/stores/gameStore";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { useUserStore } from "@/shared/stores/userStore";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
-  const isDrawer = true;
-  const isInterval = false;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
@@ -45,6 +48,11 @@ export default function PlayingGameScreen() {
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
+
+  const { gameStatus, setRoomRound, setGameStatus, isDrawer, setIsDrawer } =
+    useGameStore();
+  const { socket } = useSocketStore();
+  const { user } = useUserStore();
 
   // Side Effects
   useDisableBackButton();
@@ -91,7 +99,6 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
-        
         useToaster({
           type: "error",
           message: "Get room info failed!",
@@ -100,6 +107,21 @@ export default function PlayingGameScreen() {
     };
     getRoomInfo();
   }, [codeRoom]);
+
+  useEffect(() => {
+    socket?.on("game-play", (data: any) => {
+      setGameStatus(PLAY_GAME);
+      setRoomRound(data);
+      console.log({ data, user });
+      setIsDrawer(data.painter === user?.id);
+    });
+    return () => {
+      socket?.off("game-play");
+    };
+  }, [socket]);
+
+  const isInterval = gameStatus !== PLAY_GAME;
+  console.log({ isDrawer });
 
   return (
     <PaintContext.Provider
@@ -133,8 +155,8 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            <Canvas hidden={isInterval}/>
-            <IntervalCanvas status={START_GAME} hidden={!isInterval}/>
+            <Canvas isDrawer={isDrawer} hidden={isInterval} />
+            <IntervalCanvas status={gameStatus} hidden={!isInterval} />
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}

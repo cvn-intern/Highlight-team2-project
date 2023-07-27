@@ -25,14 +25,16 @@ export class RoomRound {
   @Column({ type: 'timestamp' })
   started_at: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   ended_at: Date;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'painter' })
+  @Column()
   painter: number;
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'next_painter' })
+  @Column()
   next_painter: number;
 }

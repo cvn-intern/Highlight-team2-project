@@ -9,8 +9,15 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { BadgeCheck, Home, Pencil, XCircle, User2 as UserIcon } from "lucide-react";
+import {
+  BadgeCheck,
+  Home,
+  Pencil,
+  XCircle,
+  User2 as UserIcon,
+} from "lucide-react";
 import { handleStringThatIsTooLong } from "@/shared/lib/string";
+import { useGameStore } from "@/shared/stores/gameStore";
 
 interface ProfileProps {
   Leaderboard: Array<Participant>;
@@ -26,6 +33,9 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
     setUserSelected(user);
     triggerRef.current?.click();
   };
+
+  const { gameStatus } = useGameStore();
+
   const renderItem = (data: ProfileProps) => {
     const maxItems = data.maxPlayer;
     const emptySlots = maxItems - data.Leaderboard.length;
@@ -45,7 +55,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
                     }
                   >
-                    {user.is_painter && (
+                    {gameStatus !== "wait-for-players" && user.is_painter && (
                       <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                     )}
                     {data.isCorrect && (
@@ -62,12 +72,14 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     )}
                   >
                     <div className="flex items-center space-x-4">
-                      <Avatar className={cn("relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
-                        {
-                          "border-blue-600": user.is_painter,
-                          "border-green-500": data.isCorrect,
-                        }
-                      )}
+                      <Avatar
+                        className={cn(
+                          "relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
+                          {
+                            "border-blue-600": user.is_painter,
+                            "border-green-500": data.isCorrect,
+                          }
+                        )}
                       >
                         <AvatarImage
                           src={user.avatar}
@@ -169,7 +181,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       <div className="flow-root w-full h-full px-4 overflow-auto no-scrollbar">
         <ul role="list">{renderItem(Leaderboard)}</ul>
       </div>
-      { }
+      {}
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
         <DialogDemo
