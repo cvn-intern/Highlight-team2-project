@@ -1,30 +1,30 @@
-import { useRef, useState, useEffect, createContext } from "react";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { createContext, useEffect, useRef, useState } from "react";
 // Variables
 import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
 import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./ranking-board/RankingBoard.component";
-import Canvas from "./draw-screen/Canvas.component";
 import BoxChatAnswer from "./chat-answer/BoxChatAnswer.component";
+import Canvas from "./draw-screen/Canvas.component";
 import PaintTools from "./draw-screen/PaintTools.component";
+import RankingBoard from "./ranking-board/RankingBoard.component";
 // Types
 import {
-  RGBAColorType,
   PaintContextType,
-  Point,
   PenStyleType,
+  Point,
+  RGBAColorType,
 } from "./draw-screen/draw";
 // Funtions
-import { resetCanvas } from "./draw-screen/draw.helper";
-import { rgbaToHex } from "@/shared/lib/colors";
-import ActionButtons from "../../shared/components/ActionButtons";
+import IntervalCanvas, { START_GAME } from "@/shared/components/IntervalCanvas";
 import Logo from "@/shared/components/Logo";
+import useToaster from "@/shared/hooks/useToaster";
+import { rgbaToHex } from "@/shared/lib/colors";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import ActionButtons from "../../shared/components/ActionButtons";
+import { resetCanvas } from "./draw-screen/draw.helper";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
-import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas, { INTERVAL_SHOW_WORD, START_GAME, WAIT_FOR_OTHER_PLAYERS } from "@/shared/components/IntervalCanvas";
 
 
 export const PaintContext = createContext<PaintContextType | null>(null);
