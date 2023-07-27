@@ -16,7 +16,6 @@ export default function RankingBoard() {
 
   useEffect(() => {
     socket?.on('participants', (data: RankingUser) => {
-      console.log(data);
       setLeaderboardData(data);
     })
 
