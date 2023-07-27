@@ -2,7 +2,6 @@ import IntervalCanvasContent from './IntervalCanvasContent'
 import IntervalCanvasHeader from './IntervalCanvasHeader'
 import {ProgressPlayTime} from './ProcessPlayTime'
 
-
 export const INTERVAL_SHOW_WORD = 'interval-show-word'
 export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word'
 export const INTERVAL_NEW_TURN = 'new-turn'
@@ -16,11 +15,8 @@ const IntervalCanvas = ({ status=INTERVAL_SHOW_WORD, hidden=true }) => {
                 <IntervalCanvasContent status={status} />
             </div>
             <ProgressPlayTime step={0.06} />
-            
         </div>
     );
-
 };
-
 
 export default IntervalCanvas;

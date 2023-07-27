@@ -4,7 +4,6 @@ import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png"
 import { INTERVAL_NEW_TURN, INTERVAL_NOT_SHOW_WORD, INTERVAL_SHOW_WORD } from "./IntervalCanvas";
 
-
 const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
     switch (status) {
         case INTERVAL_SHOW_WORD:
@@ -46,9 +45,6 @@ const IntervalCanvasContent = ({status = INTERVAL_SHOW_WORD }) => {
                 </div>
             )
     }
-
-    
 };
-
 
 export default IntervalCanvasContent;
