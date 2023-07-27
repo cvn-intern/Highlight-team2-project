@@ -31,7 +31,7 @@ export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const isDrawer = true;
-  const isInterval = true;
+  const isInterval = false;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
