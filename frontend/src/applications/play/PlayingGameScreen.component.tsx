@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, createContext } from "react";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 // Variables
 import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
@@ -21,13 +22,16 @@ import ActionButtons from "../../shared/components/ActionButtons";
 import Logo from "@/shared/components/Logo";
 import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
+import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
+import IntervalCanvas from "./IntervalCanvas.componetnt";
+import {INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const isDrawer = true;
+  const isInterval = false;
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
@@ -37,12 +41,13 @@ export default function PlayingGameScreen() {
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [previousPoint, setPreviousPoint] = useState<Point>({ x: 0, y: 0 });
   const [color, setColor] = useState<RGBAColorType>(DEFAULT_BLACK);
-  const [penStyle, setPenStyle] = useState<PenStyleType>("brush");
+  const [penStyle, setPenStyle] = useState<PenStyleType>(PEN_STYLE_BRUSH);
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
 
   // Side Effects
+  useDisableBackButton();
   useEffect(() => {
     const resetState = () => {
       if (!ctx) return;
@@ -86,15 +91,11 @@ export default function PlayingGameScreen() {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomInfo(data);
       } catch (error) {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useToaster({
           type: "error",
           message: "Get room info failed!",
-          bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-          icon: ERROR_ICON,
-          progressStyle: {
-            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-          }
-        })
+        });
       }
     };
     getRoomInfo();
@@ -132,7 +133,8 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            <Canvas />
+            <Canvas hidden={isInterval}/>
+            <IntervalCanvas status={INTERVAL_SHOW_WORD} hidden={!isInterval}/>
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}
