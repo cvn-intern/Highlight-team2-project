@@ -28,7 +28,6 @@ const WaitingRoom = () => {
 
   const handleJoinRoom = async () => {
     if (!nickname.trim()) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       useToaster({
         type: "warning",
         message: "Please enter your nickname!",
@@ -48,7 +47,7 @@ const WaitingRoom = () => {
 
       navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      
       useToaster({
         type: "error",
         message: "Join room failed!",
@@ -61,23 +60,16 @@ const WaitingRoom = () => {
     setNickname(user.nickname);
   }, [user]);
 
-  // useEffect(() => {
-  //   socket?.on("error", () => {
-  //     useToaster({
-  //       type: "success",
-  //       message: "Reloading!",
-  //       bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-  //       icon: SUCCESS_ICON,
-  //       progressStyle: {
-  //         background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-  //       }
-  //     })
-  //   });
+  useEffect(() => {
+    socket?.on("error", (data: string) => {
+      useToaster({
+        type: "error",
+        message: data,
+      })
 
-  //   return () => {
-  //     socket?.off("error");
-  //   };
-  // }, [socket])
+      navigate("/");
+    });
+  }, [socket])
 
   useDisableBackButton();
 

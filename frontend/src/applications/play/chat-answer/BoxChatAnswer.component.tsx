@@ -15,13 +15,15 @@ import { useParams } from "react-router-dom";
 import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
 import { covertMessage } from "./chatAnswer.helper";
+import { useUserStore } from "@/shared/stores/userStore";
 
 interface BoxProps {
   label: string;
   placeholder: string;
-  listChat: any;
+  listChat: Array<Chat>;
   custumClassName?: string;
   icon?: LucideIcon;
+  isDisabledInput?: boolean;
 }
 
 interface MessageProps {
@@ -93,7 +95,11 @@ const BoxChat = (props: BoxProps) => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
   }, [props.listChat]);
+
+  useEffect(() => {
+  }, [props.isDisabledInput])
 
   return (
     <>
@@ -117,12 +123,16 @@ const BoxChat = (props: BoxProps) => {
           <div className="relative">
             <form onSubmit={handleSubmitForm} className="relative">
               <input
+                disabled={props.isDisabledInput}
                 value={inputChat}
                 onChange={handleInputText}
                 id={"box-input-" + props.label}
                 type="text"
                 placeholder={props.placeholder}
-                className="block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]"
+                className={cn("block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]"
+                  , {
+                    "bg-slate-300": props.isDisabledInput,
+                  })}
               />
               <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
                 {numberOfCharactersLeft} chars left
@@ -146,6 +156,8 @@ const BoxChatAnswer = () => {
   const { codeRoom } = useParams();
   const [listChat, setListChat] = useState<Array<Chat>>([]);
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
+  const [isDisabledInput, setIsDisabledInput] = useState<boolean>(false);
+  const {user} = useUserStore();
 
   useEffect(() => {
     if (!codeRoom) return;
@@ -160,6 +172,11 @@ const BoxChatAnswer = () => {
     });
 
     socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
+      const ANSWER_CORRETLY: number = 3;
+      if (data.type === ANSWER_CORRETLY && data.user === user?.nickname) {
+        setIsDisabledInput(true);
+      }
+
       const convertData: Chat = covertMessage(data);
       setListAnswer((pre) => [...pre, convertData]);
     });
@@ -186,6 +203,7 @@ const BoxChatAnswer = () => {
             placeholder="Hit answer here!"
             icon={Pencil}
             listChat={listAnswer}
+            isDisabledInput={isDisabledInput}
           />
         </div>
         <div className="pl-2 border-l w-[50%]">
@@ -194,6 +212,7 @@ const BoxChatAnswer = () => {
             placeholder="Hit chat here!"
             icon={MessageCircle}
             listChat={listChat}
+            isDisabledInput={isDisabledInput}
           />
         </div>
       </div>

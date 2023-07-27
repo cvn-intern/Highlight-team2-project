@@ -1,8 +1,7 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { User } from '../user/user.entity';
 import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { RedisService } from '../redis/redis.service';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
@@ -12,11 +11,6 @@ type PayloadJWT = {
   id: number;
 }
 
-const client = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-);
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -24,6 +18,7 @@ export class AuthService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private redisService: RedisService,
+    @Inject('OAuth2Client') private client: OAuth2Client,
   ) { }
   async generateAccessToken(payload: PayloadJWT) {
     return this.jwtService.sign(payload, {
@@ -34,7 +29,7 @@ export class AuthService {
 
   async verifyGoogleLogin(token: string): Promise<TokenPayload> {
     try {
-      const ticket = await client.verifyIdToken({
+      const ticket = await this.client.verifyIdToken({
         idToken: token,
         audience: this.configService.get<string>('GOOGLE_CLIENT_ID'),
       });
@@ -83,5 +78,20 @@ export class AuthService {
       user: updatedUser,
       accessToken: accessToken,
     } as UserToken;
+  }
+
+  async logoutGoogle(userId: number): Promise<boolean> {
+    const userToken = await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
+    this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay);
+    const socketId = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
+
+    if (socketId) {
+      this.redisService.deleteObjectByKey(`${socketId}:ACCESSTOKEN`);
+    }
+
+    this.redisService.deleteObjectByKey(`USER:${userId}:SOCKET`);
+    this.redisService.deleteObjectByKey(`USER:${userId}:ACCESSTOKEN`);
+
+    return true;
   }
 }

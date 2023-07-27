@@ -8,12 +8,11 @@ export class RoomRoundService {
   constructor(
     @InjectRepository(RoomRound)
     private roomRoundRepository: Repository<RoomRound>,
-  ) {}
-
-  async countTheNumberOfUserInRoom(idRoom: number) {
-    return this.roomRoundRepository.count({
+  ) { }
+  async getRoundOfRoom(roomId: number): Promise<RoomRound> {
+    return await this.roomRoundRepository.findOne({
       where: {
-        room_id: idRoom,
+        room_id: roomId,
       },
     });
   }

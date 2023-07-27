@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RoomUser } from './roomUser.entity';
 import { Repository } from 'typeorm';
 import { RoomUserRepository } from './roomUser.repository';
+import { Room } from '../room/room.entity';
 
 @Injectable()
 export class RoomUserService {
@@ -42,8 +43,21 @@ export class RoomUserService {
     });
   }
 
-  async getListUserOfRoom(room_id: number) {
-    return await this.roomUserRepository.getParticipantsOfRoom(room_id);
+  async getListUserOfRoom(room: Room): Promise<Array<Participant>> {
+    const users = await this.roomUserRepository.getParticipantsOfRoom(room.id);
+    const result: Array<Participant> = users.map((user: any) => {
+      user = {...user, ...user.user};
+      delete user.user;
+
+      return {
+        ...user,
+        is_host: user.id === room.host_id,
+        is_painter: false,
+        is_next_painter: false,
+      }
+    });
+
+    return result;
   }
 
   async checkUserInRoom(user_id: number, room_id: number): Promise<boolean> {
@@ -54,6 +68,16 @@ export class RoomUserService {
      }
     });
 
-    return participant ? true : false;
+    return !!participant;
+  }
+
+  async getUserInRoomRandom(roomId: number): Promise<number> {
+    const participant: RoomUser = await this.roomUserRepository.findOne({
+      where: {
+        room_id: roomId,
+      },
+    });
+
+    return participant ? participant.user_id : null;
   }
 }

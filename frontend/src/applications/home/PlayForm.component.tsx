@@ -78,7 +78,7 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
+      
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",
@@ -91,6 +91,16 @@ const PlayForm = () => {
     form.setValue("nickname", user.nickname);
     form.setValue("language", user.language);
   }, [user]);
+
+  useEffect(() => {
+    socket?.on("error", () => {
+      navigate("/user/existing");
+    });
+
+    return () => {
+      socket?.off("error");
+    };
+  }, [socket]);
 
   return (
     <Form {...form}>

@@ -20,16 +20,20 @@ export const DRAWER_CLEAR_CANVAS: string = 'drawer-clear-canvas'
 export const GET_CANVAS_STATE: string = 'get-canvas-state'
 export const CANVAS_STATE_FROM_SERVER: string = 'canvas-state-from-server'
 
-export const MINIMUM_CHAR_WRONG = 2;
+
+// answer and chat constant
+export const JOIN_ROOM_TYPE = 0;
+export const LEAVE_ROOM_TYPE = 1;
+export const CHAT_ROOM_TYPE = 2;
 export const ANSWER_CORRETLY = 3;
 export const ANSWER_APPROXIMATELY = 4;
 export const ANSWER_WRONG = 5;
-
+export const MINIMUM_CHAR_WRONG = 2;
 export const ANSWER_CORRECTLY_CONTENT = 'hit!';
 export const ANSWER_APPROXIMATELY_CONTENT = 'answer is close!';
-
-export const JOIN_ROOM_TYPE = 0;
 export const JOIN_ROOM_CONTENT = 'joined';
-export const LEAVE_ROOM_TYPE = 1;
 export const LEAVE_ROOM_CONTENT = 'left';
-export const CHAT_ROOM_TYPE = 2;
+
+// channel for host
+export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
+export const PARTICIPANTS_CHANNEL = 'participants';

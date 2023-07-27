@@ -24,7 +24,7 @@ export default function CheckSocketDisconnectedRoute({ children }: Props) {
             navigate(`/${codeRoom}/waiting`);
           }
         } catch (error: any) {
-          // eslint-disable-next-line react-hooks/rules-of-hooks
+          
           useToaster({
             type: "error",
             message: error.response.data.response || "Some error occurred!",

@@ -1,11 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RedisService } from '../redis/redis.service';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
 import { SocketClient } from './socket.class';
 import { WsException } from '@nestjs/websockets';
+import { RoomService } from '../room/room.service';
+import { PARTICIPANTS_CHANNEL, QUALIFY_TO_START_CHANNEL } from './constant';
+import { RoomInterface } from '../room/room.interface';
+import { Room } from '../room/room.entity';
 
 @Injectable()
 export class SocketService {
@@ -14,6 +18,7 @@ export class SocketService {
     private logger: Logger = new Logger(SocketService.name),
     private jwtService: JwtService,
     private configService: ConfigService,
+    private roomService: RoomService,
   ) { }
 
   async storeClientConnection(client: Socket) {
@@ -99,5 +104,22 @@ export class SocketService {
 
   sendError(client: Socket, error: string) {
     client.emit('error', error);
+  }
+
+  async checkAndEmitToHostRoom(server: Server, room: RoomInterface) {
+    const isQualified = await this.roomService.qualifiedToStart(room.code_room);
+
+    const hostRoomSocketId = await this.redisService.getObjectByKey(`USER:${room.host_id}:SOCKET`);
+
+    server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
+  }
+
+  async sendListParticipantsInRoom(server: Server, room: Room) {
+    const participants: Array<Participant> = await this.roomService.getPartipantsInRoom(room);
+
+    server.in(room.code_room).emit(PARTICIPANTS_CHANNEL, {
+      participants,
+      max_player: room.max_player,
+    });
   }
 }
