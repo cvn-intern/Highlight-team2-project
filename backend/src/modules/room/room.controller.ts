@@ -27,13 +27,6 @@ export class RoomController {
     private roomUserService: RoomUserService,
   ) {}
 
-  @Get('/test/:codeRoom')
-  async handleTest(
-    @Param('codeRoom') codeRoom: string,
-  ) {
-    await this.roomService.changeHost(codeRoom);
-  }
-
   @UseGuards(AuthorizeJWT)
   @Post()
   async createRoom(
