@@ -1,4 +1,4 @@
-import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./IntervalCanvas";
+import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN, START_GAME, WAIT_FOR_OTHER_PLAYERS } from "./IntervalCanvas";
 
 const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {   
     const userName = "User123"
@@ -18,6 +18,13 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
                     <p className="text-xl text-slate-400">You've lost your turn :(</p>
                 </>
             );
+        case WAIT_FOR_OTHER_PLAYERS:
+        case START_GAME:
+            return (
+                <>
+                    <p className="text-[3rem] text-yellow-400">WAITING</p>                    
+                </>
+            )
         default:
             return (
                 <>
