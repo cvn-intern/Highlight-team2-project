@@ -15,7 +15,6 @@ export default function RankingBoard() {
 
   useEffect(() => {
     socket?.on("participants", (data: RankingUser) => {
-      console.log(data);
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
     });
