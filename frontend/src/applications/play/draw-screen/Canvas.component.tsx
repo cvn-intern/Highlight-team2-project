@@ -9,7 +9,7 @@ import { getPointFromEvent } from "./draw.helper";
 
 
 
-const Canvas = () => {
+const Canvas = ({hidden = false}) => {
   const variables = useContext(PaintContext);
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;
@@ -17,7 +17,10 @@ const Canvas = () => {
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } = useSocketHandleCanvasEvent()
 
   return (
-    <div className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0`}>
+    <div
+      className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0`}
+      hidden={hidden}
+    >
       <canvas
         ref={canvasRef}
         id="canvas"

@@ -16,6 +16,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily:{
+        'lilita' : ['Lilita One']
+      },
       colors: {
         textBlueColor: "#22A699",
         primaryTextColor: "#838383",

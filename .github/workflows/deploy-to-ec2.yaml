@@ -16,7 +16,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
           ssh-username: ubuntu
-          ssh-host: ec2-52-221-195-133.ap-southeast-1.compute.amazonaws.com
+          ssh-host: ec2-52-77-230-42.ap-southeast-1.compute.amazonaws.com
 
       - uses: ./.github/actions/frontend-build
         with:
@@ -25,7 +25,7 @@ jobs:
       - uses: ./.github/actions/sync-source-to-host
         with:
           ssh-username: ubuntu
-          ssh-host: ec2-52-221-195-133.ap-southeast-1.compute.amazonaws.com
+          ssh-host: ec2-52-77-230-42.ap-southeast-1.compute.amazonaws.com
           source-folder: ./frontend/dist
           destination-folder: /var/www/highlight-io.xyz/html
 
@@ -38,12 +38,12 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_BACKEND }}
           ssh-username: ubuntu
-          ssh-host: ec2-13-215-153-89.ap-southeast-1.compute.amazonaws.com
+          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
 
       - uses: ./.github/actions/sync-source-to-host
         with:
           ssh-username: ubuntu
-          ssh-host: ec2-13-215-153-89.ap-southeast-1.compute.amazonaws.com
+          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
           source-folder: ./backend
           destination-folder: /home/ubuntu/backend
 
@@ -51,4 +51,4 @@ jobs:
         with:
           variables-env: ${{ secrets.BACKEND_ENV }}
           ssh-username: ubuntu
-          ssh-host: ec2-13-215-153-89.ap-southeast-1.compute.amazonaws.com
+          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
