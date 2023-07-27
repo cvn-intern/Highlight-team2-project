@@ -75,6 +75,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         await Promise.all([
           this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`),
           this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`),
+          this.redisService.deleteObjectByKey(`USER:${user.id}:ACCESSTOKEN`),
           this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`),
         ]);
       }

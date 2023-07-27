@@ -16,7 +16,7 @@ export class AnswerGateway extends SocketGateway {
       const answerRound: string = 'animal';
       const ROOM_ANSWER: string = `${msgBody.codeRoom}-answer`;
 
-      const typeAnswer = checkTypeAnswer(answerRound, msgBody.message);
+      const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
 
 
       switch (typeAnswer) {
