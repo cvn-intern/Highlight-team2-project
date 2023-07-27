@@ -38,8 +38,8 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
 
   handleMouseMove = (currentPoint: Point) => {
     if (!isDrawing) return
-      socket?.emit(DRAWING, { codeRoom, currentPoint, penStyle, color, isFill } as SocketDrawing);
-      snapshot && handleDrawing({ currentPoint, color, penStyle, snapshot, isFill, ctx } as Drawing);
+    socket?.emit(DRAWING, { codeRoom, currentPoint, penStyle, color, isFill } as SocketDrawing);
+    snapshot && handleDrawing({ currentPoint, color, penStyle, snapshot, isFill, ctx } as Drawing);
   };
 
   handleMouseUpOrLeave = () => {
