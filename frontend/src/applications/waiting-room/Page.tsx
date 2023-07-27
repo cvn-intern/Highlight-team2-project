@@ -1,5 +1,5 @@
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
-import JoinRoomBanner from "@/shared/assets/joinRoomBanner.png";
+import JoinRoomBanner from "@/shared/assets/join-room-banner.png";
 import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";

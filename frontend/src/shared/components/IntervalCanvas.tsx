@@ -1,7 +1,11 @@
-import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
-import IntervalCanvasHeader from "./IntervalCanvasHeader.component";
-import IntervalCanvasContent from "./IntervalCanvasContent.component";
-import { INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
+import IntervalCanvasContent from './IntervalCanvasContent'
+import IntervalCanvasHeader from './IntervalCanvasHeader'
+import {ProgressPlayTime} from './ProcessPlayTime'
+
+export const INTERVAL_SHOW_WORD = 'interval-show-word'
+export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word'
+export const INTERVAL_NEW_TURN = 'new-turn'
+export const INTERVAL_INACTIVE = 'inactive'
 
 const IntervalCanvas = ({ status=INTERVAL_SHOW_WORD, hidden=true }) => {
     return (
@@ -13,8 +17,6 @@ const IntervalCanvas = ({ status=INTERVAL_SHOW_WORD, hidden=true }) => {
             <ProgressPlayTime step={0.06} />
         </div>
     );
-
 };
-
 
 export default IntervalCanvas;

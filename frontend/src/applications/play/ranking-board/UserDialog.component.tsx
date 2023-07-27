@@ -11,7 +11,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import ProfileLabel from "@/shared/assets/ProfileLabel.png";
+import ProfileLabel from "@/shared/assets/profile-label.png";
 
 type Props = {
   user: Participant | null;

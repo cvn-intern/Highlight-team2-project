@@ -24,8 +24,8 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas from "./IntervalCanvas.componetnt";
-import {INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
+import IntervalCanvas, { INTERVAL_SHOW_WORD } from "@/shared/components/IntervalCanvas";
+
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -133,8 +133,8 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            <Canvas hidden={isInterval}/>
-            <IntervalCanvas status={INTERVAL_SHOW_WORD} hidden={!isInterval}/>
+            <Canvas hidden={isInterval} />
+            <IntervalCanvas status={INTERVAL_SHOW_WORD} hidden={!isInterval} />
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}

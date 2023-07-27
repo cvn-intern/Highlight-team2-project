@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import PlayingGameScreen from "./PlayingGameScreen.component";
 import WaitingRoom from "../waiting-room/Page";
 import { useLocation } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import useToaster from "@/shared/hooks/useToaster";
+import { useEffect } from "react";
 
 export default function Page() {
   const { state } = useLocation();

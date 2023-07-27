@@ -1,4 +1,4 @@
-import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./shared/constants/intervalStatus";
+import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN } from "./IntervalCanvas";
 
 const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {   
     const userName = "User123"
@@ -24,11 +24,8 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
                     <p className="text-[3rem] text-sky-700">INTERVAL</p>
                     <p className="text-xl text-slate-400">Take a while to relax</p>
                 </>
-        
             );
-
     }
 };
-
 
 export default IntervalCanvasHeader;
