@@ -13,7 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import PlayerInfomation from "./PlayerInformation.component";
 import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON, SUCCESS_ICON, WARNING_ICON } from "@/shared/constants";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const WaitingRoom = () => {
@@ -32,12 +31,6 @@ const WaitingRoom = () => {
       useToaster({
         type: "warning",
         message: "Please enter your nickname!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: WARNING_ICON,
-        progressStyle: {
-          background:
-            "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-        },
       });
       return;
     }
@@ -57,12 +50,6 @@ const WaitingRoom = () => {
       useToaster({
         type: "error",
         message: "Join room failed!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: ERROR_ICON,
-        progressStyle: {
-          background:
-            "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        },
       });
     }
   };
@@ -73,15 +60,10 @@ const WaitingRoom = () => {
   }, [user]);
 
   useEffect(() => {
-    socket?.on("error", () => {
+    socket?.on("error", (data: string) => {
       useToaster({
         type: "error",
-        message: "Room is full!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: SUCCESS_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(202,197,49,1) 0%, rgba(243,249,167,1) 100%)",
-        }
+        message: data,
       })
 
       navigate("/");

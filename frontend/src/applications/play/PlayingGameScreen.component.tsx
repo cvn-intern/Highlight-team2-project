@@ -24,7 +24,6 @@ import roomService from "@/shared/services/roomService";
 import { useParams } from "react-router-dom";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
 import IntervalCanvas from "./IntervalCanvas.componetnt";
 import {INTERVAL_SHOW_WORD } from "./shared/constants/intervalStatus";
 
@@ -96,12 +95,6 @@ export default function PlayingGameScreen() {
         useToaster({
           type: "error",
           message: "Get room info failed!",
-          bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-          icon: ERROR_ICON,
-          progressStyle: {
-            background:
-              "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-          },
         });
       }
     };
