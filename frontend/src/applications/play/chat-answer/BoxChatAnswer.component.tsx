@@ -16,6 +16,7 @@ import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
 import { throttle } from "lodash";
 import { covertMessage } from "./chatAnswer.helper";
 import { useUserStore } from "@/shared/stores/userStore";
+import { useGameStore } from "@/shared/stores/gameStore";
 
 interface BoxProps {
   label: string;
@@ -158,6 +159,7 @@ const BoxChatAnswer = () => {
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
   const [isDisabledInput, setIsDisabledInput] = useState<boolean>(false);
   const {user} = useUserStore();
+  const {isDrawer} = useGameStore()
 
   useEffect(() => {
     if (!codeRoom) return;
@@ -203,7 +205,7 @@ const BoxChatAnswer = () => {
             placeholder="Hit answer here!"
             icon={Pencil}
             listChat={listAnswer}
-            isDisabledInput={isDisabledInput}
+            isDisabledInput={isDrawer || isDisabledInput}
           />
         </div>
         <div className="pl-2 border-l w-[50%]">
@@ -212,7 +214,7 @@ const BoxChatAnswer = () => {
             placeholder="Hit chat here!"
             icon={MessageCircle}
             listChat={listChat}
-            isDisabledInput={isDisabledInput}
+            isDisabledInput={isDrawer || isDisabledInput}
           />
         </div>
       </div>

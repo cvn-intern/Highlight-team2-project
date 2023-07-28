@@ -115,6 +115,7 @@ export default function PlayingGameScreen() {
     socket?.on("game-play", (data: any) => {
       setGameStatus(PLAY_GAME);
       setRoomRound(data);
+      console.log({data, user})
       setIsDrawer(data.painter === user?.id);
     });
     return () => {
