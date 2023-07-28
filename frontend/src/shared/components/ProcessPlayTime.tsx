@@ -10,7 +10,6 @@ interface Props {
 export function ProgressPlayTime({
   maximumTimeInMiliSeconds = 5000,
   hanldeWhenTimeOut = () => {
-    ("hihii");
   },
 }: Props) {
   const [progress, setProgress] = React.useState(100);
@@ -27,11 +26,14 @@ export function ProgressPlayTime({
     (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / maximumTimeInMiliSeconds;
   React.useEffect(() => {
     const timer = setInterval(() => {
+      if (progress <= MIN_PROGRESS_PERCENTAGE) {
+        console.log("end")
+        clearInterval(timer);
+
+        hanldeWhenTimeOut();
+        return
+      }
       setProgress((prevProgress) => {
-        if (prevProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(timer);
-          hanldeWhenTimeOut();
-        }
         return prevProgress - number_percentage_to_decrease_per_step;
       });
     }, TIME_PERSTEP);
