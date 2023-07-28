@@ -10,7 +10,7 @@ interface Props {
 export function ProgressPlayTime({
   maximumTimeInMiliSeconds = 5000,
   hanldeWhenTimeOut = () => {
-    console.log("hihii");
+    ("hihii");
   },
 }: Props) {
   const [progress, setProgress] = React.useState(100);
@@ -38,7 +38,7 @@ export function ProgressPlayTime({
     return () => {
       clearInterval(timer);
     };
-  }, [gameStatus]);
+  }, []);
 
   return (
     <Progress

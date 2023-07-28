@@ -55,9 +55,9 @@ const Canvas = ({ hidden = false, isDrawer = false }) => {
           handleMouseUpOrLeave();
         }}
       ></canvas>
-      {gameStatus === "game-start" && (
+      {/* {gameStatus === "game-start" && (
         <ProgressPlayTime hanldeWhenTimeOut={hanldeWhenTimeOut} />
-      )}
+      )} */}
     </div>
   );
 };

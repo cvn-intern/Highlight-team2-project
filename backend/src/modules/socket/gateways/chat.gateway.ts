@@ -72,14 +72,10 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           await this.socketService.sendListParticipantsInRoom(this.server, room);
         }
 
-        const userToken = await this.redisService.getObjectByKey(`USER:${user.id}:ACCESSTOKEN`);
-        await Promise.all([
-          this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay),
-          this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`),
-          this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`),
-          this.redisService.deleteObjectByKey(`USER:${user.id}:ACCESSTOKEN`),
-          this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`),
-        ]);
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:ACCESSTOKEN`);
+        await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
       }
     } catch (error) {
       this.logger.error(error);
@@ -88,14 +84,6 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     try {
-      const isValidToken = await this.socketService.checkTokenValidSocket(client);
-
-      if (!isValidToken) {
-        await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
-        this.socketService.sendError(client, errorsSocket.INVALID_TOKEN);
-        return;
-      }
-
       const isMultipleTab = await this.socketService.checkLoginMultipleTab(client);
 
       if (isMultipleTab) {

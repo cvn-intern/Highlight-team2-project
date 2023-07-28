@@ -31,6 +31,7 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 import { MULTIPLE_TAB } from "@/shared/types/errorCode";
+import JWTManager from "@/shared/lib/jwt"
 
 const formSchema = z.object({
   nickname: z.string().trim().min(2).max(50),
@@ -75,11 +76,12 @@ const PlayForm = () => {
         setUser(data);
       }
       const { data } = await playService.quickPlay();
+      (data);
       socket?.emit("join-room", data);
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      
+      (error);
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",

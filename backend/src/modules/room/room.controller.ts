@@ -49,8 +49,9 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/quick-play')
-  async getRoomQuickPlay(@Res() response: Response, @IdUser() IdUser: number) {
+  async getRoomQuickPlay(@Res() response: Response) {
     try {
+      ("sjkhdka") 
       const room = await this.roomService.randomRoomForQuickPlay();
 
       return response.status(HttpStatus.OK).json(room);
