@@ -55,7 +55,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
                     }
                   >
-                    {gameStatus !== "wait-for-players" && isDrawer && (
+                    {gameStatus !== "wait-for-players" && user.is_painter && (
                       <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                     )}
                     {data.isCorrect && (
