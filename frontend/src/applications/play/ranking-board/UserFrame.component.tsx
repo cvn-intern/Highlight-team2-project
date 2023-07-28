@@ -34,7 +34,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
     triggerRef.current?.click();
   };
 
-  const { gameStatus, isDrawer } = useGameStore();
+  const { gameStatus } = useGameStore();
 
   const renderItem = (data: ProfileProps) => {
     const maxItems = data.maxPlayer;
