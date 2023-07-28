@@ -39,9 +39,9 @@ const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }) => {
         <IntervalCanvasHeader status={status} />
         <IntervalCanvasContent status={status} />
       </div>
-      {/* {gameStatus !== "start-game" && gameStatus !== "wait-for-players" && (
+      {gameStatus !== "start-game" && gameStatus !== "wait-for-players" && (
         <ProgressPlayTime />
-      )} */}
+      )}
     </div>
   );
 };
