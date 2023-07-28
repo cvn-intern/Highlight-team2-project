@@ -17,7 +17,6 @@ export class AuthorizeJWT implements CanActivate {
     const authHeader = request.header('Authorization');
     const jwtToken = authHeader && authHeader.split(' ')[1];
     const isInBlocklist = await this.userService.checkAccessTokenOfUserInBlocklist(jwtToken);
-    (isInBlocklist)
     if(isInBlocklist) {
       return false;
     }

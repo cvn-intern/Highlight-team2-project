@@ -76,7 +76,6 @@ const PlayForm = () => {
         setUser(data);
       }
       const { data } = await playService.quickPlay();
-      (data);
       socket?.emit("join-room", data);
 
       navigate("/" + data, { state: { wait: false }, replace: true });

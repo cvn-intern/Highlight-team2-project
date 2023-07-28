@@ -34,7 +34,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
     triggerRef.current?.click();
   };
 
-  const { gameStatus } = useGameStore();
+  const { gameStatus, isDrawer } = useGameStore();
 
   const renderItem = (data: ProfileProps) => {
     const maxItems = data.maxPlayer;
@@ -55,7 +55,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
                     }
                   >
-                    {gameStatus !== "wait-for-players" && user.is_painter && (
+                    {gameStatus !== "wait-for-players" && isDrawer && (
                       <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                     )}
                     {data.isCorrect && (

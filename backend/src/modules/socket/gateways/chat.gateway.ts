@@ -67,10 +67,10 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
   
             this.server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
           }
-        } else {
-          await this.socketService.checkAndEmitToHostRoom(this.server, room);
-          await this.socketService.sendListParticipantsInRoom(this.server, room);
         }
+        await this.socketService.checkAndEmitToHostRoom(this.server, room);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
+        
 
         await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
         await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
