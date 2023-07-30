@@ -1,33 +1,28 @@
-import { useEffect } from "react";
-import { useGameStore } from "../stores/gameStore";
-import { useSocketStore } from "../stores/socketStore";
-import IntervalCanvasContent from "./IntervalCanvasContent";
-import IntervalCanvasHeader from "./IntervalCanvasHeader";
-import { ProgressPlayTime } from "./ProcessPlayTime";
+import { GameStatus, useGameStore } from '../stores/gameStore';
+import IntervalCanvasContent from './IntervalCanvasContent';
+import IntervalCanvasHeader from './IntervalCanvasHeader';
+import { ProgressPlayTime } from './ProcessPlayTime';
 
-export const INTERVAL_SHOW_WORD = "interval-show-word";
-export const INTERVAL_NOT_SHOW_WORD = "interval-not-show-word";
-export const INTERVAL_NEW_TURN = "new-turn";
-export const INTERVAL_INACTIVE = "inactive";
-export const START_GAME = "start-game";
-export const WAIT_FOR_OTHER_PLAYERS = "wait-for-players";
-export const PLAY_GAME = "game-start";
+export const INTERVAL_SHOW_WORD = 'interval-show-word';
+export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word';
+export const INTERVAL_NEW_TURN = 'new-turn';
+export const INTERVAL_INACTIVE = 'inactive';
+export const START_GAME = 'start-game';
+export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
+export const PLAY_GAME = 'game-start';
 
-export const QUALIFY_TO_START_CHANNEL = "qualify-to-start";
+export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
+export const GAME_STATUS_CHANNEL = 'game-status';
 
-const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }) => {
-  const { socket } = useSocketStore();
-  const { setGameStatus, gameStatus } = useGameStore();
+const INTERVAL_DURATION_MILISECONDS = 10000
 
-  useEffect(() => {
-    socket?.on(QUALIFY_TO_START_CHANNEL, (canStart: boolean) => {
-      if (canStart) setGameStatus(START_GAME);
-    });
+type IntervalCanvasProps = {
+  status: GameStatus,
+  hidden: boolean,
+}
 
-    return () => {
-      socket?.off(QUALIFY_TO_START_CHANNEL);
-    };
-  }, [socket]);
+const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }: IntervalCanvasProps) => {
+  const { gameStatus } = useGameStore();
 
   return (
     <div
@@ -39,8 +34,8 @@ const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }) => {
         <IntervalCanvasHeader status={status} />
         <IntervalCanvasContent status={status} />
       </div>
-      {gameStatus !== "start-game" && gameStatus !== "wait-for-players" && (
-        <ProgressPlayTime />
+      {gameStatus !== 'start-game' && gameStatus !== 'wait-for-players' && (
+        <ProgressPlayTime maximumTimeInMiliSeconds={INTERVAL_DURATION_MILISECONDS} />
       )}
     </div>
   );

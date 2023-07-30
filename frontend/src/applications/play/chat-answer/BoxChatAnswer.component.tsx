@@ -1,3 +1,10 @@
+import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
+import { cn } from "@/shared/lib/utils";
+import { useGameStore } from "@/shared/stores/gameStore";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { useUserStore } from "@/shared/stores/userStore";
+import { throttle } from "lodash";
+import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
 import {
   ChangeEvent,
   FormEvent,
@@ -6,17 +13,10 @@ import {
   useRef,
   useState,
 } from "react";
-import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
-import "./styles/style.css";
-import { iconsMap } from "../shared/constants/icons";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import { cn } from "@/shared/lib/utils";
 import { useParams } from "react-router-dom";
-import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
-import { throttle } from "lodash";
-import { covertMessage } from "./chatAnswer.helper";
-import { useUserStore } from "@/shared/stores/userStore";
-import { useGameStore } from "@/shared/stores/gameStore";
+import { iconsMap } from "../shared/constants/icons";
+import { GAME_UPDATE_RANKING, covertMessage } from "./chatAnswer.helper";
+import "./styles/style.css";
 
 interface BoxProps {
   label: string;
@@ -159,7 +159,7 @@ const BoxChatAnswer = () => {
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
   const [isDisabledInput, setIsDisabledInput] = useState<boolean>(false);
   const {user} = useUserStore();
-  const {isDrawer} = useGameStore()
+  const {participants, isDrawer, correctAnswers, maxPlayer, roomRound} = useGameStore()
 
   useEffect(() => {
     if (!codeRoom) return;
@@ -171,12 +171,36 @@ const BoxChatAnswer = () => {
     socket?.on(`${codeRoom}-chat`, (data: MessageReceiver) => {
       const convertData: Chat = covertMessage(data);
       setListChat((pre) => [...pre, convertData]);
+
     });
 
     socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
-      const ANSWER_CORRETLY: number = 3;
+      const ANSWER_CORRETLY = 3;
       if (data.type === ANSWER_CORRETLY && data.user === user?.nickname) {
         setIsDisabledInput(true);
+        const answers = [...correctAnswers, user.id]
+        const newParticipants = [...participants].map(participant => {
+          if(participant.id === user.id) {
+            return {
+              ...participant,
+              score: participant.score + maxPlayer - correctAnswers.length,
+              answered_at: new Date()
+            }
+          }
+          if(participant.id === roomRound?.painter) {
+            console.log("niceee")
+            return {
+              ...participant,
+              score: participant.score + 2,
+            }
+          }
+          return participant
+        })
+        socket.emit(GAME_UPDATE_RANKING, {
+          codeRoom,
+          correctAnswers: answers,
+          newParticipants
+        })
       }
 
       const convertData: Chat = covertMessage(data);
@@ -194,7 +218,7 @@ const BoxChatAnswer = () => {
       socket?.off(`${codeRoom}-answer`);
       socket?.off(`${codeRoom}-leave`);
     };
-  }, [socket]);
+  }, [socket, participants, roomRound]);
 
   return (
     <>

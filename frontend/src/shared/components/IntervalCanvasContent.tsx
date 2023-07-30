@@ -19,14 +19,14 @@ import { useParams } from "react-router-dom";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { setGameStatus, roomRound } = useGameStore();
+  const { setGameStatus, roomRound, isHost, correctAnswers, maxPlayer } = useGameStore();
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
     setGameStatus(PLAY_GAME);
     socket?.emit(PLAY_GAME, codeRoom);
   };
-
+  
   switch (status) {
     case INTERVAL_SHOW_WORD:
       return (
@@ -41,7 +41,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <div className="place-content-center flex flex-col">
             <p className="text-[3.5rem]">
               {" "}
-              <span className="text-cyan-700">7</span>/<span>15</span>
+              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{maxPlayer}</span>
             </p>
           </div>
         </div>
@@ -75,7 +75,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <div className="place-content-center flex flex-col">
             <p className="text-[1.5rem] text-slate-300">
               {" "}
-              Wait for other players
+              {isHost ? "Wait for other players" : "Wait for the host to start the game" }
             </p>
           </div>
         </div>

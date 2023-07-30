@@ -1,33 +1,38 @@
-import { useRef, useState, useEffect, createContext } from "react";
-import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+/* eslint-disable react-hooks/rules-of-hooks */
+import useDisableBackButton from '@/shared/hooks/useDisableBackButton';
+import { createContext, useEffect, useRef, useState } from 'react';
 // Variables
-import { DEFAULT_BLACK } from "./shared/constants/color";
+import { DEFAULT_BLACK } from './shared/constants/color';
 // Components
-import MainLayout from "@/shared/components/MainLayout";
-import RankingBoard from "./ranking-board/RankingBoard.component";
-import Canvas from "./draw-screen/Canvas.component";
-import BoxChatAnswer from "./chat-answer/BoxChatAnswer.component";
-import PaintTools from "./draw-screen/PaintTools.component";
+import MainLayout from '@/shared/components/MainLayout';
+import BoxChatAnswer from './chat-answer/BoxChatAnswer.component';
+import Canvas from './draw-screen/Canvas.component';
+import PaintTools from './draw-screen/PaintTools.component';
+import RankingBoard from './ranking-board/RankingBoard.component';
 // Types
 import {
-  RGBAColorType,
   PaintContextType,
-  Point,
   PenStyleType,
-} from "./draw-screen/draw";
+  Point,
+  RGBAColorType,
+} from './draw-screen/draw';
 // Funtions
-import { resetCanvas } from "./draw-screen/draw.helper";
-import { rgbaToHex } from "@/shared/lib/colors";
-import ActionButtons from "../../shared/components/ActionButtons";
-import Logo from "@/shared/components/Logo";
-import roomService from "@/shared/services/roomService";
-import { useParams } from "react-router-dom";
-import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
-import useToaster from "@/shared/hooks/useToaster";
-import IntervalCanvas, { PLAY_GAME } from "@/shared/components/IntervalCanvas";
-import { useGameStore } from "@/shared/stores/gameStore";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import { useUserStore } from "@/shared/stores/userStore";
+import IntervalCanvas, {
+  GAME_STATUS_CHANNEL,
+  PLAY_GAME,
+} from '@/shared/components/IntervalCanvas';
+import useToaster from '@/shared/hooks/useToaster';
+import { rgbaToHex } from '@/shared/lib/colors';
+import roomService from '@/shared/services/roomService';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useSocketStore } from '@/shared/stores/socketStore';
+import { useUserStore } from '@/shared/stores/userStore';
+import { useParams } from 'react-router-dom';
+import ActionButtons from '../../shared/components/ActionButtons';
+import { resetCanvas } from './draw-screen/draw.helper';
+import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
+import { RoomStatusType, RoomType } from '@/shared/types/room';
+import { NEW_PLAYER } from './shared/constants/drawEvent';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -72,17 +77,17 @@ export default function PlayingGameScreen() {
       ctx.fillStyle = hexColor;
       ctx.strokeStyle = hexColor;
       ctx.lineWidth = brushSize;
-      ctx.lineCap = "round";
+      ctx.lineCap = 'round';
     };
     resetState();
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       resetState();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!canvasRef.current) return;
-    setCtx(canvasRef.current.getContext("2d", { willReadFrequently: true }));
+    setCtx(canvasRef.current.getContext('2d', { willReadFrequently: true }));
   }, [canvasRef]);
 
   useEffect(() => {
@@ -103,8 +108,8 @@ export default function PlayingGameScreen() {
         setRoomInfo(data);
       } catch (error) {
         useToaster({
-          type: "error",
-          message: "Get room info failed!",
+          type: 'error',
+          message: 'Get room info failed!',
         });
       }
     };
@@ -112,13 +117,29 @@ export default function PlayingGameScreen() {
   }, [codeRoom]);
 
   useEffect(() => {
-    socket?.on("game-play", (data: any) => {
+    socket?.on('game-play', (data: RoomRound) => {
       setGameStatus(PLAY_GAME);
       setRoomRound(data);
       setIsDrawer(data.painter === user?.id);
     });
+
     return () => {
-      socket?.off("game-play");
+      socket?.off('game-play');
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    socket?.on(
+      GAME_STATUS_CHANNEL,
+      ({ success, status }: RoomStatusType) => {
+        if (!success) return;
+        if (status === PLAY_GAME) socket.emit(NEW_PLAYER, codeRoom);
+        setGameStatus(status!)
+      }
+    );
+
+    return () => {
+      socket?.off(GAME_STATUS_CHANNEL);
     };
   }, [socket]);
 
@@ -148,11 +169,8 @@ export default function PlayingGameScreen() {
     >
       <MainLayout>
         <div
-          className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
+          className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex items-center justify-center px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
         >
-          <div className="absolute top-1 left-20 lg:left-28 2xl:left-24">
-            <Logo customClassname="md:w-[180px] 2xl:w-[205px] w-[250px]" />
-          </div>
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
@@ -161,8 +179,16 @@ export default function PlayingGameScreen() {
                 {roomRound?.word}
               </div>
             )}
-            <Canvas isDrawer={isDrawer} hidden={isInterval} />
-            <IntervalCanvas status={gameStatus} hidden={!isInterval} />
+            <Canvas
+              isDrawer={isDrawer}
+              hidden={isInterval}
+            />
+            {gameStatus && isInterval && (
+              <IntervalCanvas
+                status={gameStatus}
+                hidden={!isInterval}
+              />
+            )}
             <BoxChatAnswer />
           </div>
           {isDrawer && <PaintTools />}

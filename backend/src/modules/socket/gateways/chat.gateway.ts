@@ -1,8 +1,26 @@
-import { SubscribeMessage, MessageBody, ConnectedSocket, WsException, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+  WsException,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { extractIdRoom } from '../../../common/utils/helper';
-import { CHAT_ROOM_CHANNEL, CHAT_ROOM_TYPE, JOIN_ROOM_CHANNEL, JOIN_ROOM_CONTENT, JOIN_ROOM_TYPE, LEAVE_ROOM_CHANNEL, LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE, QUALIFY_TO_START_CHANNEL } from '../constant';
+import {
+  CHAT_ROOM_CHANNEL,
+  CHAT_ROOM_TYPE,
+  GAME_STATUS,
+  JOIN_ROOM_CHANNEL,
+  JOIN_ROOM_CONTENT,
+  JOIN_ROOM_TYPE,
+  LEAVE_ROOM_CHANNEL,
+  LEAVE_ROOM_CONTENT,
+  LEAVE_ROOM_TYPE,
+  QUALIFY_TO_START_CHANNEL,
+} from '../constant';
 import { SocketClient } from '../socket.class';
 import { Socket } from 'socket.io';
 import { Chat } from '../types/chat';
@@ -10,8 +28,10 @@ import { MessageBodyType } from '../types/messageBody';
 import { Room } from 'src/modules/room/room.entity';
 import { errorsSocket } from 'src/common/errors/errorCode';
 
-export class ChatGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
-
+export class ChatGateway
+  extends SocketGateway
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   async handleDisconnect(@ConnectedSocket() client: any) {
     try {
       const isBlock = await this.socketService.checkInBlockList(client);
@@ -45,7 +65,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
           await this.roomUserService.deleteRoomUser(idRoom, user.id);
         }
 
-        const ROOM_LEAVE = `${codeRoom}-leave`
+        const ROOM_LEAVE = `${codeRoom}-leave`;
 
         this.server.in(codeRoom).emit(ROOM_LEAVE, {
           user: user.nickname,
@@ -61,7 +81,9 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         await this.socketService.sendListParticipantsInRoom(this.server, room);
         await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
         await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
-        await this.redisService.deleteObjectByKey(`USER:${user.id}:ACCESSTOKEN`);
+        await this.redisService.deleteObjectByKey(
+          `USER:${user.id}:ACCESSTOKEN`,
+        );
         await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
       }
     } catch (error) {
@@ -71,10 +93,16 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     try {
-      const isMultipleTab = await this.socketService.checkLoginMultipleTab(client);
+      const isMultipleTab = await this.socketService.checkLoginMultipleTab(
+        client,
+      );
 
       if (isMultipleTab) {
-        await this.redisService.setObjectByKeyValue(`BLOCKLIST:SOCKET:${client.id}`, client.id, expireTimeOneDay * 365);
+        await this.redisService.setObjectByKeyValue(
+          `BLOCKLIST:SOCKET:${client.id}`,
+          client.id,
+          expireTimeOneDay * 365,
+        );
         this.socketService.sendError(client, errorsSocket.MULTIPLE_TAB);
         return;
       }
@@ -99,21 +127,29 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         throw new WsException(errorsSocket.ROOM_NOT_FOUND);
       }
 
-      const isAvailableRoom: boolean = await this.roomService.checkRoomAvailability(codeRoom);
+      const isAvailableRoom: boolean =
+        await this.roomService.checkRoomAvailability(codeRoom);
 
       if (!isAvailableRoom) {
         this.socketService.sendError(client, errorsSocket.ROOM_FULL);
         throw new WsException(errorsSocket.ROOM_FULL);
       }
 
-      const participant = await this.roomService.joinRoom(idRoom, client.user.id);
+      const participant = await this.roomService.joinRoom(
+        idRoom,
+        client.user.id,
+      );
 
       if (!participant) {
         this.socketService.sendError(client, errorsSocket.CAN_NOT_JOIN);
         throw new WsException(errorsSocket.CAN_NOT_JOIN);
       }
 
-      await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
+      await this.redisService.setObjectByKeyValue(
+        `USER:${client.user.id}:ROOM`,
+        codeRoom,
+        expireTimeOneDay,
+      );
 
       client.join(codeRoom);
 
@@ -128,6 +164,9 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
       this.server.in(codeRoom).emit(codeRoom, chatContent);
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
       await this.socketService.sendListParticipantsInRoom(this.server, room);
+
+      const roomStatus = this.roomService.getRoomStatus(room);
+      this.server.to(client.id).emit(GAME_STATUS, roomStatus);
     } catch (error) {
       this.logger.error(error);
     }
@@ -147,7 +186,7 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         message: msgBody.message,
       };
 
-      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent)
+      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, chatContent);
     } catch (error) {
       this.logger.error(error);
     }
@@ -186,21 +225,26 @@ export class ChatGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(codeRoom);
       }
 
-      const isPlayingRoom = await this.roomService.checkStartGame(room.id);
+      // const isPlayingRoom = await this.roomService.checkStartGame(room.id);
 
-      if (isPlayingRoom) {
-        const isQualified = await this.roomService.qualifiedToStart(room.code_room);
+      // if (isPlayingRoom) {
+      //   const isQualified = await this.roomService.qualifiedToStart(
+      //     room.code_room,
+      //   );
 
-        if (!isQualified) {
-          const hostRoomSocketId = await this.redisService.getObjectByKey(`USER:${room.host_id}:SOCKET`);
+      //   if (!isQualified) {
+      //     const hostRoomSocketId = await this.redisService.getObjectByKey(
+      //       `USER:${room.host_id}:SOCKET`,
+      //     );
 
-          this.server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
-        }
-      } else {
+      //     this.server
+      //       .to(hostRoomSocketId)
+      //       .emit(QUALIFY_TO_START_CHANNEL, isQualified);
+      //   }
+      // } else {
         await this.socketService.checkAndEmitToHostRoom(this.server, room);
         await this.socketService.sendListParticipantsInRoom(this.server, room);
-      }
-
+      // }
     } catch (error) {
       this.logger.error(error);
     }

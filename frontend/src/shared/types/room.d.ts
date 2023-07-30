@@ -1,3 +1,5 @@
+import { GameStatus } from "../stores/gameStore";
+
 type RoomType = {
     code_room: string;
     created_at: Date;
@@ -18,4 +20,10 @@ type RoomType = {
             name: string;
         }
     };
+}
+
+type RoomStatusType = {
+    success: boolean;
+    status?: GameStatus;
+    progress?: number;
 }

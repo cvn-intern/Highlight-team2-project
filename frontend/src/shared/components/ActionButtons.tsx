@@ -14,7 +14,7 @@ type ActionButtonsProps = {
 };
 
 const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
-  const [isSound, setIsSound] = useState(true);
+  const [isSound, setIsSound] = useState(false);
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const navigate = useNavigate();

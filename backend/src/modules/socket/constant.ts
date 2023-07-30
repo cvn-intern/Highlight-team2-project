@@ -39,7 +39,10 @@ export const PARTICIPANTS_CHANNEL = 'participants';
 
 // channel for game
 export const GAME_START_CHANNEL = 'game-start';
-export const GAME_NEXT_ROUND_CHANNEL = 'game-next-round';
+export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
 export const GAME_END_CHANNEL = 'game-end';
+export const GAME_PROGRESS_CHANNEL = 'game-progress';
+export const GAME_UPDATE_RANKING_CHANNEL = 'update-ranking';
 
 export const GAME_PLAY = 'game-play';
+export const GAME_STATUS = 'game-status';
