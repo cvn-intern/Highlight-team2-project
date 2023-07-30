@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { handleStringThatIsTooLong } from "@/shared/lib/string";
 import { useGameStore } from "@/shared/stores/gameStore";
+import { useUserStore } from "@/shared/stores/userStore";
 
 interface ProfileProps {
   Leaderboard: Array<Participant>;
@@ -29,10 +30,21 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
   const [userSelected, setUserSelected] = useState<Participant>();
   const [blockedIdArray, setBlockedIdArray] = useState<number[]>([]);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const handleLinkClick = (user: Participant) => {
-    setUserSelected(user);
-    triggerRef.current?.click();
+  const {user} = useUserStore();
+  
+  const handleLinkClick = (participant: Participant) => {
+    const host = userHost();
+    if(host && user && host.id === user.id && participant.id !== user.id) {
+      setUserSelected(participant);
+      triggerRef.current?.click();
+    }
   };
+
+  const userHost = (): Participant | null => {
+    const host = Leaderboard.Leaderboard.find((user: Participant) => user.is_host);
+    
+    return host ? host : null;
+  }
 
   const { gameStatus, roomRound } = useGameStore();
 
@@ -181,7 +193,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       <div className="flow-root w-full h-full px-4 overflow-auto no-scrollbar">
         <ul role="list">{renderItem(Leaderboard)}</ul>
       </div>
-      {}
+      { }
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
         <DialogDemo

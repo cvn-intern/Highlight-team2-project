@@ -16,6 +16,7 @@ import { AnswerGateway } from './gateways/answer.gateway';
 import { RoomRoundModule } from '../room-round/roomRound.module';
 import { GameGateway } from './gateways/game.gateway';
 import { JoinGateway } from './gateways/join.gateway';
+import { RoomGateway } from './gateways/room.gateway';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { JoinGateway } from './gateways/join.gateway';
     AnswerGateway,
     GameGateway,
     JoinGateway,
+    RoomGateway,
   ],
   exports: [SocketService],
 })

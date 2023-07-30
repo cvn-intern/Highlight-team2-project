@@ -23,4 +23,8 @@ export const errorsSocket = {
     code: 'USER_NOT_FOUND',
     message: 'User not found!',
   },
+  YOU_NOT_HOST: {
+    code: 'YOU_NOT_HOST',
+    message: 'You are not host to take this action!',
+  }
 }
