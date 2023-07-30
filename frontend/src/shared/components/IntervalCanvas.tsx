@@ -17,6 +17,7 @@ export const PLAY_GAME = 'game-start';
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';
 export const GAME_NEW_TURN_CHANNEL = 'game-new-turn'
+export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out'
 
 const INTERVAL_DURATION_MILISECONDS = 10000
 

@@ -18,6 +18,7 @@ import {
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
+  GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_STATUS_CHANNEL,
   INTERVAL_NEW_TURN,
@@ -54,6 +55,7 @@ export default function PlayingGameScreen() {
   const [roomInfo, setRoomInfo] = useState<RoomType>();
 
   const {
+    participants,
     gameStatus,
     setRoomRound,
     setGameStatus,
@@ -148,10 +150,21 @@ export default function PlayingGameScreen() {
       }
     );
 
+    socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
+      console.log({participants})
+      useToaster({
+        message: "Drawer is out. The round restarts!",
+        type: "warning",
+        icon: "😅",
+        bodyClassName: 'text-sm font-semibold',
+      })
+    })
+
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
+      socket?.off(GAME_DRAWER_OUT_CHANNEL);
     };
-  }, [socket]);
+  }, [socket, participants]);
 
   const isInterval = gameStatus !== PLAY_GAME;
   

@@ -7,10 +7,18 @@ import { expireTimeOneDay } from '../../common/variables/constVariable';
 import { SocketClient } from './socket.class';
 import { WsException } from '@nestjs/websockets';
 import { RoomService } from '../room/room.service';
-import { PARTICIPANTS_CHANNEL, QUALIFY_TO_START_CHANNEL } from './constant';
+import {
+  GAME_DRAWER_IS_OUT,
+  GAME_NEW_TURN,
+  GAME_NEW_TURN_CHANNEL,
+  PARTICIPANTS_CHANNEL,
+  QUALIFY_TO_START_CHANNEL,
+} from './constant';
 import { RoomInterface } from '../room/room.interface';
 import { Room } from '../room/room.entity';
 import { RoomRoundService } from '../room-round/roomRound.service';
+import { RoomRound } from '../room-round/roomRound.entity';
+import { errorsSocket } from 'src/common/errors/errorCode';
 
 @Injectable()
 export class SocketService {
@@ -144,5 +152,17 @@ export class SocketService {
       max_player: room.max_player,
       roomRound,
     });
+  }
+
+  async updateRoomRoundWhenDrawerOut(
+    server: Server,
+    codeRoom: string,
+    roomRound: RoomRound,
+  ) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+    server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+    await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 }

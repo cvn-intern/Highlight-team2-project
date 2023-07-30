@@ -19,7 +19,6 @@ import {
   LEAVE_ROOM_CHANNEL,
   LEAVE_ROOM_CONTENT,
   LEAVE_ROOM_TYPE,
-  QUALIFY_TO_START_CHANNEL,
 } from '../constant';
 import { SocketClient } from '../socket.class';
 import { Socket } from 'socket.io';
@@ -60,10 +59,8 @@ export class ChatGateway
 
         client.leave(codeRoom);
 
-        if (codeRoom) {
-          const idRoom = extractIdRoom(codeRoom);
-          await this.roomUserService.deleteRoomUser(idRoom, user.id);
-        }
+        const idRoom = extractIdRoom(codeRoom);
+        await this.roomUserService.deleteRoomUser(idRoom, user.id);
 
         const ROOM_LEAVE = `${codeRoom}-leave`;
 
@@ -75,6 +72,28 @@ export class ChatGateway
 
         if (client.user.id === room.host_id) {
           room = await this.roomService.changeHost(codeRoom);
+        }
+
+        let roomRound = await this.roomRoundService.getRoundOfRoom(idRoom);
+        if (roomRound && roomRound.painter === client.user.id) {
+          const { endedAt, painterRound, startedAt, word } =
+            await this.roomRoundService.initRoundInfomation(room);
+          roomRound = await this.roomRoundService.updateRoomRound({
+            ...roomRound,
+            word,
+            ended_at: endedAt,
+            started_at: startedAt,
+            painter: roomRound.next_painter,
+            next_painter:
+              [painterRound.next_painter, painterRound.painter].find(
+                (painter) => painter !== roomRound.next_painter,
+              ) ?? roomRound.painter,
+          });
+          await this.socketService.updateRoomRoundWhenDrawerOut(
+            this.server,
+            codeRoom,
+            roomRound,
+          );
         }
 
         await this.socketService.checkAndEmitToHostRoom(this.server, room);
@@ -225,26 +244,8 @@ export class ChatGateway
         room = await this.roomService.changeHost(codeRoom);
       }
 
-      // const isPlayingRoom = await this.roomService.checkStartGame(room.id);
-
-      // if (isPlayingRoom) {
-      //   const isQualified = await this.roomService.qualifiedToStart(
-      //     room.code_room,
-      //   );
-
-      //   if (!isQualified) {
-      //     const hostRoomSocketId = await this.redisService.getObjectByKey(
-      //       `USER:${room.host_id}:SOCKET`,
-      //     );
-
-      //     this.server
-      //       .to(hostRoomSocketId)
-      //       .emit(QUALIFY_TO_START_CHANNEL, isQualified);
-      //   }
-      // } else {
-        await this.socketService.checkAndEmitToHostRoom(this.server, room);
-        await this.socketService.sendListParticipantsInRoom(this.server, room);
-      // }
+      await this.socketService.checkAndEmitToHostRoom(this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

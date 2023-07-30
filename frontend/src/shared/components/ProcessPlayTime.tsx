@@ -54,12 +54,12 @@ export function ProgressPlayTime({
       clearInterval(timer);
     };
   }, [socket, isHost, gameStatus]);
-
+  console.log({isHost, gameStatus})
   useEffect(() => {
     if (isHost || !socket) return;
     socket.on(GAME_PROGRESS, (progress: number) => {
       setProgress(progress);
-      if (progress <= 0) hanldeWhenTimeOut();
+      if (progress <= 0) return hanldeWhenTimeOut();
     });
     return () => {
       socket.off(GAME_PROGRESS);

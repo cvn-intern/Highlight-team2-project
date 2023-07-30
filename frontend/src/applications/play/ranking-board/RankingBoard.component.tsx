@@ -73,7 +73,7 @@ const RankingBoard = () => {
       socket?.off('participants');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, gameStatus, codeRoom, participants]);
+  }, [socket, gameStatus, codeRoom, participants, user]);
 
   useEffect(() => {
     socket?.on(
