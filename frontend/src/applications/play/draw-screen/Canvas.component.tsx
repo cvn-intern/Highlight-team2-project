@@ -1,19 +1,19 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useContext, useEffect } from 'react';
 import { PaintContext } from '@/applications/play/PlayingGameScreen.component';
+import { useContext, useEffect } from 'react';
 import cursorsIconMap from '../shared/constants/cursorsIconMap';
 // Functions
+import {
+  INTERVAL_SHOW_WORD,
+  PLAY_GAME
+} from '@/shared/components/IntervalCanvas';
 import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useSocketClearCanvasEvent } from '../shared/hooks/useSocketClearCanvasEvent';
 import { useSocketHandleCanvasEvent } from '../shared/hooks/useSocketHandleCanvasEvents';
 import { getPointFromEvent, resetCanvas } from './draw.helper';
-import { useGameStore } from '@/shared/stores/gameStore';
-import {
-  INTERVAL_NEW_TURN,
-  INTERVAL_NOT_SHOW_WORD,
-  INTERVAL_SHOW_WORD,
-  PLAY_GAME,
-} from '@/shared/components/IntervalCanvas';
-import { useSocketClearCanvasEvent } from '../shared/hooks/useSocketClearCanvasEvent';
+import { useSocketStore } from '@/shared/stores/socketStore';
+import { useParams } from 'react-router-dom';
 
 const ROUND_DURATION_MILISECONDS = 20000
 
@@ -27,16 +27,18 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;
 
+  const {codeRoom} = useParams()
+
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
     useSocketHandleCanvasEvent();
-
   const { handleClickClearCanvas } = useSocketClearCanvasEvent();
-
-  const { setGameStatus, setIsDrawer, gameStatus, correctAnswers } = useGameStore();
+  const { setGameStatus, setIsDrawer, gameStatus, isHost } = useGameStore(); 
+  const { socket } = useSocketStore(); 
 
   const hanldeWhenTimeOut = () => {
-    setGameStatus(correctAnswers.length > 0 ? INTERVAL_SHOW_WORD : INTERVAL_NEW_TURN);
+    setGameStatus(INTERVAL_SHOW_WORD);
     setIsDrawer(false);
+    if(isHost) socket?.emit(INTERVAL_SHOW_WORD, codeRoom)
   };
 
   useEffect(() => {

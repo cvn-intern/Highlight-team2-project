@@ -10,10 +10,12 @@ import { useEffect, memo } from 'react';
 import UserFrame from './UserFrame.component';
 import { GAME_UPDATE_RANKING } from '../chat-answer/chatAnswer.helper';
 import _ from 'lodash';
+import { useParams } from 'react-router-dom';
 
 interface RankingUser {
   participants: Array<Participant>;
   max_player: number;
+  roomRound: RoomRound;
 }
 
 const RankingBoard = () => {
@@ -29,7 +31,10 @@ const RankingBoard = () => {
     gameStatus,
     setIsDrawer,
     setCorrectAnswers,
+    roomRound,
+    setRoomRound,
   } = useGameStore();
+  const { codeRoom } = useParams();
 
   useEffect(() => {
     socket?.on('participants', (data: RankingUser) => {
@@ -40,11 +45,16 @@ const RankingBoard = () => {
         data.participants,
         (participant) => participant.is_host
       );
+
       const isHost = hostUser?.id === user?.id;
       setIsHost(isHost);
       if (data.participants.length === 1) {
         setGameStatus(WAIT_FOR_OTHER_PLAYERS);
         setIsDrawer(false);
+        setParticipants(
+          [...data.participants].map((participant) => ({ ...participant, score: 0 }))
+        );
+        socket.emit(WAIT_FOR_OTHER_PLAYERS, codeRoom);
       }
 
       if (
@@ -55,13 +65,15 @@ const RankingBoard = () => {
       ) {
         setGameStatus(START_GAME);
       }
+
+      if (!roomRound) setRoomRound(data.roomRound);
     });
 
     return () => {
       socket?.off('participants');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, gameStatus]);
+  }, [socket, gameStatus, codeRoom, participants]);
 
   useEffect(() => {
     socket?.on(

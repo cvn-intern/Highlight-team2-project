@@ -31,7 +31,7 @@ export function ProgressPlayTime({
   const number_percentage_to_decrease_per_step =
     (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / maximumTimeInMiliSeconds;
 
-  let timer;
+  let timer: any;
   React.useEffect(() => {
     if (!isHost) return;
     if (timer) clearInterval(timer);
@@ -53,7 +53,7 @@ export function ProgressPlayTime({
     return () => {
       clearInterval(timer);
     };
-  }, [socket, isHost]);
+  }, [socket, isHost, gameStatus]);
 
   useEffect(() => {
     if (isHost || !socket) return;

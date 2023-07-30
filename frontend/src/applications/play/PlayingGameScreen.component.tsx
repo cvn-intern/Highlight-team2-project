@@ -18,7 +18,9 @@ import {
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
+  GAME_NEW_TURN_CHANNEL,
   GAME_STATUS_CHANNEL,
+  INTERVAL_NEW_TURN,
   PLAY_GAME,
 } from '@/shared/components/IntervalCanvas';
 import useToaster from '@/shared/hooks/useToaster';
@@ -58,6 +60,8 @@ export default function PlayingGameScreen() {
     roomRound,
     isDrawer,
     setIsDrawer,
+    correctAnswers,
+    setCorrectAnswers
   } = useGameStore();
   const { socket } = useSocketStore();
   const { user } = useUserStore();
@@ -117,16 +121,22 @@ export default function PlayingGameScreen() {
   }, [codeRoom]);
 
   useEffect(() => {
-    socket?.on('game-play', (data: RoomRound) => {
-      setGameStatus(PLAY_GAME);
+    socket?.on(GAME_NEW_TURN_CHANNEL, (data: RoomRound) => {
+      setGameStatus(INTERVAL_NEW_TURN);
       setRoomRound(data);
       setIsDrawer(data.painter === user?.id);
+      setCorrectAnswers([])
+    });
+
+    socket?.on(PLAY_GAME, () => {
+      setGameStatus(PLAY_GAME);
     });
 
     return () => {
-      socket?.off('game-play');
+      socket?.off(GAME_NEW_TURN_CHANNEL);
+      socket?.off(PLAY_GAME);
     };
-  }, [socket]);
+  }, [socket, isDrawer, roomRound, gameStatus, correctAnswers]);
 
   useEffect(() => {
     socket?.on(
@@ -144,7 +154,7 @@ export default function PlayingGameScreen() {
   }, [socket]);
 
   const isInterval = gameStatus !== PLAY_GAME;
-
+  
   return (
     <PaintContext.Provider
       value={{
@@ -174,7 +184,7 @@ export default function PlayingGameScreen() {
           <RankingBoard />
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
-            {isDrawer && (
+            {isDrawer && gameStatus === PLAY_GAME && (
               <div className="absolute w-[250px] text-center py-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
                 {roomRound?.word}
               </div>

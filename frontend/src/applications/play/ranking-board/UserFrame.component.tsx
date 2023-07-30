@@ -54,8 +54,11 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                 onClick={() => handleLinkClick(user)}
               >
                 {user.id === me?.id && (
-                  <div className="absolute top-0 left-1/4 rotate-90">
-                    <Play size={14} fill='#000' />
+                  <div className={cn("absolute left-[65px] 2xl:left-[74px] rotate-90", {
+                    "top-0": _index === 0,
+                    "top-1": _index !== 0,
+                  })}>
+                    <Play size={14} fill='#FFC95F' />
                   </div>
                 )}
                 <div className="flex items-center w-full space-x-3">
@@ -76,9 +79,9 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                     className={cn(
                       'flex items-center space-x-4 justify-between w-full',
                       {
+                        ' text-[#FFB84C] font-bold': user.id === me?.id,
                         'text-blue-600 font-bold':
                           user.id === roomRound?.painter,
-                        ' font-bold': user.id === me?.id,
                         'text-green-500': correctAnswers.includes(user.id),
                       }
                     )}

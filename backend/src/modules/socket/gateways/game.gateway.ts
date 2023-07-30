@@ -7,43 +7,18 @@ import {
 import { SocketGateway } from './socket.gateway';
 import { SocketClient } from '../socket.class';
 import {
-  GAME_PLAY,
+  GAME_INTERVAL_SHOW_WORD_CHANNEL,
+  GAME_NEW_TURN_CHANNEL,
   GAME_PROGRESS_CHANNEL,
   GAME_START_CHANNEL,
   GAME_UPDATE_RANKING_CHANNEL,
+  GAME_WAIT_PLAYERS_CHANNEL,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
 
 export class GameGateway extends SocketGateway {
-  // @SubscribeMessage(GAME_START_CHANNEL)
-  // async handleStartGame(
-  //   @MessageBody() codeRoom: string,
-  //   @ConnectedSocket() client: SocketClient,
-  // ) {
-  //   const room = await this.roomService.getRoomByCodeRoom(codeRoom);
-
-  //   if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-
-  //   let roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
-  //   if (roundOfRoom) {
-  //     const { endedAt, painterRound, startedAt, word } =
-  //       await this.roomRoundService.initRoundInfomation(room);
-  //     roundOfRoom = await this.roomRoundService.updateRoomRound({
-  //       ...roundOfRoom,
-  //       word,
-  //       ended_at: endedAt,
-  //       started_at: startedAt,
-  //       ...painterRound,
-  //     });
-  //   } else {
-  //     roundOfRoom = await this.roomService.initRoomRound(room);
-  //   }
-
-  //   await this.roomService.updateRoomStatus(room, 'game-start');
-  //   this.server.in(codeRoom).emit(GAME_PLAY, roundOfRoom);
-  // }
-  @SubscribeMessage(GAME_START_CHANNEL)
-  async handleStartGame(
+  @SubscribeMessage(GAME_NEW_TURN_CHANNEL)
+  async handleNewTurn(
     @MessageBody() codeRoom: string,
     @ConnectedSocket() client: SocketClient,
   ) {
@@ -60,14 +35,30 @@ export class GameGateway extends SocketGateway {
         word,
         ended_at: endedAt,
         started_at: startedAt,
-        ...painterRound,
+        painter: roundOfRoom.next_painter,
+        next_painter:
+          [painterRound.next_painter, painterRound.painter].find(
+            (painter) => painter !== roundOfRoom.next_painter,
+          ) ?? roundOfRoom.painter,
       });
     } else {
       roundOfRoom = await this.roomService.initRoomRound(room);
     }
 
-    await this.roomService.updateRoomStatus(room, 'game-start');
-    this.server.in(codeRoom).emit(GAME_PLAY, roundOfRoom);
+    await this.roomService.updateRoomStatus(room, 'new-turn');
+    this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
+  }
+  @SubscribeMessage(GAME_START_CHANNEL)
+  async handleStartGame(
+    @MessageBody() codeRoom: string,
+    @ConnectedSocket() client: SocketClient,
+  ) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    await this.roomService.updateRoomStatus(room, GAME_START_CHANNEL);
+    this.server.in(codeRoom).emit(GAME_START_CHANNEL);
   }
 
   @SubscribeMessage(GAME_PROGRESS_CHANNEL)
@@ -93,5 +84,35 @@ export class GameGateway extends SocketGateway {
         ),
       ),
     );
+  }
+
+  @SubscribeMessage(GAME_INTERVAL_SHOW_WORD_CHANNEL)
+  async handleGameIntervalShowWord(
+    @MessageBody() codeRoom: string,
+    @ConnectedSocket() client: SocketClient,
+  ) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    await this.roomService.updateRoomStatus(
+      room,
+      GAME_INTERVAL_SHOW_WORD_CHANNEL,
+    );
+  }
+
+  @SubscribeMessage(GAME_WAIT_PLAYERS_CHANNEL)
+  async handleGameWaitPlayers(
+    @MessageBody() codeRoom: string,
+    @ConnectedSocket() client: SocketClient,
+  ) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    await Promise.all([
+      this.roomUserService.resetRoomUsersScore(room),
+      this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
+    ]);
   }
 }

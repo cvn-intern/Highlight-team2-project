@@ -105,4 +105,17 @@ export class RoomUserService {
   async updateRoomUserScore(userId: number, score: number) {
     return this.roomUserRepository.update({ user_id: userId }, { score });
   }
+
+  async resetRoomUsersScore(room: Room) {
+    const participants: Array<Participant> = await this.getListUserOfRoom(room);
+    if (participants.length === 0) return;
+    await Promise.all(
+      participants.map((participant) =>
+        this.roomUserRepository.update(
+          { user_id: participant.id },
+          { score: 0 },
+        ),
+      ),
+    );
+  }
 }
