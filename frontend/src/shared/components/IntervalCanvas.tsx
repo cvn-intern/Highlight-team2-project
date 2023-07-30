@@ -12,7 +12,6 @@ export const INTERVAL_INACTIVE = "inactive";
 export const START_GAME = "start-game";
 export const WAIT_FOR_OTHER_PLAYERS = "wait-for-players";
 export const PLAY_GAME = "game-start";
-
 export const QUALIFY_TO_START_CHANNEL = "qualify-to-start";
 
 const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }) => {
@@ -21,7 +20,11 @@ const IntervalCanvas = ({ status = INTERVAL_SHOW_WORD, hidden = true }) => {
 
   useEffect(() => {
     socket?.on(QUALIFY_TO_START_CHANNEL, (canStart: boolean) => {
-      if (canStart) setGameStatus(START_GAME);
+      if (canStart){
+        setGameStatus(START_GAME);
+      }else {
+        setGameStatus(WAIT_FOR_OTHER_PLAYERS);
+      }
     });
 
     return () => {

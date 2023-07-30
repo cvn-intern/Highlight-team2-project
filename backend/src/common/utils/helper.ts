@@ -1,7 +1,7 @@
 import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, ANSWER_WRONG, MINIMUM_CHAR_WRONG } from 'src/modules/socket/constant';
 const fs = require('fs');
 
-const PATH_FOLDER_AVATAR = 'src/common/public/avatars';
+const PATH_FOLDER_AVATAR = 'src/public/avatars';
 
 export const randomString = (length: number): string => {
   const result: string = (Math.random() + 1).toString(36).substring(length);

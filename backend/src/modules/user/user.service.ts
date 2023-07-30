@@ -70,4 +70,10 @@ export class UserService {
 
     return !!check;
   }
+
+  async isGuest(userId: number): Promise<boolean> {
+    const user: User = await this.getUserById(userId);
+
+    return user.is_guest;
+  }
 }

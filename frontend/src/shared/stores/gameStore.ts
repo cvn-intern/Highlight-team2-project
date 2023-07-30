@@ -34,7 +34,7 @@ interface GameState {
 export const useGameStore = create<GameState>((set) => ({
   participants: [],
   maxPlayer: 0,
-  gameStatus: "wait-for-players",
+  gameStatus: WAIT_FOR_OTHER_PLAYERS,
   roomRound: null,
   isDrawer: false,
   setParticipants: (data) => set((state) => ({ ...state, participants: data })),

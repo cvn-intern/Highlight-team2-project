@@ -28,6 +28,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(AuthorizeJWT)
   @Get('/avatars')
   async getAvatars(
     @Res() response: Response,

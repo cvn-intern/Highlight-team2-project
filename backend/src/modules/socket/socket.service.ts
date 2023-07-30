@@ -10,6 +10,7 @@ import { RoomService } from '../room/room.service';
 import { PARTICIPANTS_CHANNEL, QUALIFY_TO_START_CHANNEL } from './constant';
 import { RoomInterface } from '../room/room.interface';
 import { Room } from '../room/room.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class SocketService {
@@ -19,6 +20,7 @@ export class SocketService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private roomService: RoomService,
+    private userService: UserService,
   ) { }
 
   async storeClientConnection(client: Socket) {
@@ -27,9 +29,9 @@ export class SocketService {
       const idUser: number = payload.id;
 
       this.logger.log(`Client ${client.id} connected!`);
-      const token = await this.redisService.getObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-      await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
+      const token = this.getTokenFromSocket(client);
 
+      await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
       return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay);
     } catch (error) {
       this.logger.error(error);
@@ -51,7 +53,10 @@ export class SocketService {
 
       this.logger.log(`Client ${client.id} disconnected!`);
 
-      return await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:ROOM`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
+      await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
     } catch (error) {
       this.logger.error(error);
     }
@@ -93,6 +98,12 @@ export class SocketService {
 
   async checkLoginMultipleTab(client: Socket): Promise<boolean> {
     const userId = this.getUserIdFromSocket(client)
+    const isGuest = await this.userService.isGuest(userId);
+
+    if(isGuest) {
+      return false;
+    }
+    
     const socketId: string = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
 
     if (socketId && socketId !== client.id) {

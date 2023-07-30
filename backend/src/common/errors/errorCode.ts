@@ -19,4 +19,8 @@ export const errorsSocket = {
     code: 'ROOM_FULL',
     message: 'Room is full!',
   },
+  USER_NOT_FOUND: {
+    code: 'USER_NOT_FOUND',
+    message: 'User not found!',
+  },
 }
