@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import ShareRoomLinkDialog from "./ShareRoomLinkDialog";
 import RoomInfomationDialog from "./RoomInfomationDialog";
+import { RoomType } from "../types/room";
 
 type ActionButtonsProps = {
   roomInfo?: RoomType;

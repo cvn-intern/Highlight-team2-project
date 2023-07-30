@@ -2,69 +2,40 @@ import React, { useEffect } from 'react';
 import { Progress } from './shadcn-ui/progress';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
-import { useParams } from 'react-router-dom';
+import { GAME_DRAWER_OUT_CHANNEL, GAME_PROGRESS } from './IntervalCanvas';
 
 interface Props {
   maximumTimeInMiliSeconds?: number;
   hanldeWhenTimeOut?: () => void;
 }
 
-const GAME_PROGRESS = 'game-progress'
-
-export function ProgressPlayTime({
-  maximumTimeInMiliSeconds = 60 * 60 * 1000,
-  hanldeWhenTimeOut = () => {},
-}: Props) {
+export function ProgressPlayTime({ hanldeWhenTimeOut = () => {} }: Props) {
   const [progress, setProgress] = React.useState(100);
-  const MIN_PROGRESS_PERCENTAGE = 0;
-  const MAX_PROGRESS_PERCENTAGE = 100;
-  const TIME_PERSTEP = 100;
-
+  
   const { socket } = useSocketStore();
-  const { gameStatus, isHost } = useGameStore();
-  const { codeRoom } = useParams();
+  const { gameStatus } = useGameStore();
 
   useEffect(() => {
     if (gameStatus !== 'game-start') setProgress(100);
   }, [gameStatus]);
 
-  const number_percentage_to_decrease_per_step =
-    (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / maximumTimeInMiliSeconds;
-
-  let timer: any;
-  React.useEffect(() => {
-    if (!isHost) return;
-    if (timer) clearInterval(timer);
-    timer = setInterval(() => {
-      setProgress((prevProgress) => {
-        if (prevProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(timer);
-
-          hanldeWhenTimeOut();
-          return prevProgress;
-        }
-        const newProgress =
-          prevProgress - number_percentage_to_decrease_per_step;
-        socket?.emit(GAME_PROGRESS, { codeRoom, progress: newProgress });
-        return newProgress;
-      });
-    }, TIME_PERSTEP);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [socket, isHost, gameStatus]);
-  console.log({isHost, gameStatus})
   useEffect(() => {
-    if (isHost || !socket) return;
-    socket.on(GAME_PROGRESS, (progress: number) => {
+    socket?.on(GAME_PROGRESS, (progress: number) => {
       setProgress(progress);
-      if (progress <= 0) return hanldeWhenTimeOut();
+
+      if (progress <= 0) {
+        return hanldeWhenTimeOut();
+      }
     });
+
+    socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
+     
+    });
+
     return () => {
-      socket.off(GAME_PROGRESS);
+      socket?.off(GAME_PROGRESS);
     };
-  }, [socket, isHost]);
+  }, [socket, gameStatus]);
 
   return (
     <Progress

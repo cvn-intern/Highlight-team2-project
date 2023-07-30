@@ -29,7 +29,7 @@ interface GameState {
   setParticipants: (participants: Participant[]) => void;
   setMaxPlayer: (maxPlayer: number) => void;
   setGameStatus: (gameStatus: GameStatus) => void;
-  setRoomRound: (roomRound: RoomRound) => void;
+  setRoomRound: (roomRound: RoomRound | null) => void;
   setIsDrawer: (isDrawer: boolean) => void;
   setIsHost: (isDrawer: boolean) => void;
   setCorrectAnswers: (correctAnswers: number[]) => void

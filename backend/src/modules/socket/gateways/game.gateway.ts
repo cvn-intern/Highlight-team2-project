@@ -8,6 +8,7 @@ import { SocketGateway } from './socket.gateway';
 import { SocketClient } from '../socket.class';
 import {
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
+  GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
   GAME_PROGRESS_CHANNEL,
   GAME_START_CHANNEL,
@@ -40,12 +41,12 @@ export class GameGateway extends SocketGateway {
           [painterRound.next_painter, painterRound.painter].find(
             (painter) => painter !== roundOfRoom.next_painter,
           ) ?? roundOfRoom.painter,
+        current_round: roundOfRoom.current_round + 1,
       });
     } else {
       roundOfRoom = await this.roomService.initRoomRound(room);
     }
-
-    await this.roomService.updateRoomStatus(room, 'new-turn');
+    await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
     this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
   }
   @SubscribeMessage(GAME_START_CHANNEL)
@@ -56,7 +57,6 @@ export class GameGateway extends SocketGateway {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-
     await this.roomService.updateRoomStatus(room, GAME_START_CHANNEL);
     this.server.in(codeRoom).emit(GAME_START_CHANNEL);
   }
@@ -66,7 +66,21 @@ export class GameGateway extends SocketGateway {
     @MessageBody() data: GameProgressUpdate,
     @ConnectedSocket() client: SocketClient,
   ) {
-    this.server.in(data.codeRoom).emit(GAME_PROGRESS_CHANNEL, data.progress);
+    const MIN_PROGRESS_PERCENTAGE = 0;
+    const MAX_PROGRESS_PERCENTAGE = 100;
+    const TIME_PERSTEP = 100;
+
+    const number_percentage_to_decrease_per_step =
+      (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / data.maximumTimeInMiliSeconds;
+
+    this.socketService.setProgressInterval(
+      MIN_PROGRESS_PERCENTAGE,
+      number_percentage_to_decrease_per_step,
+      TIME_PERSTEP,
+      (progress: number) => {
+        this.server.in(data.codeRoom).emit(GAME_PROGRESS_CHANNEL, progress);
+      },
+    );
   }
 
   @SubscribeMessage(GAME_UPDATE_RANKING_CHANNEL)
@@ -94,6 +108,7 @@ export class GameGateway extends SocketGateway {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+    this.server.in(codeRoom).emit(GAME_INTERVAL_SHOW_WORD_CHANNEL);
 
     await this.roomService.updateRoomStatus(
       room,
@@ -113,6 +128,7 @@ export class GameGateway extends SocketGateway {
     await Promise.all([
       this.roomUserService.resetRoomUsersScore(room),
       this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
+      this.roomRoundService.deleteRoomRound(room.id),
     ]);
   }
 }

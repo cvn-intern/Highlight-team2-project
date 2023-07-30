@@ -1,6 +1,6 @@
 import { GameStatus } from "../stores/gameStore";
 
-type RoomType = {
+export type RoomType = {
     code_room: string;
     created_at: Date;
     id: number;

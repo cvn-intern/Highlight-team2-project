@@ -11,6 +11,8 @@ import {
   START_GAME,
   GAME_NEW_TURN_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS,
+  INTERVAL_DURATION_MILISECONDS,
+  GAME_PROGRESS,
 } from "./IntervalCanvas";
 import { Button } from "./shadcn-ui/Button";
 import { useGameStore } from "../stores/gameStore";
@@ -24,8 +26,9 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
-    if(!isHost) return
+    if(!isHost || !socket) return
     socket?.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
+    socket?.emit(GAME_PROGRESS, {codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS})
   };
 
   const painter = useMemo(() => {

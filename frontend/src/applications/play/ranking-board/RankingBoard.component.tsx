@@ -40,7 +40,6 @@ const RankingBoard = () => {
     socket?.on('participants', (data: RankingUser) => {
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
-
       const hostUser = _.find(
         data.participants,
         (participant) => participant.is_host
@@ -54,6 +53,7 @@ const RankingBoard = () => {
         setParticipants(
           [...data.participants].map((participant) => ({ ...participant, score: 0 }))
         );
+        setRoomRound
         socket.emit(WAIT_FOR_OTHER_PLAYERS, codeRoom);
       }
 
@@ -74,7 +74,6 @@ const RankingBoard = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, gameStatus, codeRoom, participants, user]);
-
   useEffect(() => {
     socket?.on(
       GAME_UPDATE_RANKING,

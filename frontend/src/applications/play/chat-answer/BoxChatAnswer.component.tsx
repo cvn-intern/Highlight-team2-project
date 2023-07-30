@@ -250,7 +250,7 @@ const BoxChatAnswer = () => {
             listChat={listChat}
             isDisabledInput={
               (gameStatus === PLAY_GAME && isDrawer) ||
-              correctAnswers.includes(user?.id!)
+              (gameStatus === PLAY_GAME && correctAnswers.includes(user?.id!))
             }
           />
         </div>

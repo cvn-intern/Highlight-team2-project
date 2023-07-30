@@ -74,8 +74,26 @@ export class ChatGateway
           room = await this.roomService.changeHost(codeRoom);
         }
 
+        await this.socketService.checkAndEmitToHostRoom(this.server, room);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
+
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
+        await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
+        await this.redisService.deleteObjectByKey(
+          `USER:${user.id}:ACCESSTOKEN`,
+        );
+        await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
+
         let roomRound = await this.roomRoundService.getRoundOfRoom(idRoom);
-        if (roomRound && roomRound.painter === client.user.id) {
+        if (!roomRound) return;
+
+        const participants = await this.roomUserService.getListUserOfRoom(room);
+        if (participants.length === 1) {
+          await this.roomRoundService.deleteRoomRound(idRoom);
+          return;
+        }
+
+        if (roomRound.painter === client.user.id) {
           const { endedAt, painterRound, startedAt, word } =
             await this.roomRoundService.initRoundInfomation(room);
           roomRound = await this.roomRoundService.updateRoomRound({
@@ -95,15 +113,6 @@ export class ChatGateway
             roomRound,
           );
         }
-
-        await this.socketService.checkAndEmitToHostRoom(this.server, room);
-        await this.socketService.sendListParticipantsInRoom(this.server, room);
-        await this.redisService.deleteObjectByKey(`USER:${user.id}:ROOM`);
-        await this.redisService.deleteObjectByKey(`USER:${user.id}:SOCKET`);
-        await this.redisService.deleteObjectByKey(
-          `USER:${user.id}:ACCESSTOKEN`,
-        );
-        await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
       }
     } catch (error) {
       this.logger.error(error);

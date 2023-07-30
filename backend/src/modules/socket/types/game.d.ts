@@ -1,6 +1,6 @@
 type GameProgressUpdate = {
   codeRoom: string;
-  progress: number;
+  maximumTimeInMiliSeconds: number;
 };
 
 type GameRankingUpdate = {

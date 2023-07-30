@@ -1,12 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import useDisableBackButton from '@/shared/hooks/useDisableBackButton';
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useCallback, useEffect, useRef, useState } from 'react';
 // Variables
 import { DEFAULT_BLACK } from './shared/constants/color';
 // Components
 import MainLayout from '@/shared/components/MainLayout';
 import BoxChatAnswer from './chat-answer/BoxChatAnswer.component';
-import Canvas from './draw-screen/Canvas.component';
+import Canvas, {
+  ROUND_DURATION_MILISECONDS,
+} from './draw-screen/Canvas.component';
 import PaintTools from './draw-screen/PaintTools.component';
 import RankingBoard from './ranking-board/RankingBoard.component';
 // Types
@@ -20,9 +22,14 @@ import {
 import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
+  GAME_PROGRESS,
   GAME_STATUS_CHANNEL,
+  INTERVAL_DURATION_MILISECONDS,
   INTERVAL_NEW_TURN,
+  INTERVAL_SHOW_WORD,
   PLAY_GAME,
+  START_GAME,
+  WAIT_FOR_OTHER_PLAYERS,
 } from '@/shared/components/IntervalCanvas';
 import useToaster from '@/shared/hooks/useToaster';
 import { rgbaToHex } from '@/shared/lib/colors';
@@ -36,6 +43,7 @@ import { resetCanvas } from './draw-screen/draw.helper';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 import { RoomStatusType, RoomType } from '@/shared/types/room';
 import { NEW_PLAYER } from './shared/constants/drawEvent';
+import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -61,9 +69,10 @@ export default function PlayingGameScreen() {
     setGameStatus,
     roomRound,
     isDrawer,
+    isHost,
     setIsDrawer,
     correctAnswers,
-    setCorrectAnswers
+    setCorrectAnswers,
   } = useGameStore();
   const { socket } = useSocketStore();
   const { user } = useUserStore();
@@ -127,38 +136,40 @@ export default function PlayingGameScreen() {
       setGameStatus(INTERVAL_NEW_TURN);
       setRoomRound(data);
       setIsDrawer(data.painter === user?.id);
-      setCorrectAnswers([])
+      setCorrectAnswers([]);
     });
 
     socket?.on(PLAY_GAME, () => {
       setGameStatus(PLAY_GAME);
     });
 
+    socket?.on(INTERVAL_SHOW_WORD, () => {
+      setGameStatus(INTERVAL_SHOW_WORD);
+      setIsDrawer(false);
+    });
+
     return () => {
       socket?.off(GAME_NEW_TURN_CHANNEL);
       socket?.off(PLAY_GAME);
+      socket?.off(INTERVAL_SHOW_WORD);
     };
-  }, [socket, isDrawer, roomRound, gameStatus, correctAnswers]);
+  }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
 
   useEffect(() => {
-    socket?.on(
-      GAME_STATUS_CHANNEL,
-      ({ success, status }: RoomStatusType) => {
-        if (!success) return;
-        if (status === PLAY_GAME) socket.emit(NEW_PLAYER, codeRoom);
-        setGameStatus(status!)
-      }
-    );
+    socket?.on(GAME_STATUS_CHANNEL, ({ success, status }: RoomStatusType) => {
+      if (!success) return;
+      if (status === PLAY_GAME) socket.emit(NEW_PLAYER, codeRoom);
+      setGameStatus(status!);
+    });
 
     socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
-      console.log({participants})
       useToaster({
-        message: "Drawer is out. The round restarts!",
-        type: "warning",
-        icon: "😅",
+        message: 'Drawer is out. The round restarts!',
+        type: 'warning',
+        icon: '😅',
         bodyClassName: 'text-sm font-semibold',
-      })
-    })
+      });
+    });
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
@@ -167,7 +178,36 @@ export default function PlayingGameScreen() {
   }, [socket, participants]);
 
   const isInterval = gameStatus !== PLAY_GAME;
-  
+
+  const handleProgressTimeout = useCallback(() => {
+    if (!isHost || !socket || !codeRoom) return;
+    if (gameStatus === PLAY_GAME) {
+      socket?.emit(INTERVAL_SHOW_WORD, codeRoom);
+      socket?.emit(GAME_PROGRESS, {
+        codeRoom,
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+      });
+      return;
+    }
+
+    if (gameStatus === INTERVAL_NEW_TURN) {
+      socket.emit(PLAY_GAME, codeRoom);
+      socket.emit(GAME_PROGRESS, {
+        codeRoom,
+        maximumTimeInMiliSeconds: ROUND_DURATION_MILISECONDS,
+      });
+      return;
+    }
+    if (gameStatus === INTERVAL_SHOW_WORD) {
+      socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
+      socket.emit(GAME_PROGRESS, {
+        codeRoom,
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+      });
+      return;
+    }
+  }, [gameStatus]);
+
   return (
     <PaintContext.Provider
       value={{
@@ -202,18 +242,21 @@ export default function PlayingGameScreen() {
                 {roomRound?.word}
               </div>
             )}
-            <Canvas
-              isDrawer={isDrawer}
-              hidden={isInterval}
-            />
+            <Canvas isDrawer={isDrawer} hidden={isInterval} />
             {gameStatus && isInterval && (
-              <IntervalCanvas
-                status={gameStatus}
-                hidden={!isInterval}
-              />
+              <IntervalCanvas status={gameStatus} hidden={!isInterval} />
             )}
             <BoxChatAnswer />
+            {gameStatus !== WAIT_FOR_OTHER_PLAYERS && gameStatus !== START_GAME && (
+              <div className="absolute top-[380px] z-[999999] w-full">
+                <ProgressPlayTime
+                  hanldeWhenTimeOut={handleProgressTimeout}
+                  maximumTimeInMiliSeconds={INTERVAL_DURATION_MILISECONDS}
+                />
+              </div>
+            )}
           </div>
+
           {isDrawer && <PaintTools />}
         </div>
       </MainLayout>

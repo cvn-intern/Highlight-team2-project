@@ -4,18 +4,14 @@ import { useContext, useEffect } from 'react';
 import cursorsIconMap from '../shared/constants/cursorsIconMap';
 // Functions
 import {
-  INTERVAL_SHOW_WORD,
   PLAY_GAME
 } from '@/shared/components/IntervalCanvas';
-import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
 import { useGameStore } from '@/shared/stores/gameStore';
 import { useSocketClearCanvasEvent } from '../shared/hooks/useSocketClearCanvasEvent';
 import { useSocketHandleCanvasEvent } from '../shared/hooks/useSocketHandleCanvasEvents';
 import { getPointFromEvent, resetCanvas } from './draw.helper';
-import { useSocketStore } from '@/shared/stores/socketStore';
-import { useParams } from 'react-router-dom';
 
-const ROUND_DURATION_MILISECONDS = 20000
+export const ROUND_DURATION_MILISECONDS = 20000
 
 type CanvasProps = {
   hidden: boolean
@@ -27,19 +23,10 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;
 
-  const {codeRoom} = useParams()
-
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
     useSocketHandleCanvasEvent();
   const { handleClickClearCanvas } = useSocketClearCanvasEvent();
-  const { setGameStatus, setIsDrawer, gameStatus, isHost } = useGameStore(); 
-  const { socket } = useSocketStore(); 
-
-  const hanldeWhenTimeOut = () => {
-    setGameStatus(INTERVAL_SHOW_WORD);
-    setIsDrawer(false);
-    if(isHost) socket?.emit(INTERVAL_SHOW_WORD, codeRoom)
-  };
+  const {  gameStatus } = useGameStore(); 
 
   useEffect(() => {
     if (!canvasRef || !canvasRef.current) return;
@@ -80,9 +67,7 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
           handleMouseUpOrLeave();
         }}
       ></canvas>
-      {gameStatus === 'game-start' && (
-        <ProgressPlayTime maximumTimeInMiliSeconds={ROUND_DURATION_MILISECONDS} hanldeWhenTimeOut={hanldeWhenTimeOut} />
-      )}
+     
     </div>
   );
 };
