@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import JWTManager from "@/shared/lib/jwt"
 
 export interface IUser{
   id: number
@@ -26,6 +27,6 @@ export const useUserStore = create<UserState>((set) => ({
   },
   deleteUser: () => {
     set((state) => ({ ...state, user: null }));
-    window.sessionStorage.removeItem('user');
+    JWTManager.deleteToken()
   },
 }));
