@@ -42,7 +42,7 @@ import { RoomStatusType, RoomType } from '@/shared/types/room';
 import { useParams } from 'react-router-dom';
 import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
-import { DRAWER_CLEAR_CANVAS, NEW_PLAYER } from './shared/constants/drawEvent';
+import { NEW_PLAYER } from './shared/constants/drawEvent';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
