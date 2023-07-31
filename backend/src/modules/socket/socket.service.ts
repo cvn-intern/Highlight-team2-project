@@ -50,9 +50,11 @@ export class SocketService {
       cb(progress);
     }, timeStep);
   }
+  
   clearProgressInterval() {
     this.stopProgress = true;
   }
+
   async storeClientConnection(client: Socket) {
     try {
       const payload = await this.extractPayload(client);
