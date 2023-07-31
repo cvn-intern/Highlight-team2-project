@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   Query,
   Res,
   UseGuards,
@@ -30,7 +31,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getRooms(
+  async getRoomsByQuery(
     @Query('theme') theme: string,
     @Query('language_code') language_code: string,
     @Query('search') search: string,
@@ -144,6 +145,26 @@ export class RoomController {
         participants: users,
         max_player: room.max_player,
       });
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Put()
+  async updateRoom(
+    @Body(new ValidationPipe()) roomInformation: CreateRoomDTO,
+    @Res() response: Response,
+    @IdUser() idUser: number,
+  ) {
+    try {
+      const newRoom: Room = await this.roomService.createNewRoom({
+        ...roomInformation,
+        host_id: idUser,
+      });
+
+      return response.status(HttpStatus.OK).json(newRoom);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);
