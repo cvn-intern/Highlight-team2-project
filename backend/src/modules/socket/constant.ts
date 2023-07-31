@@ -50,3 +50,8 @@ export const GAME_DRAWER_IS_OUT = 'drawer-is-out';
 export const GAME_PLAY = 'game-play';
 export const GAME_STATUS = 'game-status';
 export const GAME_NEW_TURN = 'new-turn';
+
+export const MIN_PROGRESS_PERCENTAGE = 0;
+export const MAX_PROGRESS_PERCENTAGE = 100;
+export const TIME_PERSTEP = 100;
+export const INTERVAL_DURATION_MILISECONDS = 10000;
