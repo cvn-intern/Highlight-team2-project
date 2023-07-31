@@ -30,7 +30,6 @@ import { errorsSocket } from 'src/common/errors/errorCode';
 import { RoomRound } from 'src/modules/room-round/roomRound.entity';
 
 export class ChatGateway extends SocketGateway {
-
   @SubscribeMessage(JOIN_ROOM_CHANNEL)
   async handleJoinRoom(
     @MessageBody() codeRoom: string,
