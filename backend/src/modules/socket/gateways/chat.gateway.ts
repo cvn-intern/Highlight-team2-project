@@ -1,15 +1,33 @@
-import { SubscribeMessage, MessageBody, ConnectedSocket, WsException } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  MessageBody,
+  ConnectedSocket,
+  WsException,
+} from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { checkTypeAnswer, extractIdRoom } from '../../../common/utils/helper';
-import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, BLOCK_MESSAGE, CHAT_ROOM_CHANNEL, CHAT_ROOM_TYPE, JOIN_ROOM_CHANNEL, JOIN_ROOM_CONTENT, JOIN_ROOM_TYPE, LEAVE_ROOM_CHANNEL, LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE, QUALIFY_TO_START_CHANNEL, SERVER_BLOCKED_MESSAGE_CONTENT } from '../constant';
+import {
+  ANSWER_APPROXIMATELY,
+  ANSWER_CORRETLY,
+  BLOCK_MESSAGE,
+  CHAT_ROOM_CHANNEL,
+  CHAT_ROOM_TYPE,
+  GAME_STATUS,
+  JOIN_ROOM_CHANNEL,
+  JOIN_ROOM_CONTENT,
+  JOIN_ROOM_TYPE,
+  LEAVE_ROOM_CHANNEL,
+  LEAVE_ROOM_CONTENT,
+  LEAVE_ROOM_TYPE,
+  SERVER_BLOCKED_MESSAGE_CONTENT,
+} from '../constant';
 import { SocketClient } from '../socket.class';
 import { Chat } from '../types/chat';
 import { MessageBodyType } from '../types/messageBody';
 import { Room } from 'src/modules/room/room.entity';
 import { errorsSocket } from 'src/common/errors/errorCode';
 import { RoomRound } from 'src/modules/room-round/roomRound.entity';
-import e from 'express';
 
 export class ChatGateway extends SocketGateway {
 
@@ -41,6 +59,11 @@ export class ChatGateway extends SocketGateway {
       }
 
       client.join(room.code_room);
+      await this.redisService.setObjectByKeyValue(
+        `USER:${client.user.id}:ROOM`,
+        codeRoom,
+        expireTimeOneDay,
+      );
 
       const messageContent: Chat = {
         user: client.user.nickname,
@@ -54,10 +77,8 @@ export class ChatGateway extends SocketGateway {
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, room.code_room, expireTimeOneDay);
       await this.socketService.sendListParticipantsInRoom(this.server, room);
 
-      const isPlayingRoom = await this.roomService.checkStartGame(room.id);
-      if (!isPlayingRoom) {
-        await this.socketService.checkAndEmitToHostRoom(this.server, room);
-      }
+      const roomStatus = this.roomService.getRoomStatus(room);
+      this.server.to(client.id).emit(GAME_STATUS, roomStatus);
     } catch (error) {
       this.logger.error(error);
     }
@@ -129,11 +150,7 @@ export class ChatGateway extends SocketGateway {
         room = await this.roomService.changeHost(codeRoom);
       }
 
-      const isPlayingRoom = await this.roomService.checkStartGame(room.id);
-      if (!isPlayingRoom) {
-        await this.socketService.checkAndEmitToHostRoom(this.server, room);
-      }
-
+      await this.socketService.checkAndEmitToHostRoom(this.server, room);
       await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);

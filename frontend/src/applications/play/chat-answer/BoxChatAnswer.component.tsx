@@ -1,3 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { MAX_NUMBER_OF_CHARACTER } from '@/shared/constants';
+import { cn } from '@/shared/lib/utils';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useSocketStore } from '@/shared/stores/socketStore';
+import { useUserStore } from '@/shared/stores/userStore';
+import { throttle } from 'lodash';
+import { LucideIcon, MessageCircle, Pencil } from 'lucide-react';
 import {
   ChangeEvent,
   FormEvent,
@@ -5,18 +14,12 @@ import {
   useEffect,
   useRef,
   useState,
-} from "react";
-import { LucideIcon, MessageCircle, Pencil } from "lucide-react";
-import "./styles/style.css";
-import { iconsMap } from "../shared/constants/icons";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import { cn } from "@/shared/lib/utils";
-import { useParams } from "react-router-dom";
-import { MAX_NUMBER_OF_CHARACTER } from "@/shared/constants";
-import { throttle } from "lodash";
-import { covertMessage } from "./chatAnswer.helper";
-import { useUserStore } from "@/shared/stores/userStore";
-import { useGameStore } from "@/shared/stores/gameStore";
+} from 'react';
+import { useParams } from 'react-router-dom';
+import { iconsMap } from '../shared/constants/icons';
+import { GAME_UPDATE_RANKING, covertMessage } from './chatAnswer.helper';
+import './styles/style.css';
+import { PLAY_GAME } from '@/shared/components/IntervalCanvas';
 
 interface BoxProps {
   label: string;
@@ -53,7 +56,7 @@ interface MessageBodyInterface {
 
 const BoxChat = (props: BoxProps) => {
   const { icon: Icon } = props;
-  const [inputChat, SetInputChat] = useState("");
+  const [inputChat, SetInputChat] = useState('');
   const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
     MAX_NUMBER_OF_CHARACTER
   );
@@ -65,21 +68,21 @@ const BoxChat = (props: BoxProps) => {
   const { codeRoom } = useParams();
 
   const sendMessages = (message: string) => {
-    if (message.trim() === "") return;
+    if (message.trim() === '') return;
 
-    if (props.label === "chat") {
-      socket?.emit("chat-room", {
+    if (props.label === 'chat') {
+      socket?.emit('chat-room', {
         codeRoom: codeRoom,
         message,
       } as MessageBodyInterface);
     } else {
-      socket?.emit("answer-room", {
+      socket?.emit('answer-room', {
         codeRoom: codeRoom,
         message,
       } as MessageBodyInterface);
     }
 
-    SetInputChat("");
+    SetInputChat('');
   };
 
   const throttledSendMessages = useCallback(throttle(sendMessages, 300), []);
@@ -95,12 +98,10 @@ const BoxChat = (props: BoxProps) => {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [props.listChat]);
 
-  useEffect(() => {
-  }, [props.isDisabledInput])
+  useEffect(() => {}, [props.isDisabledInput]);
 
   return (
     <>
@@ -127,7 +128,7 @@ const BoxChat = (props: BoxProps) => {
                 disabled={props.label === 'answer' ? props.isDisabledInput : false}
                 value={inputChat}
                 onChange={handleInputText}
-                id={"box-input-" + props.label}
+                id={'box-input-' + props.label}
                 type="text"
                 placeholder={props.placeholder}
                 className={cn("block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]"
@@ -140,7 +141,7 @@ const BoxChat = (props: BoxProps) => {
               </span>
             </form>
             <label
-              htmlFor={"box-input-" + props.label}
+              htmlFor={'box-input-' + props.label}
               className="box-input-icon"
             >
               {Icon && <Icon />}
@@ -157,9 +158,15 @@ const BoxChatAnswer = () => {
   const { codeRoom } = useParams();
   const [listChat, setListChat] = useState<Array<Chat>>([]);
   const [listAnswer, setListAnswer] = useState<Array<Chat>>([]);
-  const [isDisabledInput, setIsDisabledInput] = useState<boolean>(false);
-  const {user} = useUserStore();
-  const {isDrawer} = useGameStore()
+  const { user } = useUserStore();
+  const {
+    participants,
+    isDrawer,
+    correctAnswers,
+    maxPlayer,
+    roomRound,
+    gameStatus,
+  } = useGameStore();
 
   useEffect(() => {
     if (!codeRoom) return;
@@ -174,9 +181,30 @@ const BoxChatAnswer = () => {
     });
 
     socket?.on(`${codeRoom}-answer`, (data: MessageReceiver) => {
-      const ANSWER_CORRETLY: number = 3;
+      const ANSWER_CORRETLY = 3;
       if (data.type === ANSWER_CORRETLY && data.user === user?.nickname) {
-        setIsDisabledInput(true);
+        const answers = [...correctAnswers, user.id];
+        const newParticipants = [...participants].map((participant) => {
+          if (participant.id === user.id) {
+            return {
+              ...participant,
+              score: participant.score + maxPlayer - correctAnswers.length,
+              answered_at: new Date(),
+            };
+          }
+          if (participant.id === roomRound?.painter) {
+            return {
+              ...participant,
+              score: participant.score + 2,
+            };
+          }
+          return participant;
+        });
+        socket.emit(GAME_UPDATE_RANKING, {
+          codeRoom,
+          correctAnswers: answers,
+          newParticipants,
+        });
       }
 
       const convertData: Chat = covertMessage(data);
@@ -194,7 +222,7 @@ const BoxChatAnswer = () => {
       socket?.off(`${codeRoom}-answer`);
       socket?.off(`${codeRoom}-leave`);
     };
-  }, [socket]);
+  }, [socket, participants, roomRound]);
 
   return (
     <>
@@ -205,7 +233,11 @@ const BoxChatAnswer = () => {
             placeholder="Hit answer here!"
             icon={Pencil}
             listChat={listAnswer}
-            isDisabledInput={isDrawer || isDisabledInput}
+            isDisabledInput={
+              (gameStatus === PLAY_GAME && isDrawer) ||
+              correctAnswers.includes(user?.id!) ||
+              gameStatus !== PLAY_GAME
+            }
           />
         </div>
         <div className="pl-2 border-l w-[50%]">
@@ -214,7 +246,10 @@ const BoxChatAnswer = () => {
             placeholder="Hit chat here!"
             icon={MessageCircle}
             listChat={listChat}
-            isDisabledInput={isDrawer || isDisabledInput}
+            isDisabledInput={
+              (gameStatus === PLAY_GAME && isDrawer) ||
+              (gameStatus === PLAY_GAME && correctAnswers.includes(user?.id!))
+            }
           />
         </div>
       </div>

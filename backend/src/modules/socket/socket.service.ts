@@ -7,10 +7,19 @@ import { expireTimeOneDay } from '../../common/variables/constVariable';
 import { SocketClient } from './socket.class';
 import { WsException } from '@nestjs/websockets';
 import { RoomService } from '../room/room.service';
-import { PARTICIPANTS_CHANNEL, QUALIFY_TO_START_CHANNEL } from './constant';
+import {
+  GAME_DRAWER_IS_OUT,
+  GAME_NEW_TURN,
+  GAME_NEW_TURN_CHANNEL,
+  PARTICIPANTS_CHANNEL,
+  QUALIFY_TO_START_CHANNEL,
+} from './constant';
 import { RoomInterface } from '../room/room.interface';
 import { Room } from '../room/room.entity';
 import { UserService } from '../user/user.service';
+import { RoomRound } from '../room-round/roomRound.entity';
+import { errorsSocket } from 'src/common/errors/errorCode';
+import { RoomRoundService } from '../room-round/roomRound.service';
 
 @Injectable()
 export class SocketService {
@@ -20,9 +29,30 @@ export class SocketService {
     private jwtService: JwtService,
     private configService: ConfigService,
     private roomService: RoomService,
+    private roomRoundService: RoomRoundService,
     private userService: UserService,
-  ) { }
-
+  ) {}
+  private stopProgress = false;
+  public setProgressInterval(
+    minProgressPercentage: number,
+    percentageDescreasePerStep: number,
+    timeStep: number,
+    cb: (progress: number) => void,
+  ) {
+    this.stopProgress = false;
+    let progress = 100;
+    const progressInterval = setInterval(() => {
+      if (this.stopProgress || progress <= minProgressPercentage) {
+        clearInterval(progressInterval);
+        return;
+      }
+      progress = progress - percentageDescreasePerStep;
+      cb(progress);
+    }, timeStep);
+  }
+  clearProgressInterval() {
+    this.stopProgress = true;
+  }
   async storeClientConnection(client: Socket) {
     try {
       const payload = await this.extractPayload(client);
@@ -39,9 +69,11 @@ export class SocketService {
   }
 
   async checkTokenValidSocket(client: Socket): Promise<boolean> {
-    const userId = this.getUserIdFromSocket(client)
+    const userId = this.getUserIdFromSocket(client);
     const tokenOfSocket: string = await this.getTokenFromSocket(client);
-    const validToken: string = await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
+    const validToken: string = await this.redisService.getObjectByKey(
+      `USER:${userId}:ACCESSTOKEN`,
+    );
 
     return tokenOfSocket === validToken ? true : false;
   }
@@ -91,7 +123,9 @@ export class SocketService {
   }
 
   async checkInBlockList(client: Socket): Promise<boolean> {
-    const check: string = await this.redisService.getObjectByKey(`BLOCKLIST:SOCKET:${client.id}`);
+    const check: string = await this.redisService.getObjectByKey(
+      `BLOCKLIST:SOCKET:${client.id}`,
+    );
 
     return check ? true : false;
   }
@@ -120,17 +154,35 @@ export class SocketService {
   async checkAndEmitToHostRoom(server: Server, room: RoomInterface) {
     const isQualified = await this.roomService.qualifiedToStart(room.code_room);
 
-    const hostRoomSocketId = await this.redisService.getObjectByKey(`USER:${room.host_id}:SOCKET`);
+    const hostRoomSocketId = await this.redisService.getObjectByKey(
+      `USER:${room.host_id}:SOCKET`,
+    );
 
     server.to(hostRoomSocketId).emit(QUALIFY_TO_START_CHANNEL, isQualified);
   }
 
   async sendListParticipantsInRoom(server: Server, room: Room) {
-    const participants: Array<Participant> = await this.roomService.getPartipantsInRoom(room);
-
+    const [participants, roomRound] = await Promise.all([
+      this.roomService.getPartipantsInRoom(room),
+      this.roomRoundService.getRoundOfRoom(room.id),
+    ]);
     server.in(room.code_room).emit(PARTICIPANTS_CHANNEL, {
       participants,
       max_player: room.max_player,
+      roomRound,
     });
+  }
+
+  async updateRoomRoundWhenDrawerOut(
+    server: Server,
+    codeRoom: string,
+    roomRound: RoomRound,
+  ) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+    this.clearProgressInterval();
+    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+    server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+    await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 }

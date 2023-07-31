@@ -8,13 +8,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import ShareRoomLinkDialog from "./ShareRoomLinkDialog";
 import RoomInfomationDialog from "./RoomInfomationDialog";
+import { RoomType } from "../types/room";
 
 type ActionButtonsProps = {
   roomInfo?: RoomType;
 };
 
 const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
-  const [isSound, setIsSound] = useState(true);
+  const [isSound, setIsSound] = useState(false);
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const navigate = useNavigate();

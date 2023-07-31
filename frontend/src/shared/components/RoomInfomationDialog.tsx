@@ -9,6 +9,7 @@ import {
 import SettingIcon from "@/shared/assets/icons/setting-icon.png";
 import TooltipIcon from "./TooltipIcon";
 import { AlertCircle } from "lucide-react";
+import { RoomType } from "../types/room";
 
 type RoomInfomationDialogProps = {
     roomInfo: RoomType

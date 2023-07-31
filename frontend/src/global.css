@@ -37,7 +37,7 @@
 
     --play-window-width: calc(1366px * 1);
     --play-window-height: calc(760px * 1);
-    --ranking-board-width: calc(448px * 1);
+    --ranking-board-width: calc(330px * 1);
     --canvas-width: calc(760px * 1);
     --canvas-height: calc(390px * 1);
     --tool-section-width: calc(158px * 1);

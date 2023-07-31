@@ -1,32 +1,40 @@
 import AnswerHitImg from "@/shared/assets/answer-hit-img.png";
 import NobodyHitsImg from "@/shared/assets/nobody-hits-answer.png";
 import WaitingImg from "@/shared/assets/pencil-0.jpg";
-import NewTurnUserImg from "@/shared/assets/new-turn-user.png";
 import InactiveImage from "@/shared/assets/inactive.png";
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
 import {
   INTERVAL_NEW_TURN,
   INTERVAL_NOT_SHOW_WORD,
   INTERVAL_SHOW_WORD,
-  PLAY_GAME,
+  // PLAY_GAME,
   START_GAME,
+  GAME_NEW_TURN_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS,
+  INTERVAL_DURATION_MILISECONDS,
+  GAME_PROGRESS,
 } from "./IntervalCanvas";
 import { Button } from "./shadcn-ui/Button";
 import { useGameStore } from "../stores/gameStore";
 import { useSocketStore } from "../stores/socketStore";
 import { useParams } from "react-router-dom";
+import { useMemo } from "react";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { setGameStatus, roomRound } = useGameStore();
+  const { roomRound, isHost, correctAnswers, maxPlayer, participants } = useGameStore();
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
-    setGameStatus(PLAY_GAME);
-    socket?.emit(PLAY_GAME, codeRoom);
+    if(!isHost || !socket) return
+    socket?.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
+    socket?.emit(GAME_PROGRESS, {codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS})
   };
 
+  const painter = useMemo(() => {
+    return participants.find(participant => participant.id === roomRound?.painter)
+  }, [roomRound, participants])
+  
   switch (status) {
     case INTERVAL_SHOW_WORD:
       return (
@@ -39,9 +47,13 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <img src={AnswerHitImg} />
           </div>
           <div className="place-content-center flex flex-col">
-            <p className="text-[3.5rem]">
+            <p className="text-lg mt-5 text-slate-300">
               {" "}
-              <span className="text-cyan-700">7</span>/<span>15</span>
+              Correct players:
+            </p>
+            <p className="text-[3.5rem] mx-auto">
+              {" "}
+              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{maxPlayer}</span>
             </p>
           </div>
         </div>
@@ -63,7 +75,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
     case INTERVAL_NEW_TURN:
       return (
         <div className="flex items-center mt-7">
-          <img className="w-[200px]" src={NewTurnUserImg} />
+          <img className="w-[200px]" src={painter?.avatar} />
         </div>
       );
     case WAIT_FOR_OTHER_PLAYERS:
@@ -75,7 +87,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <div className="place-content-center flex flex-col">
             <p className="text-[1.5rem] text-slate-300">
               {" "}
-              Wait for other players
+              {isHost ? "Wait for other players" : "Wait for the host to start the game" }
             </p>
           </div>
         </div>

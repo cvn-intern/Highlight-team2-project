@@ -1,4 +1,11 @@
-import { AfterUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  AfterUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Theme } from '../theme/theme.entity';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
 import { User } from '../user/user.entity';
@@ -39,6 +46,21 @@ export class Room {
 
   @Column({ default: true })
   is_public: boolean; // false: private, true: public
+
+  @Column({
+    type: 'enum',
+    enum: [
+      'interval-show-word',
+      'interval-not-show-word',
+      'new-turn',
+      'inactive',
+      'wait-for-players',
+      'game-start',
+    ],
+    default: 'wait-for-players',
+    nullable: false,
+  })
+  status: string; // false: private, true: public
 
   @Column({ type: 'timestamp', default: 'now()' })
   created_at: Date;
