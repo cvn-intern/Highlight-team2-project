@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import useDisableBackButton from '@/shared/hooks/useDisableBackButton';
-import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 // Variables
 import { DEFAULT_BLACK } from './shared/constants/color';
 // Components
@@ -180,7 +180,7 @@ export default function PlayingGameScreen() {
 
   const isInterval = gameStatus !== PLAY_GAME;
 
-  const handleProgressTimeout = useCallback(() => {
+  const handleProgressTimeout = () => {
     if (!isHost || !socket || !codeRoom) return;
     if (gameStatus === PLAY_GAME) {
       socket?.emit(INTERVAL_SHOW_WORD, codeRoom);
@@ -191,7 +191,9 @@ export default function PlayingGameScreen() {
       return;
     }
 
+    
     if (gameStatus === INTERVAL_NEW_TURN) {
+      
       socket.emit(PLAY_GAME, codeRoom);
       socket.emit(GAME_PROGRESS, {
         codeRoom,
@@ -207,7 +209,7 @@ export default function PlayingGameScreen() {
       });
       return;
     }
-  }, [gameStatus]);
+  }
 
   return (
     <PaintContext.Provider
