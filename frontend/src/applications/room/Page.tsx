@@ -33,7 +33,7 @@ interface Theme {
 }
 
 const formSchema = z.object({
-  searchInput: z.string().trim().min(2).max(50),
+  searchInput: z.string().trim().max(50),
   theme: z.string(),
   language: z.string({
     required_error: "Please select an language.",
@@ -91,6 +91,11 @@ const Room = () => {
     } catch (error) {
       console.error("Error fetching rooms data:", error);
     }
+  };
+
+  const handleDropdownChange = () => {
+    console.log("Dropdown changed");
+    handleSubmit(form.getValues());
   };
 
   return (
@@ -169,7 +174,10 @@ const Room = () => {
                       <div className="relative flex flex-col">
                         <FormControl>
                           <Select
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              handleDropdownChange();
+                            }}
                             defaultValue={field.value}
                           >
                             <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
@@ -205,7 +213,10 @@ const Room = () => {
                       <div className="relative flex flex-col">
                         <FormControl>
                           <Select
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              handleDropdownChange();
+                            }}
                             defaultValue={field.value}
                           >
                             <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
