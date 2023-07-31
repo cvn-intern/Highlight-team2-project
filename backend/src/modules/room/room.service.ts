@@ -172,7 +172,7 @@ export class RoomService {
       return {
         success: false,
       };
-  
+
     return {
       success: true,
       status: room.status,
@@ -181,5 +181,9 @@ export class RoomService {
 
   async updateRoomStatus(room: Room, status: string) {
     await this.roomRepository.save({ ...room, status, updated_at: new Date() });
+  }
+
+  async getRoomsByQuery(theme: string, language_code: string): Promise<Room[]> {
+    return await this.roomRepository.getRoomsByQuery(theme, language_code);
   }
 }
