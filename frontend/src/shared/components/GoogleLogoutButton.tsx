@@ -1,7 +1,6 @@
 import { LogOut } from "lucide-react";
 import { Button } from "./shadcn-ui/Button";
 import authService from "../services/authService";
-import JWTManager from "@/shared/lib/jwt";
 import useToaster from "@/shared/hooks/useToaster";
 import { useUserStore } from "../stores/userStore";
 
@@ -10,10 +9,8 @@ const GoogleLogoutButton = () => {
     const handleLogout = async () => {
         try {
             await authService.logout();
-
-            JWTManager.deleteToken();
-            deleteUser();
-            window.location.reload();
+            deleteUser()
+            window.location.reload()
         } catch (error) {
             useToaster({
                 type: "error",

@@ -61,20 +61,20 @@ const WaitingRoom = () => {
     setNickname(user.nickname);
   }, [user]);
 
-  // useEffect(() => {
-  //   socket?.on("error", (error: ErrorSocket) => {
-  //     if(error.code === MULTIPLE_TAB) {
-  //       navigate("/user/existing");
-  //     } else {
-  //       useToaster({
-  //         type: "error",
-  //         message: error.message,
-  //       })
+  useEffect(() => {
+    socket?.on("error", (error: ErrorSocket) => {
+      if(error.code === MULTIPLE_TAB) {
+        navigate("/user/existing");
+      } else {
+        useToaster({
+          type: "error",
+          message: error.message,
+        })
 
-  //       navigate("/");
-  //     }
-  //   });
-  // }, [socket])
+        navigate("/");
+      }
+    });
+  }, [socket])
 
   useDisableBackButton();
 
