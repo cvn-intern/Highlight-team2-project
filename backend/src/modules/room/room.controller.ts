@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
@@ -103,6 +104,23 @@ export class RoomController {
   }
 
   @UseGuards(AuthorizeJWT)
+  @Delete('/:codeRoom')
+  async deleteRoom(
+    @Param('codeRoom') codeRoom: string,
+    @Res() response: Response,
+  ) {
+    try {
+      await this.roomService.deleteRoom(codeRoom);
+      return response.status(HttpStatus.OK).json({
+        message: 'Delete room successfully',
+      });
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
   @Get('/quick-play')
   async getRoomQuickPlay(@Res() response: Response) {
     try {
@@ -145,26 +163,6 @@ export class RoomController {
         participants: users,
         max_player: room.max_player,
       });
-    } catch (error) {
-      this.logger.error(error);
-      return response.status(error.status).json(error);
-    }
-  }
-
-  @UseGuards(AuthorizeJWT)
-  @Put()
-  async updateRoom(
-    @Body(new ValidationPipe()) roomInformation: CreateRoomDTO,
-    @Res() response: Response,
-    @IdUser() idUser: number,
-  ) {
-    try {
-      const newRoom: Room = await this.roomService.createNewRoom({
-        ...roomInformation,
-        host_id: idUser,
-      });
-
-      return response.status(HttpStatus.OK).json(newRoom);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);

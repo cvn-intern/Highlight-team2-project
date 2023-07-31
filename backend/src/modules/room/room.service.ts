@@ -39,6 +39,10 @@ export class RoomService {
     return await this.roomRepository.save(room);
   }
 
+  async deleteRoom(codeRoom: string): Promise<void> {
+    await this.roomRepository.delete({ code_room: codeRoom });
+  }
+
   async randomRoomForQuickPlay(): Promise<string> {
     let rooms = await this.roomRepository.getAvailableRooms();
     rooms = rooms.filter(
