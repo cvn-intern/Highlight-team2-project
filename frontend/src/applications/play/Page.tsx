@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useEffect } from "react";
 import useToaster from "@/shared/hooks/useToaster";
+import { NOTIFICATION } from "./shared/constants/socket";
 
 export default function Page() {
   const { state } = useLocation();
@@ -11,7 +12,7 @@ export default function Page() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket?.on('notification', (message: string) => {
+    socket?.on(NOTIFICATION, (message: string) => {
       useToaster({
         type: "error",
         message,
@@ -20,8 +21,7 @@ export default function Page() {
     })
 
     return () => {
-      socket?.off("error");
-      socket?.off('notification');
+      socket?.off(NOTIFICATION);
     };
   }, [socket]);
 

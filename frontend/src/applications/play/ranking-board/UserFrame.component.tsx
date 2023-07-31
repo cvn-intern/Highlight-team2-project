@@ -22,47 +22,46 @@ import { useGameStore } from '@/shared/stores/gameStore';
 import { useUserStore } from '@/shared/stores/userStore';
 
 interface ProfileProps {
-  Leaderboard: Array<Participant>;
+  rankingBoard: Array<Participant>;
   maxPlayer: number;
-  isCorrect: boolean;
 }
 
-const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
+const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
   const [userSelected, setUserSelected] = useState<Participant>();
   const [blockedIdArray, setBlockedIdArray] = useState<number[]>([]);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const {user} = useUserStore();
-  
-  const handleLinkClick = (participant: Participant) => {
+  const { user } = useUserStore();
+
+  const handleOpenUserProfile = (participant: Participant) => {
     const host = userHost();
-    if(host && user && host.id === user.id && participant.id !== user.id) {
+    if (host && user && host.id === user.id && participant.id !== user.id) {
       setUserSelected(participant);
       triggerRef.current?.click();
     }
   };
 
   const userHost = (): Participant | null => {
-    const host = Leaderboard.Leaderboard.find((user: Participant) => user.is_host);
-    
+    const host = rankingBoard.find((user: Participant) => user.is_host);
+
     return host ? host : null;
   }
 
   const { gameStatus, roomRound, correctAnswers } = useGameStore();
   const { user: me } = useUserStore();
 
-  const renderItem = (data: ProfileProps) => {
-    const maxItems = data.maxPlayer;
-    const emptySlots = maxItems - data.Leaderboard.length;
+  const renderItem = () => {
+    const maxItems = maxPlayer;
+    const emptySlots = maxItems - rankingBoard.length;
     return (
       <>
         <FlipMove className="flip-wrapper">
-          {[...data.Leaderboard]
+          {[...rankingBoard]
             .sort((a, b) => b.score - a.score)
             .map((user: Participant, _index) => (
               <li
                 key={_index}
                 className="relative flex w-full py-3 border-b-2 border-gray-100 cursor-pointer sm:py-4 group"
-                onClick={() => handleLinkClick(user)}
+                onClick={() => handleOpenUserProfile(user)}
               >
                 {user.id === me?.id && (
                   <div className={cn("absolute left-[65px] 2xl:left-[74px] rotate-90", {
@@ -206,7 +205,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
       className="self-center w-full h-full py-4 bg-white bg-center border border-gray-200 rounded-[10px] shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <div className="flow-root w-full h-full px-4 overflow-auto no-scrollbar">
-        <ul role="list">{renderItem(Leaderboard)}</ul>
+        <ul role="list">{renderItem()}</ul>
       </div>
       { }
       <Dialog>
