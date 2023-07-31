@@ -11,6 +11,7 @@ import {
   GAME_DRAWER_IS_OUT,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
+  GAME_REFRESH_CHANNEL,
   PARTICIPANTS_CHANNEL,
   QUALIFY_TO_START_CHANNEL,
 } from './constant';
@@ -184,6 +185,8 @@ export class SocketService {
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+    this.clearProgressInterval()
+    server.in(codeRoom).emit(GAME_REFRESH_CHANNEL);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 }

@@ -10,6 +10,7 @@ export const START_GAME = 'start-game';
 export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
 export const PLAY_GAME = 'game-start';
 export const GAME_PROGRESS = 'game-progress';
+export const GAME_REFRESH_ROUND = 'refresh-round';
 
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';

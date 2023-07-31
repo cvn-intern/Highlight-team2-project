@@ -23,6 +23,7 @@ import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_PROGRESS,
+  GAME_REFRESH_ROUND,
   GAME_STATUS_CHANNEL,
   INTERVAL_DURATION_MILISECONDS,
   INTERVAL_NEW_TURN,
@@ -148,10 +149,21 @@ export default function PlayingGameScreen() {
       setIsDrawer(false);
     });
 
+    
+    socket?.on(GAME_REFRESH_ROUND, () => {
+      if(!isHost) return
+      socket?.emit(GAME_PROGRESS, {
+        codeRoom,
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+      });
+    })
+
+
     return () => {
       socket?.off(GAME_NEW_TURN_CHANNEL);
       socket?.off(PLAY_GAME);
       socket?.off(INTERVAL_SHOW_WORD);
+      socket?.off(GAME_REFRESH_ROUND)
     };
   }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
 
@@ -170,6 +182,7 @@ export default function PlayingGameScreen() {
         bodyClassName: 'text-sm font-semibold',
       });
     });
+
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
