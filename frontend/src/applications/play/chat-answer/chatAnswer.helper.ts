@@ -58,3 +58,5 @@ export const covertMessage = (message: MessageReceiver): Chat => {
 
   return result;
 }
+
+export const GAME_UPDATE_RANKING = "update-ranking"

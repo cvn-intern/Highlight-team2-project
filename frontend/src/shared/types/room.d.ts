@@ -1,4 +1,6 @@
-type RoomType = {
+import { GameStatus } from "../stores/gameStore";
+
+export type RoomType = {
     code_room: string;
     created_at: Date;
     id: number;
@@ -18,4 +20,10 @@ type RoomType = {
             name: string;
         }
     };
+}
+
+type RoomStatusType = {
+    success: boolean;
+    status?: GameStatus;
+    progress?: number;
 }

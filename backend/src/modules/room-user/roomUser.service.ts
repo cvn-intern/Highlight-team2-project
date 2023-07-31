@@ -7,7 +7,7 @@ import { Room } from '../room/room.entity';
 
 @Injectable()
 export class RoomUserService {
-  constructor(private roomUserRepository: RoomUserRepository) { }
+  constructor(private roomUserRepository: RoomUserRepository) {}
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -84,15 +84,38 @@ export class RoomUserService {
   async assignPainterAndNextPainter(room: Room): Promise<PainterRound> {
     const participants: Array<Participant> = await this.getListUserOfRoom(room);
 
-    const painterIndex: number = Math.floor(Math.random() * participants.length);
+    const painterIndex: number = Math.floor(
+      Math.random() * participants.length,
+    );
     const painter: Participant = participants[painterIndex];
-    const participantsExcept: Array<Participant> = participants.filter((participant: Participant) => participant.id !== painter.id);
-    const nextPainterIndex: number = Math.floor(Math.random() * participantsExcept.length);
+    const participantsExcept: Array<Participant> = participants.filter(
+      (participant: Participant) => participant.id !== painter.id,
+    );
+    const nextPainterIndex: number = Math.floor(
+      Math.random() * participantsExcept.length,
+    );
     const nextPainter: Participant = participantsExcept[nextPainterIndex];
 
     return {
       painter: painter.id,
       next_painter: nextPainter.id,
     } as PainterRound;
+  }
+
+  async updateRoomUserScore(userId: number, score: number) {
+    return this.roomUserRepository.update({ user_id: userId }, { score });
+  }
+
+  async resetRoomUsersScore(room: Room) {
+    const participants: Array<Participant> = await this.getListUserOfRoom(room);
+    if (participants.length === 0) return;
+    await Promise.all(
+      participants.map((participant) =>
+        this.roomUserRepository.update(
+          { user_id: participant.id },
+          { score: 0 },
+        ),
+      ),
+    );
   }
 }

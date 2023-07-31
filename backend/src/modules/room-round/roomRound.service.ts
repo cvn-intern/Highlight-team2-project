@@ -3,12 +3,19 @@ import { Repository } from 'typeorm';
 import { RoomRound } from './roomRound.entity';
 import { Injectable } from '@nestjs/common';
 import { RoomRoundInterface } from './roomRound.interface';
+import { RoomRoundInfoInterface } from '../room/room.interface';
+import { Room } from '../room/room.entity';
+import { WordService } from '../word/word.service';
+import { RoomUserService } from '../room-user/roomUser.service';
+const moment = require('moment');
 
 @Injectable()
 export class RoomRoundService {
   constructor(
     @InjectRepository(RoomRound)
     private roomRoundRepository: Repository<RoomRound>,
+    private wordService: WordService,
+    private roomUserService: RoomUserService,
   ) {}
   async getRoundOfRoom(roomId: number): Promise<RoomRound> {
     return await this.roomRoundRepository.findOne({
@@ -42,5 +49,21 @@ export class RoomRoundService {
     return await this.roomRoundRepository.delete({
       room_id: roomId,
     });
+  }
+
+  async initRoundInfomation(room: Room): Promise<RoomRoundInfoInterface> {
+    const [{ word }, painterRound] = await Promise.all([
+      this.wordService.getWordRandom(room.words_collection_id),
+      this.roomUserService.assignPainterAndNextPainter(room),
+    ]);
+    const startedAt: Date = new Date();
+    const endedAt = moment(startedAt).add(room.time_per_round, 'seconds');
+
+    return {
+      word,
+      painterRound,
+      endedAt,
+      startedAt,
+    };
   }
 }
