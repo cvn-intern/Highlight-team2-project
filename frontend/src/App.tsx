@@ -10,6 +10,7 @@ import Providers from "./Providers";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from "react-toastify";
+import Rooms from "./applications/create-room/Page";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -48,6 +49,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/rooms/create-room" element={<Rooms />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
             <Route
               path="/user/existing"
