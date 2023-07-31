@@ -22,7 +22,7 @@ const CreateRoomsHeader = () => {
             </div>
             <div className="w-full text-center mr-10">
                 <p className="text-5xl font-balsamiq text-sky-600">
-                    SET UP
+                    ROOM SET UP
                 </p>
             </div>
             

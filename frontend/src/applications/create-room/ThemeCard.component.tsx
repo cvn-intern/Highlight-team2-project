@@ -1,5 +1,5 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/shared/components/shadcn-ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Card, CardContent, CardTitle } from "@/shared/components/shadcn-ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { CheckCircle2 } from "lucide-react";
 
 type ThemeCardProps = {
