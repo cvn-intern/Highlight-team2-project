@@ -13,7 +13,7 @@ export default function Page() {
   useEffect(() => {
     socket?.on('notification', (message: string) => {
       useToaster({
-        type: "warning",
+        type: "error",
         message,
       })
       navigate("/");
