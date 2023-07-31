@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpStatus, Logger, Post, Put, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Put, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
 import { getFileAvatars } from '../../common/utils/helper';
+import { app } from 'src/main';
 
 @Controller('users')
 export class UserController {
@@ -28,16 +29,15 @@ export class UserController {
     }
   }
 
+  @UseGuards(AuthorizeJWT)
   @Get('/avatars')
   async getAvatars(
     @Res() response: Response,
-    @Req() request: Request,
   ) {
     try {
-      const hostBE: string = request.get('host');
-
+      const hostBE: string = await app.getUrl();
       const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-        return `http://${hostBE}/${avatar}`;
+        return `${hostBE}/${avatar}`;
       });
 
       return response.status(HttpStatus.OK).json(
