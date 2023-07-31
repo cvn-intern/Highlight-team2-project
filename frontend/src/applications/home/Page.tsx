@@ -7,6 +7,7 @@ import CustomAvatar from "./CustomAvatar.component";
 import GoogleLoginButton from "@/shared/components/GoogleLoginButton";
 import DividerWithText from "@/shared/components/DividerWithText";
 import { useUserStore } from "@/shared/stores/userStore";
+import GoogleLogoutButton from "@/shared/components/GoogleLogoutButton";
 
 const Homepage = () => {
   const { user } = useUserStore();
@@ -28,7 +29,10 @@ const Homepage = () => {
           />
 
           <div className="flex items-center gap-4 mb-8 md:gap-10 xl:gap-20 home-content-responsive">
-            <CustomAvatar />
+            <div className="flex flex-col">
+              <CustomAvatar />
+              <GoogleLogoutButton />
+            </div>
             <PlayForm />
           </div>
 

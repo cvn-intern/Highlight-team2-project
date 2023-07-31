@@ -19,4 +19,12 @@ export const errorsSocket = {
     code: 'ROOM_FULL',
     message: 'Room is full!',
   },
+  USER_NOT_FOUND: {
+    code: 'USER_NOT_FOUND',
+    message: 'User not found!',
+  },
+  YOU_NOT_HOST: {
+    code: 'YOU_NOT_HOST',
+    message: 'You are not host to take this action!',
+  }
 }

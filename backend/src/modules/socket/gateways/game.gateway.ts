@@ -14,6 +14,9 @@ import {
   GAME_START_CHANNEL,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
+  MAX_PROGRESS_PERCENTAGE,
+  MIN_PROGRESS_PERCENTAGE,
+  TIME_PERSTEP,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
 
@@ -66,10 +69,6 @@ export class GameGateway extends SocketGateway {
     @MessageBody() data: GameProgressUpdate,
     @ConnectedSocket() client: SocketClient,
   ) {
-    const MIN_PROGRESS_PERCENTAGE = 0;
-    const MAX_PROGRESS_PERCENTAGE = 100;
-    const TIME_PERSTEP = 100;
-
     const number_percentage_to_decrease_per_step =
       (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / data.maximumTimeInMiliSeconds;
 

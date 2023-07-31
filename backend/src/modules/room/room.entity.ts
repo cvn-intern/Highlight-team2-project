@@ -60,7 +60,7 @@ export class Room {
     default: 'wait-for-players',
     nullable: false,
   })
-  status: string; // false: private, true: public
+  status: string;
 
   @Column({ type: 'timestamp', default: 'now()' })
   created_at: Date;

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import useDisableBackButton from '@/shared/hooks/useDisableBackButton';
-import { createContext, useCallback, useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 // Variables
 import { DEFAULT_BLACK } from './shared/constants/color';
 // Components
@@ -23,6 +23,7 @@ import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_PROGRESS,
+  GAME_REFRESH_ROUND,
   GAME_STATUS_CHANNEL,
   INTERVAL_DURATION_MILISECONDS,
   INTERVAL_NEW_TURN,
@@ -42,7 +43,7 @@ import { RoomStatusType, RoomType } from '@/shared/types/room';
 import { useParams } from 'react-router-dom';
 import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
-import { DRAWER_CLEAR_CANVAS, NEW_PLAYER } from './shared/constants/drawEvent';
+import { NEW_PLAYER } from './shared/constants/drawEvent';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -148,10 +149,21 @@ export default function PlayingGameScreen() {
       setIsDrawer(false);
     });
 
+    
+    socket?.on(GAME_REFRESH_ROUND, () => {
+      if(!isHost) return
+      socket?.emit(GAME_PROGRESS, {
+        codeRoom,
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+      });
+    })
+
+
     return () => {
       socket?.off(GAME_NEW_TURN_CHANNEL);
       socket?.off(PLAY_GAME);
       socket?.off(INTERVAL_SHOW_WORD);
+      socket?.off(GAME_REFRESH_ROUND)
     };
   }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
 
@@ -171,6 +183,7 @@ export default function PlayingGameScreen() {
       });
     });
 
+
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
@@ -180,7 +193,7 @@ export default function PlayingGameScreen() {
 
   const isInterval = gameStatus !== PLAY_GAME;
 
-  const handleProgressTimeout = useCallback(() => {
+  const handleProgressTimeout = () => {
     if (!isHost || !socket || !codeRoom) return;
     if (gameStatus === PLAY_GAME) {
       socket?.emit(INTERVAL_SHOW_WORD, codeRoom);
@@ -191,7 +204,9 @@ export default function PlayingGameScreen() {
       return;
     }
 
+    
     if (gameStatus === INTERVAL_NEW_TURN) {
+      
       socket.emit(PLAY_GAME, codeRoom);
       socket.emit(GAME_PROGRESS, {
         codeRoom,
@@ -207,7 +222,7 @@ export default function PlayingGameScreen() {
       });
       return;
     }
-  }, [gameStatus]);
+  }
 
   return (
     <PaintContext.Provider

@@ -1,16 +1,27 @@
 import PlayingGameScreen from "./PlayingGameScreen.component";
 import WaitingRoom from "../waiting-room/Page";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useEffect } from "react";
+import useToaster from "@/shared/hooks/useToaster";
+import { NOTIFICATION } from "./shared/constants/socket";
 
 export default function Page() {
   const { state } = useLocation();
   const { socket } = useSocketStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    socket?.on(NOTIFICATION, (message: string) => {
+      useToaster({
+        type: "error",
+        message,
+      })
+      navigate("/");
+    })
+
     return () => {
-      socket?.off("error");
+      socket?.off(NOTIFICATION);
     };
   }, [socket]);
 

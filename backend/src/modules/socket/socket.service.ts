@@ -11,14 +11,16 @@ import {
   GAME_DRAWER_IS_OUT,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
+  GAME_REFRESH_CHANNEL,
   PARTICIPANTS_CHANNEL,
   QUALIFY_TO_START_CHANNEL,
 } from './constant';
 import { RoomInterface } from '../room/room.interface';
 import { Room } from '../room/room.entity';
-import { RoomRoundService } from '../room-round/roomRound.service';
+import { UserService } from '../user/user.service';
 import { RoomRound } from '../room-round/roomRound.entity';
 import { errorsSocket } from 'src/common/errors/errorCode';
+import { RoomRoundService } from '../room-round/roomRound.service';
 
 @Injectable()
 export class SocketService {
@@ -29,6 +31,7 @@ export class SocketService {
     private configService: ConfigService,
     private roomService: RoomService,
     private roomRoundService: RoomRoundService,
+    private userService: UserService,
   ) {}
   private stopProgress = false;
   public setProgressInterval(
@@ -48,29 +51,21 @@ export class SocketService {
       cb(progress);
     }, timeStep);
   }
+  
   clearProgressInterval() {
     this.stopProgress = true;
   }
+
   async storeClientConnection(client: Socket) {
     try {
       const payload = await this.extractPayload(client);
       const idUser: number = payload.id;
 
       this.logger.log(`Client ${client.id} connected!`);
-      const token = await this.redisService.getObjectByKey(
-        `USER:${idUser}:ACCESSTOKEN`,
-      );
-      await this.redisService.setObjectByKeyValue(
-        `${client.id}:ACCESSTOKEN`,
-        token,
-        expireTimeOneDay,
-      );
+      const token = this.getTokenFromSocket(client);
 
-      return await this.redisService.setObjectByKeyValue(
-        `USER:${idUser}:SOCKET`,
-        client.id,
-        expireTimeOneDay,
-      );
+      await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
+      return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay);
     } catch (error) {
       this.logger.error(error);
     }
@@ -93,7 +88,10 @@ export class SocketService {
 
       this.logger.log(`Client ${client.id} disconnected!`);
 
-      return await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:ROOM`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
+      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
+      await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
     } catch (error) {
       this.logger.error(error);
     }
@@ -136,10 +134,14 @@ export class SocketService {
   }
 
   async checkLoginMultipleTab(client: Socket): Promise<boolean> {
-    const userId = this.getUserIdFromSocket(client);
-    const socketId: string = await this.redisService.getObjectByKey(
-      `USER:${userId}:SOCKET`,
-    );
+    const userId = this.getUserIdFromSocket(client)
+    const isGuest = await this.userService.isGuest(userId);
+
+    if(isGuest) {
+      return false;
+    }
+    
+    const socketId: string = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
 
     if (socketId && socketId !== client.id) {
       return true;
@@ -181,9 +183,10 @@ export class SocketService {
   ) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-    this.clearProgressInterval();
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+    this.clearProgressInterval()
+    server.in(codeRoom).emit(GAME_REFRESH_CHANNEL);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 }
