@@ -20,12 +20,12 @@ import {
 import AvatarCard from "@/shared/components/AvatarCard";
 import { useUserStore } from "@/shared/stores/userStore";
 import userService from "@/shared/services/userService";
-import authService from "@/shared/services/authService";
-import JWTManager from "@/shared/lib/jwt";
+// import authService from "@/shared/services/authService";
+// import JWTManager from "@/shared/lib/jwt";
 import useToaster from "@/shared/hooks/useToaster";
 
 const CustomAvatar = () => {
-  const { user, setUser, deleteUser } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
   const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
@@ -66,20 +66,20 @@ const CustomAvatar = () => {
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
+  // const handleLogout = async () => {
+  //   try {
+  //     await authService.logout();
 
-      JWTManager.deleteToken();
-      deleteUser();
-      window.location.reload();
-    } catch (error) {
-      useToaster({
-        type: "error",
-        message: "Log out failed!",
-      })
-    }
-  };
+  //     JWTManager.deleteToken();
+  //     deleteUser();
+  //     window.location.reload();
+  //   } catch (error) {
+  //     useToaster({
+  //       type: "error",
+  //       message: "Log out failed!",
+  //     })
+  //   }
+  // };
   return (
     <div className="relative">
       <Avatar className="w-fit md:h-[150px] xl:h-[180px] h-[120px]">
@@ -89,7 +89,7 @@ const CustomAvatar = () => {
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
-      {!user?.is_guest && (
+      {/* {!user?.is_guest && (
         <Button
           className="flex items-center gap-2 mx-auto mt-2 bg-blue-700 h-9 hover:bg-red-400"
           style={{ borderRadius: "5px" }}
@@ -98,7 +98,8 @@ const CustomAvatar = () => {
           <LogOut />
           <span>LOG OUT</span>
         </Button>
-      )}
+      )} */}
+
 
       <Dialog>
         <DialogTrigger asChild>
