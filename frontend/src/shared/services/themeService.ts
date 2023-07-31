@@ -1,6 +1,6 @@
 import axiosClient from "../lib/axiosClient";
 interface Theme{
-    id: string
+    id: number
     name: string
     thumbnail: string
 }

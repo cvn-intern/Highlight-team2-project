@@ -12,11 +12,9 @@ import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import { useUserStore } from "@/shared/stores/userStore";
 import { Book, DoorOpen, Globe, Search, Triangle, User2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ListOfRoom from "./ListOfRoom.component";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import { z } from "zod";
@@ -25,6 +23,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import themeService from "@/shared/services/themeService";
+import roomService from "@/shared/services/roomService";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+
+interface Theme {
+  id: number;
+  name: string;
+  thumbnail: string;
+}
 
 const formSchema = z.object({
   searchInput: z.string().trim().min(2).max(50),
@@ -36,10 +42,11 @@ const formSchema = z.object({
 
 const Room = () => {
   const navigate = useNavigate();
-  const { theme, setTheme } = useState();
-  const [formAction, setFormAction] = useState<"new-room" | "join-room">(
-    "join-room"
-  );
+  const [themesData, setThemesData] = useState<Theme[]>([]);
+  const [roomFilterData, setRoomFilterData] = useState<Theme[]>([]);
+  // const [formAction, setFormAction] = useState<"new-room" | "join-room">(
+  //   "join-room"
+  // );
 
   const handleBackButton = () => {
     navigate("/");
@@ -49,22 +56,42 @@ const Room = () => {
     defaultValues: {
       searchInput: "",
       theme: "all",
-      language: "en",      
+      language: "en",
     },
   });
 
-  const handleSubmit = (_: z.infer<typeof formSchema>) => {
-    if (formAction === "join-room") return null;
-  };
 
   useEffect(() => {
-    (
-      async () => {
-        const { data: themesData } = await themeService.getThemes();
-        setTheme(themesData)
+    const fetchThemesData = async () => {
+      try {
+        const { data } = await themeService.getThemes();
+        setThemesData(data);
+      } catch (error) {
+        console.error("Error fetching themes data:", error);
       }
-    )()
-  })
+    };
+
+    fetchThemesData();
+  }, []);
+
+  useDisableBackButton();
+
+  const handleSubmit = async (formData: z.infer<typeof formSchema>) => {
+    try {
+      // const { data: roomFilterData } = await roomService.filterRooms(
+      //   formData.theme,
+      //   formData.language,
+      //   formData.searchInput
+      // );
+      // setRoomFilterData(roomFilterData);
+
+      console.log("Fetched rooms data:", formData.theme);
+      console.log("Fetched rooms data:", formData.language);
+      console.log("Fetched rooms data:", formData.searchInput);
+    } catch (error) {
+      console.error("Error fetching rooms data:", error);
+    }
+  };
 
   return (
     <MainLayout>
@@ -77,23 +104,22 @@ const Room = () => {
         />
 
         <div className="relative bg-white flex flex-col items-center mb-5 w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
-
+          <button
+            onClick={handleBackButton}
+            className="mx-5 md:mr-10 absolute top-8 md:left-10"
+          >
+            <Triangle
+              size={40}
+              strokeWidth={2.5}
+              className="-rotate-90 fill-[#f7b733] hover:opacity-80"
+            />
+          </button>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
               className="w-full flex items-center justify-between my-3"
             >
-              <div className="flex items-center">
-                <button
-                  onClick={handleBackButton}
-                  className="mx-5 md:mr-10"
-                >
-                  <Triangle
-                    size={40}
-                    strokeWidth={2.5}
-                    className="-rotate-90 fill-[#f7b733] hover:opacity-80"
-                  />
-                </button>
+              <div className="flex items-center ml-32">
                 <FormField
                   control={form.control}
                   name="searchInput"
@@ -123,6 +149,7 @@ const Room = () => {
               </div>
               <img
                 src={RoomsTitle}
+                className=""
               />
 
               <div className="flex items-center mr-5">
@@ -149,10 +176,11 @@ const Room = () => {
                               <SelectValue placeholder="Theme" />
                             </SelectTrigger>
                             <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
+                              <SelectItem value="all">ALL</SelectItem>
                               {themesData?.map((theme) => (
-                                <SelectItem value={theme.id}>{theme.name}</SelectItem>
+                                <SelectItem value={theme.name}>{theme.name.toUpperCase()}</SelectItem>
                               ))}
-                              
+
                             </SelectContent>
                           </Select>
                         </FormControl>
