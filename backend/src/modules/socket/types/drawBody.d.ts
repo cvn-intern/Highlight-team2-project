@@ -27,7 +27,6 @@ export type StartDraw = {
   }
 
   export type GetCanvasState = {
-    codeRoom: string,
     dataImg: string,
     id: string
   }

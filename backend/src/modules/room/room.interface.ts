@@ -1,3 +1,5 @@
+import { Word } from '../word/word.entity';
+
 export interface RoomInterface {
   id?: number;
   host_id?: number;
@@ -9,7 +11,29 @@ export interface RoomInterface {
   is_public?: boolean;
   thumbnail?: string;
   code_room?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at?: Date;
+  updated_at?: Date;
   users?: [];
+  langage?: {
+    name: string;
+  };
+  words_collection?: {
+    id: number;
+    theme: {
+      name: string;
+    };
+  };
+  participants?: number;
+}
+
+export interface RoomRoundInfoInterface {
+  word: string;
+  painterRound: PainterRound;
+  startedAt: Date;
+  endedAt: Date;
+}
+
+export interface RoomStatusResponseInterface {
+  success: boolean;
+  status?: string;
 }

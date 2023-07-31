@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  AfterUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 import { Theme } from '../theme/theme.entity';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
 import { User } from '../user/user.entity';
@@ -14,6 +21,7 @@ export class Room {
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'host_id' })
+  @Column()
   host_id: number;
 
   @ManyToOne(() => WordsCollection, (wordsCollection) => wordsCollection.id)
@@ -39,9 +47,29 @@ export class Room {
   @Column({ default: true })
   is_public: boolean; // false: private, true: public
 
+  @Column({
+    type: 'enum',
+    enum: [
+      'interval-show-word',
+      'interval-not-show-word',
+      'new-turn',
+      'inactive',
+      'wait-for-players',
+      'game-start',
+    ],
+    default: 'wait-for-players',
+    nullable: false,
+  })
+  status: string;
+
   @Column({ type: 'timestamp', default: 'now()' })
   created_at: Date;
 
   @Column({ type: 'timestamp', default: 'now()' })
   updated_at: Date;
+
+  @AfterUpdate()
+  handleAfterUpdate() {
+    this.updated_at = new Date();
+  }
 }

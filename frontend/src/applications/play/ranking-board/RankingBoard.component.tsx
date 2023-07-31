@@ -1,87 +1,109 @@
-import { useEffect, useState } from "react";
-import UserFrame from "./UserFrame.component";
-import { LucideIcon } from "lucide-react";
-import { useParams } from "react-router-dom";
-import playService from "@/shared/services/playService";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
-
-export interface ILeaderboard {
-  user: {
-    id: number;
-    avatar: string;
-    nickname: string;
-  };
-  score: number;
-  answered_at: null | Date;
-  type?: string;
-  icon?: LucideIcon;
-}
+import {
+  START_GAME,
+  WAIT_FOR_OTHER_PLAYERS,
+} from '@/shared/components/IntervalCanvas';
+import Logo from '@/shared/components/Logo';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useSocketStore } from '@/shared/stores/socketStore';
+import { useUserStore } from '@/shared/stores/userStore';
+import { useEffect, memo } from 'react';
+import UserFrame from './UserFrame.component';
+import { GAME_UPDATE_RANKING } from '../chat-answer/chatAnswer.helper';
+import _ from 'lodash';
+import { useParams } from 'react-router-dom';
 
 interface RankingUser {
-  users: ILeaderboard[];
+  participants: Array<Participant>;
   max_player: number;
-  hostId?: number;
-  isCorrect?: boolean;
+  roomRound: RoomRound;
 }
 
-export default function RankingBoard() {
+const RankingBoard = () => {
+  const { user } = useUserStore();
   const { socket } = useSocketStore();
-  const [leaderboardData, setLeaderboardData] = useState<RankingUser>({
-    users: [],
-    max_player: 0,
-  });
+  const {
+    participants,
+    maxPlayer,
+    setParticipants,
+    setGameStatus,
+    setMaxPlayer,
+    setIsHost,
+    gameStatus,
+    setIsDrawer,
+    setCorrectAnswers,
+    roomRound,
+    setRoomRound,
+  } = useGameStore();
   const { codeRoom } = useParams();
 
-  const getRoomParticipants = async () => {
-    if (!codeRoom) return;
-    try {
-      const { data } = await playService.roomParticipants(codeRoom);
-      setLeaderboardData(data);
-    } catch (error) {
-      useToaster({
-        type: "error",
-        message: "Get room participants failed!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: ERROR_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
-      })
-    }
-  };
-
   useEffect(() => {
-    socket?.on(`${codeRoom}-leave`, async () => {
-      await getRoomParticipants();
-    });
+    socket?.on('participants', (data: RankingUser) => {
+      setParticipants(data.participants);
+      setMaxPlayer(data.max_player);
+      const hostUser = _.find(
+        data.participants,
+        (participant) => participant.is_host
+      );
 
-    socket?.on(codeRoom ?? "", async () => {
-      await getRoomParticipants();
+      const isHost = hostUser?.id === user?.id;
+      setIsHost(isHost);
+      if (data.participants.length === 1) {
+        setGameStatus(WAIT_FOR_OTHER_PLAYERS);
+        setIsDrawer(false);
+        setParticipants(
+          [...data.participants].map((participant) => ({ ...participant, score: 0 }))
+        );
+        setRoomRound(null)
+        socket.emit(WAIT_FOR_OTHER_PLAYERS, codeRoom);
+      }
+
+      if (
+        data.participants.length === 2 &&
+        isHost &&
+        gameStatus &&
+        gameStatus === WAIT_FOR_OTHER_PLAYERS
+      ) {
+        setGameStatus(START_GAME);
+      }
+
+      if (!roomRound) setRoomRound(data.roomRound);
     });
 
     return () => {
-      socket?.off(`${codeRoom}-leave`);
-      socket?.off(codeRoom);
+      socket?.off('participants');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [socket, gameStatus, codeRoom, participants, user]);
+  useEffect(() => {
+    socket?.on(
+      GAME_UPDATE_RANKING,
+      (data: { correctAnswers: number[]; newParticipants: Participant[] }) => {
+        setCorrectAnswers(data.correctAnswers);
+        setParticipants(data.newParticipants);
+      }
+    );
+
+    return () => {
+      socket?.off(GAME_UPDATE_RANKING);
+    };
   }, [socket]);
 
-  const numberOfPlayers = leaderboardData.users.length;
+  const numberOfPlayers = participants.length;
 
   return (
-    <div className="bg-white rounded-[10px] overflow-hidden w-[var(--ranking-board-width)] h-full relative">
+    <div className="bg-white rounded-[10px] w-[var(--ranking-board-width)] h-full relative">
+      <div className="absolute top-[-70px] md:top-[-55px] left-12 md:left-20 2xl:left-14">
+        <Logo customClassname="md:w-[180px] 2xl:w-[205px] w-[250px]" />
+      </div>
       <UserFrame
-        Leaderboard={leaderboardData.users}
-        maxPlayer={leaderboardData.max_player}
-        isCorrect={false}
-        hostId={-1}
-        drawerId={-1}
+        rankingBoard={participants}
+        maxPlayer={maxPlayer}
       />
-      <div className="absolute w-[44px] h-[44px] text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-2 right-2 flexCenter bg-white">
-        <span>{numberOfPlayers}</span>/<span>{leaderboardData.max_player}</span>
+      <div className="absolute w-[38px] h-[38px] shadow-sm text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-1 right-1 flexCenter bg-white">
+        <span>{numberOfPlayers}</span>/<span>{maxPlayer}</span>
       </div>
     </div>
   );
-}
+};
+
+export default memo(RankingBoard);

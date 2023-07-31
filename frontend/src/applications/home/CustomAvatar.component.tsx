@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
 import { cn } from "@/shared/lib/utils";
-import { Check, Edit2 as EditIcon, LogOut } from "lucide-react";
+import { Check, Edit2 as EditIcon} from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Avatar,
@@ -20,13 +20,10 @@ import {
 import AvatarCard from "@/shared/components/AvatarCard";
 import { useUserStore } from "@/shared/stores/userStore";
 import userService from "@/shared/services/userService";
-import authService from "@/shared/services/authService";
-import JWTManager from "@/shared/lib/jwt";
 import useToaster from "@/shared/hooks/useToaster";
-import { ERROR_ICON } from "@/shared/constants";
 
 const CustomAvatar = () => {
-  const { user, setUser, deleteUser } = useUserStore();
+  const { user, setUser } = useUserStore();
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
   const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
@@ -45,11 +42,6 @@ const CustomAvatar = () => {
       useToaster({
         type: "error",
         message: "Confrim avatar failed!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: ERROR_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
       })
     }
   };
@@ -63,11 +55,6 @@ const CustomAvatar = () => {
         useToaster({
           type: "error",
           message: "Get avatars failed!",
-          bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-          icon: ERROR_ICON,
-          progressStyle: {
-            background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-          }
         })
       }
     };
@@ -77,25 +64,6 @@ const CustomAvatar = () => {
 
   const handleResetAvatarIndex = () => setAvatarIndex(selectedAvatar);
 
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-
-      JWTManager.deleteToken();
-      deleteUser();
-      window.location.reload();
-    } catch (error) {
-      useToaster({
-        type: "error",
-        message: "Log out failed!",
-        bodyClassName: "text-lg font-semibold text-slate-600 text-center",
-        icon: ERROR_ICON,
-        progressStyle: {
-          background: "linear-gradient(90deg, rgba(241,39,17,1) 0%, rgba(245,175,25,1) 100%)",
-        }
-      })
-    }
-  };
   return (
     <div className="relative">
       <Avatar className="w-fit md:h-[150px] xl:h-[180px] h-[120px]">
@@ -105,16 +73,6 @@ const CustomAvatar = () => {
         />
         <AvatarFallback>Avatar</AvatarFallback>
       </Avatar>
-      {!user?.is_guest && (
-        <Button
-          className="flex items-center gap-2 mx-auto mt-2 bg-blue-700 h-9 hover:bg-red-400"
-          style={{ borderRadius: "5px" }}
-          onClick={handleLogout}
-        >
-          <LogOut />
-          <span>LOG OUT</span>
-        </Button>
-      )}
 
       <Dialog>
         <DialogTrigger asChild>

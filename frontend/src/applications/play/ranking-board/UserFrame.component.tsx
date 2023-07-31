@@ -1,78 +1,112 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Dialog, DialogTrigger } from "@/shared/components/shadcn-ui/Modal";
-import FlipMove from "react-flip-move";
-import React, { useRef, useState } from "react";
-import { DialogDemo } from "./UserDialog.component";
-import { cn } from "@/shared/lib/utils";
+import { Dialog, DialogTrigger } from '@/shared/components/shadcn-ui/Modal';
+import FlipMove from 'react-flip-move';
+import React, { useRef, useState } from 'react';
+import { DialogDemo } from './UserDialog.component';
+import { cn } from '@/shared/lib/utils';
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { ILeaderboard } from "./RankingBoard.component";
-import { BadgeCheck, Home, Pencil, XCircle, User2 as UserIcon } from "lucide-react";
-import { handleStringThatIsTooLong } from "@/shared/lib/string";
+} from '@/shared/components/shadcn-ui/avatar-shadcn';
+import {
+  BadgeCheck,
+  Home,
+  Pencil,
+  XCircle,
+  User2 as UserIcon,
+  Play,
+} from 'lucide-react';
+import { handleStringThatIsTooLong } from '@/shared/lib/string';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useUserStore } from '@/shared/stores/userStore';
 
 interface ProfileProps {
-  Leaderboard: ILeaderboard[];
+  rankingBoard: Array<Participant>;
   maxPlayer: number;
-  hostId: number;
-  isCorrect: boolean;
-  drawerId: number;
 }
 
-const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
-  const [userSelected, setUserSelected] = useState<ILeaderboard["user"] | null>(
-    null
-  );
+const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
+  const [userSelected, setUserSelected] = useState<Participant>();
   const [blockedIdArray, setBlockedIdArray] = useState<number[]>([]);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const handleLinkClick = (user: ILeaderboard["user"]) => {
-    setUserSelected(user);
-    triggerRef.current?.click();
+  const { user } = useUserStore();
+
+  const handleOpenUserProfile = (participant: Participant) => {
+    const host = userHost();
+    if (host && user && host.id === user.id && participant.id !== user.id) {
+      setUserSelected(participant);
+      triggerRef.current?.click();
+    }
   };
-  const renderItem = (data: ProfileProps) => {
-    const maxItems = data.maxPlayer;
-    const emptySlots = maxItems - data.Leaderboard.length;
+
+  const userHost = (): Participant | null => {
+    const host = rankingBoard.find((user: Participant) => user.is_host);
+
+    return host ? host : null;
+  }
+
+  const { gameStatus, roomRound, correctAnswers } = useGameStore();
+  const { user: me } = useUserStore();
+
+  const renderItem = () => {
+    const maxItems = maxPlayer;
+    const emptySlots = maxItems - rankingBoard.length;
     return (
       <>
         <FlipMove className="flip-wrapper">
-          {data.Leaderboard.slice(0, maxItems).map(
-            ({ user, score }, _index) => (
+          {[...rankingBoard]
+            .sort((a, b) => b.score - a.score)
+            .map((user: Participant, _index) => (
               <li
                 key={_index}
-                className="flex w-full py-3 border-b-2 border-gray-100 cursor-pointer sm:py-4 group"
-                onClick={() => handleLinkClick(user)}
+                className="relative flex w-full py-3 border-b-2 border-gray-100 cursor-pointer sm:py-4 group"
+                onClick={() => handleOpenUserProfile(user)}
               >
+                {user.id === me?.id && (
+                  <div className={cn("absolute left-[65px] 2xl:left-[74px] rotate-90", {
+                    "top-0": _index === 0,
+                    "top-1": _index !== 0,
+                  })}>
+                    <Play size={14} fill='#FFC95F' />
+                  </div>
+                )}
                 <div className="flex items-center w-full space-x-3">
                   <div
                     className={
-                      "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
+                      'flex items-center space-x-4 w-[25px] 2xl:w-[40px]'
                     }
                   >
-                    {user.id === data.drawerId && (
-                      <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
-                    )}
-                    {data.isCorrect && (
+                    {gameStatus !== 'wait-for-players' &&
+                      roomRound?.painter === user.id && (
+                        <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
+                      )}
+                    {correctAnswers.includes(user.id) && (
                       <BadgeCheck size={32} color="#12d94d" strokeWidth={2.5} />
                     )}
                   </div>
                   <div
                     className={cn(
-                      "flex items-center space-x-4 justify-between w-full",
+                      'flex items-center space-x-4 justify-between w-full',
                       {
-                        "text-blue-600": data.drawerId === user.id,
-                        "text-green-500": data.isCorrect,
+                        ' text-[#FFB84C] font-bold': user.id === me?.id,
+                        'text-blue-600 font-bold':
+                          user.id === roomRound?.painter,
+                        'text-green-500': correctAnswers.includes(user.id),
                       }
                     )}
                   >
                     <div className="flex items-center space-x-4">
-                      <Avatar className={cn("relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid",
-                        {
-                          "border-blue-600": data.drawerId === user.id,
-                          "border-green-500": data.isCorrect,
-                        }
-                      )}
+                      <Avatar
+                        className={cn(
+                          'relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid',
+                          {
+                            'border-blue-500': user.id === roomRound?.painter,
+                            'border-green-500': correctAnswers.includes(
+                              user.id
+                            ),
+                          }
+                        )}
                       >
                         <AvatarImage
                           src={user.avatar}
@@ -83,10 +117,10 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                         {_index < 3 && (
                           <div
                             className={cn(
-                              "h-4 w-4 rounded-full absolute right-0 bottom-0 shadow-md",
-                              { "bg-yellow-400": _index === 0 },
-                              { "bg-slate-300": _index === 1 },
-                              { "bg-yellow-700": _index === 2 }
+                              'h-4 w-4 rounded-full absolute right-0 bottom-0 shadow-md',
+                              { 'bg-yellow-400': _index === 0 },
+                              { 'bg-slate-300': _index === 1 },
+                              { 'bg-yellow-700': _index === 2 }
                             )}
                           ></div>
                         )}
@@ -101,23 +135,23 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <p
-                          className="text-lg font-medium text-left truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white"
+                          className="text-lg text-left truncate max-w-[180px] 2xl:max-w-[200px] dark:text-white"
                           title={user.nickname}
                         >
                           {handleStringThatIsTooLong(user.nickname, 10)}
                         </p>
                         <p className="font-medium text-left truncate text-md text-textBlueColor dark:text-gray-400">
-                          <strong>{score}</strong>
+                          <strong>{user.score}</strong>
                           <span> pts</span>
                         </p>
-                        {false && (
+                        {roomRound?.next_painter === user.id && (
                           <p className="font-medium text-left text-blue-500 truncate text-md dark:text-gray-400">
                             Next to draw
                           </p>
                         )}
                       </div>
                     </div>
-                    {user.id === data.hostId && (
+                    {user.is_host && (
                       <Home
                         className="text-blue-500"
                         strokeWidth={2.5}
@@ -127,8 +161,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
                   </div>
                 </div>
               </li>
-            )
-          )}
+            ))}
         </FlipMove>
         {/* Render empty slots */}
         {emptySlots > 0 &&
@@ -140,7 +173,7 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
               <div className="flex items-center w-full space-x-3">
                 <div
                   className={
-                    "flex items-center space-x-4 w-[25px] 2xl:w-[40px]"
+                    'flex items-center space-x-4 w-[25px] 2xl:w-[40px]'
                   }
                 ></div>
                 <div
@@ -169,16 +202,16 @@ const UserFrame: React.FC<ProfileProps> = (Leaderboard) => {
   return (
     <div
       id="profile"
-      className="self-center w-full h-full max-w-md py-4 bg-white bg-center border border-gray-200 rounded-[10px] shadow dark:bg-gray-800 dark:border-gray-700"
+      className="self-center w-full h-full py-4 bg-white bg-center border border-gray-200 rounded-[10px] shadow dark:bg-gray-800 dark:border-gray-700"
     >
       <div className="flow-root w-full h-full px-4 overflow-auto no-scrollbar">
-        <ul role="list">{renderItem(Leaderboard)}</ul>
+        <ul role="list">{renderItem()}</ul>
       </div>
       { }
       <Dialog>
         <DialogTrigger ref={triggerRef}></DialogTrigger>
         <DialogDemo
-          user={userSelected}
+          user={userSelected ? userSelected : null}
           blockedIdArray={blockedIdArray}
           setBlockedIdArray={setBlockedIdArray}
         />

@@ -1,55 +1,73 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useContext } from "react";
-import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
-import cursorsIconMap from "../shared/constants/cursorsIconMap";
+import { PaintContext } from '@/applications/play/PlayingGameScreen.component';
+import { useContext, useEffect } from 'react';
+import cursorsIconMap from '../shared/constants/cursorsIconMap';
 // Functions
-import { getPointFromEvent } from "@/applications/play/draw-screen/draw.helper";
-import { useSocketEvents } from "@/applications/play/shared/hooks/useSocketEvents";
-import useDrawing from "@/applications/play/shared/hooks/useDrawing";
-import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
+import {
+  PLAY_GAME
+} from '@/shared/components/IntervalCanvas';
+import { useGameStore } from '@/shared/stores/gameStore';
+import { useSocketClearCanvasEvent } from '../shared/hooks/useSocketClearCanvasEvent';
+import { useSocketHandleCanvasEvent } from '../shared/hooks/useSocketHandleCanvasEvents';
+import { getPointFromEvent, resetCanvas } from './draw.helper';
 
-const Canvas = ({hidden = false}) => {
+export const ROUND_DURATION_MILISECONDS = 20000
+
+type CanvasProps = {
+  hidden: boolean
+  isDrawer: boolean
+}
+
+const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
   const variables = useContext(PaintContext);
-  const {
-    handleStartDraw,
-    handleDrawing,
-    handleFinishDraw,
-    handleClearCanvas,
-  } = useDrawing();
-  const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
-    useSocketEvents({
-      handleStartDraw,
-      handleDrawing,
-      handleFinishDraw,
-      handleClearCanvas,
-    });
-
   if (!variables) return null;
   const { canvasRef, penStyle } = variables;
 
+  const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
+    useSocketHandleCanvasEvent();
+  const { handleClickClearCanvas } = useSocketClearCanvasEvent();
+  const {  gameStatus } = useGameStore(); 
+
+  useEffect(() => {
+    if (!canvasRef || !canvasRef.current) return;
+    if (gameStatus === PLAY_GAME) return;
+    resetCanvas(
+      canvasRef.current.getContext('2d', { willReadFrequently: true })
+    );
+  }, [canvasRef, gameStatus, handleClickClearCanvas]);
+
   return (
     <div
-      className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0`}
-      hidden={hidden}
+      className={` overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0 ${
+        hidden ? 'absolute translate-y-[-10000px]' : 'relative'
+      }`}
     >
       <canvas
         ref={canvasRef}
         id="canvas"
         className={`w-[var(--canvas-width)] h-[var(--canvas-height)] bg-white rounded-[10px] ${
-          cursorsIconMap[penStyle] ?? ""
-        }`}
+          cursorsIconMap[penStyle] ?? ''
+        } ${!isDrawer && 'pointer-events-none'}`}
         onMouseDown={(e) => {
+          if (!isDrawer) return;
           const point = getPointFromEvent(e);
           handleMouseDown(point);
         }}
         onMouseMove={(e) => {
+          if (!isDrawer) return;
           const currentPoint = getPointFromEvent(e);
           handleMouseMove(currentPoint);
         }}
-        onMouseUp={handleMouseUpOrLeave}
-        onMouseLeave={handleMouseUpOrLeave}
+        onMouseUp={() => {
+          if (!isDrawer) return;
+          handleMouseUpOrLeave();
+        }}
+        onMouseLeave={() => {
+          if (!isDrawer) return;
+          handleMouseUpOrLeave();
+        }}
       ></canvas>
-      <ProgressPlayTime />
+     
     </div>
   );
 };

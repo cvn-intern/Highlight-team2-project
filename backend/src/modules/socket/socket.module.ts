@@ -13,6 +13,10 @@ import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomModule } from '../room/room.module';
 import { AnswerGateway } from './gateways/answer.gateway';
+import { RoomRoundModule } from '../room-round/roomRound.module';
+import { GameGateway } from './gateways/game.gateway';
+import { JoinGateway } from './gateways/join.gateway';
+import { RoomGateway } from './gateways/room.gateway';
 
 @Module({
   imports: [
@@ -23,10 +27,22 @@ import { AnswerGateway } from './gateways/answer.gateway';
     RedisModule,
     RoomUserModule,
     RoomModule,
-    TypeOrmModule.forFeature([RoomUser])
+    RoomRoundModule,
+    TypeOrmModule.forFeature([RoomUser]),
   ],
   controllers: [],
-  providers: [SocketGateway, SocketService, Logger, DrawGateway, ChatGateway, RoomUserService, AnswerGateway],
+  providers: [
+    SocketGateway,
+    SocketService,
+    Logger,
+    DrawGateway,
+    ChatGateway,
+    RoomUserService,
+    AnswerGateway,
+    GameGateway,
+    JoinGateway,
+    RoomGateway,
+  ],
   exports: [SocketService],
 })
 export class SocketModule {}

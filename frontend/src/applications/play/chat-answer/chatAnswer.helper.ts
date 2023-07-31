@@ -6,6 +6,7 @@ const CHAT_ROOM_TYPE = 2;
 const ANSWER_CORRETLY = 3;
 const ANSWER_APPROXIMATELY = 4;
 const ANSWER_WRONG = 5;
+const BLOCK_MESSAGE = 6;
 
 export const covertMessage = (message: MessageReceiver): Chat => {
   const result: Chat = {
@@ -52,9 +53,17 @@ export const covertMessage = (message: MessageReceiver): Chat => {
       result.icon = 'XCircle';
 
       break;
+    case BLOCK_MESSAGE: 
+      result.content = message.message;
+      result.type = TEXT_RED;
+      result.icon = 'Ban';
+      
+      break;
     default:
       break;
   }
 
   return result;
 }
+
+export const GAME_UPDATE_RANKING = "update-ranking"
