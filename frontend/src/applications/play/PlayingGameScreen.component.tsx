@@ -149,13 +149,17 @@ export default function PlayingGameScreen() {
       setIsDrawer(false);
     });
 
-    
+    let timeout: any
     socket?.on(GAME_REFRESH_ROUND, () => {
+      clearTimeout(timeout)
       if(!isHost) return
-      socket?.emit(GAME_PROGRESS, {
-        codeRoom,
-        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
-      });
+      timeout = setTimeout(() => {
+        socket?.emit(GAME_PROGRESS, {
+          codeRoom,
+          maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+        });
+      },  500)
+     
     })
 
 
@@ -164,6 +168,7 @@ export default function PlayingGameScreen() {
       socket?.off(PLAY_GAME);
       socket?.off(INTERVAL_SHOW_WORD);
       socket?.off(GAME_REFRESH_ROUND)
+      clearTimeout(timeout)
     };
   }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
 
