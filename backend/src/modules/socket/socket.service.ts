@@ -181,7 +181,6 @@ export class SocketService {
   ) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-    this.clearProgressInterval();
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
