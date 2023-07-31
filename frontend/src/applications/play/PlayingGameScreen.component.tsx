@@ -31,19 +31,19 @@ import IntervalCanvas, {
   START_GAME,
   WAIT_FOR_OTHER_PLAYERS,
 } from '@/shared/components/IntervalCanvas';
+import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
 import useToaster from '@/shared/hooks/useToaster';
 import { rgbaToHex } from '@/shared/lib/colors';
 import roomService from '@/shared/services/roomService';
 import { useGameStore } from '@/shared/stores/gameStore';
 import { useSocketStore } from '@/shared/stores/socketStore';
 import { useUserStore } from '@/shared/stores/userStore';
+import { RoomStatusType, RoomType } from '@/shared/types/room';
 import { useParams } from 'react-router-dom';
 import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
+import { DRAWER_CLEAR_CANVAS, NEW_PLAYER } from './shared/constants/drawEvent';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
-import { RoomStatusType, RoomType } from '@/shared/types/room';
-import { NEW_PLAYER } from './shared/constants/drawEvent';
-import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -176,6 +176,7 @@ export default function PlayingGameScreen() {
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
     };
   }, [socket, participants]);
+
 
   const isInterval = gameStatus !== PLAY_GAME;
 

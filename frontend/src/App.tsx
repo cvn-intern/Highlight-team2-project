@@ -39,6 +39,7 @@ function App() {
     initPlayer();
   }, []);
 
+
   if (loading) return null;
 
   return (
