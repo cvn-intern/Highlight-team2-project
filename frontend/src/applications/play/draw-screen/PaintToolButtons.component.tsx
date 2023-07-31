@@ -29,7 +29,8 @@ export default function PaintToolButtons() {
   const variables = useContext(PaintContext);
   const { handleClickClearCanvas } = useSocketClearCanvasEvent();
 
-  if (!variables) return null;
+  if(!variables) return null
+
   const { penStyle, isFill, setPenStyle, setIsFill } = variables;
   // Handlers
   const handleChoseBrush = () => {

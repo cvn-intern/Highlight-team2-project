@@ -8,6 +8,7 @@ import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { RedisService } from '../redis/redis.service';
 import { UserToken } from './types/userToken';
+import { UserInterface } from '../user/user.interface';
 
 
 
@@ -25,8 +26,7 @@ export class AuthController {
     @Res() response: Response,
   ): Promise<any> {
     try {
-      const userInformation = this.userService.generateGuest();
-
+      const userInformation: UserInterface = await this.userService.generateGuest();
       const user: User = await this.userService.createUser(userInformation);
 
       const accessToken = await this.authService.generateAccessToken({

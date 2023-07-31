@@ -96,9 +96,8 @@ const RankingBoard = () => {
         <Logo customClassname="md:w-[180px] 2xl:w-[205px] w-[250px]" />
       </div>
       <UserFrame
-        Leaderboard={participants}
+        rankingBoard={participants}
         maxPlayer={maxPlayer}
-        isCorrect={false}
       />
       <div className="absolute w-[38px] h-[38px] shadow-sm text-[12px] font-bold text-gray-300 border-2 border-gray-300 rounded-full top-1 right-1 flexCenter bg-white">
         <span>{numberOfPlayers}</span>/<span>{maxPlayer}</span>

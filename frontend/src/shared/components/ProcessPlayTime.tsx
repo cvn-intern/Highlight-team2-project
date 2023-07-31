@@ -13,7 +13,7 @@ export function ProgressPlayTime({ hanldeWhenTimeOut = () => {} }: Props) {
   const [progress, setProgress] = React.useState(100);
   
   const { socket } = useSocketStore();
-  const { gameStatus } = useGameStore();
+  const { gameStatus, isHost } = useGameStore();
 
   useEffect(() => {
     if (gameStatus !== 'game-start') setProgress(100);
@@ -35,7 +35,7 @@ export function ProgressPlayTime({ hanldeWhenTimeOut = () => {} }: Props) {
     return () => {
       socket?.off(GAME_PROGRESS);
     };
-  }, [socket, gameStatus]);
+  }, [socket, gameStatus, isHost]);
 
   return (
     <Progress

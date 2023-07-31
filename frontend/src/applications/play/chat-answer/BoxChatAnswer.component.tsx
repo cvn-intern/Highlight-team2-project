@@ -41,10 +41,10 @@ const Message = (props: MessageProps) => {
   const { icon: Icon } = props;
 
   return (
-    <div className={cn('text-green-400 flex gap-2 break-words', props.type)}>
+    <div className={cn("text-green-400 flex gap-2 break-keep", props.type)}>
       {Icon && <Icon strokeWidth={3} />}
       <strong>{props.user}</strong>
-      <span className="max-w-[190px]"> {props.content}</span>
+      <span> {props.content}</span>
     </div>
   );
 };
@@ -125,18 +125,16 @@ const BoxChat = (props: BoxProps) => {
           <div className="relative">
             <form onSubmit={handleSubmitForm} className="relative">
               <input
-                disabled={props.isDisabledInput}
+                disabled={props.label === 'answer' ? props.isDisabledInput : false}
                 value={inputChat}
                 onChange={handleInputText}
                 id={'box-input-' + props.label}
                 type="text"
                 placeholder={props.placeholder}
-                className={cn(
-                  'block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]',
-                  {
-                    'bg-slate-300': props.isDisabledInput,
-                  }
-                )}
+                className={cn("block w-full py-2 pl-10 pr-20 mt-1 bg-white border shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 sm:text-sm focus:ring-1 rounded-[4px]"
+                  , {
+                    "bg-slate-300": props.label === 'answer' ? props.isDisabledInput : false,
+                  })}
               />
               <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
                 {numberOfCharactersLeft} chars left
