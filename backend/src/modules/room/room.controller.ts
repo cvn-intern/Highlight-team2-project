@@ -7,7 +7,6 @@ import {
   Logger,
   Param,
   Post,
-  Put,
   Query,
   Res,
   UseGuards,
@@ -17,7 +16,6 @@ import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
-import { extractIdRoom } from '../../common/utils/helper';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { Room } from './room.entity';
