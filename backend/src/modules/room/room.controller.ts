@@ -6,6 +6,7 @@ import {
   Logger,
   Param,
   Post,
+  Query,
   Res,
   UseGuards,
   ValidationPipe,
@@ -26,6 +27,59 @@ export class RoomController {
     private logger: Logger = new Logger(RoomController.name),
     private roomUserService: RoomUserService,
   ) {}
+
+  @UseGuards(AuthorizeJWT)
+  @Get()
+  async getRooms(
+    @Query('theme') theme: string,
+    @Query('language_code') language_code: string,
+    @Query('search') search: string,
+    @Res() response: Response,
+  ) {
+    try {
+      let rooms = await this.roomService.getRoomsByQuery(theme, language_code);
+
+      rooms = rooms.map((room: any) => {
+        room = {
+          id: room.id,
+          thumbnail: room.thumbnail,
+          theme_name: room.words_collection.theme.name,
+          code_room: room.code_room,
+          number_of_participants: room.participants.length,
+          max_player: room.max_player,
+          language: room.language.code,
+          current_round: room.room_round.current_round,
+          number_of_round: room.number_of_round,
+          is_public: room.is_public,
+          created_at: room.created_at,
+          updated_at: room.updated_at,
+        };
+        return room;
+      });
+
+      rooms = rooms.filter((room: any) => {
+        const themeNameContainSearch = room.theme_name
+          .toLowerCase()
+          .includes(search.toLowerCase());
+        const codeRoomContainSearch = room.code_room
+          .toLowerCase()
+          .includes(search.toLowerCase());
+        const languageContainSearch = room.language
+          .toLowerCase()
+          .includes(search.toLowerCase());
+        return (
+          themeNameContainSearch ||
+          codeRoomContainSearch ||
+          languageContainSearch
+        );
+      });
+
+      return response.status(HttpStatus.OK).json(rooms);
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
 
   @UseGuards(AuthorizeJWT)
   @Post()
@@ -85,7 +139,7 @@ export class RoomController {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
       const users = await this.roomUserService.getListUserOfRoom(room);
-      
+
       return response.status(HttpStatus.OK).json({
         participants: users,
         max_player: room.max_player,
