@@ -38,7 +38,7 @@ export class RoomGateway extends SocketGateway {
       message: HOST_KICK_USER_CONTENT,
     }
     socketKickedUser.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
-    this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `you ${HOST_KICK_USER_CONTENT}`);
+    this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `You ${HOST_KICK_USER_CONTENT}`);
 
     await this.roomUserService.deleteRoomUser(room.id, data.userId);
     await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);

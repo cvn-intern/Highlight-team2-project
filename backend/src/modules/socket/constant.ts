@@ -34,7 +34,7 @@ export const ANSWER_APPROXIMATELY_CONTENT = 'answer is close!';
 export const JOIN_ROOM_CONTENT = 'joined';
 export const LEAVE_ROOM_CONTENT = 'left';
 export const SERVER_BLOCKED_MESSAGE_CONTENT = 'Server blocked this message!';
-export const HOST_KICK_USER_CONTENT = 'is kicked by host!';
+export const HOST_KICK_USER_CONTENT = 'has been kicked by host!';
 
 // channel for host
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
