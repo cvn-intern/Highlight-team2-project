@@ -7,6 +7,7 @@ export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word';
 export const INTERVAL_NEW_TURN = 'new-turn';
 export const INTERVAL_INACTIVE = 'inactive';
 export const START_GAME = 'start-game';
+export const END_GAME = 'end-game';
 export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
 export const PLAY_GAME = 'game-start';
 export const GAME_PROGRESS = 'game-progress';
@@ -28,7 +29,8 @@ const IntervalCanvas = ({
   status = INTERVAL_SHOW_WORD,
   hidden = true,
 }: IntervalCanvasProps) => {
-
+  status = END_GAME
+  hidden = false
   return (
     <div
       hidden={hidden}
