@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { Drawing, Point, SocketDrawing, SocketGetCanvasState, SocketStartDraw, StartDraw, UseCustomHookHandleCanvasEvents } from "../../draw-screen/draw";
 import useDrawing from "./useDrawing";
-import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "../constants/drawEvent";
+import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "../constants/drawEvent";
 import { useParams } from "react-router";
 import { PaintContext } from "../../PlayingGameScreen.component";
 
@@ -29,7 +29,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
   const { codeRoom } = useParams()
   const [isNewPlayer, setIsNewPlayer] = useState<boolean>(true)
 
-  const { handleStartDraw, handleDrawing, handleFinishDraw } = useDrawing()
+  const { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas } = useDrawing()
 
   handleMouseDown = (point: Point) => {
     socket?.emit(START_DRAW, { codeRoom, point, color, penStyle, brushSize } as SocketStartDraw);
@@ -88,9 +88,14 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       }
     })
 
+    socket?.on(DRAWER_CLEAR_CANVAS, () => {
+          handleClearCanvas()
+        });
+
     return () => {
       socket?.off(GET_CANVAS_STATE)
       socket?.off(CANVAS_STATE_FROM_SERVER)
+      socket?.off(DRAWER_CLEAR_CANVAS)
     }
   }, [ctx])
 
