@@ -5,7 +5,7 @@ import {
   DialogHeader,
 } from "@/shared/components/shadcn-ui/Modal";
 import { Label } from "@/shared/components/shadcn-ui/label";
-import { Ban, ThumbsDown } from "lucide-react";
+import { Ban } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
@@ -21,26 +21,9 @@ type Props = {
   setBlockedIdArray: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-export function DialogDemo({ user, blockedIdArray, setBlockedIdArray }: Props) {
+export function DialogDemo({ user }: Props) {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
-
-  function handleBlockClick(): void {
-    if (!user) return
-
-    const foundBlockedIdIndex = blockedIdArray.findIndex(id => id === user.id);
-
-    let tempArray = [...blockedIdArray]
-
-    if (foundBlockedIdIndex < 0) {
-      tempArray.push(user.id)
-      setBlockedIdArray(tempArray)
-      return
-    }
-
-    tempArray = tempArray.filter(id => id !== user.id)
-    setBlockedIdArray(tempArray)
-  }
 
   const handleKick = () => {
     socket?.emit('kick', {
@@ -51,8 +34,6 @@ export function DialogDemo({ user, blockedIdArray, setBlockedIdArray }: Props) {
 
     socket?.off('kick');
   }
-
-  const isUserBlocked = blockedIdArray.findIndex(id => id === user?.id) >= 0;
 
   if (!user) return null;
 
