@@ -31,7 +31,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         `USER:${user.id}:ROOM`,
       );
 
-      if(!codeRoom) {
+      if (!codeRoom) {
         await this.socketService.removeClientDisconnection(client);
         return;
       }
@@ -57,13 +57,37 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(room.code_room);
       }
 
-      const isPlayingRoom = await this.roomService.checkStartGame(room.id);
-      if(!isPlayingRoom) {
-        await this.socketService.checkAndEmitToHostRoom(this.server, room);
-      }
-      
       await this.socketService.sendListParticipantsInRoom(this.server, room);
       await this.socketService.removeClientDisconnection(client);
+      let roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+      if (!roomRound) return;
+
+      const participants = await this.roomUserService.getListUserOfRoom(room);
+      if (participants.length === 1) {
+        await this.roomRoundService.deleteRoomRound(room.id);
+        return;
+      }
+
+      if (roomRound.painter === client.user.id) {
+        const { endedAt, painterRound, startedAt, word } =
+          await this.roomRoundService.initRoundInfomation(room);
+        roomRound = await this.roomRoundService.updateRoomRound({
+          ...roomRound,
+          word,
+          ended_at: endedAt,
+          started_at: startedAt,
+          painter: roomRound.next_painter,
+          next_painter:
+            [painterRound.next_painter, painterRound.painter].find(
+              (painter) => painter !== roomRound.next_painter,
+            ) ?? roomRound.painter,
+        });
+        await this.socketService.updateRoomRoundWhenDrawerOut(
+          this.server,
+          codeRoom,
+          roomRound,
+        );
+      }
     } catch (error) {
       this.logger.error(error);
     }
