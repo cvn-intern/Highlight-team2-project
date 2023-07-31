@@ -6,13 +6,13 @@ import useToaster from "@/shared/hooks/useToaster";
 import { useUserStore } from "../stores/userStore";
 
 const GoogleLogoutButton = () => {
-    const userStore = useUserStore();
+    const {user, deleteUser} = useUserStore();
     const handleLogout = async () => {
         try {
             await authService.logout();
 
             JWTManager.deleteToken();
-            userStore.deleteUser();
+            deleteUser();
             window.location.reload();
         } catch (error) {
             useToaster({
@@ -24,9 +24,9 @@ const GoogleLogoutButton = () => {
 
     return (
         <>
-            {!userStore.user?.is_guest && (
+            {!user?.is_guest && (
                 <Button
-                    className="flex items-center gap-2 mx-auto mt-2 bg-blue-700 h-9 hover:bg-red-400"
+                    className="flex items-center gap-2 mx-auto mt-4 bg-blue-700 h-9 hover:bg-red-400"
                     style={{ borderRadius: "5px" }}
                     onClick={handleLogout}
                 >
