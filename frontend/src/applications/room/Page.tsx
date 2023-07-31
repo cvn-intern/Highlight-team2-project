@@ -24,18 +24,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
+import themeService from "@/shared/services/themeService";
 
 const formSchema = z.object({
-  nickname: z.string().trim().min(2).max(50),
+  searchInput: z.string().trim().min(2).max(50),
+  theme: z.string(),
   language: z.string({
     required_error: "Please select an language.",
   }),
 });
 
 const Room = () => {
-  const { user, setUser } = useUserStore();
-  const { socket } = useSocketStore();
   const navigate = useNavigate();
+  const { theme, setTheme } = useState();
   const [formAction, setFormAction] = useState<"new-room" | "join-room">(
     "join-room"
   );
@@ -43,52 +44,27 @@ const Room = () => {
   const handleBackButton = () => {
     navigate("/");
   };
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nickname: user?.nickname,
-      language: user?.language,
+      searchInput: "",
+      theme: "all",
+      language: "en",      
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
     if (formAction === "join-room") return null;
   };
 
-  // const handleQuickPlay = async () => {
-  //   try {
-  //     const nickname = form.getValues("nickname");
-  //     const language = form.getValues("language");
-
-  //     if (user?.nickname !== nickname || user?.language !== language) {
-  //       const { data } = await userService.updateUser({
-  //         ...user,
-  //         nickname,
-  //         language,
-  //       });
-
-  //       setUser(data);
-  //     }
-  //     const { data } = await playService.quickPlay();
-  //     socket?.emit("join-room", data);
-
-  //     navigate("/" + data, { state: { wait: false }, replace: true });
-  //   } catch (error: any) {
-  //     (error);
-  //     useToaster({
-  //       type: "error",
-  //       message: error.response.data.response || "Some error occurred!",
-  //     });
-  //   }
-  // };
-
   useEffect(() => {
-    if (!user) return;
-    form.setValue("nickname", user.nickname);
-    form.setValue("language", user.language);
-  }, [user]);
+    (
+      async () => {
+        const { data: themesData } = await themeService.getThemes();
+        setTheme(themesData)
+      }
+    )()
+  })
 
   return (
     <MainLayout>
@@ -120,7 +96,7 @@ const Room = () => {
                 </button>
                 <FormField
                   control={form.control}
-                  name="nickname"
+                  name="searchInput"
                   render={({ field }) => {
                     return (
                       <FormItem className="max-lg:flex-col text-slate-400">
@@ -152,7 +128,7 @@ const Room = () => {
               <div className="flex items-center mr-5">
                 <FormField
                   control={form.control}
-                  name="language"
+                  name="theme"
                   render={({ field }) => (
                     <FormItem className=" max-lg:flex-col md:items-center text-slate-400 mr-10">
                       <FormLabel className="flex items-center gap-5">
@@ -173,8 +149,10 @@ const Room = () => {
                               <SelectValue placeholder="Theme" />
                             </SelectTrigger>
                             <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
-                              <SelectItem value="en">Con bò</SelectItem>
-                              <SelectItem value="vi">Con heo</SelectItem>
+                              {themesData?.map((theme) => (
+                                <SelectItem value={theme.id}>{theme.name}</SelectItem>
+                              ))}
+                              
                             </SelectContent>
                           </Select>
                         </FormControl>

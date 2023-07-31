@@ -10,7 +10,7 @@ import Providers from "./Providers";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from "react-toastify";
-import Room from "./applications/room/Page";
+import Room from "@/applications/room/Page";
 
 function App() {
   const [loading, setLoading] = useState(true);
