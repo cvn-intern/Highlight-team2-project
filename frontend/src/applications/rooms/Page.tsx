@@ -12,11 +12,11 @@ import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import { Book, DoorOpen, Globe, Search, Triangle, User2 } from "lucide-react";
+import { Book, DoorOpen, Globe, Search, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListOfRoom from "./ListOfRoom.component";
-import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
+import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import themeService from "@/shared/services/themeService";
 import roomService from "@/shared/services/roomService";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import useToaster from "@/shared/hooks/useToaster";
 
 interface Theme {
   id: number;
@@ -40,13 +41,10 @@ const formSchema = z.object({
   }),
 });
 
-const Room = () => {
+const RoomsPage = () => {
   const navigate = useNavigate();
   const [themesData, setThemesData] = useState<Theme[]>([]);
-  const [roomFilterData, setRoomFilterData] = useState<Theme[]>([]);
-  // const [formAction, setFormAction] = useState<"new-room" | "join-room">(
-  //   "join-room"
-  // );
+  const [roomFilterData, setRoomFilterData] = useState<roomList[]>([]);
 
   const handleBackButton = () => {
     navigate("/");
@@ -67,36 +65,40 @@ const Room = () => {
         const { data } = await themeService.getThemes();
         setThemesData(data);
       } catch (error) {
-        console.error("Error fetching themes data:", error);
+        useToaster({
+          type: "error",
+          message: "Error fetching themes data!",
+        });
       }
     };
 
     fetchThemesData();
+    handleSubmit(form.getValues());
   }, []);
 
   useDisableBackButton();
 
   const handleSubmit = async (formData: z.infer<typeof formSchema>) => {
     try {
-      // const { data: roomFilterData } = await roomService.filterRooms(
-      //   formData.theme,
-      //   formData.language,
-      //   formData.searchInput
-      // );
-      // setRoomFilterData(roomFilterData);
-
-      console.log("Fetched rooms data:", formData.theme);
-      console.log("Fetched rooms data:", formData.language);
-      console.log("Fetched rooms data:", formData.searchInput);
+      const { data: roomFilterData } = await roomService.filterRooms(
+        formData.theme,
+        formData.language,
+        formData.searchInput
+      );
+      setRoomFilterData(roomFilterData);
     } catch (error) {
-      console.error("Error fetching rooms data:", error);
+      useToaster({
+        type: "error",
+        message: "Error fetching rooms data!",
+      });
     }
   };
 
   const handleDropdownChange = () => {
-    console.log("Dropdown changed");
     handleSubmit(form.getValues());
   };
+
+
 
   return (
     <MainLayout>
@@ -104,14 +106,14 @@ const Room = () => {
         <Logo customClassname="max-md:mt-12" />
         <img
           src={SloganImg}
-          alt=""
+          alt="Slogan"
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
 
-        <div className="relative bg-white flex flex-col items-center mb-5 w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
+        <div className="relative bg-white flex flex-col items-center mb-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
           <button
             onClick={handleBackButton}
-            className="mx-5 md:mr-10 absolute top-8 md:left-10"
+            className="left-1 mx-5 md:mr-10 absolute top-8 md:left-10"
           >
             <Triangle
               size={40}
@@ -122,7 +124,7 @@ const Room = () => {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="w-full flex items-center justify-between my-3"
+              className="w-full flex flex-col md:flex-row items-center justify-between my-3"
             >
               <div className="flex items-center ml-32">
                 <FormField
@@ -139,7 +141,7 @@ const Room = () => {
                                 className={
                                   "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
                                 }
-                                maxLength={MAX_LENGHT_OF_NICKNAME}
+                                maxLength={MAX_LENGHT_OF_SEARCH}
                               />
                               <Search className="absolute w-6 h-6 top-1/2 -translate-y-1/2 right-2" />
                             </>
@@ -154,15 +156,15 @@ const Room = () => {
               </div>
               <img
                 src={RoomsTitle}
-                className=""
+                className="hidden ml-10 lg:block scale-90 md:scale-100"
               />
 
-              <div className="flex items-center mr-5">
+              <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mx-auto justify-between">
                 <FormField
                   control={form.control}
                   name="theme"
                   render={({ field }) => (
-                    <FormItem className=" max-lg:flex-col md:items-center text-slate-400 mr-10">
+                    <FormItem className="max-lg:flex-col md:items-center text-slate-400 mr-10">
                       <FormLabel className="flex items-center gap-5">
                         <div>
                           <Book size={28} strokeWidth={2} color={"#22A699"} />
@@ -180,13 +182,13 @@ const Room = () => {
                             }}
                             defaultValue={field.value}
                           >
-                            <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
                               <SelectValue placeholder="Theme" />
                             </SelectTrigger>
-                            <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
-                              <SelectItem value="all">ALL</SelectItem>
+                            <SelectContent className="text-lg font-bold">
+                              <SelectItem key={0} value="all">ALL</SelectItem>
                               {themesData?.map((theme) => (
-                                <SelectItem value={theme.name}>{theme.name.toUpperCase()}</SelectItem>
+                                <SelectItem key={theme.id} value={theme.name}>{theme.name.toUpperCase()}</SelectItem>
                               ))}
 
                             </SelectContent>
@@ -219,10 +221,10 @@ const Room = () => {
                             }}
                             defaultValue={field.value}
                           >
-                            <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
                               <SelectValue placeholder="Language" />
                             </SelectTrigger>
-                            <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
+                            <SelectContent className="text-lg font-bold border-none ">
                               <SelectItem value="en">English (EN)</SelectItem>
                               <SelectItem value="vi">Vietnamese (VN)</SelectItem>
                             </SelectContent>
@@ -237,8 +239,8 @@ const Room = () => {
             </form>
           </Form>
 
-          <div className="flex flex-col items-stretch justify-center h-full w-11/12 gap-4 p-8 mb-2 bg-white home-content-responsive md:p-0 flex-1 overflow-auto">
-            <ListOfRoom />
+          <div className="flex flex-col items-center justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
+            <ListOfRoom roomFilter={roomFilterData} />
           </div>
           <div className="flex gap-3">
             <Button
@@ -266,4 +268,4 @@ const Room = () => {
   );
 };
 
-export default Room;
+export default RoomsPage;

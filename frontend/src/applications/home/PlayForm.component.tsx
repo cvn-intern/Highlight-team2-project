@@ -58,6 +58,11 @@ const PlayForm = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
     if (formAction === "quick-play") return handleQuickPlay();
+    if (formAction === "find-room") return handleFindRoom();
+  };
+
+  const handleFindRoom = () => {
+    navigate("/rooms");
   };
 
   const handleQuickPlay = async () => {
