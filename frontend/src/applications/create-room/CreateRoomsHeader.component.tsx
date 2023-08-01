@@ -8,7 +8,7 @@ const CreateRoomsHeader = () => {
     };
 
     return (
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between lg:w-full w-[70%]">
             <div>
                 <button
                     onClick={handleBackButton}
@@ -20,8 +20,8 @@ const CreateRoomsHeader = () => {
                     />
                 </button>
             </div>
-            <div className="w-full text-center mr-10">
-                <p className="text-5xl font-balsamiq text-sky-600">
+            <div className="w-full max-lg:mt-2 text-center lg:mr-10">
+                <p className="lg:text-5xl text-2xl font-balsamiq text-sky-600">
                     ROOM SET UP
                 </p>
             </div>

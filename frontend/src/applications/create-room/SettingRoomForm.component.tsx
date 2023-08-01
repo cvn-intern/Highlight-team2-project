@@ -156,7 +156,7 @@ const SettingRoomForm = () => {
                   <Eye color={"#4240C1"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  VISIBLE ROOM
+                  VISIBLE
                 </div>
               </FormLabel>
               <FormControl>

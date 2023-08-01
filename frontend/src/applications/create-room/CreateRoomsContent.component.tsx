@@ -1,16 +1,14 @@
 
 import DoorIcon from "@/shared/assets/door-icon.svg";
-import ThemeImage from "@/shared/assets/game-avatars/deer.png";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
+import themeService from "@/shared/services/themeService";
 import { LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingRoomForm from "./SettingRoomForm.component";
 import ThemeCard from "./ThemeCard.component";
-import { useEffect, useState } from "react";
-import _ from "lodash";
-import themeService from "@/shared/services/themeService";
 
 
 type Theme = {
@@ -21,10 +19,10 @@ type Theme = {
 
 const CreateRoomsContent = () => {
     const [themesList, setThemesList] = useState<Array<Theme>>([]);
-    const [themeId, setThemeId] = useState(0);
+    const [selectedThemeId, setSelectedThemeId] = useState(0);
     const navigate = useNavigate();
     const handleBackButton = () => {
-        navigate("/");
+        navigate("/room");
     };
     const getThemesList = async () => {
         await themeService.getThemes().then(result => setThemesList(result.data));
@@ -34,9 +32,9 @@ const CreateRoomsContent = () => {
 
     return (
         <>
-            <div className="flex justify-center items-center w-[90%] h-[80%] bg-gray-300 rounded-2xl mt-5 p-6 gap-x-2">
+            <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
 
-                <div className="w-[42%] h-full border rounded-2xl bg-white text-center">
+                <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
                     <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">1. SETTINGS</p>
                     <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
                         <SettingRoomForm />
@@ -48,11 +46,12 @@ const CreateRoomsContent = () => {
                         <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">2. THEME</p>
                         <Select>
                             <SelectTrigger className="w-[40%] rounded-xl text-lg font-bold border-2 text-slate-500">
-                                <SelectValue placeholder="Theme" />
+                                <SelectValue placeholder="Themes Filter" />
                             </SelectTrigger>
                             <SelectContent className="rounded-xl text-lg font-semibold text-slate-500">
                                 <SelectItem value="all">All</SelectItem>
                                 <SelectItem value="your">Your Themes</SelectItem>
+                                <SelectItem value="offical">Offical</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -61,10 +60,10 @@ const CreateRoomsContent = () => {
                         <div className="grid grid-cols-4">
                             {themesList.map((theme) => {
                                 return <ThemeCard
-                                    name={theme.name}
+                                    name={theme.name.toUpperCase()}
                                     img={theme.thumbnail}
-                                    onClick={() => setThemeId(theme.id)}
-                                    isSelected={theme.id === themeId}
+                                    onClick={() => setSelectedThemeId(theme.id)}
+                                    isSelected={theme.id === selectedThemeId}
                                 />
                             })}
                         </div>
