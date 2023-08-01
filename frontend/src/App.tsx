@@ -56,6 +56,7 @@ function App() {
               element={<UserExistsInBrowserPage />}
             />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="404" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer role="alert" closeButton={false} />
