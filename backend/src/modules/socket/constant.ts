@@ -53,6 +53,7 @@ export const GAME_PROGRESS_CHANNEL = 'game-progress';
 export const GAME_UPDATE_RANKING_CHANNEL = 'update-ranking';
 export const GAME_INTERVAL_SHOW_WORD_CHANNEL = 'interval-show-word';
 export const GAME_DRAWER_IS_OUT = 'drawer-is-out';
+export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
 
 export const GAME_PLAY = 'game-play';
 export const GAME_STATUS = 'game-status';

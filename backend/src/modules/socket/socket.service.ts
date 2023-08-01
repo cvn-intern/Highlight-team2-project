@@ -11,6 +11,7 @@ import {
   GAME_DRAWER_IS_OUT,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
+  GAME_NEXT_DRAWER_IS_OUT,
   GAME_REFRESH_CHANNEL,
   PARTICIPANTS_CHANNEL,
   QUALIFY_TO_START_CHANNEL,
@@ -21,6 +22,7 @@ import { UserService } from '../user/user.service';
 import { RoomRound } from '../room-round/roomRound.entity';
 import { errorsSocket } from 'src/common/errors/errorCode';
 import { RoomRoundService } from '../room-round/roomRound.service';
+import { RoomUserService } from '../room-user/roomUser.service';
 
 @Injectable()
 export class SocketService {
@@ -31,8 +33,9 @@ export class SocketService {
     private configService: ConfigService,
     private roomService: RoomService,
     private roomRoundService: RoomRoundService,
+    private roomUserService: RoomUserService,
     private userService: UserService,
-  ) {}
+  ) { }
   private stopProgress = false;
   public setProgressInterval(
     minProgressPercentage: number,
@@ -51,7 +54,7 @@ export class SocketService {
       cb(progress);
     }, timeStep);
   }
-  
+
   clearProgressInterval() {
     this.stopProgress = true;
   }
@@ -137,10 +140,10 @@ export class SocketService {
     const userId = this.getUserIdFromSocket(client)
     const isGuest = await this.userService.isGuest(userId);
 
-    if(isGuest) {
+    if (isGuest) {
       return false;
     }
-    
+
     const socketId: string = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
 
     if (socketId && socketId !== client.id) {
@@ -180,13 +183,51 @@ export class SocketService {
     server: Server,
     codeRoom: string,
     roomRound: RoomRound,
+    type: string,
   ) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
-    server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+
+    switch (type) {
+      case GAME_DRAWER_IS_OUT:
+        server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+        break;
+      case GAME_NEXT_DRAWER_IS_OUT:
+        server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+        break;
+      default:
+        break;
+    }
+    
     this.clearProgressInterval()
     server.in(codeRoom).emit(GAME_REFRESH_CHANNEL);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
+  }
+
+  async handlePainterOrNextPainterOutRoom(roomRound: RoomRound, client: SocketClient, server: Server, room: Room) {
+    if (roomRound.next_painter === client.user.id) {
+      await this.roomUserService.resetNextPainterCachePainterForRoom(room.id);
+    }
+
+    if (roomRound.painter === client.user.id || roomRound.next_painter === client.user.id) {
+      const { endedAt, painterRound, startedAt, word } =
+        await this.roomRoundService.initRoundInfomation(room);
+
+      roomRound = await this.roomRoundService.updateRoomRound({
+        ...roomRound,
+        word,
+        ended_at: endedAt,
+        started_at: startedAt,
+        painter: painterRound.painter,
+        next_painter: painterRound.next_painter,
+      });
+      await this.updateRoomRoundWhenDrawerOut(
+        server,
+        room.code_room,
+        roomRound,
+        roomRound.painter === client.user.id ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
+      );
+    }
   }
 }

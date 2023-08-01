@@ -93,7 +93,7 @@ export class RoomUserService {
 
     // Find painter
     let painterId = currentPainter; 
-    if (drewPainters.length === 0 && !painterId) {
+    if (drewPainters.length === 0 || !painterId) {
       const painterIndex: number = Math.floor(Math.random() * notDrewPainters.length);
       painterId = notDrewPainters[painterIndex].id;
     }
@@ -104,7 +104,7 @@ export class RoomUserService {
     );
 
     if(participantsNextPainter.length === 0) {
-      await this.resetCachePainterForRoom(room.id, currentPainter);
+      await this.resetDrewPaintersCachePainterForRoom(room.id, currentPainter);
       participantsNextPainter = participants.filter((participant: Participant) => participant.id !== painterId);
     } 
 
@@ -123,16 +123,25 @@ export class RoomUserService {
     let drewPainters = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
     drewPainters.push(painter);
     
-    await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
+    return await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
       drewPainters,
       nextPainter: nextPainter,
     }, expireTimeOneDay);
   }
 
-  async resetCachePainterForRoom(roomId: number, nextPainter: number) {
+  async resetDrewPaintersCachePainterForRoom(roomId: number, nextPainter: number) {
     await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
       drewPainters: [],
       nextPainter: nextPainter,
+    }, expireTimeOneDay);
+  }
+
+  async resetNextPainterCachePainterForRoom(roomId: number) {
+    let paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
+
+    return await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
+      ...paintersOfPreviousRound,
+      nextPainter: null,
     }, expireTimeOneDay);
   }
 

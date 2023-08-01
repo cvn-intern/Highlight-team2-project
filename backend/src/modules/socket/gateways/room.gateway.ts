@@ -54,25 +54,6 @@ export class RoomGateway extends SocketGateway {
       return;
     }
 
-    if (roomRound.painter === client.user.id) {
-      const { endedAt, painterRound, startedAt, word } =
-        await this.roomRoundService.initRoundInfomation(room);
-      roomRound = await this.roomRoundService.updateRoomRound({
-        ...roomRound,
-        word,
-        ended_at: endedAt,
-        started_at: startedAt,
-        painter: roomRound.next_painter,
-        next_painter:
-          [painterRound.next_painter, painterRound.painter].find(
-            (painter) => painter !== roomRound.next_painter,
-          ) ?? roomRound.painter,
-      });
-      await this.socketService.updateRoomRoundWhenDrawerOut(
-        this.server,
-        data.codeRoom,
-        roomRound,
-      );
-    }
+    await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client, this.server, room);
   }
 }
