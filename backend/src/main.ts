@@ -1,10 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { Logger } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
+
+export let app: INestApplication;
 
 async function bootstrap() {
   const logger: Logger = new Logger('main');
-  const app = await NestFactory.create(AppModule);
+  app = await NestFactory.create(AppModule);
 
   app.enableCors();
 

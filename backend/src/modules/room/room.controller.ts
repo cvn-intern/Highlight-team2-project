@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Logger,
@@ -15,7 +16,6 @@ import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
-import { extractIdRoom } from '../../common/utils/helper';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { Room } from './room.entity';
@@ -30,7 +30,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getRooms(
+  async getRoomsByQuery(
     @Query('theme') theme: string,
     @Query('language_code') language_code: string,
     @Query('search') search: string,
@@ -95,6 +95,36 @@ export class RoomController {
       });
 
       return response.status(HttpStatus.OK).json(newRoom);
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Delete('/:codeRoom')
+  async deleteRoom(
+    @Param('codeRoom') codeRoom: string,
+    @Res() response: Response,
+  ) {
+    try {
+      const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+      if (!room) {
+        return response.status(HttpStatus.NOT_FOUND).json({
+          message: 'Room not found',
+        });
+      }
+      const roomUsers = await this.roomUserService.getListUserOfRoom(room);
+      if (roomUsers && roomUsers.length > 0) {
+        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+          message:
+            'There are still users in the room, you cannot delete it now!',
+        });
+      }
+      await this.roomService.deleteRoom(codeRoom);
+      return response.status(HttpStatus.OK).json({
+        message: 'Delete room successfully',
+      });
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);

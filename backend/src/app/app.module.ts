@@ -48,7 +48,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       }),
     }),
     ServeStaticModule.forRoot({
-      rootPath: process.cwd() + '/src/common/public',
+      rootPath: process.cwd() + '/src/public',
     }),
   ],
   controllers: [AppController],

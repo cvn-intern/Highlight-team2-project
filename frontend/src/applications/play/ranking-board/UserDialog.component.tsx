@@ -5,13 +5,15 @@ import {
   DialogHeader,
 } from "@/shared/components/shadcn-ui/Modal";
 import { Label } from "@/shared/components/shadcn-ui/label";
-import { Ban, ThumbsDown } from "lucide-react";
+import { Ban } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import ProfileLabel from "@/shared/assets/profile-label.png";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { useParams } from "react-router-dom";
 
 type Props = {
   user: Participant | null;
@@ -19,26 +21,19 @@ type Props = {
   setBlockedIdArray: React.Dispatch<React.SetStateAction<number[]>>;
 };
 
-export function DialogDemo({ user, blockedIdArray, setBlockedIdArray }: Props) {
+export function DialogDemo({ user }: Props) {
+  const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
 
-  function handleBlockClick(): void {
-    if(!user) return
+  const handleKick = () => {
+    socket?.emit('kick', {
+      codeRoom,
+      userId: user?.id,
+      nickname: user?.nickname,
+    });
 
-    const foundBlockedIdIndex = blockedIdArray.findIndex(id => id === user.id);
-
-    let tempArray = [...blockedIdArray]
-
-    if(foundBlockedIdIndex < 0) {
-      tempArray.push(user.id)
-      setBlockedIdArray(tempArray)
-      return
-    }
-
-    tempArray = tempArray.filter(id => id !== user.id)
-    setBlockedIdArray(tempArray)
+    socket?.off('kick');
   }
-
-  const isUserBlocked = blockedIdArray.findIndex(id => id === user?.id) >= 0;
 
   if (!user) return null;
 
@@ -66,37 +61,18 @@ export function DialogDemo({ user, blockedIdArray, setBlockedIdArray }: Props) {
       </div>
       <DialogFooter>
         <div className="flex flex-col items-center justify-center gap-5 w-full pb-4">
-          <div className="flex items-center justify-center w-full">
-            <Button className="rounded-l-full rounded-r-full ring-8 ring-black bg-yellow-600 hover:bg-yellow-200 text-white">
-              <ThumbsDown
-                size={24}
-                color="#000"
-                strokeWidth={4}
-                className="mr-1"
-              />
-              VOTE KICK
-            </Button>
-          </div>
-          <div className="flex items-center justify-center w-full">
-            {!isUserBlocked && (
-              <Button
-                variant="destructive"
-                className="rounded-l-full rounded-r-full ring-8 ring-black bg-red-700 hover:bg-red-600 text-white"
-                onClick={() => handleBlockClick()}
-              >
-                <Ban size={24} color="#000" strokeWidth={4} className="mr-5" />
-                BLOCKS
-              </Button>)}
-            {isUserBlocked && (
-              <Button
-                variant="destructive"
-                className="rounded-l-full rounded-r-full ring-8 ring-black bg-red-700 hover:bg-red-600 text-white"
-                onClick={() => handleBlockClick()}
-              >
-                <Ban size={24} color="#000" strokeWidth={4} className="mr-1" />
-                UNBLOCKS
-              </Button>)}
-          </div>
+          <Button
+            variant="destructive"
+            className="rounded-l-full rounded-r-full ring-8 ring-black bg-red-700 hover:bg-red-600 text-white"
+            onClick={handleKick}>
+            <Ban
+              size={24}
+              color="#000"
+              strokeWidth={4}
+              className="mr-4"
+            />
+            KICK
+          </Button>
         </div>
       </DialogFooter>
     </DialogContent>
