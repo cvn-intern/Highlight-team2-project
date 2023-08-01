@@ -53,7 +53,7 @@ const RankingBoard = () => {
         setParticipants(
           [...data.participants].map((participant) => ({ ...participant, score: 0 }))
         );
-        setRoomRound
+        setRoomRound(null)
         socket.emit(WAIT_FOR_OTHER_PLAYERS, codeRoom);
       }
 
