@@ -13,7 +13,7 @@ const ThemeCard = (props: ThemeCardProps) => {
     const { isSelected, onClick, img } = props;
 
     return (
-        <Card className={cn("m-4 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF]", {
+        <Card className={cn("m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF]", {
             "ring-[6px] ring-[#474DDA]": isSelected
         })}  onClick={onClick}>
 

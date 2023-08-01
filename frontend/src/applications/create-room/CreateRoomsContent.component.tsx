@@ -47,7 +47,7 @@ const CreateRoomsContent = () => {
                         </Select>
                     </div>
 
-                    <ScrollArea className="h-full w-full max-h-[50vh] rounded-2xl border py-5 px-2  bg-white">
+                    <ScrollArea className="h-full w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white">
                         <div className="grid grid-cols-4">
                             {themeIdList.map((id) => {
                                 return <ThemeCard
