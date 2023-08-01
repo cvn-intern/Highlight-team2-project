@@ -1,4 +1,4 @@
-type roomList = {
+type RoomList = {
     id: number;
     thumbnail: string;
     theme_name: string;

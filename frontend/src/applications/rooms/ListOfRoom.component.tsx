@@ -3,7 +3,7 @@ import { Card, CardContent } from '@/shared/components/shadcn-ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/shadcn-ui/avatar-shadcn';
 
 interface RoomFilterInformationProps {
-  roomFilter: Array<roomList>;
+  roomFilter: Array<RoomList>;
 }
 
 interface SelectCodeRoomProps {

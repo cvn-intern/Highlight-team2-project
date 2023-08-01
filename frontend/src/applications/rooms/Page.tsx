@@ -46,7 +46,7 @@ const formSchema = z.object({
 const RoomsPage = () => {
   const navigate = useNavigate();
   const [themesData, setThemesData] = useState<Theme[]>([]);
-  const [roomFilterData, setRoomFilterData] = useState<roomList[]>([]);
+  const [roomFilterData, setRoomFilterData] = useState<RoomList[]>([]);
   const [selectCodeRoom, setSelectCodeRoom] = useState<string>("");
   const { socket } = useSocketStore();
 
