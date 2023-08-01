@@ -1,18 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
-import {
-  RoomInterface,
-  RoomRoundInfoInterface,
-  RoomStatusResponseInterface,
-} from './room.interface';
+import { RoomInterface, RoomStatusResponseInterface } from './room.interface';
 import { randomString } from '../../common/utils/helper';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomRound } from '../room-round/roomRound.entity';
-import { WordService } from '../word/word.service';
-import { now } from 'moment';
 const moment = require('moment');
 
 const MAX_LENGTH_RANDOM = 5;

@@ -44,4 +44,20 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
     const words_collections = await queryBuilder.getMany();
     return words_collections;
   }
+
+  async createWordsCollection(
+    theme_id: number,
+    language_code: string,
+    creator_id: number,
+    is_created_by_system: boolean,
+  ): Promise<WordsCollection> {
+    const newWordsCollection = this.create({
+      theme_id,
+      language_code,
+      creator_id,
+      is_created_by_system,
+    });
+    await this.save(newWordsCollection);
+    return newWordsCollection;
+  }
 }

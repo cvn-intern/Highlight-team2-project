@@ -1,6 +1,8 @@
 import {
   Controller,
   Get,
+  Post,
+  Body,
   Query,
   UseGuards,
   Res,
@@ -11,6 +13,7 @@ import { WordsCollectionService } from './wordsCollection.service';
 import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
 import { Response } from 'express';
 import { IdUser } from 'src/common/decorators/idUser';
+import { CreateWordsCollectionDto } from './dto/createWordsCollection';
 
 @Controller('words-collection')
 export class WordsCollectionController {
@@ -47,6 +50,32 @@ export class WordsCollectionController {
         return wordsCollection;
       });
 
+      return response.status(HttpStatus.OK).json(wordsCollection);
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Post()
+  async createWordsCollection(
+    @Body() createWordsCollectionDto: CreateWordsCollectionDto,
+    @Res() response: Response,
+    @IdUser() idUser: number,
+  ) {
+    try {
+      const creator_id = idUser;
+      const is_created_by_system = false;
+      const { theme_id, language_code, words_list } = createWordsCollectionDto;
+      const wordsCollection =
+        await this.wordsCollectionService.createWordsCollection(
+          theme_id,
+          language_code,
+          creator_id,
+          is_created_by_system,
+          words_list,
+        );
       return response.status(HttpStatus.OK).json(wordsCollection);
     } catch (error) {
       this.logger.error(error);
