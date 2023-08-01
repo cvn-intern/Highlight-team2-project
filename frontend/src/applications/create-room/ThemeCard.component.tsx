@@ -7,10 +7,11 @@ type ThemeCardProps = {
     isSelected?: boolean;
     onClick: () => void;
     img: string;
+    name: string;
 };
 
 const ThemeCard = (props: ThemeCardProps) => {
-    const { isSelected, onClick, img } = props;
+    const { isSelected, onClick, img, name } = props;
 
     return (
         <Card className={cn("m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF]", {
@@ -22,7 +23,7 @@ const ThemeCard = (props: ThemeCardProps) => {
                     <AvatarImage src={img} />
                     <AvatarFallback>Avatar</AvatarFallback>
                 </Avatar>
-                <CardTitle className="font-balsamiq mt-2 text-lg">Card Title</CardTitle>
+                <CardTitle className="font-balsamiq mt-2 text-lg">{name}</CardTitle>
                 <div className="flex text-sky-600 gap-x-1">
                     <p className="text-2xl font-balsamiq">Offical </p>
                     <CheckCircle2 />

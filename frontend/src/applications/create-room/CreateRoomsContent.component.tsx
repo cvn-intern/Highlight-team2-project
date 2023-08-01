@@ -8,19 +8,29 @@ import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SettingRoomForm from "./SettingRoomForm.component";
 import ThemeCard from "./ThemeCard.component";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import _ from "lodash";
+import themeService from "@/shared/services/themeService";
 
-const themeIdList = _.range(0,60,1);
+
+type Theme = {
+    id: number
+    name: string
+    thumbnail: string
+}
 
 const CreateRoomsContent = () => {
+    const [themesList, setThemesList] = useState<Array<Theme>>([]);
     const [themeId, setThemeId] = useState(0);
-
     const navigate = useNavigate();
     const handleBackButton = () => {
         navigate("/");
     };
+    const getThemesList = async () => {
+        await themeService.getThemes().then(result => setThemesList(result.data));
 
+    }
+    useEffect(() => { getThemesList(); console.log(themesList) }, []);
 
     return (
         <>
@@ -49,11 +59,12 @@ const CreateRoomsContent = () => {
 
                     <ScrollArea className="h-full w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white">
                         <div className="grid grid-cols-4">
-                            {themeIdList.map((id) => {
+                            {themesList.map((theme) => {
                                 return <ThemeCard
-                                    img={ThemeImage}
-                                    onClick={() => setThemeId(id)}
-                                    isSelected={id === themeId}
+                                    name={theme.name}
+                                    img={theme.thumbnail}
+                                    onClick={() => setThemeId(theme.id)}
+                                    isSelected={theme.id === themeId}
                                 />
                             })}
                         </div>

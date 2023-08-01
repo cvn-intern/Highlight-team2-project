@@ -4,7 +4,6 @@ import CreateRoomsHeader from "./CreateRoomsHeader.component";
 import CreateRoomsContent from "./CreateRoomsContent.component";
 
 const CreateRooms = () => {
-
     return (
         <MainLayout>
             <div className="flex-col grid lg:w-[80%] w-[80%]">                
