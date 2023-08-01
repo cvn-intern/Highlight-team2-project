@@ -11,7 +11,7 @@ export class WordService {
     @InjectRepository(Word)
     private wordRepository: Repository<Word>,
     private redisService: RedisService,
-  ) { }
+  ) {}
 
   async getWordRandom(wordCollection: number, roomId: number): Promise<Word> {
     let words: Array<Word> = await this.wordRepository.find({
@@ -21,11 +21,11 @@ export class WordService {
     });
     const usedWords: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
-    if(usedWords) {
+    if (usedWords) {
       words = words.filter((word: Word) => !usedWords.includes(word.word));
     }
 
-    if(words.length === 0) {
+    if (words.length === 0) {
       await this.deleteCacheWordsForRoom(roomId);
       return this.getWordRandom(wordCollection, roomId);
     }
@@ -36,9 +36,9 @@ export class WordService {
   }
 
   async cacheWordsForRoom(roomId: number, word: string) {
-    let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`); 
+    let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
-    if(!words) {
+    if (!words) {
       words = [];
     }
 

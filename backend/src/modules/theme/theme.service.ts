@@ -6,12 +6,12 @@ import { ThemeInterface } from './theme.interface';
 
 @Injectable()
 export class ThemeService {
-    constructor(
-        @InjectRepository(Theme)
-        private themeRepository: Repository<Theme>,
-    ) {}
+  constructor(
+    @InjectRepository(Theme)
+    private themeRepository: Repository<Theme>,
+  ) {}
 
-    async createNewTheme(theme: ThemeInterface): Promise<Theme> {
-        return await this.themeRepository.save(theme);
-    }
+  async createNewTheme(theme: ThemeInterface): Promise<Theme> {
+    return await this.themeRepository.save(theme);
+  }
 }

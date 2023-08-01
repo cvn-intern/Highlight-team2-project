@@ -1,24 +1,21 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WsException } from "@nestjs/websockets";
-import { SocketGateway } from "./socket.gateway";
-import { BLOCK_MESSAGE, HOST_KICK_USER_CONTENT, KICK_CHANNEL, NOTIFY_CHANNEL } from "../constant";
-import { SocketClient } from "../socket.class";
-import { errorsSocket } from "src/common/errors/errorCode";
-import { Room } from "src/modules/room/room.entity";
-import { Socket } from "socket.io";
-import { Chat } from "../types/chat";
+import { ConnectedSocket, MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
+import { SocketGateway } from './socket.gateway';
+import { BLOCK_MESSAGE, HOST_KICK_USER_CONTENT, KICK_CHANNEL, NOTIFY_CHANNEL } from '../constant';
+import { SocketClient } from '../socket.class';
+import { errorsSocket } from 'src/common/errors/errorCode';
+import { Room } from 'src/modules/room/room.entity';
+import { Socket } from 'socket.io';
+import { Chat } from '../types/chat';
 
 type KickUser = {
   codeRoom: string;
   userId: number;
   nickname: string;
-}
+};
 
 export class RoomGateway extends SocketGateway {
   @SubscribeMessage(KICK_CHANNEL)
-  async hanldeKick(
-    @MessageBody() data: KickUser,
-    @ConnectedSocket() client: SocketClient,
-  ) {
+  async hanldeKick(@MessageBody() data: KickUser, @ConnectedSocket() client: SocketClient) {
     const room: Room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
 
     if (!room) {
@@ -36,7 +33,7 @@ export class RoomGateway extends SocketGateway {
       user: data.nickname,
       type: BLOCK_MESSAGE,
       message: HOST_KICK_USER_CONTENT,
-    }
+    };
     socketKickedUser.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
     this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `You ${HOST_KICK_USER_CONTENT}`);
 
@@ -45,7 +42,7 @@ export class RoomGateway extends SocketGateway {
     await this.socketService.sendListParticipantsInRoom(this.server, room);
     await this.socketService.checkAndEmitToHostRoom(this.server, room);
 
-    let roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+    const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
     if (!roomRound) return;
 
     const participants = await this.roomUserService.getListUserOfRoom(room);

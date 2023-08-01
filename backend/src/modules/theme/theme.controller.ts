@@ -5,16 +5,10 @@ import { Response } from 'express';
 
 @Controller('themes')
 export class ThemeController {
-  constructor(
-    private themeService: ThemeService,
-    private logger: Logger = new Logger(ThemeController.name),
-  ) { }
+  constructor(private themeService: ThemeService, private logger: Logger = new Logger(ThemeController.name)) {}
 
   @Post()
-  async createNewTheme(
-    @Body(new ValidationPipe()) themeInformation: CreateThemeDTO,
-    @Res() response: Response,
-  ) {
+  async createNewTheme(@Body(new ValidationPipe()) themeInformation: CreateThemeDTO, @Res() response: Response) {
     try {
       const newTheme = await this.themeService.createNewTheme(themeInformation);
 

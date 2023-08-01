@@ -31,10 +31,7 @@ export class RoomRoundService {
   }
 
   async updateRoomRound(roomRound: RoomRoundInterface): Promise<RoomRound> {
-    await this.roomRoundRepository.update(
-      { room_id: roomRound.room_id },
-      { ...roomRound },
-    );
+    await this.roomRoundRepository.update({ room_id: roomRound.room_id }, { ...roomRound });
 
     const roomUpdate: RoomRound = await this.roomRoundRepository.findOne({
       where: {
@@ -46,7 +43,7 @@ export class RoomRoundService {
   }
 
   async cacheDataRoomRound(roundOfRoom: RoomRound) {
-    return  await Promise.all([
+    return await Promise.all([
       this.roomUserService.cachePainterForRoom(roundOfRoom.room_id, roundOfRoom.painter, roundOfRoom.next_painter),
       this.wordService.cacheWordsForRoom(roundOfRoom.room_id, roundOfRoom.word),
     ]);

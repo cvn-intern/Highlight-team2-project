@@ -6,10 +6,7 @@ import { Word } from './word.entity';
 import { RedisModule } from '../redis/redis.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Word]),
-    RedisModule,
-  ],
+  imports: [TypeOrmModule.forFeature([Word]), RedisModule],
   controllers: [WordController],
   providers: [WordService],
   exports: [WordService],

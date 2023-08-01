@@ -7,11 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { RedisModule } from '../redis/redis.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule,
-    RedisModule,
-  ],
+  imports: [TypeOrmModule.forFeature([User]), JwtModule, RedisModule],
   controllers: [UserController],
   providers: [UserService, Logger],
   exports: [UserService],

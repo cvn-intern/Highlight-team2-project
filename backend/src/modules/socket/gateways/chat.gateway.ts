@@ -1,9 +1,4 @@
-import {
-  SubscribeMessage,
-  MessageBody,
-  ConnectedSocket,
-  WsException,
-} from '@nestjs/websockets';
+import { SubscribeMessage, MessageBody, ConnectedSocket, WsException } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import { expireTimeOneDay } from '../../../common/variables/constVariable';
 import { checkTypeAnswer, extractIdRoom } from '../../../common/utils/helper';
@@ -31,10 +26,7 @@ import { RoomRound } from 'src/modules/room-round/roomRound.entity';
 
 export class ChatGateway extends SocketGateway {
   @SubscribeMessage(JOIN_ROOM_CHANNEL)
-  async handleJoinRoom(
-    @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: SocketClient,
-  ) {
+  async handleJoinRoom(@MessageBody() codeRoom: string, @ConnectedSocket() client: SocketClient) {
     try {
       let room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
@@ -58,11 +50,7 @@ export class ChatGateway extends SocketGateway {
       }
 
       client.join(room.code_room);
-      await this.redisService.setObjectByKeyValue(
-        `USER:${client.user.id}:ROOM`,
-        codeRoom,
-        expireTimeOneDay,
-      );
+      await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       const messageContent: Chat = {
         user: client.user.nickname,
@@ -84,15 +72,10 @@ export class ChatGateway extends SocketGateway {
   }
 
   @SubscribeMessage(CHAT_ROOM_CHANNEL)
-  async handleMessageChatBox(
-    @MessageBody() msgBody: MessageBodyType,
-    @ConnectedSocket() client: SocketClient,
-  ) {
+  async handleMessageChatBox(@MessageBody() msgBody: MessageBodyType, @ConnectedSocket() client: SocketClient) {
     try {
       const roomId = extractIdRoom(msgBody.codeRoom);
-      const round: RoomRound = await this.roomRoundService.getRoundOfRoom(
-        roomId,
-      );
+      const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
       const answerRound: string = round.word;
       const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
 
@@ -102,27 +85,24 @@ export class ChatGateway extends SocketGateway {
         message: msgBody.message,
       };
 
-      const ROOM_CHAT: string = `${msgBody.codeRoom}-chat`;
+      const ROOM_CHAT = `${msgBody.codeRoom}-chat`;
 
       if (typeAnswer === ANSWER_CORRETLY || typeAnswer === ANSWER_APPROXIMATELY) {
         messageContent.message = SERVER_BLOCKED_MESSAGE_CONTENT;
         messageContent.type = BLOCK_MESSAGE;
         messageContent.user = '';
-        this.server.to(client.id).emit(ROOM_CHAT, messageContent)
+        this.server.to(client.id).emit(ROOM_CHAT, messageContent);
         return;
       }
 
-      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, messageContent)
+      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
     } catch (error) {
       this.logger.error(error);
     }
   }
 
   @SubscribeMessage(LEAVE_ROOM_CHANNEL)
-  async handleLeaveRoom(
-    @MessageBody() codeRoom: string,
-    @ConnectedSocket() client: SocketClient,
-  ) {
+  async handleLeaveRoom(@MessageBody() codeRoom: string, @ConnectedSocket() client: SocketClient) {
     try {
       let room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
@@ -152,7 +132,7 @@ export class ChatGateway extends SocketGateway {
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
       await this.socketService.sendListParticipantsInRoom(this.server, room);
 
-      let roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
 
       const participants = await this.roomUserService.getListUserOfRoom(room);

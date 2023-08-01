@@ -1,20 +1,8 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Logger,
-  Param,
-  Post,
-  Res,
-  UseGuards,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Logger, Param, Post, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
 import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
-import { extractIdRoom } from '../../common/utils/helper';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { Room } from './room.entity';
@@ -62,10 +50,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/:codeRoom')
-  async getRoom(
-    @Param('codeRoom') codeRoom: string,
-    @Res() response: Response,
-  ) {
+  async getRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
@@ -78,14 +63,11 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/participants/:codeRoom')
-  async getListUserOfRoom(
-    @Param('codeRoom') codeRoom: string,
-    @Res() response: Response,
-  ) {
+  async getListUserOfRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
       const users = await this.roomUserService.getListUserOfRoom(room);
-      
+
       return response.status(HttpStatus.OK).json({
         participants: users,
         max_player: room.max_player,

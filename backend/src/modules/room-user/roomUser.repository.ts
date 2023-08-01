@@ -16,18 +16,9 @@ export class RoomUserRepository extends Repository<RoomUser> {
   async getParticipantsOfRoom(room_id: number): Promise<RoomUser[]> {
     return await this.createQueryBuilder('roomuser')
       .where('room_id = :room_id', { room_id })
-      .leftJoinAndMapOne(
-        'roomuser.user', User, 'user', 'user.id = roomuser.user_id'
-      )
-      .select([
-        'roomuser.score',
-        'roomuser.answered_at',
-      ])
-      .addSelect([
-        'user.id',
-        'user.avatar',
-        'user.nickname'
-      ])
+      .leftJoinAndMapOne('roomuser.user', User, 'user', 'user.id = roomuser.user_id')
+      .select(['roomuser.score', 'roomuser.answered_at'])
+      .addSelect(['user.id', 'user.avatar', 'user.nickname'])
       .orderBy('roomuser.score', 'ASC')
       .getMany();
   }

@@ -3,22 +3,19 @@ import { UserService } from './user.service';
 import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
-import { getFileAvatars } from '../../common/utils/helper';
-import { app } from 'src/main';
+import { RedisService } from '../redis/redis.service';
 
 @Controller('users')
 export class UserController {
   constructor(
     private userService: UserService,
     private logger: Logger = new Logger(UserController.name),
-  ) { }
+    private redisService: RedisService,
+  ) {}
 
   @UseGuards(AuthorizeJWT)
   @Put('/update-profile')
-  async updateProfile(
-    @Body(new ValidationPipe()) userInformation: UpdateUserDTO,
-    @Res() response: Response,
-  ) {
+  async updateProfile(@Body(new ValidationPipe()) userInformation: UpdateUserDTO, @Res() response: Response) {
     try {
       const user = await this.userService.updateUser(userInformation);
 
@@ -31,18 +28,11 @@ export class UserController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/avatars')
-  async getAvatars(
-    @Res() response: Response,
-  ) {
+  async getAvatars(@Res() response: Response) {
     try {
-      const hostBE: string = await app.getUrl();
-      const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-        return `${hostBE}/${avatar}`;
-      });
+      const avatars: Array<string> = await this.redisService.getObjectByKey('DEFAULT_AVATARS');
 
-      return response.status(HttpStatus.OK).json(
-        avatars,
-      );
+      return response.status(HttpStatus.OK).json(avatars ? avatars : []);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status);

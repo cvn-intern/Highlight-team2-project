@@ -1,10 +1,10 @@
-import { IsNotEmpty, Length } from "class-validator";
+import { IsNotEmpty, Length } from 'class-validator';
 
 export class CreateThemeDTO {
-    @IsNotEmpty()
-    @Length(2)
-    name: string;
+  @IsNotEmpty()
+  @Length(2)
+  name: string;
 
-    @IsNotEmpty()
-    thumbnail: string;
+  @IsNotEmpty()
+  thumbnail: string;
 }

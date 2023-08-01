@@ -1,24 +1,24 @@
 //socket chat event receive from client
-export const JOIN_ROOM_CHANNEL: string = 'join-room';
-export const CHAT_ROOM_CHANNEL: string = 'chat-room';
-export const LEAVE_ROOM_CHANNEL: string = 'leave-room';
-export const ANSWER_ROOM_CHANNEL: string = 'answer-room';
+export const JOIN_ROOM_CHANNEL = 'join-room';
+export const CHAT_ROOM_CHANNEL = 'chat-room';
+export const LEAVE_ROOM_CHANNEL = 'leave-room';
+export const ANSWER_ROOM_CHANNEL = 'answer-room';
 
 //socket draw event receive from client
-export const NEW_PLAYER_CHANNEL: string = 'new-player';
-export const CANVAS_STATE_CHANNEL: string = 'canvas-state';
-export const START_DRAWING_CHANNEL: string = 'start-drawing';
-export const DRAWING_CHANNEL: string = 'drawing';
-export const FINISH_DRAWING_CHANNEL: string = 'finish-drawing';
-export const CLEAR_CANVAS_CHANNEL: string = 'clear-canvas';
+export const NEW_PLAYER_CHANNEL = 'new-player';
+export const CANVAS_STATE_CHANNEL = 'canvas-state';
+export const START_DRAWING_CHANNEL = 'start-drawing';
+export const DRAWING_CHANNEL = 'drawing';
+export const FINISH_DRAWING_CHANNEL = 'finish-drawing';
+export const CLEAR_CANVAS_CHANNEL = 'clear-canvas';
 
 //socket draw event emit to client
-export const DRAWER_START_DRAWING: string = 'drawer-start-drawing';
-export const DRAWER_DRAWING: string = 'drawer-drawing';
-export const DRAWER_FINISH_DRAWING: string = 'drawer-finish-drawing';
-export const DRAWER_CLEAR_CANVAS: string = 'drawer-clear-canvas';
-export const GET_CANVAS_STATE: string = 'get-canvas-state';
-export const CANVAS_STATE_FROM_SERVER: string = 'canvas-state-from-server';
+export const DRAWER_START_DRAWING = 'drawer-start-drawing';
+export const DRAWER_DRAWING = 'drawer-drawing';
+export const DRAWER_FINISH_DRAWING = 'drawer-finish-drawing';
+export const DRAWER_CLEAR_CANVAS = 'drawer-clear-canvas';
+export const GET_CANVAS_STATE = 'get-canvas-state';
+export const CANVAS_STATE_FROM_SERVER = 'canvas-state-from-server';
 
 // answer and chat constant
 export const JOIN_ROOM_TYPE = 0;
@@ -27,7 +27,7 @@ export const CHAT_ROOM_TYPE = 2;
 export const ANSWER_CORRETLY = 3;
 export const ANSWER_APPROXIMATELY = 4;
 export const ANSWER_WRONG = 5;
-export const BLOCK_MESSAGE  = 6;
+export const BLOCK_MESSAGE = 6;
 export const MINIMUM_CHAR_WRONG = 2;
 export const ANSWER_CORRECTLY_CONTENT = 'hit!';
 export const ANSWER_APPROXIMATELY_CONTENT = 'answer is close!';
