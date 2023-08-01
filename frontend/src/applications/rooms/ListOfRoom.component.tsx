@@ -12,7 +12,6 @@ interface SelectCodeRoomProps {
 }
 
 const ListOfRoom: React.FC<RoomFilterInformationProps & SelectCodeRoomProps> = ({ roomFilter, selectCodeRoom, setSelectCodeRoom }) => {
-  console.log("sadasd", selectCodeRoom);
   const handleSelectRoom = (codeRoom: string) => {
     if (selectCodeRoom === codeRoom) {
       setSelectCodeRoom("");
