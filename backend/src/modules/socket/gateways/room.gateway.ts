@@ -17,7 +17,7 @@ export class RoomGateway extends SocketGateway {
   @SubscribeMessage(KICK_CHANNEL)
   async hanldeKick(
     @MessageBody() data: KickUser,
-    @ConnectedSocket() client: SocketClient, 
+    @ConnectedSocket() client: SocketClient,
   ) {
     const room: Room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
 
@@ -25,7 +25,7 @@ export class RoomGateway extends SocketGateway {
       throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     }
 
-    if(room.host_id !== client.user.id) {
+    if (room.host_id !== client.user.id) {
       throw new WsException(errorsSocket.YOU_NOT_HOST);
     }
     const socketIdKickedUser = await this.redisService.getObjectByKey(`USER:${data.userId}:SOCKET`);
@@ -44,5 +44,35 @@ export class RoomGateway extends SocketGateway {
     await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
     await this.socketService.sendListParticipantsInRoom(this.server, room);
     await this.socketService.checkAndEmitToHostRoom(this.server, room);
+
+    let roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+    if (!roomRound) return;
+
+    const participants = await this.roomUserService.getListUserOfRoom(room);
+    if (participants.length === 1) {
+      await this.roomRoundService.deleteRoomRound(room.id);
+      return;
+    }
+
+    if (roomRound.painter === client.user.id) {
+      const { endedAt, painterRound, startedAt, word } =
+        await this.roomRoundService.initRoundInfomation(room);
+      roomRound = await this.roomRoundService.updateRoomRound({
+        ...roomRound,
+        word,
+        ended_at: endedAt,
+        started_at: startedAt,
+        painter: roomRound.next_painter,
+        next_painter:
+          [painterRound.next_painter, painterRound.painter].find(
+            (painter) => painter !== roomRound.next_painter,
+          ) ?? roomRound.painter,
+      });
+      await this.socketService.updateRoomRoundWhenDrawerOut(
+        this.server,
+        data.codeRoom,
+        roomRound,
+      );
+    }
   }
 }

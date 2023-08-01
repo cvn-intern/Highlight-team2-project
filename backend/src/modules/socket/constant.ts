@@ -46,7 +46,7 @@ export const GAME_WAIT_PLAYERS_CHANNEL = 'wait-for-players';
 export const GAME_START_CHANNEL = 'game-start';
 export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
 export const GAME_END_CHANNEL = 'game-end';
-export const GAME_REFRESH_CHANNEL = 'refresh-out';
+export const GAME_REFRESH_CHANNEL = 'refresh-round';
 
 export const NOTIFY_CHANNEL = 'notification';
 export const GAME_PROGRESS_CHANNEL = 'game-progress';

@@ -11,6 +11,7 @@ import {
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
   GAME_PROGRESS_CHANNEL,
+  GAME_REFRESH_CHANNEL,
   GAME_START_CHANNEL,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
@@ -129,5 +130,13 @@ export class GameGateway extends SocketGateway {
       this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
       this.roomRoundService.deleteRoomRound(room.id),
     ]);
+  }
+
+  @SubscribeMessage(GAME_REFRESH_CHANNEL)
+  async handleRefresh(
+    @MessageBody() codeRoom: string,
+    @ConnectedSocket() client: SocketClient,
+  ) {
+    this.socketService.clearProgressInterval()
   }
 }
