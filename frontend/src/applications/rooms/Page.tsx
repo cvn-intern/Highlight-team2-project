@@ -26,6 +26,7 @@ import themeService from "@/shared/services/themeService";
 import roomService from "@/shared/services/roomService";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 import useToaster from "@/shared/hooks/useToaster";
+import { useSocketStore } from "@/shared/stores/socketStore";
 
 interface Theme {
   id: number;
@@ -45,6 +46,8 @@ const RoomsPage = () => {
   const navigate = useNavigate();
   const [themesData, setThemesData] = useState<Theme[]>([]);
   const [roomFilterData, setRoomFilterData] = useState<roomList[]>([]);
+  const [selectCodeRoom, setSelectCodeRoom] = useState<string>("");
+  const { socket } = useSocketStore();
 
   const handleBackButton = () => {
     navigate("/");
@@ -57,7 +60,6 @@ const RoomsPage = () => {
       language: "en",
     },
   });
-
 
   useEffect(() => {
     const fetchThemesData = async () => {
@@ -98,6 +100,18 @@ const RoomsPage = () => {
     handleSubmit(form.getValues());
   };
 
+  const handleJoinRoom = async () => {
+    try {
+      socket?.emit("join-room", selectCodeRoom);
+
+      navigate("/" + selectCodeRoom, { state: { wait: false }, replace: false });
+    } catch (error) {
+      useToaster({
+        type: "error",
+        message: "Join room failed!",
+      });
+    }
+  };
 
 
   return (
@@ -240,7 +254,7 @@ const RoomsPage = () => {
           </Form>
 
           <div className="flex flex-col items-center justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
-            <ListOfRoom roomFilter={roomFilterData} />
+            <ListOfRoom roomFilter={roomFilterData} selectCodeRoom={selectCodeRoom} setSelectCodeRoom={setSelectCodeRoom} />
           </div>
           <div className="flex gap-3">
             <Button
@@ -256,7 +270,7 @@ const RoomsPage = () => {
               type="submit"
               variant="opacityHover"
               className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
-            // onClick={handleJoinRoom}
+              onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
               <p>PLAY</p>
