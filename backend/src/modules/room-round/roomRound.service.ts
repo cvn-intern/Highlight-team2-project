@@ -42,14 +42,20 @@ export class RoomRoundService {
       },
     });
 
-    await this.wordService.cacheWordsForRoom(roomRound.room_id, roomRound.word);
-
     return roomUpdate;
+  }
+
+  async cacheDataRoomRound(roundOfRoom: RoomRound) {
+    return  await Promise.all([
+      this.roomUserService.cachePainterForRoom(roundOfRoom.room_id, roundOfRoom.painter, roundOfRoom.next_painter),
+      this.wordService.cacheWordsForRoom(roundOfRoom.room_id, roundOfRoom.word),
+    ]);
   }
 
   async deleteRoomRound(roomId: number) {
     await this.wordService.deleteCacheWordsForRoom(roomId);
-    
+    await this.roomUserService.deleteCachePainterAndNextPainterForRoom(roomId);
+
     return await this.roomRoundRepository.delete({
       room_id: roomId,
     });

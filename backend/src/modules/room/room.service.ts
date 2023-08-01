@@ -10,8 +10,6 @@ import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomRound } from '../room-round/roomRound.entity';
-import { RedisService } from '../redis/redis.service';
-import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { WordService } from '../word/word.service';
 const moment = require('moment');
 
@@ -23,9 +21,8 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
-    private redisService: RedisService,
     private wordService: WordService,
-  ) {}
+  ) { }
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
     const codeRoom: string =
@@ -167,7 +164,6 @@ export class RoomService {
       ...painterRound,
     });
 
-    await this.wordService.cacheWordsForRoom(room.id, word);
     return roomRound;
   }
 
@@ -176,7 +172,7 @@ export class RoomService {
       return {
         success: false,
       };
-  
+
     return {
       success: true,
       status: room.status,

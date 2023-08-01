@@ -11,7 +11,7 @@ import { useSocketClearCanvasEvent } from '../shared/hooks/useSocketClearCanvasE
 import { useSocketHandleCanvasEvent } from '../shared/hooks/useSocketHandleCanvasEvents';
 import { getPointFromEvent, resetCanvas } from './draw.helper';
 
-export const ROUND_DURATION_MILISECONDS = 20000
+export const ROUND_DURATION_MILISECONDS = 1000
 
 type CanvasProps = {
   hidden: boolean

@@ -17,7 +17,7 @@ export const GAME_STATUS_CHANNEL = 'game-status';
 export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
 export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
 
-export const INTERVAL_DURATION_MILISECONDS = 10000;
+export const INTERVAL_DURATION_MILISECONDS = 1000;
 
 type IntervalCanvasProps = {
   status: GameStatus;

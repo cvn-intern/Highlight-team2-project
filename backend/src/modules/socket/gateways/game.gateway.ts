@@ -40,16 +40,16 @@ export class GameGateway extends SocketGateway {
         word,
         ended_at: endedAt,
         started_at: startedAt,
-        painter: roundOfRoom.next_painter,
-        next_painter:
-          [painterRound.next_painter, painterRound.painter].find(
-            (painter) => painter !== roundOfRoom.next_painter,
-          ) ?? roundOfRoom.painter,
+        painter: painterRound.painter,
+        next_painter: painterRound.next_painter,
         current_round: roundOfRoom.current_round + 1,
       });
     } else {
       roundOfRoom = await this.roomService.initRoomRound(room);
     }
+
+    await this.roomRoundService.cacheDataRoomRound(roundOfRoom);
+
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
     this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
   }

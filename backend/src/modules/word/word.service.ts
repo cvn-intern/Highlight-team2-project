@@ -22,7 +22,7 @@ export class WordService {
     const usedWords: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
     if(usedWords) {
-      words = words.filter((word: Word) => usedWords && !usedWords.includes(word.word));
+      words = words.filter((word: Word) => !usedWords.includes(word.word));
     }
 
     if(words.length === 0) {
@@ -40,9 +40,6 @@ export class WordService {
 
     if(!words) {
       words = [];
-      words.push(word);
-      await this.redisService.setObjectByKeyValue(`${roomId}:WORDS`, words, expireTimeOneDay);
-      return;
     }
 
     words.push(word);

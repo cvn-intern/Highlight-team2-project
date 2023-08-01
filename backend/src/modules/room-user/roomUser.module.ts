@@ -6,12 +6,14 @@ import { Logger, Module } from "@nestjs/common";
 import { RoomUserController } from "./roomUser.controller";
 import { RoomUserService } from "./roomUser.service";
 import { RoomUserRepository } from "./roomUser.repository";
+import { RedisModule } from "../redis/redis.module";
 
 @Module({
     imports: [
       TypeOrmModule.forFeature([RoomUser]),
       JwtModule,
       UserModule,
+      RedisModule,
     ],
     controllers: [RoomUserController],
     providers: [RoomUserService, Logger, RoomUserRepository],

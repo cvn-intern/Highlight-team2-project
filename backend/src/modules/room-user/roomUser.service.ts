@@ -1,13 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { RoomUser } from './roomUser.entity';
-import { Repository } from 'typeorm';
 import { RoomUserRepository } from './roomUser.repository';
 import { Room } from '../room/room.entity';
+import { RedisService } from '../redis/redis.service';
+import { expireTimeOneDay } from 'src/common/variables/constVariable';
 
 @Injectable()
 export class RoomUserService {
-  constructor(private roomUserRepository: RoomUserRepository) {}
+  constructor(
+    private roomUserRepository: RoomUserRepository,
+    private redisService: RedisService,
+  ) { }
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -82,24 +85,59 @@ export class RoomUserService {
   }
 
   async assignPainterAndNextPainter(room: Room): Promise<PainterRound> {
-    const participants: Array<Participant> = await this.getListUserOfRoom(room);
+    let participants: Array<Participant> = await this.getListUserOfRoom(room);
+    const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${room.id}:PAINTERS`);
+    const drewPainters: Array<number> = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+    const currentPainter = paintersOfPreviousRound ? paintersOfPreviousRound.nextPainter : null;
+    let notDrewPainters: Array<Participant> = participants;
 
-    const painterIndex: number = Math.floor(
-      Math.random() * participants.length,
-    );
-    const painter: Participant = participants[painterIndex];
-    const participantsExcept: Array<Participant> = participants.filter(
-      (participant: Participant) => participant.id !== painter.id,
-    );
-    const nextPainterIndex: number = Math.floor(
-      Math.random() * participantsExcept.length,
-    );
-    const nextPainter: Participant = participantsExcept[nextPainterIndex];
+    // Find painter
+    let painterId = currentPainter; 
+    if (drewPainters.length === 0 && !painterId) {
+      const painterIndex: number = Math.floor(Math.random() * notDrewPainters.length);
+      painterId = notDrewPainters[painterIndex].id;
+    }
 
+    drewPainters.push(painterId); 
+    let participantsNextPainter: Array<Participant> = notDrewPainters.filter(
+      (participant: Participant) => !drewPainters.includes(participant.id),
+    );
+
+    if(participantsNextPainter.length === 0) {
+      await this.resetCachePainterForRoom(room.id, currentPainter);
+      participantsNextPainter = participants.filter((participant: Participant) => participant.id !== painterId);
+    } 
+
+    const nextPainterIndex = Math.floor(Math.random() * participantsNextPainter.length);
+    const nextPainterId = participantsNextPainter[nextPainterIndex].id;
+    
     return {
-      painter: painter.id,
-      next_painter: nextPainter.id,
+      painter: painterId, 
+      next_painter: nextPainterId, 
     } as PainterRound;
+  }
+
+  async cachePainterForRoom(roomId: number, painter: number, nextPainter: number) {
+    let paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
+
+    let drewPainters = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+    drewPainters.push(painter);
+    
+    await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
+      drewPainters,
+      nextPainter: nextPainter,
+    }, expireTimeOneDay);
+  }
+
+  async resetCachePainterForRoom(roomId: number, nextPainter: number) {
+    await this.redisService.setObjectByKeyValue(`${roomId}:PAINTERS`, {
+      drewPainters: [],
+      nextPainter: nextPainter,
+    }, expireTimeOneDay);
+  }
+
+  async deleteCachePainterAndNextPainterForRoom(roomId: number) {
+    return await this.redisService.deleteObjectByKey(`${roomId}:PAINTERS`);
   }
 
   async updateRoomUserScore(userId: number, score: number) {
