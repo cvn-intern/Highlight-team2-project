@@ -26,7 +26,7 @@ const ListOfRoom: React.FC<RoomFilterInformationProps & SelectCodeRoomProps> = (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-center justify-start gap-2 flex-1 pb-2 h-[540px] w-full pl-2 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-full">
         {roomFilter.map((roomFilter, index) => (
           <button key={index} onClick={() => handleSelectRoom(roomFilter.code_room)}>
-            <Card key={index} className={`rounded-[10px] max-h-[255px] w-full aspect-square cursor-pointer hover:opacity-80 hover:bg-white ${selectCodeRoom === roomFilter.code_room ? 'border-red-500 border-4' : ''}`}>
+            <Card key={index} className={`rounded-[10px] max-h-[255px] w-full aspect-square cursor-pointer hover:opacity-80 hover:bg-white ${selectCodeRoom === roomFilter.code_room ? 'border-blue-500 border-8' : ''}`}>
               <CardContent className="flex flex-col justify-center items-center">
                 <div className="flex justify-center items-center space-x-1 rounded-md p-4">
                   <Avatar className="relative flex items-center bg-yellow-300 w-[80px] h-auto overflow-visible border-4 border-solid">
