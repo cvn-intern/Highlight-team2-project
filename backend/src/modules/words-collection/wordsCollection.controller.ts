@@ -37,6 +37,7 @@ export class WordsCollectionController {
         wordsCollection = {
           id: wordsCollection.id,
           creator_id: wordsCollection.creator_id,
+          language_code: wordsCollection.language_code,
           is_created_by_system: wordsCollection.is_created_by_system,
           theme_name: wordsCollection.theme.name,
           theme_thumbnail: wordsCollection.theme.thumbnail,

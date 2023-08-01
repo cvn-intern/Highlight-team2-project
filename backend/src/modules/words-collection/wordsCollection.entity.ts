@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Theme } from '../theme/theme.entity';
 import { User } from '../user/user.entity';
+import { Language } from '../language/language.entity';
 
 @Entity('words_collection')
 export class WordsCollection {
@@ -22,6 +23,11 @@ export class WordsCollection {
   @JoinColumn({ name: 'creator_id' })
   @Column()
   creator_id: number;
+
+  @ManyToOne(() => Language, (language) => language.code)
+  @JoinColumn({ name: 'language_code' })
+  @Column()
+  language_code: string;
 
   @Column({
     type: 'boolean',
