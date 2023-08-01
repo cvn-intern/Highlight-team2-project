@@ -20,6 +20,7 @@ import {
   GAME_PROGRESS,
   END_GAME,
 } from "./IntervalCanvas";
+import Confetti from "react-confetti";
 import { Button } from "./shadcn-ui/Button";
 import { useGameStore } from "../stores/gameStore";
 import { useSocketStore } from "../stores/socketStore";
@@ -152,60 +153,63 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
       );
     case END_GAME:
       return (
-        <div className={cn("flex flex-row justify-center items-center gap-y-3 h-60 mt-3",
-          {
-            "w-full": participants.length >= 3,
-            "w-[45%]": participants.length < 3
-          })}>
-          <div className="flex flex-row w-4/5 h-4/5 justify-around">
+        <>
+          <Confetti numberOfPieces={250} width={1000} height={1000} />
+          <div className={cn("flex flex-row justify-center items-center gap-y-3 h-60 mt-3",
+            {
+              "w-full": participants.length >= 3,
+              "w-[45%]": participants.length < 3
+            })}>
+            <div className="flex flex-row w-4/5 h-4/5 justify-around">
 
-            {participants && handleTop3Ranking(participants).map((item: Participant, index: number) => (
-              <div className={cn("flex-auto", {
-                'w-60': item.is_winner,
-                'w-32 transform translate-y-7': !item.is_winner
-              })
-              }>
-                <div className="flex flex-col justify-center items-center h-full">
-                  <div className="flex flex-row justify-center">
-                    {item.is_winner && (<img
-                      className="h-full transform translate-x-1/4"
-                      src={FlorLeft}
-                    />)}
-                    <Avatar className={cn("relative flex items-center h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid",
+              {participants && handleTop3Ranking(participants).map((item: Participant, index: number) => (
+                <div className={cn("flex-auto", {
+                  'w-60': item.is_winner,
+                  'w-32 transform translate-y-7': !item.is_winner
+                })
+                }>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <div className="flex flex-row justify-center">
+                      {item.is_winner && (<img
+                        className="h-full transform translate-x-1/4"
+                        src={FlorLeft}
+                      />)}
+                      <Avatar className={cn("relative flex items-center h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid",
+                        {
+                          "w-[60%]": item.is_winner,
+                          "w-5/6": !item.is_winner
+                        }
+                      )}>
+                        <AvatarImage
+                          src={item.avatar}
+                          alt="avatar"
+                          className="border-2 border-white border-solid rounded-full"
+                        />
+                        <AvatarFallback>Avatar</AvatarFallback>
+                        <img
+                          className="absolute w-[45%] top-1/2 left-1/2 transform -translate-y-[-70%] -translate-x-1/2"
+                          src={item.is_winner ? RankFirst : (index === 0 ? RankSecond : RankThird)}
+                        />
+                      </Avatar>
+                      {item.is_winner && (<img
+                        className="h-full transform -translate-x-1/4"
+                        src={FlorRight}
+                      />)}
+                    </div>
+                    <p className={cn("text-2xl text-slate-800",
                       {
-                        "w-[60%]": item.is_winner,
-                        "w-5/6": !item.is_winner
+                        "mt-16": item.is_winner,
+                        "mt-9": !item.is_winner
                       }
-                    )}>
-                      <AvatarImage
-                        src={item.avatar}
-                        alt="avatar"
-                        className="border-2 border-white border-solid rounded-full"
-                      />
-                      <AvatarFallback>Avatar</AvatarFallback>
-                      <img
-                        className="absolute w-1/2 top-1/2 left-1/2 transform -translate-y-[-50%] -translate-x-1/2"
-                        src={item.is_winner ? RankFirst : (index === 0 ? RankSecond : RankThird)}
-                      />
-                    </Avatar>
-                    {item.is_winner && (<img
-                      className="h-full transform -translate-x-1/4"
-                      src={FlorRight}
-                    />)}
+                    )}>{item.nickname}</p>
                   </div>
-                  <p className={cn("text-2xl text-slate-800",
-                    {
-                      "mt-16": item.is_winner,
-                      "mt-9": !item.is_winner
-                    }
-                  )}>{item.nickname}</p>
                 </div>
-              </div>
-            ))}
+              ))}
 
 
+            </div>
           </div>
-        </div>
+        </>
       );
     default:
       return (
