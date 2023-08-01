@@ -8,10 +8,14 @@ import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SettingRoomForm from "./SettingRoomForm.component";
 import ThemeCard from "./ThemeCard.component";
+import { useState } from "react";
+import _ from "lodash";
 
-const arr = new Array(60).fill(0);
+const themeIdList = _.range(0,60,1);
 
 const CreateRoomsContent = () => {
+    const [themeId, setThemeId] = useState(0);
+
     const navigate = useNavigate();
     const handleBackButton = () => {
         navigate("/");
@@ -23,7 +27,7 @@ const CreateRoomsContent = () => {
             <div className="flex justify-center items-center w-[90%] h-[80%] bg-gray-300 rounded-2xl mt-5 p-6 gap-x-2">
 
                 <div className="w-[42%] h-full border rounded-2xl bg-white text-center">
-                    <p className="text-3xl font-bakbak text-cyan-800 mt-5">1. SETTINGS</p>
+                    <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">1. SETTINGS</p>
                     <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
                         <SettingRoomForm />
                     </div>
@@ -31,12 +35,12 @@ const CreateRoomsContent = () => {
 
                 <div className="flex flex-col items-center w-full h-full gap-y-2">
                     <div className="flex w-full justify-between p-5 mt-1 gap-x-5  bg-white rounded-2xl">
-                        <p className="text-3xl font-bakbak text-cyan-800 mt-1">2. THEME</p>
+                        <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">2. THEME</p>
                         <Select>
-                            <SelectTrigger className="w-[40%] rounded-xl text-lg font-bold">
+                            <SelectTrigger className="w-[40%] rounded-xl text-lg font-bold border-2 text-slate-500">
                                 <SelectValue placeholder="Theme" />
                             </SelectTrigger>
-                            <SelectContent className="rounded-xl text-lg font-semibold">
+                            <SelectContent className="rounded-xl text-lg font-semibold text-slate-500">
                                 <SelectItem value="all">All</SelectItem>
                                 <SelectItem value="your">Your Themes</SelectItem>
                             </SelectContent>
@@ -45,8 +49,12 @@ const CreateRoomsContent = () => {
 
                     <ScrollArea className="h-full w-full max-h-[50vh] rounded-2xl border py-5 px-2  bg-white">
                         <div className="grid grid-cols-4">
-                            {arr.map(() => {
-                                return <ThemeCard img={ThemeImage} />
+                            {themeIdList.map((id) => {
+                                return <ThemeCard
+                                    img={ThemeImage}
+                                    onClick={() => setThemeId(id)}
+                                    isSelected={id === themeId}
+                                />
                             })}
                         </div>
 
