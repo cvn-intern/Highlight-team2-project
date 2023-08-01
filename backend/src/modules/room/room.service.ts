@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
 import {
   RoomInterface,
-  RoomRoundInfoInterface,
   RoomStatusResponseInterface,
 } from './room.interface';
 import { randomString } from '../../common/utils/helper';
@@ -11,8 +10,9 @@ import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomRound } from '../room-round/roomRound.entity';
+import { RedisService } from '../redis/redis.service';
+import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { WordService } from '../word/word.service';
-import { now } from 'moment';
 const moment = require('moment');
 
 const MAX_LENGTH_RANDOM = 5;
@@ -23,6 +23,8 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
+    private redisService: RedisService,
+    private wordService: WordService,
   ) {}
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
@@ -164,6 +166,8 @@ export class RoomService {
       ended_at: moment(endedAt).toDate(),
       ...painterRound,
     });
+
+    await this.wordService.cacheWordsForRoom(room.id, word);
     return roomRound;
   }
 

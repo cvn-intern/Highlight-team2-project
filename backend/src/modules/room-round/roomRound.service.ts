@@ -42,10 +42,14 @@ export class RoomRoundService {
       },
     });
 
+    await this.wordService.cacheWordsForRoom(roomRound.room_id, roomRound.word);
+
     return roomUpdate;
   }
 
   async deleteRoomRound(roomId: number) {
+    await this.wordService.deleteCacheWordsForRoom(roomId);
+    
     return await this.roomRoundRepository.delete({
       room_id: roomId,
     });
@@ -53,7 +57,7 @@ export class RoomRoundService {
 
   async initRoundInfomation(room: Room): Promise<RoomRoundInfoInterface> {
     const [{ word }, painterRound] = await Promise.all([
-      this.wordService.getWordRandom(room.words_collection_id),
+      this.wordService.getWordRandom(room.words_collection_id, room.id),
       this.roomUserService.assignPainterAndNextPainter(room),
     ]);
     const startedAt: Date = new Date();
