@@ -1,4 +1,3 @@
-import ControllerIcon from "@/shared/assets/controller-icon.svg";
 import {
   Form,
   FormControl,
@@ -7,26 +6,28 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/shadcn-ui/form";
-import RoomsTitle from "@/shared/assets/rooms-title.png";
-import SloganImg from "@/shared/assets/slogan.png";
-import Logo from "@/shared/components/Logo";
-import MainLayout from "@/shared/components/MainLayout";
-import { Button } from "@/shared/components/shadcn-ui/Button";
-import { Book, DoorOpen, Globe, Search, Triangle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import ListOfRoom from "./ListOfRoom.component";
-import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
 import { Input } from "@/shared/components/shadcn-ui/Input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
-import themeService from "@/shared/services/themeService";
-import roomService from "@/shared/services/roomService";
-import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
-import useToaster from "@/shared/hooks/useToaster";
 import { useSocketStore } from "@/shared/stores/socketStore";
+import { Button } from "@/shared/components/shadcn-ui/Button";
+import { Book, DoorOpen, Globe, Search, Triangle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
+import Logo from "@/shared/components/Logo";
+import ListOfRoom from "./ListOfRoom.component";
+import SloganImg from "@/shared/assets/slogan.png";
+import useToaster from "@/shared/hooks/useToaster";
+import MainLayout from "@/shared/components/MainLayout";
+import roomService from "@/shared/services/roomService";
+import RoomsTitle from "@/shared/assets/rooms-title.png";
+import themeService from "@/shared/services/themeService";
+import ControllerIcon from "@/shared/assets/controller-icon.svg";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { cn } from "@/shared/lib/utils";
 
 interface Theme {
   id: number;
@@ -49,9 +50,6 @@ const RoomsPage = () => {
   const [selectCodeRoom, setSelectCodeRoom] = useState<string>("");
   const { socket } = useSocketStore();
 
-  const handleBackButton = () => {
-    navigate("/");
-  };
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -78,7 +76,9 @@ const RoomsPage = () => {
     handleSubmit(form.getValues());
   }, []);
 
-  useDisableBackButton();
+  const handleBackButton = () => {
+    navigate("/");
+  };
 
   const handleSubmit = async (formData: z.infer<typeof formSchema>) => {
     try {
@@ -102,9 +102,10 @@ const RoomsPage = () => {
 
   const handleJoinRoom = async () => {
     try {
-      socket?.emit("join-room", selectCodeRoom);
-
-      navigate("/" + selectCodeRoom, { state: { wait: false }, replace: false });
+      if (selectCodeRoom) {
+        socket?.emit("join-room", selectCodeRoom);
+        navigate("/" + selectCodeRoom, { state: { wait: false }, replace: false });
+      }
     } catch (error) {
       useToaster({
         type: "error",
@@ -113,6 +114,7 @@ const RoomsPage = () => {
     }
   };
 
+  useDisableBackButton();
 
   return (
     <MainLayout>
@@ -123,7 +125,6 @@ const RoomsPage = () => {
           alt="Slogan"
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
-
         <div className="relative bg-white flex flex-col items-center mb-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
           <button
             onClick={handleBackButton}
@@ -166,8 +167,8 @@ const RoomsPage = () => {
                     );
                   }}
                 />
-
               </div>
+
               <img
                 src={RoomsTitle}
                 className="hidden ml-10 lg:block scale-90 md:scale-100"
@@ -204,7 +205,6 @@ const RoomsPage = () => {
                               {themesData?.map((theme) => (
                                 <SelectItem key={theme.id} value={theme.name}>{theme.name.toUpperCase()}</SelectItem>
                               ))}
-
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -269,7 +269,12 @@ const RoomsPage = () => {
             <Button
               type="submit"
               variant="opacityHover"
-              className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
+              className={cn(
+                "gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black p-5",
+                selectCodeRoom
+                  ? "bg-gradient-to-r from-[#f7b733] to-[#E4E5E6]"
+                  : "bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]"
+              )}
               onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />

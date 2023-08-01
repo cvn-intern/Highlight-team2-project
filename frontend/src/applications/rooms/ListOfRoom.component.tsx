@@ -1,14 +1,6 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/shared/components/shadcn-ui/avatar-shadcn';
 import { Globe, Swords, User2 as UserIcon } from 'lucide-react';
-import {
-  Card,
-  CardContent,
-} from '@/shared/components/shadcn-ui/card';
-import { cn } from '@/shared/lib/utils';
+import { Card, CardContent } from '@/shared/components/shadcn-ui/card';
+import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/shadcn-ui/avatar-shadcn';
 
 interface RoomFilterInformationProps {
   roomFilter: Array<roomList>;
@@ -20,11 +12,20 @@ interface SelectCodeRoomProps {
 }
 
 const ListOfRoom: React.FC<RoomFilterInformationProps & SelectCodeRoomProps> = ({ roomFilter, selectCodeRoom, setSelectCodeRoom }) => {
+  console.log("sadasd", selectCodeRoom);
+  const handleSelectRoom = (codeRoom: string) => {
+    if (selectCodeRoom === codeRoom) {
+      setSelectCodeRoom("");
+    } else {
+      setSelectCodeRoom(codeRoom);
+    }
+  };
+
   return (
     <div className='bg-[#00416A]/40 pt-2 rounded-2xl w-full xl:w-[93.1%]'>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-center justify-start gap-2 flex-1 pb-2 h-[540px] w-full pl-2 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-full">
         {roomFilter.map((roomFilter, index) => (
-          <button key={index} onClick={() => setSelectCodeRoom(roomFilter.code_room)}>
+          <button key={index} onClick={() => handleSelectRoom(roomFilter.code_room)}>
             <Card key={index} className={`rounded-[10px] max-h-[255px] w-full aspect-square cursor-pointer hover:opacity-80 hover:bg-white ${selectCodeRoom === roomFilter.code_room ? 'border-red-500 border-4' : ''}`}>
               <CardContent className="flex flex-col justify-center items-center">
                 <div className="flex justify-center items-center space-x-1 rounded-md p-4">
@@ -94,4 +95,3 @@ const ListOfRoom: React.FC<RoomFilterInformationProps & SelectCodeRoomProps> = (
 };
 
 export default ListOfRoom;
-
