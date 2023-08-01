@@ -29,6 +29,7 @@ const IntervalCanvas = ({
   status = INTERVAL_SHOW_WORD,
   hidden = true,
 }: IntervalCanvasProps) => {
+  status = END_GAME
   return (
     <div
       hidden={hidden}

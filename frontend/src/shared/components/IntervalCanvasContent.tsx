@@ -8,7 +8,6 @@ import RankSecond from "@/shared/assets/rank_second.svg";
 import RankThird from "@/shared/assets/rank_third.svg";
 import FlorLeft from "@/shared/assets/florLeft.svg";
 import FlorRight from "@/shared/assets/florRight.svg";
-import imgGiraffe from "@/shared/assets/game-avatars/giraffe.png";
 import {
   INTERVAL_NEW_TURN,
   INTERVAL_NOT_SHOW_WORD,
@@ -27,12 +26,32 @@ import { useSocketStore } from "../stores/socketStore";
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./shadcn-ui/avatar-shadcn";
+import { cn } from "../lib/utils";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { roomRound, isHost, correctAnswers, maxPlayer, participants } =
-    useGameStore();
+  const { roomRound, isHost, correctAnswers, maxPlayer, participants } = useGameStore();
   const { codeRoom } = useParams();
+
+  const swapPositionRanking = (top3Users: Participant[]): Participant[] => {
+    const temp: Participant = top3Users[0]
+    top3Users[0] = top3Users[1]
+    top3Users[1] = temp
+    return top3Users
+  }
+
+  const handleTop3Ranking = (listParticipant: Participant[]): Participant[] => {
+    const usersInRoom: number = 3
+    if (listParticipant.length >= usersInRoom) {
+      const top3Users: Participant[] = [...listParticipant.slice(0, 3)]
+      top3Users[0].is_winner = true
+      return swapPositionRanking(top3Users)
+    } else {
+      const userWinner: Participant[] = [...[listParticipant[0]]]
+      userWinner[0].is_winner = true
+      return userWinner
+    }
+  }
 
   const handleStartGame = () => {
     if (!isHost || !socket) return;
@@ -133,71 +152,58 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
       );
     case END_GAME:
       return (
-        <div className="flex flex-row justify-center items-center gap-y-3 w-full h-60 mt-2">
+        <div className={cn("flex flex-row justify-center items-center gap-y-3 h-60 mt-3",
+          {
+            "w-full": participants.length >= 3,
+            "w-[45%]": participants.length < 3
+          })}>
           <div className="flex flex-row w-4/5 h-4/5 justify-around">
-            <div className="flex-auto justify-center w-32 transform translate-y-7">
-              <div className="flex flex-col justify-center items-center h-full">
-                <Avatar className="relative flex items-center w-5/6  h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid">
-                  <AvatarImage
-                    src={imgGiraffe}
-                    alt="avatar"
-                    className="border-2 border-white border-solid rounded-full"
-                  />
-                  <AvatarFallback>Avatar</AvatarFallback>
-                  <img
-                    className="absolute w-1/2 top-1/2 left-1/2 transform -translate-y-[-30%] -translate-x-1/2"
-                    src={RankSecond}
-                  />
-                </Avatar>
-                <p className="text-2xl text-slate-800 mt-5">User2658</p>
-              </div>
-            </div>
 
-            <div className="flex-auto w-60">
-              <div className="flex flex-col justify-center items-center h-full">
-                <div className="flex flex-row justify-center">
-                  <img
-                    className="h-full transform translate-x-1/4"
-                    src={FlorLeft}
-                  />
-                  <Avatar className="relative flex items-center w-[60%] h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid">
-                    <AvatarImage
-                      src={imgGiraffe}
-                      alt="avatar"
-                      className="border-2 border-white border-solid rounded-full"
-                    />
-                    <AvatarFallback>Avatar</AvatarFallback>
-                    <img
-                      className="absolute w-1/2 top-1/2 left-1/2 transform -translate-y-[-30%] -translate-x-1/2"
-                      src={RankFirst}
-                    />
-                  </Avatar>
-                  <img
-                    className="h-full transform -translate-x-1/4"
-                    src={FlorRight}
-                  />
+            {participants && handleTop3Ranking(participants).map((item: Participant, index: number) => (
+              <div className={cn("flex-auto", {
+                'w-60': item.is_winner,
+                'w-32 transform translate-y-7': !item.is_winner
+              })
+              }>
+                <div className="flex flex-col justify-center items-center h-full">
+                  <div className="flex flex-row justify-center">
+                    {item.is_winner && (<img
+                      className="h-full transform translate-x-1/4"
+                      src={FlorLeft}
+                    />)}
+                    <Avatar className={cn("relative flex items-center h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid",
+                      {
+                        "w-[60%]": item.is_winner,
+                        "w-5/6": !item.is_winner
+                      }
+                    )}>
+                      <AvatarImage
+                        src={item.avatar}
+                        alt="avatar"
+                        className="border-2 border-white border-solid rounded-full"
+                      />
+                      <AvatarFallback>Avatar</AvatarFallback>
+                      <img
+                        className="absolute w-1/2 top-1/2 left-1/2 transform -translate-y-[-50%] -translate-x-1/2"
+                        src={item.is_winner ? RankFirst : (index === 0 ? RankSecond : RankThird)}
+                      />
+                    </Avatar>
+                    {item.is_winner && (<img
+                      className="h-full transform -translate-x-1/4"
+                      src={FlorRight}
+                    />)}
+                  </div>
+                  <p className={cn("text-2xl text-slate-800",
+                    {
+                      "mt-16": item.is_winner,
+                      "mt-9": !item.is_winner
+                    }
+                  )}>{item.nickname}</p>
                 </div>
-                <p className="text-2xl text-slate-800 mt-12">User2658</p>
               </div>
-            </div>
+            ))}
 
-            <div className="flex-auto w-32 transform translate-y-7">
-              <div className="flex flex-col justify-center items-center h-full">
-                <Avatar className="relative flex items-center w-5/6  h-auto group-hover:scale-110 overflow-visible border-4 border-black border-solid">
-                  <AvatarImage
-                    src={imgGiraffe}
-                    alt="avatar"
-                    className="border-2 border-white border-solid rounded-full"
-                  />
-                  <AvatarFallback>Avatar</AvatarFallback>
-                  <img
-                    className="absolute w-1/2 top-1/2 left-1/2 transform -translate-y-[-30%] -translate-x-1/2"
-                    src={RankThird}
-                  />
-                </Avatar>
-                <p className="text-2xl text-slate-800 mt-5">User2658</p>
-              </div>
-            </div>
+
           </div>
         </div>
       );
