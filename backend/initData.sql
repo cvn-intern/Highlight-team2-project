@@ -117,7 +117,7 @@ INSERT INTO public."user"(id, avatar, nickname, is_guest, language_code)
 VALUES (1, 'https://cdn4.iconfinder.com/data/icons/avatars-21/512/avatar-circle-human-female-4-1024.png', 'USER123TEST', true, 'en');
 
 -- init words collection
-INSERT INTO public.words_collection(id, is_created_by_system, theme_id) VALUES (1, true, 1);
+INSERT INTO public.words_collection(id, is_created_by_system, theme_id, creator_id) VALUES (1, true, 1, 1);
 
 -- init data room
 INSERT INTO public.room(id, code_room, max_player, time_per_round, number_of_round, thumbnail, is_public, host_id, words_collection_id, language_code)
