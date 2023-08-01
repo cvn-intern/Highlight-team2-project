@@ -20,7 +20,7 @@ export class WordsCollection {
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'creator_id' })
-  @Column()
+  @Column({default:null})
   creator_id: number;
 
   @Column({
