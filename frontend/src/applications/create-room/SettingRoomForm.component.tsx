@@ -16,15 +16,10 @@ import {
 import { Switch } from "@/shared/components/shadcn-ui/switch";
 
 import useToaster from "@/shared/hooks/useToaster";
-import playService from "@/shared/services/playService";
-import userService from "@/shared/services/userService";
-import { useSocketStore } from "@/shared/stores/socketStore";
-import { useUserStore } from "@/shared/stores/userStore";
-import { MULTIPLE_TAB } from "@/shared/types/errorCode";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Globe } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Eye, Trophy, User2 } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
@@ -32,16 +27,14 @@ import { z } from "zod";
 import _ from "lodash";
 
 const formSchema = z.object({
-  nickname: z.string().trim().min(2).max(50),
-  language: z.string({
-    required_error: "Please select an language.",
-  }),
+  players: z.string().nonempty(),
+  visible: z.boolean(),
+  round: z.string().nonempty(),
 });
-const numberOfPlayer = _.range(1,15,1);
+const numberOfPlayer = _.range(1, 15, 1);
+
 const SettingRoomForm = () => {
 
-  const { user, setUser } = useUserStore();
-  const { socket } = useSocketStore();
   const navigate = useNavigate();
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
@@ -50,34 +43,27 @@ const SettingRoomForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      nickname: user?.nickname,
-      language: user?.language,
+      players: "8",
+      round: "3",
+      visible: true
     },
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleSubmit = (_: z.infer<typeof formSchema>) => {
-    if (formAction === "quick-play") return handleQuickPlay();
+    if (formAction === "quick-play") return handleCreateRoom();
   };
 
-  const handleQuickPlay = async () => {
+  const handleCreateRoom = async () => {
     try {
-      const nickname = form.getValues("nickname");
-      const language = form.getValues("language");
+      const players = parseInt(form.getValues("players"));
+      const round = parseInt(form.getValues("round"));
+      const visible = form.getValues("visible");
 
-      if (user?.nickname !== nickname || user?.language !== language) {
-        const { data } = await userService.updateUser({
-          ...user,
-          nickname,
-          language,
-        });
+      console.log(players);
+      console.log(round);
+      console.log(visible);
 
-        setUser(data);
-      }
-      const { data } = await playService.quickPlay();
-      socket?.emit("join-room", data);
-
-      navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
       (error);
       useToaster({
@@ -86,24 +72,6 @@ const SettingRoomForm = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (!user) return;
-    form.setValue("nickname", user.nickname);
-    form.setValue("language", user.language);
-  }, [user]);
-
-  useEffect(() => {
-    socket?.on("error", (error: ErrorSocket) => {
-      if (error.code === MULTIPLE_TAB) {
-        navigate("/user/existing");
-      }
-    });
-
-    return () => {
-      socket?.off("error");
-    };
-  }, [socket]);
 
   return (
     <Form {...form}>
@@ -114,28 +82,28 @@ const SettingRoomForm = () => {
 
         <FormField
           control={form.control}
-          name="language"
+          name="players"
           render={({ field }) => (
             <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <Globe color={"#22A699"} size={28} />
+                  <User2 color={"#4240C1"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  LANGUAGE
+                  PLAYERS
                 </div>
               </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={String(field.value)}                
                 >
                   <SelectTrigger className="w-[30%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
-                    <SelectValue placeholder="Theme" />
+                    <SelectValue/>
                   </SelectTrigger>
-                  <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
+                  <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
                     {numberOfPlayer.map((value) => {
-                      return (<SelectItem value={String(value)}>{value}</SelectItem>)
+                      return (<SelectItem value={`${value}`}>{value}</SelectItem>)
                     })}
                   </SelectContent>
                 </Select>
@@ -147,28 +115,29 @@ const SettingRoomForm = () => {
         />
         <FormField
           control={form.control}
-          name="language"
+          name="round"
           render={({ field }) => (
             <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <Globe color={"#22A699"} size={28} />
+                  <Trophy color={"#4240C1"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  LANGUAGE
+                  ROUND
                 </div>
               </FormLabel>
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  defaultValue={String(field.value)}
                 >
                   <SelectTrigger className="w-[30%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
-                    <SelectValue placeholder="Theme" />
+                    <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
-                    <SelectItem value="en">English (EN)</SelectItem>
-                    <SelectItem value="vi">Vietnamese (VN)</SelectItem>
+                  <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
+                    {_.range(1, 11, 1).map((value) => {
+                      return (<SelectItem datatype="" value={String(value)}>{value}</SelectItem>)
+                    })}
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -179,15 +148,15 @@ const SettingRoomForm = () => {
         />
         <FormField
           control={form.control}
-          name="language"
-          render={({ field }) => (
+          name="visible"
+          render={() => (
             <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <Globe color={"#22A699"} size={28} />
+                  <Eye color={"#4240C1"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  LANGUAGE
+                  VISIBLE ROOM
                 </div>
               </FormLabel>
               <FormControl>

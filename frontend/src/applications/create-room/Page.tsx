@@ -8,12 +8,14 @@ const CreateRooms = () => {
     return (
         <MainLayout>
             <div className="flex-col grid lg:w-[80%] w-[80%]">
-                <Logo customClassname="justify-self-center max-lg:mt-12 md:w-[200px] 2xl:w-[250px] w-[150px]" />
+                <Logo customClassname="justify-self-center max-lg:mt-12 md:w-[200px] 2xl:w-[250px] w-[150px] mt-8" />
 
-                <div className="justify-self-center w-full lg:h-[70%] min-h-[70vh] bg-white flex flex-col items-center mb-5  h-[70%] mt-5 rounded-2xl p-8">
+                <div className="justify-self-center w-full lg:h-[90%] min-h-[70vh] bg-white flex flex-col items-center mb-5 mt-5 rounded-2xl p-8">
                     <CreateRoomsHeader />
                     <CreateRoomsContent />
+                    
                 </div>
+
             </div>
         </MainLayout>
     );
