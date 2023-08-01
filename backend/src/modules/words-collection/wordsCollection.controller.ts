@@ -2,12 +2,14 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Body,
   Query,
   UseGuards,
   Res,
   Logger,
   HttpStatus,
+  Param,
 } from '@nestjs/common';
 import { WordsCollectionService } from './wordsCollection.service';
 import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
@@ -58,6 +60,17 @@ export class WordsCollectionController {
   }
 
   @UseGuards(AuthorizeJWT)
+  @Get('/:id')
+  async getWordsCollectionDetailById(
+    @Param('id') id: number,
+    @Res() response: Response,
+  ) {
+    const wordsCollectionDetail =
+      await this.wordsCollectionService.getWordsCollectionDetailById(id);
+    return response.status(HttpStatus.OK).json(wordsCollectionDetail);
+  }
+
+  @UseGuards(AuthorizeJWT)
   @Post()
   async createWordsCollection(
     @Body() createWordsCollectionDto: CreateWordsCollectionDto,
@@ -81,5 +94,34 @@ export class WordsCollectionController {
       this.logger.error(error);
       throw error;
     }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Put('/:id')
+  async updateWordsCollection(
+    @Param('id') id: number,
+    @Body() createWordsCollectionDto: CreateWordsCollectionDto,
+    @Res() response: Response,
+    @IdUser() idUser: number,
+  ) {
+    const creator_id = idUser;
+    const is_created_by_system = false;
+    const { theme_id, language_code, words_list } = createWordsCollectionDto;
+    // Update words collection data
+    const words_collection =
+      await this.wordsCollectionService.updateWordsCollection(
+        Number(id),
+        theme_id,
+        language_code,
+        creator_id,
+        is_created_by_system,
+        words_list,
+      );
+    if (!words_collection) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: `Words collection with id ${id} not found`,
+      });
+    }
+    return response.status(HttpStatus.OK).json(words_collection);
   }
 }
