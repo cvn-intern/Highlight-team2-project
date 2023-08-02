@@ -8,7 +8,7 @@ import {
 } from "@/shared/components/shadcn-ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
@@ -34,6 +34,7 @@ import themeService from "@/shared/services/themeService";
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 import { cn } from "@/shared/lib/utils";
+import { debounce } from "lodash";
 
 interface Theme {
   id: number;
@@ -51,6 +52,7 @@ const formSchema = z.object({
 
 const RoomsPage = () => {
   const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState<string>("");
   const [themesData, setThemesData] = useState<Theme[]>([]);
   const [roomFilterData, setRoomFilterData] = useState<RoomList[]>([]);
   const [selectCodeRoom, setSelectCodeRoom] = useState<string>("");
@@ -65,27 +67,17 @@ const RoomsPage = () => {
     },
   });
 
-  useEffect(() => {
-    const fetchThemesData = async () => {
-      try {
-        const { data } = await themeService.getThemes();
-        setThemesData(data);
-      } catch (error) {
-        useToaster({
-          type: "error",
-          message: "Error fetching themes data!",
-        });
-      }
-    };
-
-    fetchThemesData();
-    handleSubmit(form.getValues());
-  }, []);
-
-  const handleBackButton = () => {
-    navigate("/");
+  const fetchThemesData = async () => {
+    try {
+      const { data } = await themeService.getThemes();
+      setThemesData(data);
+    } catch (error) {
+      useToaster({
+        type: "error",
+        message: "Error fetching themes data!",
+      });
+    }
   };
-
   const handleSubmit = async (formData: z.infer<typeof formSchema>) => {
     try {
       const { data: roomFilterData } = await roomService.filterRooms(
@@ -101,9 +93,21 @@ const RoomsPage = () => {
       });
     }
   };
+  const debounceHandleSubmit = useCallback(debounce(handleSubmit, 300), []);
+  useEffect(() => {
+    debounceHandleSubmit(form.getValues());
+  }, []);
+  useEffect(() => {
+    fetchThemesData();
+    debounceHandleSubmit(form.getValues());
+  }, [searchInput]);
+
+  const handleBackButton = () => {
+    navigate("/");
+  };
 
   const handleDropdownChange = () => {
-    handleSubmit(form.getValues());
+    debounceHandleSubmit(form.getValues());
   };
 
   const handleJoinRoom = async () => {
@@ -166,6 +170,11 @@ const RoomsPage = () => {
                                   "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
                                 }
                                 maxLength={MAX_LENGHT_OF_SEARCH}
+                                value={searchInput}
+                                onChange={(e) => {
+                                  setSearchInput(e.target.value);
+                                  field.onChange(e.target.value);
+                                }}
                               />
                               <Search className="absolute w-6 h-6 top-1/2 -translate-y-1/2 right-2" />
                             </>

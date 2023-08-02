@@ -27,7 +27,7 @@ const ListOfRoom: React.FC<
   };
 
   return (
-    <div className="bg-[#00416A]/40 p-2 rounded-2xl w-full xl:w-[93.1%]">
+    <div className="bg-[#00416A]/40 p-2 rounded-2xl w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-start justify-start gap-2 flex-1 pb-2 h-[540px] w-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-full">
         {roomFilter.map((roomFilter, index) => (
           <button
