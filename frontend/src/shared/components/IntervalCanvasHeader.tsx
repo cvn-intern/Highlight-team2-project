@@ -2,8 +2,8 @@ import { useGameStore } from "../stores/gameStore";
 import { INTERVAL_INACTIVE, INTERVAL_NEW_TURN, START_GAME, WAIT_FOR_OTHER_PLAYERS } from "./IntervalCanvas";
 
 const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {   
-    const {participants, roomRound} = useGameStore()
-    const nextDrawer = participants.find(participant => participant.id === roomRound?.painter)
+    const {participants} = useGameStore()
+    const nextDrawer = participants.find(participant => participant.is_painter)
 
     switch (status) {
         case INTERVAL_NEW_TURN:

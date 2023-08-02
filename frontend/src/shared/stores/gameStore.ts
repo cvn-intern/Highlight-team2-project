@@ -7,6 +7,7 @@ import {
   INTERVAL_SHOW_WORD,
   START_GAME,
   PLAY_GAME,
+  GAME_REFRESH_DRAWER,
 } from "../components/IntervalCanvas";
 
 export type GameStatus =
@@ -16,7 +17,7 @@ export type GameStatus =
   | typeof INTERVAL_NEW_TURN
   | typeof INTERVAL_INACTIVE
   | typeof START_GAME
-  | typeof PLAY_GAME;
+  | typeof PLAY_GAME | typeof GAME_REFRESH_DRAWER;
 
 interface GameState {
   participants: Participant[];

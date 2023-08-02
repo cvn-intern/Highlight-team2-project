@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Progress } from './shadcn-ui/progress';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
-import { GAME_DRAWER_OUT_CHANNEL, GAME_NEW_TURN_CHANNEL, GAME_PRESENT_PROGRESS, GAME_PRESENT_PROGRESS_NEW_PLAYER, GAME_PROGRESS, INTERVAL_DURATION_MILISECONDS, INTERVAL_NEW_TURN, INTERVAL_SHOW_WORD, PLAY_GAME, START_GAME, WAIT_FOR_OTHER_PLAYERS } from './IntervalCanvas';
+import { GAME_DRAWER_OUT_CHANNEL, GAME_NEW_TURN_CHANNEL, GAME_PRESENT_PROGRESS, GAME_PRESENT_PROGRESS_NEW_PLAYER, GAME_PROGRESS, GAME_REFRESH_DRAWER, INTERVAL_DURATION_MILISECONDS, INTERVAL_NEW_TURN, INTERVAL_SHOW_WORD, PLAY_GAME, START_GAME, WAIT_FOR_OTHER_PLAYERS } from './IntervalCanvas';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
@@ -14,14 +14,17 @@ export const TIME_PERSTEP = 100;
 
 export function ProgressPlayTime() {
   const [progress, setProgress] = useState(100);
+  const [isRunning, setIsRunning] = useState(true)
+  const [isMeHost, setIsMeHost] = useState(false)
 
   const { socket } = useSocketStore();
-  const { gameStatus, isHost, setGameStatus } = useGameStore();
+  const { gameStatus, isHost, setGameStatus, participants, roomRound } = useGameStore();
   const { codeRoom } = useParams()
 
-  const handleProgressTimeout = (status: string) => {
+  const handleProgressTimeout = (status: string, data: any) => {
+    const {isHost} = data
+    console.log({data})
     if (!isHost || !socket || !codeRoom) return;
-
     switch (status) {
       case INTERVAL_NEW_TURN:
         socket.emit(PLAY_GAME, codeRoom);
@@ -33,6 +36,7 @@ export function ProgressPlayTime() {
         socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_SHOW_WORD, sendAt: moment() })
         return
 
+      case GAME_REFRESH_DRAWER:
       case INTERVAL_SHOW_WORD:
         socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
         socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_NEW_TURN, sendAt: moment() })
@@ -44,11 +48,10 @@ export function ProgressPlayTime() {
     if (gameStatus !== 'game-start') setProgress(100);
   }, [gameStatus]);
 
-  let progressInterval: any
+  const progressInterval: any = useRef();
 
-  const handleIntervalProgress = (data: GamePresentProgressPackage) => {
-    if (progressInterval) clearInterval(progressInterval)
-
+  const handleIntervalProgress = (data: GamePresentProgressPackage, isHost?: boolean) => {
+    if (progressInterval) clearInterval(progressInterval.current)
     let { startProgress } = data
     const { maximumTimeInMiliSeconds, status, sendAt } = data
     const duration = moment.duration(moment().diff(sendAt));
@@ -58,10 +61,10 @@ export function ProgressPlayTime() {
     setGameStatus(status)
     setProgress(startProgress)
 
-    progressInterval = setInterval(() => {
+    progressInterval.current = setInterval(() => {
       if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-        clearInterval(progressInterval);
-        return handleProgressTimeout(status);
+        clearInterval(progressInterval.current);
+        return handleProgressTimeout(status, {isHost});
       }
       startProgress = startProgress - percentageDescreasePerStep
       setProgress(startProgress)
@@ -69,12 +72,14 @@ export function ProgressPlayTime() {
   }
 
   useEffect(() => {
-    socket?.on(GAME_PRESENT_PROGRESS, (data: any) => {
-      handleIntervalProgress(data)
+    socket?.on(GAME_PRESENT_PROGRESS, (data: GamePresentProgressPackage) => {
+      handleIntervalProgress(data,isMeHost)
     });
 
-    socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, (data: any) => {
-      handleIntervalProgress(data)
+    socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, (data: GamePresentProgressPackage) => {
+      setIsRunning(true)
+
+      handleIntervalProgress(data,isMeHost)
     });
 
     if (!codeRoom) return
@@ -84,12 +89,33 @@ export function ProgressPlayTime() {
         { socketId, codeRoom, maximumTimeInMiliSeconds: gameStatus === PLAY_GAME ? ROUND_DURATION_MILISECONDS : INTERVAL_DURATION_MILISECONDS, startProgress: progress, status: gameStatus, sendAt: moment() })
     });
 
+    socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
+      setIsRunning(false)
+    });
+
     return () => {
       socket?.off(GAME_PRESENT_PROGRESS)
       socket?.off(GAME_PRESENT_PROGRESS_NEW_PLAYER)
       socket?.off(codeRoom)
     };
-  }, [socket, gameStatus, isHost, codeRoom, progress]);
+  }, [socket, gameStatus, codeRoom, isMeHost, progress, progressInterval, isRunning, participants, roomRound]);
+
+  useEffect(() => {
+    if (!isRunning) {
+      clearInterval(progressInterval.current);
+      progressInterval.current = null;
+
+      setIsRunning(true)
+      handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:"refresh-drawer"}, isMeHost)
+    }
+  }, [isRunning, isMeHost, participants, roomRound])
+
+  useEffect(() => {
+      setIsMeHost(isHost)
+  }, [isHost])
+
+  console.log({isRunning, isHost, participants})
+
   return (
     <Progress
       value={progress}

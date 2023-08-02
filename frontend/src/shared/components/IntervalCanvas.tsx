@@ -11,6 +11,7 @@ export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
 export const PLAY_GAME = 'game-start';
 export const GAME_PROGRESS = 'game-progress';
 export const GAME_REFRESH_ROUND = 'refresh-round';
+export const GAME_REFRESH_DRAWER = 'refresh-drawer';
 export const GAME_PRESENT_PROGRESS = 'game-present-progress';
 export const GAME_PRESENT_PROGRESS_NEW_PLAYER = 'game-present-progress-new-player';
 

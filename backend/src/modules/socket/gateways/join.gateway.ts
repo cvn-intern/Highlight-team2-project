@@ -1,10 +1,11 @@
 import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import { Room } from 'src/modules/room/room.entity';
-import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
+import { GAME_PRESENT_PROGRESS_CHANNEL, GAME_REFRESH_DRAWER_CHANNEL, INTERVAL_DURATION_MILISECONDS, LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
 import { Socket } from 'socket.io';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { errorsSocket } from 'src/common/errors/errorCode';
+const moment = require("moment")
 
 export class JoinGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(@ConnectedSocket() client: any) {
@@ -52,6 +53,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
 
       if (client.user.id === room.host_id) {
         room = await this.roomService.changeHost(room.code_room);
+       
       }
 
       await this.socketService.removeClientDisconnection(client);

@@ -12,7 +12,6 @@ import {
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
   GAME_NEXT_DRAWER_IS_OUT,
-  GAME_REFRESH_CHANNEL,
   PARTICIPANTS_CHANNEL,
   QUALIFY_TO_START_CHANNEL,
 } from './constant';
@@ -36,29 +35,6 @@ export class SocketService {
     private roomUserService: RoomUserService,
     private userService: UserService,
   ) {}
-  private stopProgress = false;
-  public setProgressInterval(
-    minProgressPercentage: number,
-    percentageDescreasePerStep: number,
-    timeStep: number,
-    cb: (progress: number) => void,
-  ) {
-    this.stopProgress = false;
-    let progress = 100;
-    const progressInterval = setInterval(() => {
-      if (this.stopProgress || progress <= minProgressPercentage) {
-        clearInterval(progressInterval);
-        return;
-      }
-      progress = progress - percentageDescreasePerStep;
-      cb(progress);
-    }, timeStep);
-  }
-
-  clearProgressInterval() {
-    this.stopProgress = true;
-  }
-
   async storeClientConnection(client: Socket) {
     try {
       const payload = await this.extractPayload(client);
@@ -176,7 +152,7 @@ export class SocketService {
   async updateRoomRoundWhenDrawerOut(server: Server, codeRoom: string, roomRound: RoomRound, type: string) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+  
 
     switch (type) {
       case GAME_DRAWER_IS_OUT:
@@ -187,10 +163,10 @@ export class SocketService {
         break;
       default:
         break;
-    }
 
-    this.clearProgressInterval();
-    server.in(codeRoom).emit(GAME_REFRESH_CHANNEL);
+
+    }
+    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 

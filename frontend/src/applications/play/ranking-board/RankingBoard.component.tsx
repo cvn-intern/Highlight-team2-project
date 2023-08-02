@@ -33,6 +33,7 @@ const RankingBoard = () => {
     setCorrectAnswers,
     roomRound,
     setRoomRound,
+    isHost
   } = useGameStore();
   const { codeRoom } = useParams();
 
@@ -44,8 +45,9 @@ const RankingBoard = () => {
         data.participants,
         (participant) => participant.is_host
       );
+      if (!roomRound) setRoomRound(data.roomRound);
 
-      const isHost = hostUser?.id === user?.id;
+      const isHost = hostUser?.id === user?.id
       setIsHost(isHost);
       if (data.participants.length === 1) {
         setGameStatus(WAIT_FOR_OTHER_PLAYERS);
@@ -55,6 +57,7 @@ const RankingBoard = () => {
         );
         setRoomRound(null)
         socket.emit(WAIT_FOR_OTHER_PLAYERS, codeRoom);
+        return
       }
 
       if (
@@ -64,16 +67,23 @@ const RankingBoard = () => {
         gameStatus === WAIT_FOR_OTHER_PLAYERS
       ) {
         setGameStatus(START_GAME);
+        return
+        
       }
+      const drawer = _.find(
+        data.participants,
+        (participant) => participant.is_painter
+      );
 
-      if (!roomRound) setRoomRound(data.roomRound);
+      const isDrawer = drawer?.id === user?.id;
+      setIsDrawer(isDrawer);
     });
 
     return () => {
       socket?.off('participants');
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [socket, gameStatus, codeRoom, participants, user]);
+  }, [socket, gameStatus, codeRoom, isHost, participants, user]);
   useEffect(() => {
     socket?.on(
       GAME_UPDATE_RANKING,
