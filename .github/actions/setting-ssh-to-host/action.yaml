@@ -32,4 +32,4 @@ runs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
         ssh -o "StrictHostKeyChecking=no" $SSH_USERNAME@$SSH_HOST "echo 'Connected via SSH'"
-        ssh $SSH_USERNAME@$SSH_HOST "sudo apt-get update"
+        ssh $SSH_USERNAME@$SSH_HOST "sudo apt update"

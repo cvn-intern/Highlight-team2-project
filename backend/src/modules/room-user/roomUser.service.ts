@@ -1,13 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { RoomUser } from './roomUser.entity';
-import { Repository } from 'typeorm';
 import { RoomUserRepository } from './roomUser.repository';
 import { Room } from '../room/room.entity';
+import { RedisService } from '../redis/redis.service';
+import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { RoomRoundService } from '../room-round/roomRound.service';
 
 @Injectable()
 export class RoomUserService {
-  constructor(private roomUserRepository: RoomUserRepository) {}
+  constructor(
+    private roomUserRepository: RoomUserRepository,
+    private redisService: RedisService,
+    @Inject(forwardRef(() => RoomRoundService))
+    private roomRoundService: RoomRoundService,
+  ) { }
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -28,10 +34,7 @@ export class RoomUserService {
   }
 
   async deleteRoomUser(room_id: number, user_id: number) {
-    const participant: RoomUser = await this.roomUserRepository.getParticipant(
-      room_id,
-      user_id,
-    );
+    const participant: RoomUser = await this.roomUserRepository.getParticipant(room_id, user_id);
 
     if (!participant) {
       throw new HttpException('Not found user', HttpStatus.NOT_FOUND);
@@ -45,14 +48,24 @@ export class RoomUserService {
 
   async getListUserOfRoom(room: Room): Promise<Array<Participant>> {
     const users = await this.roomUserRepository.getParticipantsOfRoom(room.id);
-    const result: Array<Participant> = users.map((user: any, index: number) => {
+    const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+    const result: Array<Participant> = users.map((user: any) => {
       user = { ...user, ...user.user };
       delete user.user;
 
+      if (roomRound) {
+        return {
+          ...user,
+          is_host: user.id === room.host_id,
+          is_painter: user.id === roomRound.painter,
+          is_next_painter: user.id === roomRound.next_painter,
+        };
+      }
+      
       return {
         ...user,
         is_host: user.id === room.host_id,
-        is_painter: index === 0,
+        is_painter: false,
         is_next_painter: false,
       };
     });
@@ -83,23 +96,79 @@ export class RoomUserService {
 
   async assignPainterAndNextPainter(room: Room): Promise<PainterRound> {
     const participants: Array<Participant> = await this.getListUserOfRoom(room);
+    const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${room.id}:PAINTERS`);
+    const drewPainters: Array<number> = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+    const currentPainter = paintersOfPreviousRound ? paintersOfPreviousRound.nextPainter : null;
+    const notDrewPainters: Array<Participant> = participants;
 
-    const painterIndex: number = Math.floor(
-      Math.random() * participants.length,
+    // Find painter
+    let painterId = currentPainter;
+    if (drewPainters.length === 0 || !painterId) {
+      const painterIndex: number = Math.floor(Math.random() * notDrewPainters.length);
+      painterId = notDrewPainters[painterIndex].id;
+    }
+
+    drewPainters.push(painterId);
+    let participantsNextPainter: Array<Participant> = notDrewPainters.filter(
+      (participant: Participant) => !drewPainters.includes(participant.id),
     );
-    const painter: Participant = participants[painterIndex];
-    const participantsExcept: Array<Participant> = participants.filter(
-      (participant: Participant) => participant.id !== painter.id,
-    );
-    const nextPainterIndex: number = Math.floor(
-      Math.random() * participantsExcept.length,
-    );
-    const nextPainter: Participant = participantsExcept[nextPainterIndex];
+
+    if (participantsNextPainter.length === 0) {
+      await this.resetDrewPaintersCachePainterForRoom(room.id, currentPainter);
+      participantsNextPainter = participants.filter((participant: Participant) => participant.id !== painterId);
+    }
+
+    const nextPainterIndex = Math.floor(Math.random() * participantsNextPainter.length);
+    const nextPainterId = participantsNextPainter[nextPainterIndex].id;
 
     return {
-      painter: painter.id,
-      next_painter: nextPainter.id,
+      painter: painterId,
+      next_painter: nextPainterId,
     } as PainterRound;
+  }
+
+  async cachePainterForRoom(roomId: number, painter: number, nextPainter: number) {
+    const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
+
+    const drewPainters = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+    drewPainters.push(painter);
+
+    return await this.redisService.setObjectByKeyValue(
+      `${roomId}:PAINTERS`,
+      {
+        drewPainters,
+        nextPainter: nextPainter,
+      },
+      expireTimeOneDay,
+    );
+  }
+
+  async resetDrewPaintersCachePainterForRoom(roomId: number, nextPainter: number) {
+    await this.redisService.setObjectByKeyValue(
+      `${roomId}:PAINTERS`,
+      {
+        drewPainters: [],
+        nextPainter: nextPainter,
+      },
+      expireTimeOneDay,
+    );
+  }
+
+  async resetNextPainterCachePainterForRoom(roomId: number) {
+    const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
+
+    return await this.redisService.setObjectByKeyValue(
+      `${roomId}:PAINTERS`,
+      {
+        ...paintersOfPreviousRound,
+        nextPainter: null,
+      },
+      expireTimeOneDay,
+    );
+  }
+
+  async deleteCachePainterAndNextPainterForRoom(roomId: number) {
+    return await this.redisService.deleteObjectByKey(`${roomId}:PAINTERS`);
   }
 
   async updateRoomUserScore(userId: number, score: number) {
@@ -110,12 +179,7 @@ export class RoomUserService {
     const participants: Array<Participant> = await this.getListUserOfRoom(room);
     if (participants.length === 0) return;
     await Promise.all(
-      participants.map((participant) =>
-        this.roomUserRepository.update(
-          { user_id: participant.id },
-          { score: 0 },
-        ),
-      ),
+      participants.map((participant) => this.roomUserRepository.update({ user_id: participant.id }, { score: 0 })),
     );
   }
 }

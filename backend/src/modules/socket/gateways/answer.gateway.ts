@@ -1,8 +1,4 @@
-import {
-  ConnectedSocket,
-  MessageBody,
-  SubscribeMessage,
-} from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import {
   ANSWER_APPROXIMATELY,
@@ -20,17 +16,12 @@ import { RoomRound } from 'src/modules/room-round/roomRound.entity';
 
 export class AnswerGateway extends SocketGateway {
   @SubscribeMessage(ANSWER_ROOM_CHANNEL)
-  async handleAnswer(
-    @MessageBody() msgBody: MessageBodyType,
-    @ConnectedSocket() client: SocketClient,
-  ) {
+  async handleAnswer(@MessageBody() msgBody: MessageBodyType, @ConnectedSocket() client: SocketClient) {
     try {
       const roomId = extractIdRoom(msgBody.codeRoom);
-      const round: RoomRound = await this.roomRoundService.getRoundOfRoom(
-        roomId,
-      );
+      const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
       const answerRound: string = round.word;
-      const ROOM_ANSWER: string = `${msgBody.codeRoom}-answer`;
+      const ROOM_ANSWER = `${msgBody.codeRoom}-answer`;
 
       const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
 

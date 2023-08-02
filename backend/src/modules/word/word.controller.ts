@@ -3,7 +3,5 @@ import { WordService } from './word.service';
 
 @Controller('words')
 export class WordController {
-    constructor(
-        private wordService: WordService,
-    ) {}
+  constructor(private wordService: WordService) {}
 }

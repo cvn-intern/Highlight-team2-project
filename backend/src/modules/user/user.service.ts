@@ -6,9 +6,9 @@ import { UserInterface } from './user.interface';
 import { getFileAvatars, randomString } from '../../common/utils/helper';
 import { LANGUAGE_DEFAULT } from './constant';
 import { RedisService } from '../redis/redis.service';
-import { app } from 'src/main';
+import { daysOfYear, expireTimeOneDay } from 'src/common/variables/constVariable';
 
-const LENGTH_STRING_RANDOM: number = 6;
+const LENGTH_STRING_RANDOM = 6;
 
 @Injectable()
 export class UserService {
@@ -41,12 +41,9 @@ export class UserService {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
 
-    if(!user.provider) {
-      const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
-  
-      if (!isAvatarIndefault) {
-        throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
-      }
+    const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
+    if (!user.provider && !isAvatarIndefault) {
+      throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
     }
 
     return this.userRepository.save(user);
@@ -62,12 +59,18 @@ export class UserService {
     return isUserExisted;
   }
 
-  async generateGuest(): Promise<UserInterface> {
-    const hostBE: string = await app.getUrl();
-    const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-      return `${hostBE}/${avatar}`;
-    });
-    const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
+  async generateGuest(hostBE: string): Promise<UserInterface> {
+    let avatars: Array<string> = await this.redisService.getObjectByKey('DEFAULT_AVATARS');
+
+    if (!avatars) {
+      avatars = (await getFileAvatars()).map((avatar: string) => {
+        return `http://${hostBE}/${avatar}`;
+      });
+
+      this.cacheAvatar(avatars);
+    }
+
+    const nicknameGuest: string = 'user' + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = avatars[0];
     const language: string = LANGUAGE_DEFAULT;
 
@@ -76,6 +79,10 @@ export class UserService {
       avatar: avatar,
       language: language,
     } as UserInterface;
+  }
+
+  async cacheAvatar(avatars: Array<string>) {
+    return await this.redisService.setObjectByKeyValue('DEFAULT_AVATARS', avatars, expireTimeOneDay * daysOfYear);
   }
 
   async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
@@ -91,10 +98,7 @@ export class UserService {
   }
 
   async checkAvatarInDefault(avatar: string): Promise<boolean> {
-    const hostBE: string = await app.getUrl();
-    const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-      return `${hostBE}/${avatar}`;
-    });
+    const avatars: Array<string> = await this.redisService.getObjectByKey('DEFAULT_AVATARS');
 
     return !!avatars.includes(avatar);
   }

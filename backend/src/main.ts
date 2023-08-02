@@ -7,7 +7,7 @@ export let app: INestApplication;
 
 async function bootstrap() {
   const logger: Logger = new Logger('main');
-  app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
   app.enableCors();
   app.use(compression({

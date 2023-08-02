@@ -8,7 +8,7 @@ export class LanguageService {
   constructor(
     @InjectRepository(Language)
     private languageRepository: Repository<Language>,
-  ) { }
+  ) {}
 
   async getAllLanguge() {
     return this.languageRepository.find();

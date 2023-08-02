@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-  Res,
-  Logger,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, Res, Logger, HttpStatus } from '@nestjs/common';
 import { WordsCollectionService } from './wordsCollection.service';
 import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
 import { Response } from 'express';
@@ -21,17 +13,9 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getWordsCollectionByType(
-    @Query('type') type: number,
-    @Res() response: Response,
-    @IdUser() idUser: number,
-  ) {
+  async getWordsCollectionByType(@Query('type') type: number, @Res() response: Response, @IdUser() idUser: number) {
     try {
-      let wordsCollection =
-        await this.wordsCollectionService.getWordsCollectionByType(
-          type,
-          idUser,
-        );
+      let wordsCollection = await this.wordsCollectionService.getWordsCollectionByType(type, idUser);
 
       wordsCollection = wordsCollection.map((wordsCollection: any) => {
         wordsCollection = {

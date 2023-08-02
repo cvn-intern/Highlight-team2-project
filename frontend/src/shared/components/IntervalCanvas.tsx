@@ -14,10 +14,12 @@ export const PLAY_GAME = "game-start";
 export const GAME_PROGRESS = "game-progress";
 export const GAME_REFRESH_ROUND = "refresh-round";
 
-export const QUALIFY_TO_START_CHANNEL = "qualify-to-start";
-export const GAME_STATUS_CHANNEL = "game-status";
-export const GAME_NEW_TURN_CHANNEL = "game-new-turn";
-export const GAME_DRAWER_OUT_CHANNEL = "drawer-is-out";
+export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
+export const GAME_STATUS_CHANNEL = 'game-status';
+export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
+export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
+export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
+
 
 export const INTERVAL_DURATION_MILISECONDS = 10000;
 

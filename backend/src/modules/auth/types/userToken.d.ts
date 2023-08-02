@@ -1,6 +1,6 @@
-import { User } from "../../user/user.entity"
+import { User } from '../../user/user.entity';
 
 export type UserToken = {
-    user: User,
-    accessToken: string;
-}
+  user: User;
+  accessToken: string;
+};
