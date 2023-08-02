@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) {}
+  ) { }
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
@@ -41,14 +41,10 @@ export class UserService {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
 
-    if(!user.provider) {
-      const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
-      
-      if (!isAvatarIndefault) {
-        throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
-      }
+    const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
+    if (!user.provider && !isAvatarIndefault) {
+      throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
     }
-
 
     return this.userRepository.save(user);
   }
