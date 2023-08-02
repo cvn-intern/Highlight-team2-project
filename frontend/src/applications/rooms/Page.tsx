@@ -16,7 +16,13 @@ import { Input } from "@/shared/components/shadcn-ui/Input";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { Book, DoorOpen, Globe, Search, Triangle } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/shadcn-ui/select";
 import Logo from "@/shared/components/Logo";
 import ListOfRoom from "./ListOfRoom.component";
 import SloganImg from "@/shared/assets/slogan.png";
@@ -104,7 +110,10 @@ const RoomsPage = () => {
     try {
       if (selectCodeRoom) {
         socket?.emit("join-room", selectCodeRoom);
-        navigate("/" + selectCodeRoom, { state: { wait: false }, replace: false });
+        navigate("/" + selectCodeRoom, {
+          state: { wait: false },
+          replace: false,
+        });
       }
     } catch (error) {
       useToaster({
@@ -128,7 +137,7 @@ const RoomsPage = () => {
         <div className="relative bg-white flex flex-col items-center mb-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
           <button
             onClick={handleBackButton}
-            className="left-1 mx-5 md:mr-10 absolute top-8 md:left-10"
+            className="left-4 mx-5 md:mr-10 absolute top-4 md:top-8 md:left-10"
           >
             <Triangle
               size={40}
@@ -141,7 +150,7 @@ const RoomsPage = () => {
               onSubmit={form.handleSubmit(handleSubmit)}
               className="w-full flex flex-col md:flex-row items-center justify-between my-3"
             >
-              <div className="flex items-center ml-32">
+              <div className="flex items-center ml-12 md:ml-32">
                 <FormField
                   control={form.control}
                   name="searchInput"
@@ -201,9 +210,13 @@ const RoomsPage = () => {
                               <SelectValue placeholder="Theme" />
                             </SelectTrigger>
                             <SelectContent className="text-lg font-bold">
-                              <SelectItem key={0} value="all">ALL</SelectItem>
+                              <SelectItem key={0} value="all">
+                                ALL
+                              </SelectItem>
                               {themesData?.map((theme) => (
-                                <SelectItem key={theme.id} value={theme.name}>{theme.name.toUpperCase()}</SelectItem>
+                                <SelectItem key={theme.id} value={theme.name}>
+                                  {theme.name.toUpperCase()}
+                                </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
@@ -240,7 +253,9 @@ const RoomsPage = () => {
                             </SelectTrigger>
                             <SelectContent className="text-lg font-bold border-none ">
                               <SelectItem value="en">English (EN)</SelectItem>
-                              <SelectItem value="vi">Vietnamese (VN)</SelectItem>
+                              <SelectItem value="vi">
+                                Vietnamese (VN)
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>
@@ -253,15 +268,19 @@ const RoomsPage = () => {
             </form>
           </Form>
 
-          <div className="flex flex-col items-center justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
-            <ListOfRoom roomFilter={roomFilterData} selectCodeRoom={selectCodeRoom} setSelectCodeRoom={setSelectCodeRoom} />
+          <div className="flex flex-col items-start justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
+            <ListOfRoom
+              roomFilter={roomFilterData}
+              selectCodeRoom={selectCodeRoom}
+              setSelectCodeRoom={setSelectCodeRoom}
+            />
           </div>
           <div className="flex gap-3">
             <Button
               type="submit"
               variant="opacityHover"
               className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#005AA7] to-[#FFFDE4] p-5"
-            // onClick={handleJoinRoom}
+              // onClick={handleJoinRoom}
             >
               <DoorOpen />
               <p>NEW ROOM</p>
@@ -283,7 +302,7 @@ const RoomsPage = () => {
           </div>
         </div>
       </div>
-    </MainLayout >
+    </MainLayout>
   );
 };
 
