@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) {}
+  ) { }
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
@@ -42,8 +42,7 @@ export class UserService {
     }
 
     const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
-
-    if (!isAvatarIndefault) {
+    if (!user.provider && !isAvatarIndefault) {
       throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
     }
 
