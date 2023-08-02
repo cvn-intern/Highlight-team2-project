@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
 import { MY_WORDS_COLLECTION, OFFICIAL_WORDS_COLLECTION } from './constants';
 import { Theme } from '../theme/theme.entity';
+import { Word } from '../word/word.entity';
 
 @Injectable()
 export class WordsCollectionRepository extends Repository<WordsCollection> {
@@ -34,5 +35,61 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
     }
     const words_collections = await queryBuilder.getMany();
     return words_collections;
+  }
+
+  async getWordsCollectionDetailById(id: number) {
+    const words_collection = await this.createQueryBuilder('words_collection')
+      .leftJoinAndMapOne('words_collection.theme', Theme, 'theme', 'words_collection.theme_id = theme.id')
+      .leftJoinAndMapMany('words_collection.words_list', Word, 'word', 'word.words_collection_id = words_collection.id')
+      .where('words_collection.id = :id', { id })
+      .getOne();
+    return words_collection;
+  }
+
+  async getWordsCollectionById(id: number) {
+    const words_collection = await this.createQueryBuilder('words_collection')
+      .leftJoinAndMapOne('words_collection.theme', Theme, 'theme', 'words_collection.theme_id = theme.id')
+      .where('words_collection.id = :id', { id })
+      .getOne();
+    return words_collection;
+  }
+
+  async createWordsCollection(
+    theme_id: number,
+    language_code: string,
+    creator_id: number,
+    is_created_by_system: boolean,
+  ): Promise<WordsCollection> {
+    const newWordsCollection = this.create({
+      theme_id,
+      language_code,
+      creator_id,
+      is_created_by_system,
+    });
+    return await this.save(newWordsCollection);
+  }
+
+  async updateWordsCollection(
+    id: number,
+    theme_id: number,
+    language_code: string,
+    creator_id: number,
+    is_created_by_system: boolean,
+  ) {
+    const words_collection = await this.findOneBy({ id });
+    if (!words_collection) {
+      return null;
+    }
+    return await this.save({
+      id,
+      theme_id,
+      language_code,
+      creator_id,
+      is_created_by_system,
+    });
+  }
+
+  async deleteWordsCollection(id: number) {
+    await this.delete({ id });
   }
 }

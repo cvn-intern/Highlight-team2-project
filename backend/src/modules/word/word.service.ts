@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Word } from './word.entity';
 import { Repository } from 'typeorm';
+import { WordType } from '../words-collection/dto/createWordsCollection';
 import { RedisService } from '../redis/redis.service';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 
@@ -12,7 +13,6 @@ export class WordService {
     private wordRepository: Repository<Word>,
     private redisService: RedisService,
   ) {}
-
   async getWordRandom(wordCollection: number, roomId: number): Promise<Word> {
     let words: Array<Word> = await this.wordRepository.find({
       where: {
@@ -34,7 +34,17 @@ export class WordService {
 
     return words[randomIndex];
   }
-
+  async createWord(word: WordType, words_collection_id: number) {
+    const newWord = this.wordRepository.create({
+      ...word,
+      words_collection_id,
+    });
+    await this.wordRepository.save(newWord);
+    return newWord;
+  }
+  async deleteAllWordsInWordsCollection(words_collection_id: number) {
+    await this.wordRepository.delete({ words_collection_id });
+  }
   async cacheUsedWordsForRoom(roomId: number, word: string) {
     let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
