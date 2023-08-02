@@ -39,18 +39,16 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
 
   async getWordsCollectionDetailById(id: number) {
     const words_collection = await this.createQueryBuilder('words_collection')
-      .leftJoinAndMapOne(
-        'words_collection.theme',
-        Theme,
-        'theme',
-        'words_collection.theme_id = theme.id',
-      )
-      .leftJoinAndMapMany(
-        'words_collection.words_list',
-        Word,
-        'word',
-        'word.words_collection_id = words_collection.id',
-      )
+      .leftJoinAndMapOne('words_collection.theme', Theme, 'theme', 'words_collection.theme_id = theme.id')
+      .leftJoinAndMapMany('words_collection.words_list', Word, 'word', 'word.words_collection_id = words_collection.id')
+      .where('words_collection.id = :id', { id })
+      .getOne();
+    return words_collection;
+  }
+
+  async getWordsCollectionById(id: number) {
+    const words_collection = await this.createQueryBuilder('words_collection')
+      .leftJoinAndMapOne('words_collection.theme', Theme, 'theme', 'words_collection.theme_id = theme.id')
       .where('words_collection.id = :id', { id })
       .getOne();
     return words_collection;
