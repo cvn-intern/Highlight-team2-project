@@ -53,7 +53,7 @@ const CreateRoomsContent = () => {
         return handleCreateRoom();
     };
 
-    
+
     const handleCreateRoom = async () => {
         try {
             const players = parseInt(form.getValues("players"));
@@ -67,7 +67,7 @@ const CreateRoomsContent = () => {
                 round,
                 DEFAULT_ROOM_TIME,
                 visible,
-                );
+            );
             handleJoinNewCreateRoom(createRoomResponse.code_room);
         } catch (error: any) {
             (error);
@@ -94,7 +94,7 @@ const CreateRoomsContent = () => {
             });
         }
     };
-    
+
     const handleSubmitClick = () => {
         document.getElementById("submitBtn")?.click();
     }

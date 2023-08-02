@@ -48,7 +48,7 @@ const RoomInfomationDialog = ({roomInfo}: RoomInfomationDialogProps) => {
             Rounds:
           </p>
           <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text capitalize">
-            {roomInfo?.max_player} rounds
+            {roomInfo?.number_of_round} rounds
           </p>
         </div>
         <div className="flex flex-col items-center justify-center">
