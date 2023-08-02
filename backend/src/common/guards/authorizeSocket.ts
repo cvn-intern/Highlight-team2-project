@@ -1,29 +1,25 @@
-import { CanActivate, Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import { Observable } from "rxjs";
-import { SocketService } from "src/modules/socket/socket.service";
-import { UserService } from "src/modules/user/user.service";
+import { CanActivate, Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import { SocketService } from 'src/modules/socket/socket.service';
+import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
 export class AuthorizeSocket implements CanActivate {
-
   constructor(
     private userService: UserService,
     private logger: Logger = new Logger(AuthorizeSocket.name),
     private jwtService: JwtService,
     private configService: ConfigService,
     private socketService: SocketService,
-  ) { }
+  ) {}
 
-  async canActivate(
-    context: any,
-  ): Promise<boolean> {
-    const  client = context.args[0];
+  async canActivate(context: any): Promise<boolean> {
+    const client = context.args[0];
 
     const isBlock = await this.socketService.checkInBlockList(client);
-    
-    if(isBlock) {
+
+    if (isBlock) {
       return false;
     }
 
@@ -37,7 +33,7 @@ export class AuthorizeSocket implements CanActivate {
       const curUser = await this.userService.getUserById(payload.id);
 
       if (curUser) {
-        client.user =  curUser;
+        client.user = curUser;
       }
 
       return curUser ? true : false;

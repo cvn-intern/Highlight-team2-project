@@ -22,6 +22,7 @@ import {
 import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
+  GAME_NEXT_DRAWER_IS_OUT,
   GAME_PROGRESS,
   GAME_REFRESH_ROUND,
   GAME_STATUS_CHANNEL,
@@ -188,10 +189,19 @@ export default function PlayingGameScreen() {
       });
     });
 
+    socket?.on(GAME_NEXT_DRAWER_IS_OUT, () => {
+      useToaster({
+        message: 'Next drawer is out. The round restarts!',
+        type: 'warning',
+        icon: '😅',
+        bodyClassName: 'text-sm font-semibold',
+      });
+    });
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
+      socket?.off(GAME_NEXT_DRAWER_IS_OUT);
     };
   }, [socket, participants]);
 

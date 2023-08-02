@@ -27,17 +27,9 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getWordsCollectionByType(
-    @Query('type') type: number,
-    @Res() response: Response,
-    @IdUser() idUser: number,
-  ) {
+  async getWordsCollectionByType(@Query('type') type: number, @Res() response: Response, @IdUser() idUser: number) {
     try {
-      let wordsCollection =
-        await this.wordsCollectionService.getWordsCollectionByType(
-          type,
-          idUser,
-        );
+      let wordsCollection = await this.wordsCollectionService.getWordsCollectionByType(type, idUser);
 
       wordsCollection = wordsCollection.map((wordsCollection: any) => {
         wordsCollection = {
@@ -62,12 +54,8 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/:id')
-  async getWordsCollectionDetailById(
-    @Param('id') id: number,
-    @Res() response: Response,
-  ) {
-    const wordsCollectionDetail =
-      await this.wordsCollectionService.getWordsCollectionDetailById(id);
+  async getWordsCollectionDetailById(@Param('id') id: number, @Res() response: Response) {
+    const wordsCollectionDetail = await this.wordsCollectionService.getWordsCollectionDetailById(id);
     return response.status(HttpStatus.OK).json(wordsCollectionDetail);
   }
 
@@ -82,14 +70,13 @@ export class WordsCollectionController {
       const creator_id = idUser;
       const is_created_by_system = false;
       const { theme_id, language_code, words_list } = createWordsCollectionDto;
-      const wordsCollection =
-        await this.wordsCollectionService.createWordsCollection(
-          theme_id,
-          language_code,
-          creator_id,
-          is_created_by_system,
-          words_list,
-        );
+      const wordsCollection = await this.wordsCollectionService.createWordsCollection(
+        theme_id,
+        language_code,
+        creator_id,
+        is_created_by_system,
+        words_list,
+      );
       return response.status(HttpStatus.OK).json(wordsCollection);
     } catch (error) {
       this.logger.error(error);
@@ -109,15 +96,14 @@ export class WordsCollectionController {
     const is_created_by_system = false;
     const { theme_id, language_code, words_list } = createWordsCollectionDto;
     // Update words collection data
-    const words_collection =
-      await this.wordsCollectionService.updateWordsCollection(
-        Number(id),
-        theme_id,
-        language_code,
-        creator_id,
-        is_created_by_system,
-        words_list,
-      );
+    const words_collection = await this.wordsCollectionService.updateWordsCollection(
+      Number(id),
+      theme_id,
+      language_code,
+      creator_id,
+      is_created_by_system,
+      words_list,
+    );
     if (!words_collection) {
       return response.status(HttpStatus.NOT_FOUND).json({
         message: `Words collection with id ${id} not found`,
@@ -128,23 +114,15 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Delete('/:id')
-  async deleteWordsCollection(
-    @Param('id') id: number,
-    @Res() response: Response,
-  ) {
+  async deleteWordsCollection(@Param('id') id: number, @Res() response: Response) {
     const words_collection_id = Number(id);
-    const words_collection =
-      await this.wordsCollectionService.getWordsCollectionDetailById(
-        words_collection_id,
-      );
+    const words_collection = await this.wordsCollectionService.getWordsCollectionDetailById(words_collection_id);
     if (!words_collection) {
       return response.status(HttpStatus.NOT_FOUND).json({
         message: `Words collection with id ${id} not found`,
       });
     }
-    await this.wordsCollectionService.deleteWordsCollection(
-      words_collection_id,
-    );
+    await this.wordsCollectionService.deleteWordsCollection(words_collection_id);
     return response.status(HttpStatus.OK).json({
       message: `Words collection with id ${id} has been deleted successfully`,
     });

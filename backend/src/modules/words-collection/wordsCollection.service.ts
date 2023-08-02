@@ -12,14 +12,8 @@ export class WordsCollectionService {
     private wordService: WordService,
   ) {}
 
-  async getWordsCollectionByType(
-    type: number,
-    creator_id: number,
-  ): Promise<WordsCollection[]> {
-    return await this.wordsCollectionRepository.getWordsCollectionByType(
-      type,
-      creator_id,
-    );
+  async getWordsCollectionByType(type: number, creator_id: number): Promise<WordsCollection[]> {
+    return await this.wordsCollectionRepository.getWordsCollectionByType(type, creator_id);
   }
 
   async getWordsCollectionDetailById(id: number) {

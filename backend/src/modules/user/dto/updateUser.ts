@@ -1,5 +1,5 @@
 export class UpdateUserDTO {
-    nickname?: string;
-    avatar?: string;
-    language?: string;
+  nickname?: string;
+  avatar?: string;
+  language?: string;
 }

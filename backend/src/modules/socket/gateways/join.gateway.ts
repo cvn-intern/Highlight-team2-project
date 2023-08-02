@@ -1,11 +1,10 @@
-import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect } from "@nestjs/websockets";
-import { SocketGateway } from "./socket.gateway";
-import { Room } from "src/modules/room/room.entity";
-import { extractIdRoom } from "src/common/utils/helper";
-import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from "../constant";
-import { Socket } from "socket.io";
-import { expireTimeOneDay } from "src/common/variables/constVariable";
-import { errorsSocket } from "src/common/errors/errorCode";
+import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
+import { SocketGateway } from './socket.gateway';
+import { Room } from 'src/modules/room/room.entity';
+import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
+import { Socket } from 'socket.io';
+import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { errorsSocket } from 'src/common/errors/errorCode';
 
 export class JoinGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(@ConnectedSocket() client: any) {
@@ -27,9 +26,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         return;
       }
 
-      const codeRoom: string = await this.redisService.getObjectByKey(
-        `USER:${user.id}:ROOM`,
-      );
+      const codeRoom: string = await this.redisService.getObjectByKey(`USER:${user.id}:ROOM`);
 
       if (!codeRoom) {
         await this.socketService.removeClientDisconnection(client);
@@ -44,7 +41,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
 
       client.leave(room.code_room);
 
-      const ROOM_LEAVE = `${room.code_room}-leave`
+      const ROOM_LEAVE = `${room.code_room}-leave`;
       this.server.in(codeRoom).emit(ROOM_LEAVE, {
         user: user.nickname,
         type: LEAVE_ROOM_TYPE,
@@ -57,9 +54,8 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(room.code_room);
       }
 
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
       await this.socketService.removeClientDisconnection(client);
-      let roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
 
       const participants = await this.roomUserService.getListUserOfRoom(room);
@@ -68,26 +64,8 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         return;
       }
 
-      if (roomRound.painter === client.user.id) {
-        const { endedAt, painterRound, startedAt, word } =
-          await this.roomRoundService.initRoundInfomation(room);
-        roomRound = await this.roomRoundService.updateRoomRound({
-          ...roomRound,
-          word,
-          ended_at: endedAt,
-          started_at: startedAt,
-          painter: roomRound.next_painter,
-          next_painter:
-            [painterRound.next_painter, painterRound.painter].find(
-              (painter) => painter !== roomRound.next_painter,
-            ) ?? roomRound.painter,
-        });
-        await this.socketService.updateRoomRoundWhenDrawerOut(
-          this.server,
-          codeRoom,
-          roomRound,
-        );
-      }
+      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

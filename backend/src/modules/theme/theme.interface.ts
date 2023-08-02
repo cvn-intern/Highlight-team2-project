@@ -1,5 +1,5 @@
 export interface ThemeInterface {
-    id?: number;
-    name?: string;
-    thumbnail?: string;
+  id?: number;
+  name?: string;
+  thumbnail?: string;
 }
