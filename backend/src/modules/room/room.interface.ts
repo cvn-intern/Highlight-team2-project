@@ -1,5 +1,3 @@
-import { Word } from '../word/word.entity';
-
 export interface RoomInterface {
   id?: number;
   host_id?: number;

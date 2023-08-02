@@ -31,10 +31,7 @@ export class RoomRoundService {
   }
 
   async updateRoomRound(roomRound: RoomRoundInterface): Promise<RoomRound> {
-    await this.roomRoundRepository.update(
-      { room_id: roomRound.room_id },
-      { ...roomRound },
-    );
+    await this.roomRoundRepository.update({ room_id: roomRound.room_id }, { ...roomRound });
 
     const roomUpdate: RoomRound = await this.roomRoundRepository.findOne({
       where: {
@@ -45,7 +42,17 @@ export class RoomRoundService {
     return roomUpdate;
   }
 
+  async cacheDataRoomRound(roundOfRoom: RoomRound) {
+    return await Promise.all([
+      this.roomUserService.cachePainterForRoom(roundOfRoom.room_id, roundOfRoom.painter, roundOfRoom.next_painter),
+      this.wordService.cacheUsedWordsForRoom(roundOfRoom.room_id, roundOfRoom.word),
+    ]);
+  }
+
   async deleteRoomRound(roomId: number) {
+    await this.wordService.deleteCacheUsedWordsForRoom(roomId);
+    await this.roomUserService.deleteCachePainterAndNextPainterForRoom(roomId);
+
     return await this.roomRoundRepository.delete({
       room_id: roomId,
     });
@@ -53,7 +60,7 @@ export class RoomRoundService {
 
   async initRoundInfomation(room: Room): Promise<RoomRoundInfoInterface> {
     const [{ word }, painterRound] = await Promise.all([
-      this.wordService.getWordRandom(room.words_collection_id),
+      this.wordService.getWordRandom(room.words_collection_id, room.id),
       this.roomUserService.assignPainterAndNextPainter(room),
     ]);
     const startedAt: Date = new Date();

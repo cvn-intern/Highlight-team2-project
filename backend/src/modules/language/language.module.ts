@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Language } from './language.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Language])
-  ],
+  imports: [TypeOrmModule.forFeature([Language])],
   controllers: [LanguageController],
   providers: [LanguageService, Logger],
   exports: [LanguageService],

@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Theme } from '../theme/theme.entity';
 import { User } from '../user/user.entity';
 
@@ -20,7 +14,7 @@ export class WordsCollection {
 
   @ManyToOne(() => User, (user) => user.id)
   @JoinColumn({ name: 'creator_id' })
-  @Column({default: null})
+  @Column({ default: null })
   creator_id: number;
 
   @Column({

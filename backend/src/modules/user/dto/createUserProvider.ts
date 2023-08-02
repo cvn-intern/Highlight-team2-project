@@ -1,4 +1,4 @@
-import { IsIn, IsNotEmpty, Length } from "class-validator";
+import { IsIn, IsNotEmpty, Length } from 'class-validator';
 
 export class CreateUserProviderDTO {
   @IsNotEmpty()

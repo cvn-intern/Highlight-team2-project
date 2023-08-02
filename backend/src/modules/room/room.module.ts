@@ -11,6 +11,7 @@ import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomRepository } from './room.repository';
 import { WordModule } from '../word/word.module';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { WordModule } from '../word/word.module';
     UserModule,
     RoomRoundModule,
     RoomUserModule,
-    WordModule
+    WordModule,
+    RedisModule,
   ],
   controllers: [RoomController],
   providers: [RoomService, Logger, RoomUserService, RoomRepository],

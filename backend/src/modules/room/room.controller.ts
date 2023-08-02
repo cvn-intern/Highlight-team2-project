@@ -48,7 +48,7 @@ export class RoomController {
           number_of_participants: room.participants.length,
           max_player: room.max_player,
           language: room.language.code,
-          current_round: room.room_round.current_round,
+          current_round: room.room_round?.current_round || 1,
           number_of_round: room.number_of_round,
           is_public: room.is_public,
           created_at: room.created_at,
@@ -58,20 +58,10 @@ export class RoomController {
       });
 
       rooms = rooms.filter((room: any) => {
-        const themeNameContainSearch = room.theme_name
-          .toLowerCase()
-          .includes(search.toLowerCase());
-        const codeRoomContainSearch = room.code_room
-          .toLowerCase()
-          .includes(search.toLowerCase());
-        const languageContainSearch = room.language
-          .toLowerCase()
-          .includes(search.toLowerCase());
-        return (
-          themeNameContainSearch ||
-          codeRoomContainSearch ||
-          languageContainSearch
-        );
+        const themeNameContainSearch = room.theme_name.toLowerCase().includes(search.toLowerCase());
+        const codeRoomContainSearch = room.code_room.toLowerCase().includes(search.toLowerCase());
+        const languageContainSearch = room.language.toLowerCase().includes(search.toLowerCase());
+        return themeNameContainSearch || codeRoomContainSearch || languageContainSearch;
       });
 
       return response.status(HttpStatus.OK).json(rooms);
@@ -103,10 +93,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Delete('/:codeRoom')
-  async deleteRoom(
-    @Param('codeRoom') codeRoom: string,
-    @Res() response: Response,
-  ) {
+  async deleteRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const room = await this.roomService.getRoomByCodeRoom(codeRoom);
       if (!room) {
@@ -117,8 +104,7 @@ export class RoomController {
       const roomUsers = await this.roomUserService.getListUserOfRoom(room);
       if (roomUsers && roomUsers.length > 0) {
         return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          message:
-            'There are still users in the room, you cannot delete it now!',
+          message: 'There are still users in the room, you cannot delete it now!',
         });
       }
       await this.roomService.deleteRoom(codeRoom);
@@ -146,10 +132,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/:codeRoom')
-  async getRoom(
-    @Param('codeRoom') codeRoom: string,
-    @Res() response: Response,
-  ) {
+  async getRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
@@ -162,10 +145,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/participants/:codeRoom')
-  async getListUserOfRoom(
-    @Param('codeRoom') codeRoom: string,
-    @Res() response: Response,
-  ) {
+  async getListUserOfRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
       const users = await this.roomUserService.getListUserOfRoom(room);
