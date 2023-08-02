@@ -75,4 +75,9 @@ export class WordsCollectionService {
     });
     return words_collection;
   }
+
+  async deleteWordsCollection(id: number) {
+    await this.wordService.deleteAllWordsInWordsCollection(id);
+    await this.wordsCollectionRepository.deleteWordsCollection(id);
+  }
 }

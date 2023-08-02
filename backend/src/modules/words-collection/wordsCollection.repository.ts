@@ -99,4 +99,8 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
       is_created_by_system,
     });
   }
+
+  async deleteWordsCollection(id: number) {
+    await this.delete({ id });
+  }
 }

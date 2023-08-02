@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Query,
   UseGuards,
@@ -123,5 +124,29 @@ export class WordsCollectionController {
       });
     }
     return response.status(HttpStatus.OK).json(words_collection);
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Delete('/:id')
+  async deleteWordsCollection(
+    @Param('id') id: number,
+    @Res() response: Response,
+  ) {
+    const words_collection_id = Number(id);
+    const words_collection =
+      await this.wordsCollectionService.getWordsCollectionDetailById(
+        words_collection_id,
+      );
+    if (!words_collection) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: `Words collection with id ${id} not found`,
+      });
+    }
+    await this.wordsCollectionService.deleteWordsCollection(
+      words_collection_id,
+    );
+    return response.status(HttpStatus.OK).json({
+      message: `Words collection with id ${id} has been deleted successfully`,
+    });
   }
 }
