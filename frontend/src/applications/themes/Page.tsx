@@ -1,5 +1,5 @@
 import Logo from "@/shared/components/Logo";
-import { Triangle } from "lucide-react";
+import { Search, Triangle } from "lucide-react";
 import MainLayout from "@/shared/components/MainLayout";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import { Button } from "@/shared/components/shadcn-ui/Button";
@@ -9,6 +9,7 @@ import { Input } from "@/shared/components/shadcn-ui/Input";
 import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import _ from "lodash";
+import { InputWithSearchIcon } from "@/shared/components/shadcn-ui/InputWithSearchIcon";
 
 const CreateThemePage = () => {
     const [numberOfWords, setnumberOfWords] = useState(0);
@@ -84,9 +85,9 @@ const CreateThemePage = () => {
                             </div>
                         </div>
                         <div className="bg-white w-full rounded-2xl p-5">
-                            <div className="flex justify-between">
+                            <div className="flex justify-between mb-5">
                                 <div className="w-full flex justify-between">
-                                    <div className="text-xl text-slate-500 font-bold">{numberOfWords} WORDS CREATED</div>
+                                    <div className="text-xl text-slate-500 font-bold flex items-center">{numberOfWords} WORDS CREATED</div>
                                     <div className="flex gap-x-5">
                                         {_.zip(
                                             [easyWord, mediumWord, hardWord],
@@ -99,7 +100,9 @@ const CreateThemePage = () => {
                                         ))}                                        
                                     </div>
                                 </div>
-                                <div className="w-full text-right">ahmdahvd</div>
+                                <div className="flex justify-end w-full">                                    
+                                    <InputWithSearchIcon className="rounded-xl w-[60%]" placeholder="Search..."/>                                    
+                                </div>
                             </div>
                             <div className="bg-slate-300 w-full">
                                 skvskjvbkjwasbvk
