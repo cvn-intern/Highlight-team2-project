@@ -49,11 +49,10 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
       const top3Users: Participant[] = [...listParticipant.slice(0, 3)]
       top3Users[0].is_winner = true
       return swapPositionRanking(top3Users)
-    } else {
-      const userWinner: Participant[] = [...[listParticipant[0]]]
-      userWinner[0].is_winner = true
-      return userWinner
     }
+    const userWinner: Participant[] = [...[listParticipant[0]]]
+    userWinner[0].is_winner = true
+    return userWinner
   }
 
   const handleStartGame = () => {
@@ -70,6 +69,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
       (participant) => participant.id === roomRound?.painter
     );
   }, [roomRound, participants]);
+
 
   switch (status) {
     case INTERVAL_SHOW_WORD:
@@ -119,7 +119,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <img className="w-1/3" src={PainterIsOut} />
           </div>
           <p className="text-xl absolute bottom-6 text-slate-500">Painter has left the room :(</p>
-        </> 
+        </>
       );
     case WAIT_FOR_OTHER_PLAYERS:
       return (
