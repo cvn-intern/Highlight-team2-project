@@ -1,7 +1,7 @@
 
 import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/shared/components/shadcn-ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import themeService from "@/shared/services/themeService";
 import { LogOut } from "lucide-react";
@@ -28,7 +28,7 @@ const CreateRoomsContent = () => {
         await themeService.getThemes().then(result => setThemesList(result.data));
 
     }
-    useEffect(() => { getThemesList(); console.log(themesList) }, []);
+    useEffect(() => { getThemesList() }, []);
 
     return (
         <>
@@ -41,14 +41,14 @@ const CreateRoomsContent = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col items-center w-full h-full gap-y-2">
+                <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
                     <div className="flex w-full justify-between p-5 mt-1 gap-x-5  bg-white rounded-2xl">
                         <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">2. THEME</p>
                         <Select>
-                            <SelectTrigger className="w-[40%] rounded-xl text-lg font-bold border-2 text-slate-500">
+                            <SelectTrigger className="w-[40%] rounded-xl md:text-lg font-bold border-2 text-slate-500">
                                 <SelectValue placeholder="Themes Filter" />
                             </SelectTrigger>
-                            <SelectContent className="rounded-xl text-lg font-semibold text-slate-500">
+                            <SelectContent className="rounded-xl md:text-lg font-semibold text-slate-500">
                                 <SelectItem value="all">All</SelectItem>
                                 <SelectItem value="your">Your Themes</SelectItem>
                                 <SelectItem value="offical">Offical</SelectItem>
@@ -56,8 +56,8 @@ const CreateRoomsContent = () => {
                         </Select>
                     </div>
 
-                    <ScrollArea className="h-full w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white">
-                        <div className="grid grid-cols-4">
+                    <ScrollArea className="xl:h-full md:h-[70%] h-[50%] w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
+                        <div className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2">
                             {themesList.map((theme) => {
                                 return <ThemeCard
                                     name={theme.name.toUpperCase()}
@@ -67,17 +67,16 @@ const CreateRoomsContent = () => {
                                 />
                             })}
                         </div>
-
                     </ScrollArea>
 
                 </div>
 
             </div>
-            <div className="flex gap-3 my-5">
+            <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
                 <Button
                     type="submit"
                     variant="opacityHover"
-                    className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
+                    className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
                     onClick={handleBackButton}
                 >
                     <LogOut strokeWidth={3} size={32} />
@@ -86,7 +85,7 @@ const CreateRoomsContent = () => {
                 <Button
                     type="submit"
                     variant="opacityHover"
-                    className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
+                    className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
 
                 >
                     <img src={DoorIcon} alt="" className="w-[18%]" />

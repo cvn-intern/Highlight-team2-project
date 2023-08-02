@@ -77,7 +77,7 @@ const SettingRoomForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-2 md:space-y-5 2xl:space-y-8 w-full flex flex-col items-center justify-stretch px-5"
+        className="space-y-5 md:space-y-5 2xl:space-y-8 w-full flex flex-col items-center justify-stretch px-5"
       >
 
         <FormField
@@ -98,7 +98,7 @@ const SettingRoomForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={String(field.value)}                
                 >
-                  <SelectTrigger className="w-[30%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                  <SelectTrigger className="lg:w-[30%] w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue/>
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
@@ -131,7 +131,7 @@ const SettingRoomForm = () => {
                   onValueChange={field.onChange}
                   defaultValue={String(field.value)}
                 >
-                  <SelectTrigger className="w-[30%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                  <SelectTrigger className="lg:w-[30%] w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
@@ -150,7 +150,7 @@ const SettingRoomForm = () => {
           control={form.control}
           name="visible"
           render={() => (
-            <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex justify-between w-full md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Eye color={"#4240C1"} size={28} />
