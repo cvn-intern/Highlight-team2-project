@@ -18,7 +18,6 @@ const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
 const DEFAULT_THEME = 1;
 
-
 type Theme = {
     id: number
     name: string
@@ -123,7 +122,6 @@ const CreateRoomsContent = () => {
                             })}
                         </div>
                     </ScrollArea>
-
                 </div>
 
             </div>
