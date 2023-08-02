@@ -1,12 +1,13 @@
 import { Triangle } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 
 const CreateRoomsHeader = () => {
     const navigate = useNavigate();
     const handleBackButton = () => {
-        navigate("/");
+        navigate("/rooms");
     };
-
+    useDisableBackButton();
     return (
         <div className="flex justify-between lg:w-full w-[70%]">
             <div>
@@ -24,8 +25,7 @@ const CreateRoomsHeader = () => {
                 <p className="lg:text-5xl text-2xl font-balsamiq text-sky-600">
                     SET UP
                 </p>
-            </div>
-            
+            </div>            
         </div>
     )
 }

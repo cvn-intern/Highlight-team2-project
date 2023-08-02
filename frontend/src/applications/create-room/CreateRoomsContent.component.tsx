@@ -13,6 +13,8 @@ import useToaster from "@/shared/hooks/useToaster";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import roomService from "@/shared/services/roomService";
+import wordCollectionService from "@/shared/services/wordCollectionService";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -56,7 +58,7 @@ const CreateRoomsContent = () => {
 
             console.log(players);
             console.log(round);
-            console.log(visible);
+            console.log(typeof visible);
             console.log(theme)
 
 
@@ -114,6 +116,7 @@ const CreateRoomsContent = () => {
                         <div className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2">
                             {themesList.map((item) => {
                                 return <ThemeCard
+                                    key={item.id}
                                     name={item.name.toUpperCase()}
                                     img={item.thumbnail}
                                     onClick={() => setSelectedThemeId(item.id)}

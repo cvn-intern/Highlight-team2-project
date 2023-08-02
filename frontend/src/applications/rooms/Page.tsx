@@ -40,6 +40,20 @@ const RoomsPage = () => {
     }
   };
 
+  const handleJoinCreateRoom = async () => {
+    try {
+      navigate("/rooms/create-room" + selectCodeRoom, {
+        state: { wait: false },
+        replace: false,
+      });
+    } catch (error) {
+      useToaster({
+        type: "error",
+        message: "Join room failed!",
+      });
+    }
+  };
+
   useDisableBackButton();
 
   return (
@@ -63,7 +77,7 @@ const RoomsPage = () => {
             />
           </button>
 
-          <RoomFilterForm setRoomFilterData={setRoomFilterData}/>
+          <RoomFilterForm setRoomFilterData={setRoomFilterData} />
 
           <div className="flex flex-col items-start justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
             <ListOfRoom
@@ -77,7 +91,7 @@ const RoomsPage = () => {
               type="submit"
               variant="opacityHover"
               className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#005AA7] to-[#FFFDE4] p-5"
-              // onClick={handleJoinRoom}
+              onClick={handleJoinCreateRoom}
             >
               <DoorOpen />
               <p>NEW ROOM</p>

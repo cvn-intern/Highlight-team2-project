@@ -67,7 +67,7 @@ const SettingRoomForm = ({ handleSubmit, form }: Props) => {
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
                     {NUMBER_OF_PLAYER.map((value) => {
-                      return (<SelectItem value={`${value}`}>{value}</SelectItem>)
+                      return (<SelectItem key={value} value={`${value}`}>{value}</SelectItem>)
                     })}
                   </SelectContent>
                 </Select>
@@ -100,12 +100,11 @@ const SettingRoomForm = ({ handleSubmit, form }: Props) => {
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
                     {NUMBER_OF_ROUND.map((value) => {
-                      return (<SelectItem datatype="" value={String(value)}>{value}</SelectItem>)
+                      return (<SelectItem key={value} datatype="" value={String(value)}>{value}</SelectItem>)
                     })}
                   </SelectContent>
                 </Select>
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
