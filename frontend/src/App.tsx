@@ -11,7 +11,7 @@ import NotFoundPage from "./shared/pages/NotFoundPage";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from "react-toastify";
 import CreateRoom from "./applications/create-room/Page";
-import Room from "@/applications/room/Page";
+import RoomsPage from "@/applications/rooms/Page";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -52,12 +52,13 @@ function App() {
             <Route path="/" element={<Homepage />} />
             <Route path="/rooms/create-room" element={<CreateRoom />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
-            <Route path="/room" element={<Room />} />
+            <Route path="/rooms" element={<RoomsPage />} />
             <Route
               path="/user/existing"
               element={<UserExistsInBrowserPage />}
             />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="404" element={<NotFoundPage />} />
           </Routes>
         </BrowserRouter>
         <ToastContainer role="alert" closeButton={false} />
