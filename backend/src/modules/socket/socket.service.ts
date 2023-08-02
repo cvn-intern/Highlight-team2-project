@@ -183,7 +183,7 @@ export class SocketService {
         server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
         break;
       case GAME_NEXT_DRAWER_IS_OUT:
-        server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
+        server.in(codeRoom).emit(GAME_NEXT_DRAWER_IS_OUT);
         break;
       default:
         break;
@@ -194,12 +194,12 @@ export class SocketService {
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 
-  async handlePainterOrNextPainterOutRoom(roomRound: RoomRound, client: SocketClient, server: Server, room: Room) {
-    if (roomRound.next_painter === client.user.id) {
+  async handlePainterOrNextPainterOutRoom(roomRound: RoomRound, userId: number, server: Server, room: Room) {
+    if (roomRound.next_painter === userId) {
       await this.roomUserService.resetNextPainterCachePainterForRoom(room.id);
     }
 
-    if (roomRound.painter === client.user.id || roomRound.next_painter === client.user.id) {
+    if (roomRound.painter === userId || roomRound.next_painter === userId) {
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
 
       roomRound = await this.roomRoundService.updateRoomRound({
@@ -214,7 +214,7 @@ export class SocketService {
         server,
         room.code_room,
         roomRound,
-        roomRound.painter === client.user.id ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
+        roomRound.painter === userId ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
       );
     }
   }

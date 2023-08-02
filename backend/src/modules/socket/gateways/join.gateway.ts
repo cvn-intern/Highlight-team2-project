@@ -54,7 +54,6 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(room.code_room);
       }
 
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
       await this.socketService.removeClientDisconnection(client);
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
@@ -65,7 +64,8 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         return;
       }
 
-      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client, this.server, room);
+      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

@@ -1,13 +1,19 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { RoomUser } from './roomUser.entity';
 import { RoomUserRepository } from './roomUser.repository';
 import { Room } from '../room/room.entity';
 import { RedisService } from '../redis/redis.service';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
+import { RoomRoundService } from '../room-round/roomRound.service';
 
 @Injectable()
 export class RoomUserService {
-  constructor(private roomUserRepository: RoomUserRepository, private redisService: RedisService) {}
+  constructor(
+    private roomUserRepository: RoomUserRepository,
+    private redisService: RedisService,
+    @Inject(forwardRef(() => RoomRoundService))
+    private roomRoundService: RoomRoundService,
+  ) {}
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -42,16 +48,26 @@ export class RoomUserService {
 
   async getListUserOfRoom(room: Room): Promise<Array<Participant>> {
     const users = await this.roomUserRepository.getParticipantsOfRoom(room.id);
-    const result: Array<Participant> = users.map((user: any, index: number) => {
+    const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+    const result: Array<Participant> = users.map((user: any) => {
       user = { ...user, ...user.user };
       delete user.user;
 
-      return {
-        ...user,
-        is_host: user.id === room.host_id,
-        is_painter: index === 0,
-        is_next_painter: false,
-      };
+      if (roomRound) {
+        return {
+          ...user,
+          is_host: user.id === room.host_id,
+          is_painter: user.id === roomRound.painter,
+          is_next_painter: user.id === roomRound.next_painter,
+        };
+      } else {
+        return {
+          ...user,
+          is_host: user.id === room.host_id,
+          is_painter: false,
+          is_next_painter: false,
+        };
+      }
     });
 
     return result;

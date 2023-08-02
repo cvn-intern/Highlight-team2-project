@@ -42,6 +42,7 @@ export class GameGateway extends SocketGateway {
 
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
     this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
   @SubscribeMessage(GAME_START_CHANNEL)
   async handleStartGame(@MessageBody() codeRoom: string) {
@@ -49,6 +50,7 @@ export class GameGateway extends SocketGateway {
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     await this.roomService.updateRoomStatus(room, GAME_START_CHANNEL);
+
     this.server.in(codeRoom).emit(GAME_START_CHANNEL);
   }
 

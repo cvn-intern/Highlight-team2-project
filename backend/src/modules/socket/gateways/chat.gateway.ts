@@ -62,10 +62,10 @@ export class ChatGateway extends SocketGateway {
       room = await this.roomService.changeHost(room.code_room);
 
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, room.code_room, expireTimeOneDay);
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
-
       const roomStatus = this.roomService.getRoomStatus(room);
       this.server.to(client.id).emit(GAME_STATUS, roomStatus);
+
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }
@@ -130,7 +130,6 @@ export class ChatGateway extends SocketGateway {
       }
 
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
 
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
@@ -141,7 +140,8 @@ export class ChatGateway extends SocketGateway {
         return;
       }
 
-      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client, this.server, room);
+      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }
