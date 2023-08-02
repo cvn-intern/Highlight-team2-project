@@ -15,63 +15,27 @@ import {
 } from "@/shared/components/shadcn-ui/select";
 import { Switch } from "@/shared/components/shadcn-ui/switch";
 
-import useToaster from "@/shared/hooks/useToaster";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 import { Eye, Trophy, User2 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { z } from "zod";
 
 import _ from "lodash";
+import { z } from "zod";
 
-const formSchema = z.object({
-  players: z.string().nonempty(),
-  visible: z.boolean(),
-  round: z.string().nonempty(),
-});
-const numberOfPlayer = _.range(1, 15, 1);
+const MIN_PLAYER_IN_ROOM = 2;
+const MAX_PLAYER_IN_ROOM = 50;
+const NUMBER_OF_PLAYER = _.range(MIN_PLAYER_IN_ROOM, MAX_PLAYER_IN_ROOM + 1, 1);
 
-const SettingRoomForm = () => {
 
-  const navigate = useNavigate();
-  const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
-    "quick-play"
-  );
+const MIN_ROUND = 1;
+const MAX_ROUND = 15;
+const NUMBER_OF_ROUND = _.range(MIN_ROUND, MAX_ROUND + 1, 1);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      players: "8",
-      round: "3",
-      visible: true
-    },
-  });
+type Props = {
+  handleSubmit: (_: z.infer<any>) => Promise<void>,
+  form: any
+}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleSubmit = (_: z.infer<typeof formSchema>) => {
-    if (formAction === "quick-play") return handleCreateRoom();
-  };
 
-  const handleCreateRoom = async () => {
-    try {
-      const players = parseInt(form.getValues("players"));
-      const round = parseInt(form.getValues("round"));
-      const visible = form.getValues("visible");
-
-      console.log(players);
-      console.log(round);
-      console.log(visible);
-
-    } catch (error: any) {
-      (error);
-      useToaster({
-        type: "error",
-        message: error.response.data.response || "Some error occurred!",
-      });
-    }
-  };
+const SettingRoomForm = ({ handleSubmit, form }: Props) => {
 
   return (
     <Form {...form}>
@@ -96,13 +60,13 @@ const SettingRoomForm = () => {
               <FormControl>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={String(field.value)}                
+                  defaultValue={String(field.value)}
                 >
                   <SelectTrigger className="lg:w-[30%] w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
-                    <SelectValue/>
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
-                    {numberOfPlayer.map((value) => {
+                    {NUMBER_OF_PLAYER.map((value) => {
                       return (<SelectItem value={`${value}`}>{value}</SelectItem>)
                     })}
                   </SelectContent>
@@ -135,7 +99,7 @@ const SettingRoomForm = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="overflow-y-auto h-[150px] text-lg font-bold border-2 border-primaryTextColor">
-                    {_.range(1, 11, 1).map((value) => {
+                    {NUMBER_OF_ROUND.map((value) => {
                       return (<SelectItem datatype="" value={String(value)}>{value}</SelectItem>)
                     })}
                   </SelectContent>
@@ -149,7 +113,7 @@ const SettingRoomForm = () => {
         <FormField
           control={form.control}
           name="visible"
-          render={() => (
+          render={({ field }) => (
             <FormItem className="flex justify-between w-full md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
@@ -160,13 +124,15 @@ const SettingRoomForm = () => {
                 </div>
               </FormLabel>
               <FormControl>
-                <Switch />
+                <Switch checked={field.value}
+                  onCheckedChange={field.onChange} />
               </FormControl>
 
               <FormMessage />
             </FormItem>
           )}
         />
+        <button type="submit" id="submitBtn" hidden></button>
       </form>
     </Form>
   );

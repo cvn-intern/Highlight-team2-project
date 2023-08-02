@@ -1,7 +1,7 @@
 
 import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import { ScrollArea, ScrollBar } from "@/shared/components/shadcn-ui/scroll-area";
+import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import themeService from "@/shared/services/themeService";
 import { LogOut } from "lucide-react";
@@ -9,6 +9,13 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingRoomForm from "./SettingRoomForm.component";
 import ThemeCard from "./ThemeCard.component";
+import useToaster from "@/shared/hooks/useToaster";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+
+const DEFAULT_ROUND = "3";
+const DEFAULT_PLAYER = "8";
 
 
 type Theme = {
@@ -17,17 +24,60 @@ type Theme = {
     thumbnail: string
 }
 
+const formSchema = z.object({
+    players: z.string().nonempty(),
+    visible: z.boolean(),
+    round: z.string().nonempty(),
+  });
+  
 const CreateRoomsContent = () => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            players: DEFAULT_PLAYER,
+            round: DEFAULT_ROUND,
+            visible: false,
+
+        },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const handleSubmit = (_: z.infer<typeof formSchema>) => {
+        return handleCreateRoom();
+    };
+
+    const handleCreateRoom = async () => {
+        try {
+            const players = parseInt(form.getValues("players"));
+            const round = parseInt(form.getValues("round"));
+            const visible = form.getValues("visible");
+
+            console.log(players);
+            console.log(round);
+            console.log(visible);
+
+
+        } catch (error: any) {
+            (error);
+            useToaster({
+                type: "error",
+                message: error.response.data.response || "Some error occurred!",
+            });
+        }
+    };
+
+
     const [themesList, setThemesList] = useState<Array<Theme>>([]);
     const [selectedThemeId, setSelectedThemeId] = useState(0);
     const navigate = useNavigate();
-    const handleBackButton = () => {
-        navigate("/room");
+    const handleExitButton = () => {
+        navigate("/rooms");
     };
     const getThemesList = async () => {
         await themeService.getThemes().then(result => setThemesList(result.data));
 
     }
+  
     useEffect(() => { getThemesList() }, []);
 
     return (
@@ -37,7 +87,7 @@ const CreateRoomsContent = () => {
                 <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
                     <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">1. SETTINGS</p>
                     <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
-                        <SettingRoomForm />
+                        <SettingRoomForm handleSubmit={handleSubmit} form={form}/>
                     </div>
                 </div>
 
@@ -77,7 +127,7 @@ const CreateRoomsContent = () => {
                     type="submit"
                     variant="opacityHover"
                     className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
-                    onClick={handleBackButton}
+                    onClick={handleExitButton}
                 >
                     <LogOut strokeWidth={3} size={32} />
                     <p className="text-lg">EXIT</p>
@@ -85,8 +135,7 @@ const CreateRoomsContent = () => {
                 <Button
                     type="submit"
                     variant="opacityHover"
-                    className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
-
+                    className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"                    
                 >
                     <img src={DoorIcon} alt="" className="w-[18%]" />
                     <p>NEW ROOMS</p>
