@@ -4,7 +4,6 @@ import { Server, Socket } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { expireTimeOneDay } from '../../common/variables/constVariable';
-import { SocketClient } from './socket.class';
 import { WsException } from '@nestjs/websockets';
 import { RoomService } from '../room/room.service';
 import {
@@ -67,8 +66,11 @@ export class SocketService {
       this.logger.log(`Client ${client.id} connected!`);
       const token = this.getTokenFromSocket(client);
 
-      await this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay);
-      return await this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay);
+      return await Promise.all([
+        this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay),
+        this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay),
+        this.redisService.setObjectByKeyValue(`USER:${idUser}:ACCESSTOKEN`, token, expireTimeOneDay),
+      ])
     } catch (error) {
       this.logger.error(error);
     }
@@ -82,17 +84,15 @@ export class SocketService {
     return tokenOfSocket === validToken ? true : false;
   }
 
-  async removeClientDisconnection(client: SocketClient) {
+  async removeClientDisconnection(userId: number) {
     try {
-      const payload = await this.extractPayload(client);
-      const idUser: number = payload.id;
+      const socketId = await this.redisService.getObjectByKey(`USER:${userId}:SOCKET`);
+      this.logger.log(`Client ${socketId} disconnected!`);
 
-      this.logger.log(`Client ${client.id} disconnected!`);
-
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:ROOM`);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:SOCKET`);
-      await this.redisService.deleteObjectByKey(`USER:${idUser}:ACCESSTOKEN`);
-      await this.redisService.deleteObjectByKey(`${client.id}:ACCESSTOKEN`);
+      await this.redisService.deleteObjectByKey(`${socketId}:ACCESSTOKEN`);
+      await this.redisService.deleteObjectByKey(`USER:${userId}:ROOM`);
+      await this.redisService.deleteObjectByKey(`USER:${userId}:SOCKET`);
+      await this.redisService.deleteObjectByKey(`USER:${userId}:ACCESSTOKEN`);
     } catch (error) {
       this.logger.error(error);
     }
@@ -110,7 +110,7 @@ export class SocketService {
     }
   }
 
-  async getTokenFromSocket(client: Socket): Promise<string> {
+  getTokenFromSocket(client: Socket): string {
     const token: string = client.handshake.headers.authorization;
 
     return token;
