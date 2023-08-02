@@ -23,7 +23,7 @@ import moment from "moment"
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { roomRound, isHost, correctAnswers, maxPlayer, participants } = useGameStore();
+  const { roomRound, isHost, correctAnswers, participants } = useGameStore();
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
@@ -54,7 +54,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             </p>
             <p className="text-[3.5rem] mx-auto">
               {" "}
-              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{maxPlayer}</span>
+              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{participants.length}</span>
             </p>
           </div>
         </div>

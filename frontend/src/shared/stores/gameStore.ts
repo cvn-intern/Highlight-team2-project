@@ -34,9 +34,10 @@ interface GameState {
   setIsDrawer: (isDrawer: boolean) => void;
   setIsHost: (isDrawer: boolean) => void;
   setCorrectAnswers: (correctAnswers: number[]) => void
+  getIsHost: () => boolean
 }
 
-export const useGameStore = create<GameState>((set) => ({
+export const useGameStore = create<GameState>((set, get) => ({
   participants: [],
   maxPlayer: 0,
   gameStatus: null,
@@ -51,4 +52,7 @@ export const useGameStore = create<GameState>((set) => ({
   setIsDrawer: (data) => set((state) => ({ ...state, isDrawer: data })),
   setIsHost:  (data) => set((state) => ({ ...state, isHost: data })),
   setCorrectAnswers:  (data) => set((state) => ({ ...state, correctAnswers: data })),
+  getIsHost: () => {
+    return get().isHost
+  }
 }));

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Progress } from './shadcn-ui/progress';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
-import { GAME_DRAWER_OUT_CHANNEL, GAME_NEW_TURN_CHANNEL, GAME_PRESENT_PROGRESS, GAME_PRESENT_PROGRESS_NEW_PLAYER, GAME_PROGRESS, GAME_REFRESH_DRAWER, INTERVAL_DURATION_MILISECONDS, INTERVAL_NEW_TURN, INTERVAL_SHOW_WORD, PLAY_GAME, START_GAME, WAIT_FOR_OTHER_PLAYERS } from './IntervalCanvas';
+import { GAME_DRAWER_OUT_CHANNEL, GAME_NEW_TURN_CHANNEL, GAME_PRESENT_PROGRESS, GAME_PRESENT_PROGRESS_NEW_PLAYER, GAME_REFRESH_DRAWER, INTERVAL_DURATION_MILISECONDS, INTERVAL_NEW_TURN, INTERVAL_SHOW_WORD, PLAY_GAME, START_GAME, WAIT_FOR_OTHER_PLAYERS } from './IntervalCanvas';
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
@@ -15,15 +15,13 @@ export const TIME_PERSTEP = 100;
 export function ProgressPlayTime() {
   const [progress, setProgress] = useState(100);
   const [isRunning, setIsRunning] = useState(true)
-  const [isMeHost, setIsMeHost] = useState(false)
 
   const { socket } = useSocketStore();
-  const { gameStatus, isHost, setGameStatus, participants, roomRound } = useGameStore();
+  const { gameStatus, isHost, setGameStatus, participants, getIsHost } = useGameStore();
   const { codeRoom } = useParams()
 
-  const handleProgressTimeout = (status: string, data: any) => {
-    const {isHost} = data
-    console.log({data})
+  const handleProgressTimeout = (status: string) => {
+    const isHost = getIsHost()
     if (!isHost || !socket || !codeRoom) return;
     switch (status) {
       case INTERVAL_NEW_TURN:
@@ -50,7 +48,7 @@ export function ProgressPlayTime() {
 
   const progressInterval: any = useRef();
 
-  const handleIntervalProgress = (data: GamePresentProgressPackage, isHost?: boolean) => {
+  const handleIntervalProgress = (data: GamePresentProgressPackage) => {
     if (progressInterval) clearInterval(progressInterval.current)
     let { startProgress } = data
     const { maximumTimeInMiliSeconds, status, sendAt } = data
@@ -64,7 +62,7 @@ export function ProgressPlayTime() {
     progressInterval.current = setInterval(() => {
       if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
         clearInterval(progressInterval.current);
-        return handleProgressTimeout(status, {isHost});
+        return handleProgressTimeout(status);
       }
       startProgress = startProgress - percentageDescreasePerStep
       setProgress(startProgress)
@@ -73,13 +71,11 @@ export function ProgressPlayTime() {
 
   useEffect(() => {
     socket?.on(GAME_PRESENT_PROGRESS, (data: GamePresentProgressPackage) => {
-      handleIntervalProgress(data,isMeHost)
+      handleIntervalProgress(data)
     });
 
     socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, (data: GamePresentProgressPackage) => {
-      setIsRunning(true)
-
-      handleIntervalProgress(data,isMeHost)
+      handleIntervalProgress(data)
     });
 
     if (!codeRoom) return
@@ -98,7 +94,7 @@ export function ProgressPlayTime() {
       socket?.off(GAME_PRESENT_PROGRESS_NEW_PLAYER)
       socket?.off(codeRoom)
     };
-  }, [socket, gameStatus, codeRoom, isMeHost, progress, progressInterval, isRunning, participants, roomRound]);
+  }, [socket, gameStatus, codeRoom, progress, progressInterval, isRunning, participants]);
 
   useEffect(() => {
     if (!isRunning) {
@@ -106,15 +102,9 @@ export function ProgressPlayTime() {
       progressInterval.current = null;
 
       setIsRunning(true)
-      handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:"refresh-drawer"}, isMeHost)
+      handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:"refresh-drawer"})
     }
-  }, [isRunning, isMeHost, participants, roomRound])
-
-  useEffect(() => {
-      setIsMeHost(isHost)
-  }, [isHost])
-
-  console.log({isRunning, isHost, participants})
+  }, [isRunning, participants])
 
   return (
     <Progress
