@@ -10,7 +10,6 @@ import { WordModule } from '../word/word.module';
 import { WordService } from '../word/word.service';
 import { WordRepository } from '../word/word.repository';
 import { Word } from '../word/word.entity';
-import { RedisService } from '../redis/redis.service';
 import { RedisModule } from '../redis/redis.module';
 
 @Module({
