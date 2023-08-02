@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { PLAY_GAME } from '@/shared/components/IntervalCanvas';
 import { MAX_NUMBER_OF_CHARACTER } from '@/shared/constants';
 import { cn } from '@/shared/lib/utils';
 import { useGameStore } from '@/shared/stores/gameStore';
@@ -19,7 +20,6 @@ import { useParams } from 'react-router-dom';
 import { iconsMap } from '../shared/constants/icons';
 import { GAME_UPDATE_RANKING, covertMessage } from './chatAnswer.helper';
 import './styles/style.css';
-import { PLAY_GAME } from '@/shared/components/IntervalCanvas';
 
 interface BoxProps {
   label: string;
@@ -166,6 +166,7 @@ const BoxChatAnswer = () => {
     maxPlayer,
     roomRound,
     gameStatus,
+    isHost,
   } = useGameStore();
 
   useEffect(() => {
@@ -222,7 +223,7 @@ const BoxChatAnswer = () => {
       socket?.off(`${codeRoom}-answer`);
       socket?.off(`${codeRoom}-leave`);
     };
-  }, [socket, participants, roomRound]);
+  }, [socket, participants, roomRound, isHost, gameStatus]);
 
   return (
     <>

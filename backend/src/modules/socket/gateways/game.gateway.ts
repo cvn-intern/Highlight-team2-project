@@ -10,6 +10,8 @@ import {
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
+  GAME_PRESENT_PROGRESS_CHANNEL,
+  GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
   GAME_PROGRESS_CHANNEL,
   GAME_REFRESH_CHANNEL,
   GAME_START_CHANNEL,
@@ -65,22 +67,22 @@ export class GameGateway extends SocketGateway {
     this.server.in(codeRoom).emit(GAME_START_CHANNEL);
   }
 
-  @SubscribeMessage(GAME_PROGRESS_CHANNEL)
-  async handleGameProgress(
-    @MessageBody() data: GameProgressUpdate,
+  @SubscribeMessage(GAME_PRESENT_PROGRESS_CHANNEL)
+  async handleSendPresentProgress(
+    @MessageBody() data: GamePresentProgress,
     @ConnectedSocket() client: SocketClient,
   ) {
-    const number_percentage_to_decrease_per_step =
-      (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / data.maximumTimeInMiliSeconds;
+    const {codeRoom, ...rest} =  data
+    this.server.in(codeRoom).emit(GAME_PRESENT_PROGRESS_CHANNEL, rest);
+  }
 
-    this.socketService.setProgressInterval(
-      MIN_PROGRESS_PERCENTAGE,
-      number_percentage_to_decrease_per_step,
-      TIME_PERSTEP,
-      (progress: number) => {
-        this.server.in(data.codeRoom).emit(GAME_PROGRESS_CHANNEL, progress);
-      },
-    );
+  @SubscribeMessage(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL)
+  async handleGameProgress(
+    @MessageBody() data: GamePresentProgress & {socketId: string},
+    @ConnectedSocket() client: SocketClient,
+  ) {
+    const {socketId, codeRoom: _, ...rest} =  data
+    this.server.to(socketId).emit(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL, rest);
   }
 
   @SubscribeMessage(GAME_UPDATE_RANKING_CHANNEL)

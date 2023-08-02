@@ -12,13 +12,14 @@ import {
   GAME_NEW_TURN_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS,
   INTERVAL_DURATION_MILISECONDS,
-  GAME_PROGRESS,
+  GAME_PRESENT_PROGRESS,
 } from "./IntervalCanvas";
 import { Button } from "./shadcn-ui/Button";
 import { useGameStore } from "../stores/gameStore";
 import { useSocketStore } from "../stores/socketStore";
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
+import moment from "moment"
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
@@ -26,15 +27,15 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { codeRoom } = useParams();
 
   const handleStartGame = () => {
-    if(!isHost || !socket) return
-    socket?.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
-    socket?.emit(GAME_PROGRESS, {codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS})
+    if (!isHost || !socket) return
+    socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
+    socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_NEW_TURN, sendAt: moment() })
   };
 
   const painter = useMemo(() => {
     return participants.find(participant => participant.id === roomRound?.painter)
   }, [roomRound, participants])
-  
+
   switch (status) {
     case INTERVAL_SHOW_WORD:
       return (
@@ -87,7 +88,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <div className="place-content-center flex flex-col">
             <p className="text-[1.5rem] text-slate-300">
               {" "}
-              {isHost ? "Wait for other players" : "Wait for the host to start the game" }
+              {isHost ? "Wait for other players" : "Wait for the host to start the game"}
             </p>
           </div>
         </div>
