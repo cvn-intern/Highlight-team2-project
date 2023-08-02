@@ -1,10 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
-import {
-  RoomInterface,
-  RoomRoundInfoInterface,
-  RoomStatusResponseInterface,
-} from './room.interface';
+import { RoomInterface, RoomStatusResponseInterface } from './room.interface';
 import { randomString } from '../../common/utils/helper';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomRepository } from './room.repository';
@@ -12,7 +8,6 @@ import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomRound } from '../room-round/roomRound.entity';
 import { WordService } from '../word/word.service';
-import { now } from 'moment';
 const moment = require('moment');
 
 const MAX_LENGTH_RANDOM = 5;
@@ -23,11 +18,11 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
+    private wordService: WordService,
   ) {}
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
-    const codeRoom: string =
-      randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
+    const codeRoom: string = randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
     const idRoom: number = await this.roomRepository.generateIdRoom();
 
     const room: Room = this.roomRepository.create({
@@ -45,24 +40,17 @@ export class RoomService {
 
   async randomRoomForQuickPlay(): Promise<string> {
     let rooms = await this.roomRepository.getAvailableRooms();
-    rooms = rooms.filter(
-      (room: RoomInterface) => room.users.length < room.max_player,
-    );
+    rooms = rooms.filter((room: RoomInterface) => room.users.length < room.max_player);
 
     if (rooms.length === 0) {
-      throw new HttpException(
-        'Can not found available room!',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new HttpException('Can not found available room!', HttpStatus.NOT_FOUND);
     }
 
     return rooms[0].code_room;
   }
 
   async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
-    const isExisted: Room = await this.roomRepository.getRoomByCodeRoom(
-      codeRoom,
-    );
+    const isExisted: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
 
     if (!isExisted) {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
@@ -81,10 +69,7 @@ export class RoomService {
   }
 
   async joinRoom(idRoom: number, idUser: number): Promise<RoomUser> {
-    const participant = await this.roomUserService.createNewRoomUser(
-      idRoom,
-      idUser,
-    );
+    const participant = await this.roomUserService.createNewRoomUser(idRoom, idUser);
 
     return participant;
   }
@@ -132,9 +117,7 @@ export class RoomService {
       return room;
     }
 
-    const userId: number = await this.roomUserService.getUserInRoomRandom(
-      room.id,
-    );
+    const userId: number = await this.roomUserService.getUserInRoomRandom(room.id);
 
     if (!userId) {
       await this.roomRoundService.deleteRoomRound(room.id);
@@ -157,8 +140,7 @@ export class RoomService {
   }
 
   async initRoomRound(room: Room): Promise<RoomRound> {
-    const { word, painterRound, endedAt, startedAt } =
-      await this.roomRoundService.initRoundInfomation(room);
+    const { word, painterRound, endedAt, startedAt } = await this.roomRoundService.initRoundInfomation(room);
 
     const roomRound: RoomRound = await this.roomRoundService.createRoundOfRoom({
       room_id: room.id,
@@ -168,6 +150,7 @@ export class RoomService {
       ended_at: moment(endedAt).toDate(),
       ...painterRound,
     });
+
     return roomRound;
   }
 

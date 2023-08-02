@@ -6,12 +6,12 @@ const PATH_FOLDER_AVATAR = 'src/public/avatars';
 export const randomString = (length: number): string => {
   const result: string = (Math.random() + 1).toString(36).substring(length);
   return result;
-}
+};
 
 export const extractIdRoom = (codeRoom: string): number => {
-  const idRoom = codeRoom.split("_")[codeRoom.split("_").length - 1];
+  const idRoom = codeRoom.split('_')[codeRoom.split('_').length - 1];
   return Number.parseInt(idRoom);
-}
+};
 
 export const checkTypeAnswer = (answerRound: string, answerUser: string): number => {
   if (answerRound === answerUser) {
@@ -23,7 +23,7 @@ export const checkTypeAnswer = (answerRound: string, answerUser: string): number
   }
 
   let countCharCorretly = 0;
-  for (let index: number = 0; index < answerRound.length; index++) {
+  for (let index = 0; index < answerRound.length; index++) {
     if (answerRound[index] === answerUser[index]) {
       countCharCorretly++;
     }
@@ -34,7 +34,7 @@ export const checkTypeAnswer = (answerRound: string, answerUser: string): number
   }
 
   return ANSWER_WRONG;
-}
+};
 
 export const getFileAvatars = async (): Promise<Array<string>> => {
   const avatars: Array<string> = [];
@@ -45,4 +45,4 @@ export const getFileAvatars = async (): Promise<Array<string>> => {
   });
 
   return avatars;
-}
+};

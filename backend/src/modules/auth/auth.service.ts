@@ -9,7 +9,7 @@ import { UserToken } from './types/userToken';
 
 type PayloadJWT = {
   id: number;
-}
+};
 
 @Injectable()
 export class AuthService {
@@ -19,7 +19,7 @@ export class AuthService {
     private configService: ConfigService,
     private redisService: RedisService,
     @Inject('OAuth2Client') private client: OAuth2Client,
-  ) { }
+  ) {}
   async generateAccessToken(payload: PayloadJWT) {
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESSKEY'),
@@ -34,21 +34,21 @@ export class AuthService {
         audience: this.configService.get<string>('GOOGLE_CLIENT_ID'),
       });
 
-      return ticket ? ticket.getPayload() : null
+      return ticket ? ticket.getPayload() : null;
     } catch (error) {
-      return null
+      return null;
     }
   }
 
   async googleLogin(token: string, userId: number): Promise<UserToken> {
     const tokenPayload = await this.verifyGoogleLogin(token);
-    if (!tokenPayload) throw new BadRequestException("Login google failed");
+    if (!tokenPayload) throw new BadRequestException('Login google failed');
 
     const existingUser = await this.userService.getUserByIdProvider(tokenPayload.sub);
 
     if (existingUser) {
       const accessToken = await this.generateAccessToken({
-        id: existingUser.id
+        id: existingUser.id,
       });
 
       await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay);

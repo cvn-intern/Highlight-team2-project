@@ -6,9 +6,9 @@ import { UserInterface } from './user.interface';
 import { getFileAvatars, randomString } from '../../common/utils/helper';
 import { LANGUAGE_DEFAULT } from './constant';
 import { RedisService } from '../redis/redis.service';
-import { app } from 'src/main';
+import { daysOfYear, expireTimeOneDay } from 'src/common/variables/constVariable';
 
-const LENGTH_STRING_RANDOM: number = 6;
+const LENGTH_STRING_RANDOM = 6;
 
 @Injectable()
 export class UserService {
@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) { }
+  ) {}
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
@@ -60,12 +60,18 @@ export class UserService {
     return isUserExisted;
   }
 
-  async generateGuest(): Promise<UserInterface> {
-    const hostBE: string = await app.getUrl();
-    const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-      return `${hostBE}/${avatar}`;
-    });
-    const nicknameGuest: string = "user" + randomString(LENGTH_STRING_RANDOM);
+  async generateGuest(hostBE: string): Promise<UserInterface> {
+    let avatars: Array<string> = await this.redisService.getObjectByKey('DEFAULT_AVATARS');
+
+    if (!avatars) {
+      avatars = (await getFileAvatars()).map((avatar: string) => {
+        return `http://${hostBE}/${avatar}`;
+      });
+
+      this.cacheAvatar(avatars);
+    }
+
+    const nicknameGuest: string = 'user' + randomString(LENGTH_STRING_RANDOM);
     const avatar: string = avatars[0];
     const language: string = LANGUAGE_DEFAULT;
 
@@ -74,6 +80,10 @@ export class UserService {
       avatar: avatar,
       language: language,
     } as UserInterface;
+  }
+
+  async cacheAvatar(avatars: Array<string>) {
+    return await this.redisService.setObjectByKeyValue('DEFAULT_AVATARS', avatars, expireTimeOneDay * daysOfYear);
   }
 
   async checkAccessTokenOfUserInBlocklist(tokenUser: string): Promise<boolean> {
@@ -89,10 +99,7 @@ export class UserService {
   }
 
   async checkAvatarInDefault(avatar: string): Promise<boolean> {
-    const hostBE: string = await app.getUrl();
-    const avatars: Array<string> = (await getFileAvatars()).map((avatar: string) => {
-      return `${hostBE}/${avatar}`;
-    });
+    const avatars: Array<string> = await this.redisService.getObjectByKey('DEFAULT_AVATARS');
 
     return !!avatars.includes(avatar);
   }

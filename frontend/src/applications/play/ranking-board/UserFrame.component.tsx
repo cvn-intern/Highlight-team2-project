@@ -46,9 +46,8 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
     return host ? host : null;
   }
 
-  const { gameStatus, roomRound, correctAnswers } = useGameStore();
-  const { user: me } = useUserStore();
-
+  const { gameStatus, correctAnswers } = useGameStore();
+  const { user: me } = useUserStore(); 
   const renderItem = () => {
     const maxItems = maxPlayer;
     const emptySlots = maxItems - rankingBoard.length;
@@ -78,7 +77,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                     }
                   >
                     {gameStatus !== 'wait-for-players' &&
-                      roomRound?.painter === user.id && (
+                      user.is_painter && (
                         <Pencil color="#3f84f3" size={32} strokeWidth={3.5} />
                       )}
                     {correctAnswers.includes(user.id) && (
@@ -91,7 +90,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                       {
                         ' text-[#FFB84C] font-bold': user.id === me?.id,
                         'text-blue-600 font-bold':
-                          user.id === roomRound?.painter,
+                        user.is_painter ,
                         'text-green-500': correctAnswers.includes(user.id),
                       }
                     )}
@@ -101,7 +100,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                         className={cn(
                           'relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid',
                           {
-                            'border-blue-500': user.id === roomRound?.painter,
+                            'border-blue-500':  user.is_painter ,
                             'border-green-500': correctAnswers.includes(
                               user.id
                             ),
@@ -144,7 +143,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                           <strong>{user.score}</strong>
                           <span> pts</span>
                         </p>
-                        {roomRound?.next_painter === user.id && (
+                        { user.is_next_painter && (
                           <p className="font-medium text-left text-blue-500 truncate text-md dark:text-gray-400">
                             Next to draw
                           </p>

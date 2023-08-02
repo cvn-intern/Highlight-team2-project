@@ -26,5 +26,5 @@ export const errorsSocket = {
   YOU_NOT_HOST: {
     code: 'YOU_NOT_HOST',
     message: 'You are not host to take this action!',
-  }
-}
+  },
+};
