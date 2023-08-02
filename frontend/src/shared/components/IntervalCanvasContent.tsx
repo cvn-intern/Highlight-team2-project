@@ -21,6 +21,7 @@ import {
   GAME_PRESENT_PROGRESS,
   END_GAME,
   INTERVAL_DRAWER_OUT,
+  GAME_REFRESH_DRAWER,
 } from "./IntervalCanvas";
 import Confetti from "react-confetti";
 import { Button } from "./shadcn-ui/Button";
@@ -106,7 +107,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <img className="w-[200px]" src={painter?.avatar} />
         </div>
       );
-    case INTERVAL_DRAWER_OUT:
+    case GAME_REFRESH_DRAWER:
       return (
         <>
           <div className="flex relative justify-center items-center mt-2 mb-4 transform -translate-y-5">
