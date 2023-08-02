@@ -21,7 +21,7 @@ export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
 export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
 
 
-export const INTERVAL_DURATION_MILISECONDS = 2000;
+export const INTERVAL_DURATION_MILISECONDS = 5000;
 
 type IntervalCanvasProps = {
   status: GameStatus;

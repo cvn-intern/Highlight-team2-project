@@ -55,6 +55,7 @@ export class RoomGateway extends SocketGateway {
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       const messageContent: Chat = {
+        socketId: client.id,
         user: client.user.nickname,
         type: JOIN_ROOM_TYPE,
         message: JOIN_ROOM_CONTENT,

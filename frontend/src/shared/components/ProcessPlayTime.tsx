@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Progress } from './shadcn-ui/progress';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
@@ -6,13 +6,14 @@ import { GAME_DRAWER_OUT_CHANNEL, GAME_NEW_TURN_CHANNEL, GAME_PRESENT_PROGRESS, 
 import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
+import { GamePresentProgressPackage } from '../types/gameProgress';
 
 export const MIN_PROGRESS_PERCENTAGE = 0;
 export const MAX_PROGRESS_PERCENTAGE = 100;
 export const TIME_PERSTEP = 100;
 
 export function ProgressPlayTime() {
-  const [progress, setProgress] = React.useState(100);
+  const [progress, setProgress] = useState(100);
 
   const { socket } = useSocketStore();
   const { gameStatus, isHost, setGameStatus } = useGameStore();
@@ -44,54 +45,36 @@ export function ProgressPlayTime() {
   }, [gameStatus]);
 
   let progressInterval: any
-  let newPlayerProgressInterval: any
+
+  const handleIntervalProgress = (data: GamePresentProgressPackage) => {
+    if (progressInterval) clearInterval(progressInterval)
+
+    let { startProgress } = data
+    const { maximumTimeInMiliSeconds, status, sendAt } = data
+    const duration = moment.duration(moment().diff(sendAt));
+    const miliseconds = duration.asMilliseconds();
+    const percentageDescreasePerStep =
+      (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / (maximumTimeInMiliSeconds - miliseconds);
+    setGameStatus(status)
+    setProgress(startProgress)
+
+    progressInterval = setInterval(() => {
+      if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
+        clearInterval(progressInterval);
+        return handleProgressTimeout(status);
+      }
+      startProgress = startProgress - percentageDescreasePerStep
+      setProgress(startProgress)
+    }, TIME_PERSTEP)
+  }
 
   useEffect(() => {
     socket?.on(GAME_PRESENT_PROGRESS, (data: any) => {
-      if (newPlayerProgressInterval) clearInterval(newPlayerProgressInterval)
-      if (progressInterval) clearInterval(progressInterval)
-
-      let { startProgress } = data
-      const { maximumTimeInMiliSeconds, status, sendAt } = data
-      const duration = moment.duration(moment().diff(sendAt));
-      const miliseconds = duration.asMilliseconds();
-      const percentageDescreasePerStep =
-        (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / (maximumTimeInMiliSeconds - miliseconds);
-      setGameStatus(status)
-      setProgress(startProgress)
-
-      progressInterval = setInterval(() => {
-        if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(progressInterval);
-          return handleProgressTimeout(status);
-        }
-        startProgress = startProgress - percentageDescreasePerStep
-        setProgress(startProgress)
-      }, TIME_PERSTEP)
+      handleIntervalProgress(data)
     });
 
     socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, (data: any) => {
-      if (progressInterval) clearInterval(progressInterval)
-      if (newPlayerProgressInterval) clearInterval(newPlayerProgressInterval)
-
-      let { startProgress } = data
-      const { maximumTimeInMiliSeconds, status, sendAt } = data
-      console.log({data})
-      const duration = moment.duration(moment().diff(sendAt));
-      const miliseconds = duration.asMilliseconds();
-      const percentageDescreasePerStep =
-        (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / (maximumTimeInMiliSeconds - miliseconds);
-      setGameStatus(status)
-      setProgress(startProgress)
-
-      newPlayerProgressInterval = setInterval(() => {
-        if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(newPlayerProgressInterval);
-          return handleProgressTimeout(status);
-        }
-        startProgress = startProgress - percentageDescreasePerStep
-        setProgress(startProgress)
-      }, TIME_PERSTEP)
+      handleIntervalProgress(data)
     });
 
     if (!codeRoom) return

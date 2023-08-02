@@ -59,7 +59,6 @@ export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_PRESENT_PROGRESS_CHANNEL)
   async handleSendPresentProgress(
     @MessageBody() data: GamePresentProgress,
-    @ConnectedSocket() client: SocketClient,
   ) {
     const {codeRoom, ...rest} =  data
     this.server.in(codeRoom).emit(GAME_PRESENT_PROGRESS_CHANNEL, rest);
@@ -68,7 +67,6 @@ export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL)
   async handleGameProgress(
     @MessageBody() data: GamePresentProgress & {socketId: string},
-    @ConnectedSocket() client: SocketClient,
   ) {
     const {socketId, codeRoom: _, ...rest} =  data
     this.server.to(socketId).emit(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL, rest);

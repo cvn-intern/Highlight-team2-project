@@ -101,7 +101,7 @@ const BoxChat = (props: BoxProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [props.listChat]);
 
-  useEffect(() => {}, [props.isDisabledInput]);
+  useEffect(() => { }, [props.isDisabledInput]);
 
   return (
     <>

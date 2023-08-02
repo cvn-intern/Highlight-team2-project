@@ -20,7 +20,12 @@ import {
 import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
+  GAME_NEXT_DRAWER_IS_OUT,
+  GAME_PRESENT_PROGRESS,
+  GAME_REFRESH_ROUND,
   GAME_STATUS_CHANNEL,
+  INTERVAL_DURATION_MILISECONDS,
+  INTERVAL_NEW_TURN,
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
   START_GAME,
@@ -40,6 +45,7 @@ import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
 import { NEW_PLAYER } from './shared/constants/drawEvent';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
+import moment from 'moment';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -126,6 +132,7 @@ export default function PlayingGameScreen() {
     };
     getRoomInfo();
   }, [codeRoom]);
+  let timeout: any
 
   useEffect(() => {
     socket?.on(GAME_NEW_TURN_CHANNEL, (data: RoomRound) => {
@@ -138,24 +145,21 @@ export default function PlayingGameScreen() {
       setIsDrawer(false);
     });
 
-    // let timeout: any
-    // socket?.on(GAME_REFRESH_ROUND, () => {
-    //   clearTimeout(timeout)
-    //   if (!isHost) return
-    //   timeout = setTimeout(() => {
-    //     socket?.emit(GAME_PROGRESS, {
-    //       codeRoom,
-    //       maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
-    //     });
-    //   }, 500)
+    socket?.on(GAME_REFRESH_ROUND, () => {
+      clearTimeout(timeout)
+      console.log("Hello")
+      if (!isHost) return
+      timeout = setTimeout(() => {
+          socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_NEW_TURN, sendAt: moment() })
+      }, 500)
 
-    // })
+    })
 
     return () => {
       socket?.off(GAME_NEW_TURN_CHANNEL);
       socket?.off(INTERVAL_SHOW_WORD);
-      // socket?.off(GAME_REFRESH_ROUND)
-      // clearTimeout(timeout)
+      socket?.off(GAME_REFRESH_ROUND)
+      clearTimeout(timeout)
     };
   }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
 
@@ -173,6 +177,7 @@ export default function PlayingGameScreen() {
         icon: '😅',
         bodyClassName: 'text-sm font-semibold',
       });
+     
     });
 
     socket?.on(GAME_NEXT_DRAWER_IS_OUT, () => {
@@ -189,7 +194,7 @@ export default function PlayingGameScreen() {
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
       socket?.off(GAME_NEXT_DRAWER_IS_OUT);
     };
-  }, [socket, participants]);
+  }, [socket, participants, isHost]);
 
 
   const isInterval = gameStatus !== PLAY_GAME;
@@ -238,7 +243,7 @@ export default function PlayingGameScreen() {
             <div className={cn("absolute top-[380px] z-[999999] w-full", {
               "hidden": gameStatus === WAIT_FOR_OTHER_PLAYERS || gameStatus === START_GAME
             })}>
-              <ProgressPlayTime/>
+              <ProgressPlayTime />
             </div>
           </div>
 
