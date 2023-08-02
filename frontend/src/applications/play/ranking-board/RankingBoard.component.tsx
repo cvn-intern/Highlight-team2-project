@@ -12,7 +12,7 @@ import { GAME_UPDATE_RANKING } from '../chat-answer/chatAnswer.helper';
 import _ from 'lodash';
 import { useParams } from 'react-router-dom';
 
-interface RankingUser {
+export interface RankingUser {
   participants: Array<Participant>;
   max_player: number; 
   roomRound: RoomRound;
@@ -39,6 +39,7 @@ const RankingBoard = () => {
 
   useEffect(() => {
     socket?.on('participants', (data: RankingUser) => {
+
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
       const hostUser = _.find(

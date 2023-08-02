@@ -152,7 +152,6 @@ export class SocketService {
   async updateRoomRoundWhenDrawerOut(server: Server, codeRoom: string, roomRound: RoomRound, type: string) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-  
 
     switch (type) {
       case GAME_DRAWER_IS_OUT:
@@ -163,7 +162,6 @@ export class SocketService {
         break;
       default:
         break;
-
 
     }
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
