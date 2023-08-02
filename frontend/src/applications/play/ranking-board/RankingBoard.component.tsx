@@ -14,7 +14,7 @@ import { useParams } from 'react-router-dom';
 
 interface RankingUser {
   participants: Array<Participant>;
-  max_player: number;
+  max_player: number; 
   roomRound: RoomRound;
 }
 

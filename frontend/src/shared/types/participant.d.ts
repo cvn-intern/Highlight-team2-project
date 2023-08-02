@@ -7,4 +7,5 @@ type Participant = {
   is_host: boolean;
   is_painter: boolean;
   is_next_painter: boolean;
+  is_winner?: boolean;
 }
