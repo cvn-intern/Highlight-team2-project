@@ -16,6 +16,7 @@ import { z } from "zod";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
+const DEFAULT_THEME = 1;
 
 
 type Theme = {
@@ -28,6 +29,7 @@ const formSchema = z.object({
     players: z.string().nonempty(),
     visible: z.boolean(),
     round: z.string().nonempty(),
+    theme: z.number()
   });
   
 const CreateRoomsContent = () => {
@@ -37,7 +39,7 @@ const CreateRoomsContent = () => {
             players: DEFAULT_PLAYER,
             round: DEFAULT_ROUND,
             visible: false,
-
+            theme : DEFAULT_THEME
         },
     });
 
@@ -51,10 +53,12 @@ const CreateRoomsContent = () => {
             const players = parseInt(form.getValues("players"));
             const round = parseInt(form.getValues("round"));
             const visible = form.getValues("visible");
+            const theme = selectedThemeId;
 
             console.log(players);
             console.log(round);
             console.log(visible);
+            console.log(theme)
 
 
         } catch (error: any) {
@@ -66,16 +70,17 @@ const CreateRoomsContent = () => {
         }
     };
 
-
+    const handleSubmitClick = () =>{
+        document.getElementById("submitBtn")?.click();
+    }
     const [themesList, setThemesList] = useState<Array<Theme>>([]);
-    const [selectedThemeId, setSelectedThemeId] = useState(0);
+    const [selectedThemeId, setSelectedThemeId] = useState(DEFAULT_THEME);
     const navigate = useNavigate();
     const handleExitButton = () => {
         navigate("/rooms");
     };
     const getThemesList = async () => {
         await themeService.getThemes().then(result => setThemesList(result.data));
-
     }
   
     useEffect(() => { getThemesList() }, []);
@@ -108,12 +113,12 @@ const CreateRoomsContent = () => {
 
                     <ScrollArea className="xl:h-full md:h-[70%] h-[50%] w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
                         <div className="grid xl:grid-cols-4 md:grid-cols-3 grid-cols-2">
-                            {themesList.map((theme) => {
+                            {themesList.map((item) => {
                                 return <ThemeCard
-                                    name={theme.name.toUpperCase()}
-                                    img={theme.thumbnail}
-                                    onClick={() => setSelectedThemeId(theme.id)}
-                                    isSelected={theme.id === selectedThemeId}
+                                    name={item.name.toUpperCase()}
+                                    img={item.thumbnail}
+                                    onClick={() => setSelectedThemeId(item.id)}
+                                    isSelected={item.id === selectedThemeId}
                                 />
                             })}
                         </div>
@@ -135,6 +140,7 @@ const CreateRoomsContent = () => {
                 <Button
                     type="submit"
                     variant="opacityHover"
+                    onClick={handleSubmitClick}
                     className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"                    
                 >
                     <img src={DoorIcon} alt="" className="w-[18%]" />
