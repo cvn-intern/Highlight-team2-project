@@ -20,8 +20,4 @@ export class Word {
   @ManyToOne(() => WordsCollection, (wordsCollection) => wordsCollection.id)
   @JoinColumn({ name: 'words_collection_id' })
   words_collection_id: number;
-
-  @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn({ name: 'creator_id' })
-  creator_id: number;
 }

@@ -5,7 +5,7 @@ export class CreateRoomDTO {
   max_player: number;
 
   @IsNotEmpty()
-  theme: number;
+  words_collection_id: number;
 
   @IsNotEmpty()
   number_of_round: number;
@@ -14,7 +14,7 @@ export class CreateRoomDTO {
   time_per_round: number;
 
   @IsNotEmpty()
-  language: string;
+  language_code: string;
 
   @IsNotEmpty()
   is_public: boolean;

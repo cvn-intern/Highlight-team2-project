@@ -11,6 +11,10 @@ export class ThemeService {
     private themeRepository: Repository<Theme>,
   ) {}
 
+  async getAllTheme(): Promise<Theme[]> {
+    return await this.themeRepository.find();
+  }
+
   async createNewTheme(theme: ThemeInterface): Promise<Theme> {
     return await this.themeRepository.save(theme);
   }

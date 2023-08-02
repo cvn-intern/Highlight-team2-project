@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { WordsCollection } from './wordsCollection.entity';
-import { Repository } from 'typeorm';
+import { WordsCollectionRepository } from './wordsCollection.repository';
 
 @Injectable()
 export class WordsCollectionService {
-  constructor(
-    @InjectRepository(WordsCollection)
-    private wordsCollectionRepository: Repository<WordsCollection>,
-  ) {}
+  constructor(private wordsCollectionRepository: WordsCollectionRepository) {}
+
+  async getWordsCollectionByType(type: number, creator_id: number): Promise<WordsCollection[]> {
+    return await this.wordsCollectionRepository.getWordsCollectionByType(type, creator_id);
+  }
 }

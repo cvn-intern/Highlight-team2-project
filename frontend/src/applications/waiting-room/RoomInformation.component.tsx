@@ -3,7 +3,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/shared/components/shadcn-ui/avatar-shadcn';
-import useToaster from '@/shared/hooks/useToaster';
 import roomService from '@/shared/services/roomService';
 import { RoomType } from '@/shared/types/room';
 import { Globe, Swords, User2 as UserIcon } from 'lucide-react';
@@ -21,11 +20,7 @@ const RoomInformation = () => {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomData(data);
       } catch (error) {
-        useToaster({
-          type: 'error',
-          message: 'Room not found!',
-        });
-        navigate('/');
+        navigate('404');
       }
     };
 

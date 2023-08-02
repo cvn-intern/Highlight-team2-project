@@ -34,6 +34,10 @@ export class RoomService {
     return await this.roomRepository.save(room);
   }
 
+  async deleteRoom(codeRoom: string): Promise<void> {
+    await this.roomRepository.delete({ code_room: codeRoom });
+  }
+
   async randomRoomForQuickPlay(): Promise<string> {
     let rooms = await this.roomRepository.getAvailableRooms();
     rooms = rooms.filter((room: RoomInterface) => room.users.length < room.max_player);
@@ -164,5 +168,9 @@ export class RoomService {
 
   async updateRoomStatus(room: Room, status: string) {
     await this.roomRepository.save({ ...room, status, updated_at: new Date() });
+  }
+
+  async getRoomsByQuery(theme: string, language_code: string): Promise<Room[]> {
+    return await this.roomRepository.getRoomsByQuery(theme, language_code);
   }
 }

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Theme } from '../theme/theme.entity';
+import { User } from '../user/user.entity';
 
 @Entity('words_collection')
 export class WordsCollection {
@@ -8,7 +9,13 @@ export class WordsCollection {
 
   @ManyToOne(() => Theme, (theme) => theme.id)
   @JoinColumn({ name: 'theme_id' })
+  @Column()
   theme_id: number;
+
+  @ManyToOne(() => User, (user) => user.id)
+  @JoinColumn({ name: 'creator_id' })
+  @Column({ default: null })
+  creator_id: number;
 
   @Column({
     type: 'boolean',
