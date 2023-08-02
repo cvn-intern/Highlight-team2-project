@@ -48,7 +48,7 @@ export class RoomController {
           number_of_participants: room.participants.length,
           max_player: room.max_player,
           language: room.language.code,
-          current_round: room.room_round?.current_round || 1,
+          current_round: room.room_round?.current_round || 0,
           number_of_round: room.number_of_round,
           is_public: room.is_public,
           created_at: room.created_at,
