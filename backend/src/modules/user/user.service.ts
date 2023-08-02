@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) {}
+  ) { }
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
@@ -94,7 +94,7 @@ export class UserService {
 
   async isGuest(userId: number): Promise<boolean> {
     const user: User = await this.getUserById(userId);
-
+    if (!user) return false;
     return user.is_guest;
   }
 

@@ -261,10 +261,8 @@ const RoomsPage = () => {
                               <SelectValue placeholder="Language" />
                             </SelectTrigger>
                             <SelectContent className="text-lg font-bold border-none ">
-                              <SelectItem value="en">English (EN)</SelectItem>
-                              <SelectItem value="vi">
-                                Vietnamese (VN)
-                              </SelectItem>
+                              <SelectItem value="en">EN</SelectItem>
+                              <SelectItem value="vi">VI</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>

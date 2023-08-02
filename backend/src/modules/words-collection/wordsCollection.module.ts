@@ -10,6 +10,7 @@ import { WordModule } from '../word/word.module';
 import { WordService } from '../word/word.service';
 import { WordRepository } from '../word/word.repository';
 import { Word } from '../word/word.entity';
+import { RedisModule } from '../redis/redis.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Word } from '../word/word.entity';
     JwtModule,
     UserModule,
     WordModule,
+    RedisModule
   ],
   controllers: [WordsCollectionController],
   providers: [
