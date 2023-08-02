@@ -12,6 +12,7 @@ import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { ToastContainer } from "react-toastify";
 import CreateRoom from "./applications/create-room/Page";
 import RoomsPage from "@/applications/rooms/Page";
+import CreateRooms from "./applications/create-room/Page";
 
 function App() {
   const [loading, setLoading] = useState(true);

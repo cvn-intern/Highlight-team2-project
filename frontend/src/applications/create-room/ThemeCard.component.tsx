@@ -25,7 +25,7 @@ const ThemeCard = (props: ThemeCardProps) => {
                 </Avatar>
                 <CardTitle className="font-balsamiq mt-2 text-lg">{name}</CardTitle>
                 <div className="flex text-sky-600 gap-x-1">
-                    <p className="text-2xl font-balsamiq">Offical </p>
+                    <p className="text-xl font-balsamiq">Offical </p>
                     <CheckCircle2 />
                 </div>
 
