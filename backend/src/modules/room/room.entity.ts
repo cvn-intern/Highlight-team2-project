@@ -1,12 +1,4 @@
-import {
-  AfterUpdate,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryColumn,
-} from 'typeorm';
-import { Theme } from '../theme/theme.entity';
+import { AfterUpdate, Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
 import { User } from '../user/user.entity';
 import { Language } from '../language/language.entity';
@@ -49,14 +41,7 @@ export class Room {
 
   @Column({
     type: 'enum',
-    enum: [
-      'interval-show-word',
-      'interval-not-show-word',
-      'new-turn',
-      'inactive',
-      'wait-for-players',
-      'game-start',
-    ],
+    enum: ['interval-show-word', 'interval-not-show-word', 'new-turn', 'inactive', 'wait-for-players', 'game-start'],
     default: 'wait-for-players',
     nullable: false,
   })

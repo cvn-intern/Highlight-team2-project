@@ -9,20 +9,17 @@ import * as redisStore from 'cache-manager-redis-store';
     CacheModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService): Promise<any> => (
-        {
-          store: redisStore,
-          host: configService.get('REDIS_HOST'),
-          port: configService.get('REDIS_PORT'),
-          ttl: 120,
-          ssl: true,
-        }
-      )
-    })
+      useFactory: async (configService: ConfigService): Promise<any> => ({
+        store: redisStore,
+        host: configService.get('REDIS_HOST'),
+        port: configService.get('REDIS_PORT'),
+        ttl: 120,
+        ssl: true,
+      }),
+    }),
   ],
   controllers: [],
   providers: [RedisService, Logger],
   exports: [RedisService],
-
 })
 export class RedisModule {}
