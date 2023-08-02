@@ -13,7 +13,7 @@ export class RoomUserService {
     private redisService: RedisService,
     @Inject(forwardRef(() => RoomRoundService))
     private roomRoundService: RoomRoundService,
-  ) {}
+  ) { }
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -60,14 +60,14 @@ export class RoomUserService {
           is_painter: user.id === roomRound.painter,
           is_next_painter: user.id === roomRound.next_painter,
         };
-      } else {
-        return {
-          ...user,
-          is_host: user.id === room.host_id,
-          is_painter: false,
-          is_next_painter: false,
-        };
       }
+      
+      return {
+        ...user,
+        is_host: user.id === room.host_id,
+        is_painter: false,
+        is_next_painter: false,
+      };
     });
 
     return result;

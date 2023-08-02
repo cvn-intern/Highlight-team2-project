@@ -26,7 +26,7 @@ export class WordService {
     }
 
     if (words.length === 0) {
-      await this.deleteCacheWordsForRoom(roomId);
+      await this.deleteCacheUsedWordsForRoom(roomId);
       return this.getWordRandom(wordCollection, roomId);
     }
 
@@ -35,7 +35,7 @@ export class WordService {
     return words[randomIndex];
   }
 
-  async cacheWordsForRoom(roomId: number, word: string) {
+  async cacheUsedWordsForRoom(roomId: number, word: string) {
     let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
     if (!words) {
@@ -46,7 +46,7 @@ export class WordService {
     await this.redisService.setObjectByKeyValue(`${roomId}:WORDS`, words, expireTimeOneDay);
   }
 
-  async deleteCacheWordsForRoom(roomId: number) {
+  async deleteCacheUsedWordsForRoom(roomId: number) {
     return await this.redisService.deleteObjectByKey(`${roomId}:WORDS`);
   }
 }

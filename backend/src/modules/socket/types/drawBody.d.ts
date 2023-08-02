@@ -27,6 +27,6 @@ export type Drawing = {
 };
 
 export type GetCanvasState = {
-  dataImg: string;
   id: string;
+  dataImg: string;
 };
