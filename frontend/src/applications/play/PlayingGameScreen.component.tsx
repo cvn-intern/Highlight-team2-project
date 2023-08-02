@@ -20,6 +20,7 @@ import {
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
+  END_GAME,
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_NEXT_DRAWER_IS_OUT,
@@ -153,14 +154,14 @@ export default function PlayingGameScreen() {
     let timeout: any
     socket?.on(GAME_REFRESH_ROUND, () => {
       clearTimeout(timeout)
-      if(!isHost) return
+      if (!isHost) return
       timeout = setTimeout(() => {
         socket?.emit(GAME_PROGRESS, {
           codeRoom,
           maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
         });
-      },  500)
-     
+      }, 500)
+
     })
 
 
@@ -198,10 +199,17 @@ export default function PlayingGameScreen() {
       });
     });
 
+    socket?.on(END_GAME, (isEndGame: boolean) => {
+      if (isEndGame) {
+        setGameStatus(END_GAME)
+      }
+    })
+
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
       socket?.off(GAME_NEXT_DRAWER_IS_OUT);
+      socket?.off(END_GAME);
     };
   }, [socket, participants]);
 
@@ -219,9 +227,9 @@ export default function PlayingGameScreen() {
       return;
     }
 
-    
+
     if (gameStatus === INTERVAL_NEW_TURN) {
-      
+
       socket.emit(PLAY_GAME, codeRoom);
       socket.emit(GAME_PROGRESS, {
         codeRoom,

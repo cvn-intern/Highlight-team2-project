@@ -1,6 +1,7 @@
 import { MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import {
+  END_GAME,
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
@@ -24,6 +25,10 @@ export class GameGateway extends SocketGateway {
 
     let roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
     if (roundOfRoom) {
+      if(roundOfRoom.current_round + 1 > room.number_of_round) {
+       return this.server.to(room.code_room).emit(END_GAME, true);
+      }
+
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
       roundOfRoom = await this.roomRoundService.updateRoomRound({
         ...roundOfRoom,
