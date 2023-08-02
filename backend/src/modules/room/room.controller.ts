@@ -83,7 +83,6 @@ export class RoomController {
     try {
       const { words_collection_id } = roomInformation;
       const words_collection = await this.wordsCollectionService.getWordsCollectionById(words_collection_id);
-      console.log(words_collection);
       const newRoom: Room = await this.roomService.createNewRoom({
         ...roomInformation,
         language_code: words_collection.language_code,
