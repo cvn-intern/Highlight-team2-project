@@ -8,6 +8,7 @@ import RankSecond from "@/shared/assets/rank_second.svg";
 import RankThird from "@/shared/assets/rank_third.svg";
 import FlorLeft from "@/shared/assets/florLeft.svg";
 import FlorRight from "@/shared/assets/florRight.svg";
+import PainterIsOut from "@/shared/assets/painter_was_out.png";
 import {
   INTERVAL_NEW_TURN,
   INTERVAL_NOT_SHOW_WORD,
@@ -19,6 +20,7 @@ import {
   INTERVAL_DURATION_MILISECONDS,
   GAME_PROGRESS,
   END_GAME,
+  INTERVAL_DRAWER_OUT,
 } from "./IntervalCanvas";
 import Confetti from "react-confetti";
 import { Button } from "./shadcn-ui/Button";
@@ -109,6 +111,15 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
         <div className="flex items-center mt-7">
           <img className="w-[200px]" src={painter?.avatar} />
         </div>
+      );
+    case INTERVAL_DRAWER_OUT:
+      return (
+        <>
+          <div className="flex relative justify-center items-center mt-2 mb-4 transform -translate-y-5">
+            <img className="w-1/3" src={PainterIsOut} />
+          </div>
+          <p className="text-xl absolute bottom-6 text-slate-500">Painter has left the room :(</p>
+        </> 
       );
     case WAIT_FOR_OTHER_PLAYERS:
       return (

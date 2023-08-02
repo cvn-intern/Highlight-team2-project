@@ -41,10 +41,12 @@ export class UserService {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
 
-    const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
-
-    if (!isAvatarIndefault) {
-      throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
+    if(!user.provider) {
+      const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
+  
+      if (!isAvatarIndefault) {
+        throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
+      }
     }
 
     return this.userRepository.save(user);

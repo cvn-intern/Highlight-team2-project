@@ -1,6 +1,7 @@
 import { useGameStore } from "../stores/gameStore";
 import {
   END_GAME,
+  INTERVAL_DRAWER_OUT,
   INTERVAL_INACTIVE,
   INTERVAL_NEW_TURN,
   START_GAME,
@@ -27,8 +28,14 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
     case INTERVAL_INACTIVE:
       return (
         <>
-          <p className="text-[3rem] text-red-500">INACTIVE</p>
+          <p className="text-[2rem] text-red-500">INACTIVE</p>
           <p className="text-xl text-slate-400">You've lost your turn :(</p>
+        </>
+      );
+    case INTERVAL_DRAWER_OUT:
+      return (
+        <>
+          <p className="text-[3rem] text-yellow-400">NEW TURN</p>
         </>
       );
     case WAIT_FOR_OTHER_PLAYERS:
