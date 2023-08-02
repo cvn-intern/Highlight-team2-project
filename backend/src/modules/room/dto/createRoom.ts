@@ -14,11 +14,5 @@ export class CreateRoomDTO {
   time_per_round: number;
 
   @IsNotEmpty()
-  language_code: string;
-
-  @IsNotEmpty()
   is_public: boolean;
-
-  @IsNotEmpty()
-  thumbnail: string;
 }

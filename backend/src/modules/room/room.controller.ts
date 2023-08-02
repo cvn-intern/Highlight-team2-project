@@ -19,6 +19,7 @@ import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { Room } from './room.entity';
+import { WordsCollectionService } from '../words-collection/wordsCollection.service';
 
 @Controller('rooms')
 export class RoomController {
@@ -26,6 +27,7 @@ export class RoomController {
     private roomService: RoomService,
     private logger: Logger = new Logger(RoomController.name),
     private roomUserService: RoomUserService,
+    private wordsCollectionService: WordsCollectionService,
   ) {}
 
   @UseGuards(AuthorizeJWT)
@@ -48,7 +50,7 @@ export class RoomController {
           number_of_participants: room.participants.length,
           max_player: room.max_player,
           language: room.language.code,
-          current_round: room.room_round?.current_round || 1,
+          current_round: room.room_round?.current_round || 0,
           number_of_round: room.number_of_round,
           is_public: room.is_public,
           created_at: room.created_at,
@@ -79,8 +81,12 @@ export class RoomController {
     @IdUser() idUser: number,
   ) {
     try {
+      const { words_collection_id } = roomInformation;
+      const words_collection = await this.wordsCollectionService.getWordsCollectionById(words_collection_id);
       const newRoom: Room = await this.roomService.createNewRoom({
         ...roomInformation,
+        language_code: words_collection.language_code,
+        thumbnail: words_collection.theme.thumbnail,
         host_id: idUser,
       });
 

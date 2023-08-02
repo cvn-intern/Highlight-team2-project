@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Room } from './room.entity';
 import { RoomInterface, RoomStatusResponseInterface } from './room.interface';

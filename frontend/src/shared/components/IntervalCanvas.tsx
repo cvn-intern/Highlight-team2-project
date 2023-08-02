@@ -1,12 +1,7 @@
-import { GameStatus } from '../stores/gameStore';
-import IntervalCanvasContent from './IntervalCanvasContent';
-import IntervalCanvasHeader from './IntervalCanvasHeader';
+import { GameStatus } from "../stores/gameStore";
+import IntervalCanvasContent from "./IntervalCanvasContent";
+import IntervalCanvasHeader from "./IntervalCanvasHeader";
 
-export const INTERVAL_SHOW_WORD = 'interval-show-word';
-export const INTERVAL_NOT_SHOW_WORD = 'interval-not-show-word';
-export const INTERVAL_NEW_TURN = 'new-turn';
-export const INTERVAL_INACTIVE = 'inactive';
-export const START_GAME = 'start-game';
 export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
 export const PLAY_GAME = 'game-start';
 export const GAME_PROGRESS = 'game-progress';
@@ -14,6 +9,13 @@ export const GAME_REFRESH_ROUND = 'refresh-round';
 export const GAME_REFRESH_DRAWER = 'refresh-drawer';
 export const GAME_PRESENT_PROGRESS = 'game-present-progress';
 export const GAME_PRESENT_PROGRESS_NEW_PLAYER = 'game-present-progress-new-player';
+export const INTERVAL_SHOW_WORD = "interval-show-word";
+export const INTERVAL_NOT_SHOW_WORD = "interval-not-show-word";
+export const INTERVAL_NEW_TURN = "new-turn";
+export const INTERVAL_INACTIVE = "inactive";
+export const INTERVAL_DRAWER_OUT = "drawer_out";
+export const START_GAME = "start-game";
+export const END_GAME = "end-game";
 
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';
@@ -33,7 +35,6 @@ const IntervalCanvas = ({
   status = INTERVAL_SHOW_WORD,
   hidden = true,
 }: IntervalCanvasProps) => {
-
   return (
     <div
       hidden={hidden}

@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 import {
   WAIT_FOR_OTHER_PLAYERS,
   INTERVAL_INACTIVE,
@@ -8,7 +8,8 @@ import {
   START_GAME,
   PLAY_GAME,
   GAME_REFRESH_DRAWER,
-} from "../components/IntervalCanvas";
+  END_GAME,
+} from '../components/IntervalCanvas';
 
 export type GameStatus =
   | typeof WAIT_FOR_OTHER_PLAYERS
@@ -17,7 +18,9 @@ export type GameStatus =
   | typeof INTERVAL_NEW_TURN
   | typeof INTERVAL_INACTIVE
   | typeof START_GAME
-  | typeof PLAY_GAME | typeof GAME_REFRESH_DRAWER;
+  | typeof PLAY_GAME
+  | typeof GAME_REFRESH_DRAWER
+  | typeof END_GAME;
 
 interface GameState {
   participants: Participant[];
@@ -26,15 +29,15 @@ interface GameState {
   roomRound: RoomRound | null;
   isDrawer: boolean;
   isHost: boolean;
-  correctAnswers: number[]
+  correctAnswers: number[];
   setParticipants: (participants: Participant[]) => void;
   setMaxPlayer: (maxPlayer: number) => void;
   setGameStatus: (gameStatus: GameStatus) => void;
   setRoomRound: (roomRound: RoomRound | null) => void;
   setIsDrawer: (isDrawer: boolean) => void;
   setIsHost: (isDrawer: boolean) => void;
-  setCorrectAnswers: (correctAnswers: number[]) => void
-  getIsHost: () => boolean
+  setCorrectAnswers: (correctAnswers: number[]) => void;
+  getIsHost: () => boolean;
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
@@ -50,9 +53,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   setGameStatus: (data) => set((state) => ({ ...state, gameStatus: data })),
   setRoomRound: (data) => set((state) => ({ ...state, roomRound: data })),
   setIsDrawer: (data) => set((state) => ({ ...state, isDrawer: data })),
-  setIsHost:  (data) => set((state) => ({ ...state, isHost: data })),
-  setCorrectAnswers:  (data) => set((state) => ({ ...state, correctAnswers: data })),
+  setIsHost: (data) => set((state) => ({ ...state, isHost: data })),
+  setCorrectAnswers: (data) =>
+    set((state) => ({ ...state, correctAnswers: data })),
   getIsHost: () => {
-    return get().isHost
-  }
+    return get().isHost;
+  },
 }));
