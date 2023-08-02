@@ -30,4 +30,8 @@ export class WordService {
     await this.wordRepository.save(newWord);
     return newWord;
   }
+
+  async deleteAllWordsInWordsCollection(words_collection_id: number) {
+    await this.wordRepository.delete({ words_collection_id });
+  }
 }
