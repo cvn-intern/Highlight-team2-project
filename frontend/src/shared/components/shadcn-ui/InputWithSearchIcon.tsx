@@ -13,7 +13,7 @@ const InputWithSearchIcon = React.forwardRef<HTMLInputElement, InputProps>(
             className
           )}>
             <Search width={24} height={24} />
-            <input
+            <input className="focus:outline-none"
               type={type}
               
               ref={ref}

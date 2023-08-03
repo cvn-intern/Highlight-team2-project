@@ -1,6 +1,5 @@
-import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
-import { Circle } from "lucide-react"
+import * as React from "react"
 
 import { cn } from "@/shared/lib/utils"
 
@@ -18,6 +17,7 @@ const RadioGroup = React.forwardRef<
 })
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 
+
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
@@ -31,12 +31,30 @@ const RadioGroupItem = React.forwardRef<
       )}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-current text-current" />
-      </RadioGroupPrimitive.Indicator>
+      {children}
     </RadioGroupPrimitive.Item>
   )
 })
 RadioGroupItem.displayName = RadioGroupPrimitive.Item.displayName
 
-export { RadioGroup, RadioGroupItem }
+const RadioGroupIndicator = React.forwardRef<
+  React.ElementRef<typeof RadioGroupPrimitive.Indicator>,
+  React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Indicator>
+>(({ className, children, ...props }, ref) => {
+  return (
+    <RadioGroupPrimitive.Indicator
+      ref={ref}
+      className={cn(
+        "flex items-center justify-center",
+        className
+      )}
+      {...props}
+    >
+      {children}      
+    </RadioGroupPrimitive.Indicator>
+  )
+})
+RadioGroupIndicator.displayName = RadioGroupPrimitive.Indicator.displayName
+
+export { RadioGroup, RadioGroupIndicator, RadioGroupItem }
+
