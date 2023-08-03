@@ -132,10 +132,7 @@ const CreateRoomsContent = () => {
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
         <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
-          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
-            1. SETTINGS
-          </p>
-          <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
+          <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[91.5%]">
             <SettingRoomForm
               handleSubmit={handleSubmit}
               form={form}
@@ -148,7 +145,7 @@ const CreateRoomsContent = () => {
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
             <p className="text-2xl font-balsamiq text-headerBlueColor mt-1">
-              2. THEME
+              THEME
             </p>
             <div className="flex gap-x-2">
               <Select

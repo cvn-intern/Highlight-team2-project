@@ -38,7 +38,7 @@ export default function SettingThemeForm({
     <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
         <div className="flex flex-col gap-2">
-          <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">
+          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
             1. THEME NAME
           </p>
           <Select
@@ -67,7 +67,7 @@ export default function SettingThemeForm({
         </div>
         {/* End theme name */}
         <div className="flex flex-col gap-2">
-          <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">
+          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
             2. LANGUAGE
           </p>
           <div className="flex gap-4 text-xl font-balsamiq text-gray-400 mt-5">
@@ -77,7 +77,7 @@ export default function SettingThemeForm({
         </div>
         {/* End language */}
         <div className="flex flex-col gap-1">
-          <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">
+          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
             3. CREATE WORDS
           </p>
           <div className="flex flex-col gap-2">
