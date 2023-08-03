@@ -20,7 +20,6 @@ import {
   INTERVAL_DURATION_MILISECONDS,
   GAME_PRESENT_PROGRESS,
   END_GAME,
-  INTERVAL_DRAWER_OUT,
   GAME_REFRESH_DRAWER,
 } from "./IntervalCanvas";
 import Confetti from "react-confetti";
@@ -82,7 +81,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-lg mt-5 text-slate-300"> Correct players:</p>
             <p className="text-[3.5rem] mx-auto">
               {" "}
-              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{participants.length}</span>
+              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{participants.length-1}</span>
             </p>
           </div>
         </div>

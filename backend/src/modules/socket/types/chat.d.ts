@@ -1,5 +1,5 @@
 export type Chat = {
-  socketId?: string,
+  socketId?: string;
   user: string;
   type: number;
   message: string;

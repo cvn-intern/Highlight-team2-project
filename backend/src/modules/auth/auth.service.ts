@@ -84,10 +84,8 @@ export class AuthService {
 
   async logoutGoogle(userId: number): Promise<boolean> {
     const userToken = await this.redisService.getObjectByKey(`USER:${userId}:ACCESSTOKEN`);
-    
-    await Promise.all([
-      this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay),
-    ])
+
+    await Promise.all([this.redisService.setObjectByKeyValue(`BLOCKLIST:${userToken}`, userToken, expireTimeOneDay)]);
 
     return true;
   }

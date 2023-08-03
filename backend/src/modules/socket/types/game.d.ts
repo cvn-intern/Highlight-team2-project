@@ -6,10 +6,10 @@ type GameProgressUpdate = {
 type GamePresentProgress = {
   codeRoom: string;
   maximumTimeInMiliSeconds: number;
-  startProgress: number
-  status: string
-  sendAt: Date
-}
+  startProgress: number;
+  status: string;
+  sendAt: Date;
+};
 
 type GameRankingUpdate = {
   codeRoom: string;

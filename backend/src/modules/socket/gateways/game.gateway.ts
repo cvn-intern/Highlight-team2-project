@@ -7,7 +7,6 @@ import {
   GAME_NEW_TURN_CHANNEL,
   GAME_PRESENT_PROGRESS_CHANNEL,
   GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
-  GAME_REFRESH_CHANNEL,
   GAME_START_CHANNEL,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
@@ -23,8 +22,8 @@ export class GameGateway extends SocketGateway {
 
     let roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
     if (roundOfRoom) {
-      if(roundOfRoom.current_round + 1 > room.number_of_round) {
-       return this.server.to(room.code_room).emit(END_GAME, true);
+      if (roundOfRoom.current_round + 1 > room.number_of_round) {
+        return this.server.to(room.code_room).emit(END_GAME, true);
       }
 
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
@@ -58,18 +57,14 @@ export class GameGateway extends SocketGateway {
   }
 
   @SubscribeMessage(GAME_PRESENT_PROGRESS_CHANNEL)
-  async handleSendPresentProgress(
-    @MessageBody() data: GamePresentProgress,
-  ) {
-    const {codeRoom, ...rest} =  data
+  async handleSendPresentProgress(@MessageBody() data: GamePresentProgress) {
+    const { codeRoom, ...rest } = data;
     this.server.in(codeRoom).emit(GAME_PRESENT_PROGRESS_CHANNEL, rest);
   }
 
   @SubscribeMessage(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL)
-  async handleGameProgress(
-    @MessageBody() data: GamePresentProgress & {socketId: string},
-  ) {
-    const {socketId, codeRoom: _, ...rest} =  data
+  async handleGameProgress(@MessageBody() data: GamePresentProgress & { socketId: string }) {
+    const { socketId, codeRoom: _, ...rest } = data;
     this.server.to(socketId).emit(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL, rest);
   }
 

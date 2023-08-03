@@ -46,7 +46,7 @@ export class SocketService {
         this.redisService.setObjectByKeyValue(`${client.id}:ACCESSTOKEN`, token, expireTimeOneDay),
         this.redisService.setObjectByKeyValue(`USER:${idUser}:SOCKET`, client.id, expireTimeOneDay),
         this.redisService.setObjectByKeyValue(`USER:${idUser}:ACCESSTOKEN`, token, expireTimeOneDay),
-      ])
+      ]);
     } catch (error) {
       this.logger.error(error);
     }
@@ -162,7 +162,6 @@ export class SocketService {
         break;
       default:
         break;
-
     }
     server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
