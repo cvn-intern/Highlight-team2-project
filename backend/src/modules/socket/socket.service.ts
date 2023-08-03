@@ -169,10 +169,13 @@ export class SocketService {
 
   async handlePainterOrNextPainterOutRoom(oldRoomRound: RoomRound, userId: number, server: Server, room: Room) {
     if (oldRoomRound.next_painter === userId) {
-      await this.roomUserService.resetNextPainterCachePainterForRoom(room.id);
-    }
-
-    if (oldRoomRound.painter === userId || oldRoomRound.next_painter === userId) {
+      await this.roomUserService.resetNextPainterCachePainterForRoom(room.id, null);
+      const nextPainter = await this.roomUserService.assignNextPainter(room, oldRoomRound.painter);
+      await this.roomRoundService.updateRoomRound({
+        ...oldRoomRound,
+        next_painter: nextPainter,
+      });
+    } else if(oldRoomRound.painter === userId) {
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
 
       const newRoomRound = await this.roomRoundService.updateRoomRound({
@@ -191,7 +194,8 @@ export class SocketService {
         newRoomRound,
         oldRoomRound.painter === userId ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
       );
-      await this.sendListParticipantsInRoom(server, room);
     }
+
+    await this.sendListParticipantsInRoom(server, room);
   }
 }
