@@ -12,6 +12,7 @@ import {
   LEAVE_ROOM_CONTENT,
   LEAVE_ROOM_TYPE,
   NOTIFY_CHANNEL,
+  RESET_GAME,
 } from '../constant';
 import { SocketClient } from '../socket.class';
 import { errorsSocket } from 'src/common/errors/errorCode';
@@ -109,7 +110,7 @@ export class RoomGateway extends SocketGateway {
     const participants = await this.roomUserService.getListUserOfRoom(room);
     if (participants.length === 1) {
       await this.roomRoundService.deleteRoomRound(room.id);
-      this.server.in(room.code_room).emit('reset-game');
+      this.server.in(room.code_room).emit(RESET_GAME);
     } else {
       await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
     }
@@ -155,7 +156,7 @@ export class RoomGateway extends SocketGateway {
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
-        this.server.in(room.code_room).emit('reset-game');
+        this.server.in(room.code_room).emit(RESET_GAME);
       } else {
         await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
       }

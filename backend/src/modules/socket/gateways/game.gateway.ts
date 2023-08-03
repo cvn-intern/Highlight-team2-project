@@ -8,8 +8,10 @@ import {
   GAME_PRESENT_PROGRESS_CHANNEL,
   GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
   GAME_START_CHANNEL,
+  GAME_STATUS,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
+  RESET_GAME,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
 
@@ -23,6 +25,7 @@ export class GameGateway extends SocketGateway {
     let roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
     if (roundOfRoom) {
       if (roundOfRoom.current_round + 1 > room.number_of_round) {
+        await this.roomService.updateRoomStatus(room, END_GAME);
         return this.server.to(room.code_room).emit(END_GAME, true);
       }
 
@@ -100,5 +103,26 @@ export class GameGateway extends SocketGateway {
       this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
       this.roomRoundService.deleteRoomRound(room.id),
     ]);
+  }
+
+  @SubscribeMessage(RESET_GAME)
+  async handleResetGame(@MessageBody() codeRoom: string) {
+    console.log(codeRoom);
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    await Promise.all([
+      this.roomRoundService.deleteRoomRound(room.id),
+      this.roomUserService.resetRoomUsersScore(room),
+      this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
+    ]);
+
+    this.server.in(codeRoom).emit(GAME_STATUS, {
+      success: true,
+      status: GAME_WAIT_PLAYERS_CHANNEL,
+    });
+
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
 }

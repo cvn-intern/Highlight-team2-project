@@ -178,6 +178,7 @@ export class SocketService {
       const newRoomRound = await this.roomRoundService.updateRoomRound({
         ...oldRoomRound,
         word,
+        current_round: oldRoomRound.current_round - 1,
         ended_at: endedAt,
         started_at: startedAt,
         painter: painterRound.painter,

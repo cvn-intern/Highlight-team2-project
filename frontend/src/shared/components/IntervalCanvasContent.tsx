@@ -45,6 +45,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
 
   const handleTop3Ranking = (listParticipant: Participant[]): Participant[] => {
     const usersInRoom: number = 3
+    if(listParticipant.length === 0) return []
     if (listParticipant.length >= usersInRoom) {
       const top3Users: Participant[] = [...listParticipant.slice(0, 3)]
       top3Users[0].is_winner = true
