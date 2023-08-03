@@ -5,7 +5,7 @@ import roomService from "@/shared/services/roomService";
 import wordCollectionService from "@/shared/services/wordCollectionService";
 import SettingRoomForm from "./SettingRoomForm.component";
 import { z } from "zod";
-import { LogOut } from "lucide-react";
+import { LogOut, PlusCircle } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -22,6 +22,7 @@ import {
     SelectValue,
 } from "@/shared/components/shadcn-ui/select";
 import { WordsCollection } from "@/shared/types/wordsCollection";
+import { useUserStore } from "@/shared/stores/userStore";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -41,6 +42,7 @@ const CreateRoomsContent = () => {
         []
     );
     const [type, setType] = useState(0);
+    const { user } = useUserStore();
     const [languageCode, setLanguageCode] = useState("all");
     const fetchWordsCollection = async (type: number, language_code: string) => {
         return await wordCollectionService.getWordCollections(type, language_code);
@@ -114,12 +116,15 @@ const CreateRoomsContent = () => {
             });
         }
     };
-
+    
     const handleSubmitClick = () => {
         document.getElementById("submitBtn")?.click();
     };
     const handleExitButton = () => {
         navigate("/rooms");
+    };
+    const handleCreateThemeClick = () => {
+        // navigate("/rooms/create-theme");
     };
 
     return (
@@ -144,23 +149,36 @@ const CreateRoomsContent = () => {
                         <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">
                             2. THEME
                         </p>
-                        <Select
-                            value={type.toString()}
-                            onValueChange={(value) => {
-                                setType(parseInt(value));
-                            }}
-                        >
-                            <SelectTrigger className="w-[40%] rounded-xl md:text-lg font-bold border-2 text-slate-500">
-                                <SelectValue placeholder="Themes Filter" />
-                            </SelectTrigger>
-                            <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
-                                <SelectItem value={"0"}>All</SelectItem>
-                                <SelectItem value={"1"}>Your Themes</SelectItem>
-                                <SelectItem value={"2"}>Offical</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                        <div className="flex gap-x-2">
+                            <Select
+                                value={type.toString()}
+                                onValueChange={(value) => {
+                                    setType(parseInt(value));
+                                }}
+                            >
+                                <SelectTrigger className="w-[200px] rounded-xl md:text-lg font-bold border-2 text-slate-500">
+                                    <SelectValue placeholder="Themes Filter" />
+                                </SelectTrigger>
+                                <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
+                                    <SelectItem value={"0"}>All</SelectItem>
+                                    <SelectItem value={"1"}>Your Themes</SelectItem>
+                                    <SelectItem value={"2"}>Offical</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {!user?.is_guest && (
+                                < Button
+                                    type="submit"
+                                    variant="opacityHover"
+                                    className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
+                                    onClick={handleCreateThemeClick}
+                                >
+                                    <p className="text-base md:text-lg">CREATE THEME</p>
+                                </Button>
+                            )
+                            }
 
+                        </div>
+                    </div>
                     <ScrollArea className="xl:h-full md:h-[70%] h-[50%] w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
                         <div className="grid grid-cols-2 xl:grid-cols-4 md:grid-cols-3">
                             {wordsCollections.map((item) => {
@@ -177,7 +195,7 @@ const CreateRoomsContent = () => {
                         </div>
                     </ScrollArea>
                 </div>
-            </div>
+            </div >
             <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
                 <Button
                     type="submit"

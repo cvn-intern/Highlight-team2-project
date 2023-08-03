@@ -218,7 +218,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                             </SelectTrigger>
                                             <SelectContent className="text-lg font-bold border-none">
                                                 <SelectItem value="en">English</SelectItem>
-                                                <SelectItem value="vi">Vietnamese</SelectItem>
+                                                <SelectItem value="vi">Tiếng Việt</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
