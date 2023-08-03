@@ -77,6 +77,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
 
     socket?.on(GET_CANVAS_STATE, (id: string) => {
       const dataImg = canvasRef.current.toDataURL()
+
       socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
     })
 
@@ -86,6 +87,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       img.onload = () => {
         ctx?.drawImage(img, 0, 0)
       }
+
     })
 
     socket?.on(DRAWER_CLEAR_CANVAS, () => {

@@ -5,6 +5,7 @@ import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
 import { Socket } from 'socket.io';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { errorsSocket } from 'src/common/errors/errorCode';
+const moment = require('moment');
 
 export class JoinGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -61,10 +62,11 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
-        return;
+        this.server.in(codeRoom).emit('reset-game');
+      } else {
+        await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
       }
 
-      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
       await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
@@ -80,7 +82,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         this.socketService.sendError(client, errorsSocket.MULTIPLE_TAB);
         return;
       }
-      
+
       this.socketService.storeClientConnection(client);
     } catch (error) {
       this.logger.error(error);

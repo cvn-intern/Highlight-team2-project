@@ -19,7 +19,7 @@ export class AuthService {
     private configService: ConfigService,
     private redisService: RedisService,
     @Inject('OAuth2Client') private client: OAuth2Client,
-  ) { }
+  ) {}
   async generateAccessToken(payload: PayloadJWT) {
     return this.jwtService.sign(payload, {
       secret: this.configService.get<string>('JWT_ACCESSKEY'),
@@ -54,7 +54,11 @@ export class AuthService {
       await Promise.all([
         await this.redisService.deleteObjectByKey(`USER:${userId}:ACCESSTOKEN`),
         await this.redisService.deleteObjectByKey(`USER:${userId}:SOCKET`),
-        await this.redisService.setObjectByKeyValue(`USER:${existingUser.id}:ACCESSTOKEN`, accessToken, expireTimeOneDay),
+        await this.redisService.setObjectByKeyValue(
+          `USER:${existingUser.id}:ACCESSTOKEN`,
+          accessToken,
+          expireTimeOneDay,
+        ),
       ]);
 
       return {

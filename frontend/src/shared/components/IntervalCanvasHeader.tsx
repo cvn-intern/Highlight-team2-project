@@ -4,6 +4,7 @@ import {
   INTERVAL_DRAWER_OUT,
   INTERVAL_INACTIVE,
   INTERVAL_NEW_TURN,
+  INTERVAL_SHOW_WORD,
   START_GAME,
   WAIT_FOR_OTHER_PLAYERS,
 } from "./IntervalCanvas";
@@ -15,6 +16,12 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
   );
 
   switch (status) {
+    case INTERVAL_SHOW_WORD:
+      return (
+        <>
+          <p className="text-[3rem] text-sky-700">INTERVAL</p>
+        </>
+      );
     case INTERVAL_NEW_TURN:
       return (
         <>
@@ -55,8 +62,7 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
     default:
       return (
         <>
-          <p className="text-[3rem] text-sky-700">INTERVAL</p>
-          <p className="text-xl text-slate-400">Take a while to relax</p>
+          <p className="text-[3rem] text-sky-700">REFRESHING ROUND</p>
         </>
       );
   }
