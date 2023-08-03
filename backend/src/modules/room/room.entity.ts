@@ -41,7 +41,15 @@ export class Room {
 
   @Column({
     type: 'enum',
-    enum: ['interval-show-word', 'interval-not-show-word', 'new-turn', 'inactive', 'wait-for-players', 'game-start'],
+    enum: [
+      'interval-show-word',
+      'interval-not-show-word',
+      'new-turn',
+      'inactive',
+      'wait-for-players',
+      'game-start',
+      'end-game',
+    ],
     default: 'wait-for-players',
     nullable: false,
   })

@@ -1,7 +1,7 @@
 import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import { Room } from 'src/modules/room/room.entity';
-import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE } from '../constant';
+import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE, RESET_GAME } from '../constant';
 import { Socket } from 'socket.io';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { errorsSocket } from 'src/common/errors/errorCode';
@@ -56,18 +56,18 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(room.code_room);
       }
 
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
-
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
 
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
-        return;
+        this.server.in(codeRoom).emit(RESET_GAME);
+      } else {
+        await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
       }
 
-      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

@@ -16,6 +16,7 @@ export const INTERVAL_INACTIVE = "inactive";
 export const INTERVAL_DRAWER_OUT = "drawer_out";
 export const START_GAME = "start-game";
 export const END_GAME = "end-game";
+export const RESET_GAME = 'reset-game';
 
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';

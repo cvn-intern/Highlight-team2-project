@@ -111,6 +111,7 @@ INSERT INTO public.language(code, name) VALUES ('zu', 'Zulu');
 
 -- init data for theme
 INSERT INTO public.theme(id, name, thumbnail) VALUES (1, 'animal', 'https://media.istockphoto.com/vectors/animal-circle-pattern-vector-id175606088?k=6&m=175606088&s=170667a&w=0&h=h8NFINyj_616W34sy_2bSq7s_NfVQhOzJHiU6p1NkGc=');
+INSERT INTO public.theme(id, name, thumbnail) VALUES (2, 'games', 'https://us.123rf.com/450wm/jemastock/jemastock1912/jemastock191220956/135481905-video-game-control-handle-icon-vector-illustration-design.jpg?ver=6');
 
 -- init data user
 INSERT INTO public."user"(id, avatar, nickname, is_guest, language_code) 
@@ -118,6 +119,7 @@ VALUES (1, 'https://cdn4.iconfinder.com/data/icons/avatars-21/512/avatar-circle-
 
 -- init words collection
 INSERT INTO public.words_collection(id, is_created_by_system, theme_id, creator_id, language_code) VALUES (1, true, 1, 1, 'en');
+INSERT INTO public.words_collection(id, is_created_by_system, theme_id, creator_id, language_code) VALUES (2, true, 2, 1, 'en');
 
 -- init data room
 INSERT INTO public.room(id, code_room, max_player, time_per_round, number_of_round, thumbnail, is_public, host_id, words_collection_id, language_code)
@@ -142,3 +144,29 @@ INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('fox', 'easy', 1);
 INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('frog', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('kangaroo', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('lion', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('monkey', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('penguin', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('whale', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('tiger', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('wolf', 'easy', 1);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('pubg', 'easy', 2);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('csgo', 'easy', 2);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('valorant', 'easy', 2);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('genshin impact', 'easy', 2);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('outlast', 'easy', 2);
+INSERT INTO public.word(word, difficulty, words_collection_id)
+VALUES ('naraka', 'easy', 2);

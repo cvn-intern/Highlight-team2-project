@@ -18,7 +18,6 @@ import {
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
-  END_GAME,
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_NEXT_DRAWER_IS_OUT,
@@ -149,6 +148,10 @@ export default function PlayingGameScreen() {
     socket?.on(GAME_STATUS_CHANNEL, ({ success, status }: RoomStatusType) => {
       if (!success) return;
       if (status === PLAY_GAME) socket.emit(NEW_PLAYER, codeRoom);
+      if (isHost && status === WAIT_FOR_OTHER_PLAYERS && participants.length > 1){
+        setGameStatus(START_GAME);
+        return
+      }
       setGameStatus(status!);
     });
 
@@ -169,17 +172,11 @@ export default function PlayingGameScreen() {
         bodyClassName: 'text-sm font-semibold',
       });
     });
-    socket?.on(END_GAME, (isEndGame: boolean) => {
-      if (isEndGame) {
-        setGameStatus(END_GAME)
-      }
-    })
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_NEXT_DRAWER_IS_OUT);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
-      socket?.off(END_GAME);
     };
   }, [socket, participants, isHost, gameStatus]);
 

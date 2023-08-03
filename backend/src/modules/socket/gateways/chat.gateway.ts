@@ -20,8 +20,7 @@ export class ChatGateway extends SocketGateway {
     try {
       const roomId = extractIdRoom(msgBody.codeRoom);
       const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
-      const answerRound: string = round.word;
-      const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
+      const ROOM_CHAT = `${msgBody.codeRoom}-chat`;
 
       const messageContent: Chat = {
         user: client.user.nickname,
@@ -29,17 +28,19 @@ export class ChatGateway extends SocketGateway {
         message: msgBody.message,
       };
 
-      const ROOM_CHAT = `${msgBody.codeRoom}-chat`;
+      if (!round) {
+        return this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
+      }
+      const answerRound: string = round.word;
+      const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
 
       if (typeAnswer === ANSWER_CORRETLY || typeAnswer === ANSWER_APPROXIMATELY) {
         messageContent.message = SERVER_BLOCKED_MESSAGE_CONTENT;
         messageContent.type = BLOCK_MESSAGE;
         messageContent.user = '';
-        this.server.to(client.id).emit(ROOM_CHAT, messageContent);
-        return;
-      }
 
-      this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
+        return this.server.to(client.id).emit(ROOM_CHAT, messageContent);
+      }
     } catch (error) {
       this.logger.error(error);
     }

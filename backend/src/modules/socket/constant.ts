@@ -62,6 +62,7 @@ export const GAME_PLAY = 'game-play';
 export const GAME_STATUS = 'game-status';
 export const GAME_NEW_TURN = 'new-turn';
 export const END_GAME = 'end-game';
+export const RESET_GAME = 'reset-game';
 
 export const MIN_PROGRESS_PERCENTAGE = 0;
 export const MAX_PROGRESS_PERCENTAGE = 100;

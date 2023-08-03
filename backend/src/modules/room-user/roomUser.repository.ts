@@ -19,7 +19,7 @@ export class RoomUserRepository extends Repository<RoomUser> {
       .leftJoinAndMapOne('roomuser.user', User, 'user', 'user.id = roomuser.user_id')
       .select(['roomuser.score', 'roomuser.answered_at'])
       .addSelect(['user.id', 'user.avatar', 'user.nickname'])
-      .orderBy('roomuser.score', 'ASC')
+      .orderBy('roomuser.score', 'DESC')
       .getMany();
   }
 
