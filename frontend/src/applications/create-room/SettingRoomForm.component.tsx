@@ -55,7 +55,7 @@ const SettingRoomForm = ({
             <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <User2 color={"#4240C1"} size={28} />
+                  <User2 className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
                   PLAYERS
@@ -92,7 +92,7 @@ const SettingRoomForm = ({
             <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <Trophy color={"#4240C1"} size={28} />
+                  <Trophy className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
                   ROUND
@@ -132,7 +132,7 @@ const SettingRoomForm = ({
             <FormItem className="flex justify-between w-full md:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
-                  <Eye color={"#4240C1"} size={28} />
+                  <Eye className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
                   VISIBLE
@@ -157,7 +157,7 @@ const SettingRoomForm = ({
             <FormItem className="flex flex-col items-start w-full text-slate-400 gap-2">
               <FormLabel className="flex items-center gap-3 mt-4">
                 <div>
-                  <Globe color={"#4240C1"} size={28} />
+                  <Globe className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
                   LANGUAGE
