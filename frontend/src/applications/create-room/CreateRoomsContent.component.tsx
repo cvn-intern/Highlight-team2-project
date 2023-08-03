@@ -29,6 +29,7 @@ import { WordsCollection } from "@/shared/types/wordsCollection";
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
 const DEFAULT_THEME = 1;
+const DEFAULT_LANGUAGE = "all";
 
 type Theme = {
   id: number;
@@ -41,6 +42,7 @@ const formSchema = z.object({
   visible: z.boolean(),
   round: z.string().nonempty(),
   theme: z.number(),
+  language: z.string().nonempty(),
 });
 
 const CreateRoomsContent = () => {
@@ -48,15 +50,16 @@ const CreateRoomsContent = () => {
     []
   );
   const [type, setType] = useState(0);
-  const [languageCode, setLanguageCode] = useState("en");
+  const [languageCode, setLanguageCode] = useState("all");
   const fetchWordsCollection = async (type: number, language_code: string) => {
     return await wordCollectionService.getWordCollections(type, language_code);
   };
   useEffect(() => {
     (async () => {
       const { data } = await fetchWordsCollection(type, languageCode);
-      console.log(data);
       setWordsCollections(data);
+      // console.log(type, languageCode);
+      console.log(data);
     })();
   }, [type, languageCode]);
   ////////////////////////////////////////////////
@@ -72,6 +75,7 @@ const CreateRoomsContent = () => {
       round: DEFAULT_ROUND,
       visible: false,
       theme: DEFAULT_THEME,
+      language: DEFAULT_LANGUAGE,
     },
   });
 
@@ -84,16 +88,18 @@ const CreateRoomsContent = () => {
       const players = parseInt(form.getValues("players"));
       const round = parseInt(form.getValues("round"));
       const visible = form.getValues("visible");
+      const languageCode = form.getValues("language");
       const theme = selectedThemeId;
 
-      const { data: createRoomResponse } = await roomService.createRoom(
-        players,
-        theme,
-        round,
-        DEFAULT_ROOM_TIME,
-        visible
-      );
-      handleJoinNewCreateRoom(createRoomResponse.code_room);
+      console.log(languageCode);
+      // const { data: createRoomResponse } = await roomService.createRoom(
+      //   players,
+      //   theme,
+      //   round,
+      //   DEFAULT_ROOM_TIME,
+      //   visible
+      // );
+      // handleJoinNewCreateRoom(createRoomResponse.code_room);
     } catch (error: any) {
       error;
       useToaster({
@@ -142,7 +148,12 @@ const CreateRoomsContent = () => {
             1. SETTINGS
           </p>
           <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
-            <SettingRoomForm handleSubmit={handleSubmit} form={form} />
+            <SettingRoomForm
+              handleSubmit={handleSubmit}
+              form={form}
+              languageCode={languageCode}
+              setLanguageCode={setLanguageCode}
+            />
           </div>
         </div>
 
