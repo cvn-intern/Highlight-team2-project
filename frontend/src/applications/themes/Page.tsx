@@ -14,6 +14,8 @@ import _ from "lodash";
 import { Circle, Inbox, LogOut, Plus, Settings, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
+const MAX_LENGTH_INPUT = 20;
+
 type Level = "hard" | "medium" | "easy";
 interface checkboxStyle {
     id: string,
@@ -28,11 +30,22 @@ const CreateThemePage = () => {
             setAddedWords(addedWords => [...addedWords, newWord.toLowerCase()]);
             setNewWord("");
             setAddedWordsLevel([...addedWordsLevel, level]);
+            switch (level) {
+                case "hard":
+                    setHardWord(hardWord + 1);
+                    break;
+                case "medium":
+                    setMediumWord(mediumWord + 1);
+                    break;
+                default:
+                    setEasyWord(easyWord + 1)
+                    break;
+            }
         }
     }
-    
+
     const [hardWord, setHardWord] = useState(0);
-    const [mediumWord, setMediumdWord] = useState(0);
+    const [mediumWord, setMediumWord] = useState(0);
     const [easyWord, setEasyWord] = useState(0);
     const [newWord, setNewWord] = useState("");
     const [noNewWord, setNoNewWord] = useState(true)
@@ -111,13 +124,36 @@ const CreateThemePage = () => {
                                     </SelectContent>
                                 </Select>
                             </div>
+                            <div >
+                                <p className="text-2xl mb-4 font-semibold text-sky-600">2. LANGUAGE</p>
+                                <Select defaultValue="en">
+                                    <SelectTrigger className="w-full border-slate-300 rounded-xl">
+                                        <SelectValue placeholder="Select language..." />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-xl">
+                                        <SelectGroup>
+                                            <SelectLabel>Select a language...</SelectLabel>
+                                            <SelectItem value="en">English</SelectItem>
+                                            <SelectItem value="vi">Vietnamese</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                             <div className="flex flex-col">
-                                <p className="text-2xl mb-8 font-semibold text-sky-600">2. CREATE WORDS</p>
+                                <p className="text-2xl mb-8 font-semibold text-sky-600">3. CREATE WORDS</p>
                                 <p className="text-slate-400 mb-4">Add new words to the list</p>
                                 <div className="flex gap-x-4 mb-8">
-                                    <Input value={newWord} className="rounded-xl"
-                                        onKeyDown={({ key }) => { handleEnterWord(key, wordLevel) }}
-                                        onChange={({ target: { value } }) => { setNewWord(value) }} />
+                                    <div>
+                                        <Input maxLength={MAX_LENGTH_INPUT}
+                                            value={newWord}
+                                            className="rounded-xl"
+                                            onKeyDown={({ key }) => { handleEnterWord(key, wordLevel) }}
+                                            onChange={({ target: { value } }) => { setNewWord(value) }} />
+                                        <span className="relative text-[10px] text-slate-400 bottom-8 left-20 -translate-y-1/2">
+                                            {10} chars left
+                                        </span>
+                                    </div>
+
                                     <Button onClick={() => { handleEnterWord("Enter", wordLevel) }}
                                         className="rounded-xl disabled:bg-slate-500 bg-[#1B67AD] text-white"
                                         disabled={newWord == ""} variant="opacityHover">
@@ -144,7 +180,7 @@ const CreateThemePage = () => {
                                 </RadioGroup>
                             </div>
                         </div>
-                        <div className="bg-white w-full rounded-2xl p-5 min-h-[45vh]">
+                        <div className="bg-white w-full rounded-2xl p-5 min-h-[55vh]">
                             <div className="flex justify-between mb-5">
                                 <div className="w-full flex justify-between">
                                     <div className="text-xl text-slate-500 font-bold flex items-center">{addedWords.length} WORDS CREATED</div>
@@ -164,7 +200,7 @@ const CreateThemePage = () => {
                                     <InputWithSearchIcon className="rounded-xl w-[60%]" placeholder="Search..." />
                                 </div>
                             </div>
-                            <div className={cn("bg-slate-300 w-full h-full px-5 text-slate-500 rounded-2xl", noNewWord?"py-24":"py-3")}>
+                            <div className={cn("bg-slate-300 w-full h-full px-5 text-slate-500 rounded-2xl", noNewWord ? "py-32" : "py-3")}>
                                 <div className={cn("flex flex-col items-center", !noNewWord ? "hidden" : "")}>
                                     <Inbox size={48} />
                                     <p className="text-2xl font-bold text-center">
@@ -172,8 +208,13 @@ const CreateThemePage = () => {
                                     </p>
                                 </div>
                                 <ScrollArea className={cn("h-[300px] w-full rounded-md", !noNewWord ? "" : "hidden")}>
-                                    <div className="grid gap-2 grid-cols-8">
-                                        {addedWords.map((word, index) => <Badge variant={addedWordsLevel[index]} >{word}</Badge>)}
+                                    <div className="flex flex-wrap gap-3">
+                                        {addedWords.map(
+                                            (word, index) => <Badge
+                                                className="text-lg"
+                                                variant={addedWordsLevel[index]}>
+                                                {word}
+                                            </Badge>)}
                                     </div>
                                 </ScrollArea>
                             </div>
