@@ -15,7 +15,7 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
-  async getWordsCollectionByType(type: number, creator_id: number): Promise<WordsCollection[]> {
+  async getWordsCollectionByQuery(type: number, language_code: string, creator_id: number): Promise<WordsCollection[]> {
     const queryBuilder = this.createQueryBuilder('words_collection').leftJoinAndMapOne(
       'words_collection.theme',
       Theme,
@@ -32,6 +32,9 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
       queryBuilder.where('words_collection.is_created_by_system = :is_created_by_system', {
         is_created_by_system: true,
       });
+    }
+    if (language_code != 'all') {
+      queryBuilder.andWhere('words_collection.language_code = :language_code', { language_code });
     }
     const words_collections = await queryBuilder.getMany();
     return words_collections;

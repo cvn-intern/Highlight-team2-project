@@ -27,9 +27,14 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getWordsCollectionByType(@Query('type') type: number, @Res() response: Response, @IdUser() idUser: number) {
+  async getWordsCollectionByType(
+    @Query('type') type: number,
+    @Query('language_code') language_code: string,
+    @Res() response: Response,
+    @IdUser() idUser: number,
+  ) {
     try {
-      let wordsCollection = await this.wordsCollectionService.getWordsCollectionByType(type, idUser);
+      let wordsCollection = await this.wordsCollectionService.getWordsCollectionByQuery(type, language_code, idUser);
 
       wordsCollection = wordsCollection.map((wordsCollection: any) => {
         wordsCollection = {
