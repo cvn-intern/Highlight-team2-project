@@ -55,8 +55,7 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
     default:
       return (
         <>
-          <p className="text-[3rem] text-sky-700">INTERVAL</p>
-          <p className="text-xl text-slate-400">Take a while to relax</p>
+          <p className="text-[3rem] text-sky-700">REFRESHING ROUND</p>
         </>
       );
   }

@@ -54,7 +54,6 @@ export class DrawGateway extends SocketGateway {
       const [roomId] = Array.from(item[1].values());
       return !!roomId;
     });
-
     if (listClients.length > 1 && inRoomClient) {
       client.broadcast.to(inRoomClient[0]).emit(GET_CANVAS_STATE, client.id);
     }

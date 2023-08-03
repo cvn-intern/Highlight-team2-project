@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) { }
+  ) {}
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({

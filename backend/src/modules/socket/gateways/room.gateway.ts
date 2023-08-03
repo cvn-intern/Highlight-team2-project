@@ -55,6 +55,7 @@ export class RoomGateway extends SocketGateway {
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       const messageContent: Chat = {
+        socketId: client.id,
         user: client.user.nickname,
         type: JOIN_ROOM_TYPE,
         message: JOIN_ROOM_CONTENT,
@@ -100,6 +101,8 @@ export class RoomGateway extends SocketGateway {
     await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
     await this.socketService.checkAndEmitToHostRoom(this.server, room);
 
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
+
     const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
     if (!roomRound) return;
 
@@ -110,7 +113,6 @@ export class RoomGateway extends SocketGateway {
     }
 
     await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, data.userId, this.server, room);
-    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
 
   @SubscribeMessage(LEAVE_ROOM_CHANNEL)
@@ -143,6 +145,8 @@ export class RoomGateway extends SocketGateway {
 
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
 
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
+
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
       if (!roomRound) return;
 
@@ -153,7 +157,6 @@ export class RoomGateway extends SocketGateway {
       }
 
       await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

@@ -1,9 +1,8 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { WordsCollection } from './wordsCollection.entity';
 import { WordsCollectionRepository } from './wordsCollection.repository';
 import { WordService } from '../word/word.service';
 import { WordType } from './dto/createWordsCollection';
-import { response } from 'express';
 
 @Injectable()
 export class WordsCollectionService {
