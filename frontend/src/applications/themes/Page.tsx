@@ -3,31 +3,45 @@ import MainLayout from "@/shared/components/MainLayout";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { InputWithSearchIcon } from "@/shared/components/shadcn-ui/InputWithSearchIcon";
+import { Badge } from "@/shared/components/shadcn-ui/badge";
 import { Label } from "@/shared/components/shadcn-ui/label";
 import { RadioGroup, RadioGroupIndicator, RadioGroupItem } from "@/shared/components/shadcn-ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import { cn } from "@/shared/lib/utils";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 
 import _ from "lodash";
 import { Circle, Inbox, LogOut, Plus, Settings, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";
 
+type Level = "hard" | "medium" | "easy";
+interface checkboxStyle {
+    id: string,
+    value: Level,
+    label: string,
+    color: string
+}
+
 const CreateThemePage = () => {
-    const handleEnterWord = (key: string = "Enter") => {
+    const handleEnterWord = (key: string = "Enter", level: Level) => {
         if (key == "Enter" && newWord != "") {
-            setAddedWords(addedWords => [...addedWords, newWord]);
+            setAddedWords(addedWords => [...addedWords, newWord.toLowerCase()]);
             setNewWord("");
-            console.log(addedWords);
+            setAddedWordsLevel([...addedWordsLevel, level]);
         }
     }
-    const [numberOfWords, setnumberOfWords] = useState(0);
+    
     const [hardWord, setHardWord] = useState(0);
     const [mediumWord, setMediumdWord] = useState(0);
     const [easyWord, setEasyWord] = useState(0);
     const [newWord, setNewWord] = useState("");
+    const [noNewWord, setNoNewWord] = useState(true)
     const [addedWords, setAddedWords] = useState<string[]>([]);
+    const [addedWordsLevel, setAddedWordsLevel] = useState<Level[]>([]);
+    const [wordLevel, setWordLevel] = useState<Level>("easy")
 
-    const checkboxStyle = [
+
+    const checkboxStyleList: checkboxStyle[] = [
         {
             id: "easy",
             value: "easy",
@@ -47,7 +61,12 @@ const CreateThemePage = () => {
             color: "fill-red-500"
         }
     ]
-    
+
+    useEffect(
+        () => { setNoNewWord(addedWords.length == 0) },
+        [addedWords.length == 0]
+    )
+
     return (
         <MainLayout>
             <div className="flex flex-col items-center justify-center w-full">
@@ -97,9 +116,9 @@ const CreateThemePage = () => {
                                 <p className="text-slate-400 mb-4">Add new words to the list</p>
                                 <div className="flex gap-x-4 mb-8">
                                     <Input value={newWord} className="rounded-xl"
-                                        onKeyDown={({ key }) => { handleEnterWord(key) }}
+                                        onKeyDown={({ key }) => { handleEnterWord(key, wordLevel) }}
                                         onChange={({ target: { value } }) => { setNewWord(value) }} />
-                                    <Button onClick={() => { handleEnterWord() }}
+                                    <Button onClick={() => { handleEnterWord("Enter", wordLevel) }}
                                         className="rounded-xl disabled:bg-slate-500 bg-[#1B67AD] text-white"
                                         disabled={newWord == ""} variant="opacityHover">
                                         <Plus size={24} strokeWidth={3} className="mr-1" />
@@ -107,11 +126,14 @@ const CreateThemePage = () => {
                                     </Button>
                                 </div>
 
-                                <RadioGroup defaultValue={checkboxStyle[0].value}
+                                <RadioGroup defaultValue={checkboxStyleList[0].value}
                                     className="flex w-full justify-between px-3">
-                                    {checkboxStyle.map((item) => (
+                                    {checkboxStyleList.map((item) => (
                                         <div className="flex items-center space-x-2">
-                                            <RadioGroupItem value={item.value} id={item.id}>
+                                            <RadioGroupItem
+                                                value={item.value}
+                                                id={item.id}
+                                                onClick={() => { setWordLevel(item.value) }}>
                                                 <RadioGroupIndicator>
                                                     <Circle className={cn("h-full w-full text-current", item.color)} />
                                                 </RadioGroupIndicator>
@@ -125,7 +147,7 @@ const CreateThemePage = () => {
                         <div className="bg-white w-full rounded-2xl p-5 min-h-[45vh]">
                             <div className="flex justify-between mb-5">
                                 <div className="w-full flex justify-between">
-                                    <div className="text-xl text-slate-500 font-bold flex items-center">{numberOfWords} WORDS CREATED</div>
+                                    <div className="text-xl text-slate-500 font-bold flex items-center">{addedWords.length} WORDS CREATED</div>
                                     <div className="flex gap-x-5">
                                         {_.zip(
                                             [easyWord, mediumWord, hardWord],
@@ -142,11 +164,18 @@ const CreateThemePage = () => {
                                     <InputWithSearchIcon className="rounded-xl w-[60%]" placeholder="Search..." />
                                 </div>
                             </div>
-                            <div className="bg-slate-300 w-full h-full flex flex-col items-center px-5 py-24 text-slate-500 rounded-2xl">
-                                <Inbox size={48} />
-                                <p className="text-2xl font-bold text-center">
-                                    NO WORDS WAS FOUND. PLEASE CREATE NEW WORDS FOR THIS THEME.
-                                </p>
+                            <div className={cn("bg-slate-300 w-full h-full px-5 text-slate-500 rounded-2xl", noNewWord?"py-24":"py-3")}>
+                                <div className={cn("flex flex-col items-center", !noNewWord ? "hidden" : "")}>
+                                    <Inbox size={48} />
+                                    <p className="text-2xl font-bold text-center">
+                                        NO WORDS WAS FOUND. PLEASE CREATE NEW WORDS FOR THIS THEME.
+                                    </p>
+                                </div>
+                                <ScrollArea className={cn("h-[300px] w-full rounded-md", !noNewWord ? "" : "hidden")}>
+                                    <div className="grid gap-2 grid-cols-8">
+                                        {addedWords.map((word, index) => <Badge variant={addedWordsLevel[index]} >{word}</Badge>)}
+                                    </div>
+                                </ScrollArea>
                             </div>
                         </div>
                     </div>
