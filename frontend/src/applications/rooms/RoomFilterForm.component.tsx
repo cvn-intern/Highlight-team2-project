@@ -6,13 +6,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/shared/components/shadcn-ui/form";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
-import { Input } from "@/shared/components/shadcn-ui/Input";
-import { Book, Globe, Search } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -20,13 +13,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/shared/components/shadcn-ui/select";
+import { z } from "zod";
+import { debounce } from "lodash";
+import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
+import { Input } from "@/shared/components/shadcn-ui/Input";
+import { Book, Globe, Search } from "lucide-react";
 import useToaster from "@/shared/hooks/useToaster";
 import roomService from "@/shared/services/roomService";
 import RoomsTitle from "@/shared/assets/rooms-title.png";
 import themeService from "@/shared/services/themeService";
-import { debounce } from "lodash";
-
-
 
 interface Theme {
     id: number;
@@ -210,12 +208,17 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                             }}
                                             defaultValue={field.value}
                                         >
-                                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
-                                                <SelectValue placeholder="Language" />
+                                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl overflow-hidden">
+                                                <span
+                                                    className="w-full h-full inline-block overflow-hidden text-ellipsis"
+                                                    style={{ maxWidth: '100%', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                                >
+                                                    <SelectValue placeholder="Language" />
+                                                </span>
                                             </SelectTrigger>
-                                            <SelectContent className="text-lg font-bold border-none ">
-                                                <SelectItem value="en">EN</SelectItem>
-                                                <SelectItem value="vi">VI</SelectItem>
+                                            <SelectContent className="text-lg font-bold border-none">
+                                                <SelectItem value="en">English</SelectItem>
+                                                <SelectItem value="vi">Tiếng Việt</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

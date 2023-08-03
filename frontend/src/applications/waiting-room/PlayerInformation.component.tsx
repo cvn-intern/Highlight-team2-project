@@ -4,15 +4,18 @@ import GoogleLoginButton from "../../shared/components/GoogleLoginButton";
 import CustomAvatar from "../home/CustomAvatar.component";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
+import GoogleLogoutButton from "@/shared/components/GoogleLogoutButton";
 
 type PlayerInfomationProps = {
   nickname: string;
   setNickname: (nickname: string) => void;
 };
 
+
 const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
   const { user } = useUserStore();
 
+  const numberOfCharactersLeft = MAX_LENGHT_OF_NICKNAME - nickname.length;
   return (
     <div className="relative flex flex-col items-center justify-center gap-5">
       <p className="text-xl font-medium bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent ">
@@ -20,17 +23,22 @@ const PlayerInfomation = ({ nickname, setNickname }: PlayerInfomationProps) => {
       </p>
       <div className="relative w-fit">
         <CustomAvatar />
+        <GoogleLogoutButton />
       </div>
-      
-      <Input
-        className={
-          "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10 w-[60%]"
-        }
-        value={nickname}
-        maxLength={MAX_LENGHT_OF_NICKNAME}
-        onChange={(e) => setNickname(e.target.value)}
-      />
+      <div className="relative">
+        <Input
+          className={
+            "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
+          }
+          value={nickname}
+          maxLength={MAX_LENGHT_OF_NICKNAME}
+          onChange={(e) => setNickname(e.target.value)}
+        />
+        <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
+          {numberOfCharactersLeft} chars left
+        </span>
 
+      </div>
       {user?.is_guest && (
         <>
           <DividerWithText
