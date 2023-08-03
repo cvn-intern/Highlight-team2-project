@@ -4,10 +4,10 @@ import { Button } from "@/shared/components/shadcn-ui/Button";
 import { Input } from "@/shared/components/shadcn-ui/Input";
 import { InputWithSearchIcon } from "@/shared/components/shadcn-ui/InputWithSearchIcon";
 import { Label } from "@/shared/components/shadcn-ui/label";
-import { RadioGroup, RadioGroupItem } from "@/shared/components/shadcn-ui/radio-group";
+import { RadioGroup, RadioGroupIndicator, RadioGroupItem } from "@/shared/components/shadcn-ui/radio-group";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/shared/components/shadcn-ui/select";
 import { cn } from "@/shared/lib/utils";
-import { RadioGroupIndicator } from "@radix-ui/react-radio-group";
+
 import _ from "lodash";
 import { Circle, Inbox, LogOut, Plus, Settings, Triangle } from "lucide-react";
 import { useEffect, useState } from "react";

@@ -9,4 +9,5 @@ type MessageReceiver = {
   user: string;
   type: number;
   message: string;
+  socketId?: string
 }

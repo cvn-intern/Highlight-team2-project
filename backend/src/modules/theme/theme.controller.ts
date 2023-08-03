@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, ValidationPipe, UseGuards, Query } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, ValidationPipe, UseGuards } from '@nestjs/common';
 import { ThemeService } from './theme.service';
 import { CreateThemeDTO } from './dto/createTheme';
 import { Response } from 'express';

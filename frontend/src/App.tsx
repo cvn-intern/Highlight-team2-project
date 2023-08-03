@@ -1,17 +1,18 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PlayingPage from "@/applications/play/Page";
+import { ToastContainer } from "react-toastify";
 import { Suspense, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import authService from "@/shared/services/authService";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { IUser, useUserStore } from "@/shared/stores/userStore";
+import Providers from "./Providers";
 import JWTManager from "@/shared/lib/jwt";
 import Homepage from "@/applications/home/Page";
-import Providers from "./Providers";
-import NotFoundPage from "./shared/pages/NotFoundPage";
-import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
-import { ToastContainer } from "react-toastify";
 import RoomsPage from "@/applications/rooms/Page";
 import CreateThemePage from "./applications/themes/Page";
+import PlayingPage from "@/applications/play/Page";
+import NotFoundPage from "./shared/pages/NotFoundPage";
+import authService from "@/shared/services/authService";
+import CreateRoom from "./applications/create-room/Page";
+import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -50,6 +51,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/rooms/create-room" element={<CreateRoom />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
             <Route path="/rooms/create-room/new-theme" element={<CreateThemePage />} />

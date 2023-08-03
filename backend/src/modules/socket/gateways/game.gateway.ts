@@ -1,17 +1,15 @@
 import { MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import {
+  END_GAME,
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
-  GAME_PROGRESS_CHANNEL,
-  GAME_REFRESH_CHANNEL,
+  GAME_PRESENT_PROGRESS_CHANNEL,
+  GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
   GAME_START_CHANNEL,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
-  MAX_PROGRESS_PERCENTAGE,
-  MIN_PROGRESS_PERCENTAGE,
-  TIME_PERSTEP,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
 
@@ -24,6 +22,10 @@ export class GameGateway extends SocketGateway {
 
     let roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
     if (roundOfRoom) {
+      if (roundOfRoom.current_round + 1 > room.number_of_round) {
+        return this.server.to(room.code_room).emit(END_GAME, true);
+      }
+
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
       roundOfRoom = await this.roomRoundService.updateRoomRound({
         ...roundOfRoom,
@@ -54,19 +56,16 @@ export class GameGateway extends SocketGateway {
     this.server.in(codeRoom).emit(GAME_START_CHANNEL);
   }
 
-  @SubscribeMessage(GAME_PROGRESS_CHANNEL)
-  async handleGameProgress(@MessageBody() data: GameProgressUpdate) {
-    const number_percentage_to_decrease_per_step =
-      (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / data.maximumTimeInMiliSeconds;
+  @SubscribeMessage(GAME_PRESENT_PROGRESS_CHANNEL)
+  async handleSendPresentProgress(@MessageBody() data: GamePresentProgress) {
+    const { codeRoom, ...rest } = data;
+    this.server.in(codeRoom).emit(GAME_PRESENT_PROGRESS_CHANNEL, rest);
+  }
 
-    this.socketService.setProgressInterval(
-      MIN_PROGRESS_PERCENTAGE,
-      number_percentage_to_decrease_per_step,
-      TIME_PERSTEP,
-      (progress: number) => {
-        this.server.in(data.codeRoom).emit(GAME_PROGRESS_CHANNEL, progress);
-      },
-    );
+  @SubscribeMessage(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL)
+  async handleGameProgress(@MessageBody() data: GamePresentProgress & { socketId: string }) {
+    const { socketId, codeRoom: _, ...rest } = data;
+    this.server.to(socketId).emit(GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL, rest);
   }
 
   @SubscribeMessage(GAME_UPDATE_RANKING_CHANNEL)
@@ -101,10 +100,5 @@ export class GameGateway extends SocketGateway {
       this.roomService.updateRoomStatus(room, GAME_WAIT_PLAYERS_CHANNEL),
       this.roomRoundService.deleteRoomRound(room.id),
     ]);
-  }
-
-  @SubscribeMessage(GAME_REFRESH_CHANNEL)
-  async handleRefresh() {
-    this.socketService.clearProgressInterval();
   }
 }

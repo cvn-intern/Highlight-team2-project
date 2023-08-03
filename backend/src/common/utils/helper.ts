@@ -1,5 +1,5 @@
 import { ANSWER_APPROXIMATELY, ANSWER_CORRETLY, ANSWER_WRONG, MINIMUM_CHAR_WRONG } from 'src/modules/socket/constant';
-const fs = require('fs');
+import * as fs from 'fs';
 
 const PATH_FOLDER_AVATAR = 'src/public/avatars';
 

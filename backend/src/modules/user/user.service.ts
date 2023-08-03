@@ -42,8 +42,7 @@ export class UserService {
     }
 
     const isAvatarIndefault = await this.checkAvatarInDefault(user.avatar);
-
-    if (!isAvatarIndefault) {
+    if (!user.provider && !isAvatarIndefault) {
       throw new HttpException('Avatar is not in default avatars!', HttpStatus.BAD_REQUEST);
     }
 
@@ -94,7 +93,7 @@ export class UserService {
 
   async isGuest(userId: number): Promise<boolean> {
     const user: User = await this.getUserById(userId);
-
+    if (!user) return false;
     return user.is_guest;
   }
 
