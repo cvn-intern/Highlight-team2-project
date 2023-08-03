@@ -11,6 +11,7 @@ import PlayingPage from "@/applications/play/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import authService from "@/shared/services/authService";
 import CreateRoom from "./applications/create-room/Page";
+import CreateTheme from "./applications/themes/Page";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 
 function App() {
@@ -41,7 +42,6 @@ function App() {
     initPlayer();
   }, []);
 
-
   if (loading) return null;
 
   return (
@@ -51,6 +51,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/rooms/create-room" element={<CreateRoom />} />
+            <Route path="/rooms/create-theme" element={<CreateTheme />} />
             <Route path="/:codeRoom" element={<PlayingPage />} />
             <Route path="/rooms" element={<RoomsPage />} />
             <Route

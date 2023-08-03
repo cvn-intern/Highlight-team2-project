@@ -3,7 +3,6 @@
 import ThemeCard from "./ThemeCard.component";
 import useToaster from "@/shared/hooks/useToaster";
 import DoorIcon from "@/shared/assets/door-icon.svg";
-import roomService from "@/shared/services/roomService";
 import themeService from "@/shared/services/themeService";
 import wordCollectionService from "@/shared/services/wordCollectionService";
 import SettingRoomForm from "./SettingRoomForm.component";
@@ -13,7 +12,6 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DEFAULT_ROOM_TIME } from "@/shared/constants";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { ScrollArea } from "@/shared/components/shadcn-ui/scroll-area";
@@ -144,10 +142,7 @@ const CreateRoomsContent = () => {
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
         <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
-          <p className="text-2xl font-balsamiq text-[#1B67AD] mt-5">
-            1. SETTINGS
-          </p>
-          <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[80%]">
+          <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[91.5%]">
             <SettingRoomForm
               handleSubmit={handleSubmit}
               form={form}
@@ -159,9 +154,7 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">
-              2. THEME
-            </p>
+            <p className="text-2xl font-balsamiq text-[#1B67AD] mt-1">THEME</p>
             <Select
               value={type.toString()}
               onValueChange={(value) => {
