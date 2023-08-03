@@ -43,6 +43,8 @@ export class ChatGateway extends SocketGateway {
 
         return this.server.to(client.id).emit(ROOM_CHAT, messageContent);
       }
+
+      return this.server.to(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
     } catch (error) {
       this.logger.error(error);
     }
