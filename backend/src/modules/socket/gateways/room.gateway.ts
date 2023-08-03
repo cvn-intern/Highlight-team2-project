@@ -101,8 +101,6 @@ export class RoomGateway extends SocketGateway {
     await this.roomUserService.deleteRoomUser(room.id, data.userId);
     await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
     await this.socketService.checkAndEmitToHostRoom(this.server, room);
-
-
     await this.socketService.sendListParticipantsInRoom(this.server, room);
 
     const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
@@ -115,7 +113,7 @@ export class RoomGateway extends SocketGateway {
       return;
     }
 
-    await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
+    await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, data.userId, this.server, room);
   }
 
   @SubscribeMessage(LEAVE_ROOM_CHANNEL)

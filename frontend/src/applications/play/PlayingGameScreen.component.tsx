@@ -157,7 +157,7 @@ export default function PlayingGameScreen() {
 
     socket?.on(GAME_NEXT_DRAWER_IS_OUT, () => {
       useToaster({
-        message: 'Next drawer is out. The round restarts!',
+        message: 'Next drawer is out.',
         type: 'warning',
         icon: '😅',
         bodyClassName: 'text-sm font-semibold',
