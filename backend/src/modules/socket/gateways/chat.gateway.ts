@@ -18,7 +18,6 @@ export class ChatGateway extends SocketGateway {
   @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(@MessageBody() msgBody: MessageBodyType, @ConnectedSocket() client: SocketClient) {
     try {
-      console.log(msgBody)
       const roomId = extractIdRoom(msgBody.codeRoom);
       const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
       const ROOM_CHAT = `${msgBody.codeRoom}-chat`;

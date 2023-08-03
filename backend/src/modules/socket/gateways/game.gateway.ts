@@ -107,7 +107,6 @@ export class GameGateway extends SocketGateway {
 
   @SubscribeMessage(RESET_GAME)
   async handleResetGame(@MessageBody() codeRoom: string) {
-    console.log(codeRoom);
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);

@@ -51,18 +51,13 @@ export class RoomService {
   }
 
   async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
-    const isExisted: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+    const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
 
-    if (!isExisted) {
+    if (!room) {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
     }
 
-    const room = await this.roomRepository.getInformationRoom(codeRoom);
-
-    return {
-      ...room,
-      host_id: isExisted.host_id,
-    };
+    return room;
   }
 
   async checkUserInRoom(idUser: number, idRoom: number): Promise<boolean> {

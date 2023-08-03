@@ -51,7 +51,6 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
 
       await this.roomUserService.deleteRoomUser(room.id, user.id);
       await this.socketService.removeClientDisconnection(user.id);
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
       
       if (user.id === room.host_id) {
         room = await this.roomService.changeHost(room.code_room);
@@ -65,6 +64,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
         this.server.in(codeRoom).emit(RESET_GAME);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
         return;
       }
 
