@@ -7,7 +7,7 @@ type Props = {
 
 export default function WordsContainer({ wordsList, handleDeleteWord }: Props) {
   return (
-    <div className="flex gap-x-8 gap-y-6 flex-wrap">
+    <div className="flex flex-wrap justify-center gap-x-8 gap-y-6">
       {wordsList.map((word, index) => {
         return (
           <WordElement

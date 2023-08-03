@@ -1,12 +1,11 @@
 import ThemeCard from "./ThemeCard.component";
 import useToaster from "@/shared/hooks/useToaster";
 import DoorIcon from "@/shared/assets/door-icon.svg";
-import themeService from "@/shared/services/themeService";
 import roomService from "@/shared/services/roomService";
 import wordCollectionService from "@/shared/services/wordCollectionService";
 import SettingRoomForm from "./SettingRoomForm.component";
 import { z } from "zod";
-import { LogOut, PlusCircle } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -144,7 +143,7 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="text-2xl font-balsamiq text-headerBlueColor mt-1">
+            <p className="mt-1 text-2xl font-balsamiq text-headerBlueColor">
               THEME
             </p>
             <div className="flex gap-x-2">
@@ -170,7 +169,7 @@ const CreateRoomsContent = () => {
                   className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
                   onClick={handleCreateThemeClick}
                 >
-                  <p className="font-bold text-white text-base md:text-lg">
+                  <p className="text-base font-bold text-white md:text-lg">
                     CREATE THEME
                   </p>
                 </Button>

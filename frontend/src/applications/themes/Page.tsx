@@ -4,9 +4,7 @@ import MainLayout from "@/shared/components/MainLayout";
 import CreateThemeHeader from "./CreateThemeHeader.component";
 import CreateThemeContent from "./CreateThemeContent.component";
 
-type Props = {};
-
-export default function Page({}: Props) {
+export default function Page() {
   return (
     <MainLayout>
       <div className="flex-col grid lg:w-[90%]">

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import themeService from "@/shared/services/themeService";
@@ -18,16 +18,43 @@ const CreateThemeContent = () => {
   );
   const [word, setWord] = useState("");
   const [wordsList, setWordsList] = useState<WordType[]>([]);
+
+  const totalWords = useMemo(() => wordsList.length, [wordsList]);
+  const totalEasyWords = useMemo(
+    () =>
+      wordsList.reduce((total, currentWord) => {
+        return currentWord.difficulty === "easy" ? total + 1 : total;
+      }, 0),
+    [wordsList]
+  );
+  const totalMediumWords = useMemo(
+    () =>
+      wordsList.reduce((total, currentWord) => {
+        return currentWord.difficulty === "medium" ? total + 1 : total;
+      }, 0),
+    [wordsList]
+  );
+  const totalHardWords = useMemo(
+    () => totalWords - totalEasyWords - totalMediumWords,
+    [totalWords, totalEasyWords, totalMediumWords]
+  );
+
+  const thereIsWordIsExistedInWordsList = useMemo(
+    () => wordsList.some((wordObj) => wordObj.word === word),
+    [word, wordsList]
+  );
+
   const [search, setSearch] = useState("");
+  // Side effects
   useEffect(() => {
     (async () => {
       const { data } = await themeService.getThemes();
       setThemes(data);
     })();
   }, []);
-  useEffect(() => {
-    console.log({ themeId, difficulty, word });
-  }, [themeId, difficulty, word]);
+  // useEffect(() => {
+  //   console.log({ themeId, difficulty, word });
+  // }, [themeId, difficulty, word]);
   // Handlers
   const handleDeleteWord = (index: number) => {
     const newWordsList = [...wordsList];
@@ -43,6 +70,7 @@ const CreateThemeContent = () => {
     newWordsList.push({ word, difficulty });
     setWordsList(newWordsList);
   };
+
   return (
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
@@ -53,30 +81,37 @@ const CreateThemeContent = () => {
           difficulty={difficulty}
           setDifficulty={setDifficulty}
           word={word}
+          thereIsWordIsExistedInWordsList={thereIsWordIsExistedInWordsList}
           setWord={setWord}
           handleAddWord={handleAddWord}
         />
-        <div className="flex flex-col items-center w-full lg:h-full gap-y-4 bg-white rounded-2xl p-4">
+        <div className="flex flex-col items-center w-full p-4 bg-white lg:h-full gap-y-4 rounded-2xl">
           <div className="flex justify-between w-full mt-1 gap-x-5 ">
             <div className="flex justify-between">
-              <div className="flex gap-2 items-center">
-                <p className="uppercase text-gray-400 font-medium">
-                  0 words created
+              <div className="flex items-center gap-2">
+                <p className="font-medium text-gray-400 uppercase">
+                  {totalWords} words created
                 </p>
                 {/* Easy */}
                 <div className="flex items-center gap-[2px]">
                   <div className="h-[12px] w-[8px] rounded-[5px] bg-green-600"></div>
-                  <span className="text-gray-400 font-medium">0</span>
+                  <span className="font-medium text-gray-400">
+                    {totalEasyWords}
+                  </span>
                 </div>
                 {/* Medium */}
                 <div className="flex items-center gap-[2px]">
                   <div className="h-[12px] w-[8px] rounded-[5px] bg-yellow-600"></div>
-                  <span className="text-gray-400 font-medium">0</span>
+                  <span className="font-medium text-gray-400">
+                    {totalMediumWords}
+                  </span>
                 </div>
                 {/* Hard */}
                 <div className="flex items-center gap-[2px]">
                   <div className="h-[12px] w-[8px] rounded-[5px] bg-red-600"></div>
-                  <span className="text-gray-400 font-medium">0</span>
+                  <span className="font-medium text-gray-400">
+                    {totalHardWords}
+                  </span>
                 </div>
               </div>
             </div>
@@ -84,14 +119,14 @@ const CreateThemeContent = () => {
               <Search size={16} />
               <input
                 type="text"
-                className="placeholder:text-gray-400 placeholder:font-medium border-none outline-none leading-5"
+                className="leading-5 border-none outline-none placeholder:text-gray-400 placeholder:font-medium"
                 placeholder="search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
-          <div className="rounded-2xl bg-gray-300 flex-1 w-full p-4">
+          <div className="flex-1 w-full p-4 bg-gray-300 rounded-2xl">
             <WordsContainer
               wordsList={wordsList}
               handleDeleteWord={handleDeleteWord}

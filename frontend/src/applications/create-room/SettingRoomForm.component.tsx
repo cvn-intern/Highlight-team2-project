@@ -46,7 +46,7 @@ const SettingRoomForm = ({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="space-y-5 md:space-y-5 2xl:space-y-8 w-full flex flex-col items-center justify-stretch px-5"
+        className="flex flex-col items-center w-full px-5 space-y-5 md:space-y-5 2xl:space-y-8 justify-stretch"
       >
         <FormField
           control={form.control}
@@ -57,7 +57,7 @@ const SettingRoomForm = ({
                 <div>
                   <User2 className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
                   PLAYERS
                 </div>
               </FormLabel>
@@ -94,7 +94,7 @@ const SettingRoomForm = ({
                 <div>
                   <Trophy className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
                   ROUND
                 </div>
               </FormLabel>
@@ -134,7 +134,7 @@ const SettingRoomForm = ({
                 <div>
                   <Eye className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
                   VISIBLE
                 </div>
               </FormLabel>
@@ -154,12 +154,12 @@ const SettingRoomForm = ({
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-col items-start w-full text-slate-400 gap-2">
+            <FormItem className="flex flex-col items-start w-full gap-2 text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-4">
                 <div>
                   <Globe className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
                   LANGUAGE
                 </div>
               </FormLabel>
@@ -171,7 +171,7 @@ const SettingRoomForm = ({
                     field.onChange(value);
                   }}
                 >
-                  <SelectTrigger className="w-full rounded-xl md:text-lg font-bold border-2 text-slate-500">
+                  <SelectTrigger className="w-full font-bold border-2 rounded-xl md:text-lg text-slate-500">
                     <SelectValue placeholder="Themes Filter" />
                   </SelectTrigger>
                   <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">

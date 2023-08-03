@@ -21,6 +21,7 @@ type Props = {
   difficulty: "easy" | "medium" | "hard";
   setDifficulty: Dispatch<SetStateAction<"easy" | "medium" | "hard">>;
   word: string;
+  thereIsWordIsExistedInWordsList: boolean;
   setWord: Dispatch<SetStateAction<string>>;
   handleAddWord: (word: string, difficulty: "easy" | "medium" | "hard") => void;
 };
@@ -32,6 +33,7 @@ export default function SettingThemeForm({
   difficulty,
   setDifficulty,
   word,
+  thereIsWordIsExistedInWordsList,
   setWord,
   handleAddWord,
 }: Props) {
@@ -40,7 +42,7 @@ export default function SettingThemeForm({
     <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
         <div className="flex flex-col gap-2">
-          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
+          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
             1. THEME NAME
           </p>
           <Select
@@ -69,23 +71,31 @@ export default function SettingThemeForm({
         </div>
         {/* End theme name */}
         <div className="flex flex-col gap-2">
-          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
+          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
             2. LANGUAGE
           </p>
-          <div className="flex gap-4 text-xl font-balsamiq text-gray-400 mt-5">
+          <div className="flex gap-4 mt-5 text-xl text-gray-400 font-balsamiq">
             <Globe size={28} strokeWidth={2} color={"#1B67AD"} />
             {user?.language ? user?.language.toUpperCase() : "EN"}
           </div>
         </div>
         {/* End language */}
         <div className="flex flex-col gap-1">
-          <p className="text-2xl font-balsamiq text-headerBlueColor mt-5">
+          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
             3. CREATE WORDS
           </p>
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-gray-400 font-semibold">
-              Add new word to the list
-            </p>
+            {!thereIsWordIsExistedInWordsList && (
+              <p className="text-sm font-semibold text-gray-400">
+                Add new word to the list
+              </p>
+            )}
+            {thereIsWordIsExistedInWordsList && (
+              <p className="text-sm font-semibold text-red-400">
+                Repeated word
+              </p>
+            )}
+
             <div className="flex gap-2">
               <Input
                 type="text"
@@ -100,7 +110,9 @@ export default function SettingThemeForm({
                 onClick={() => {
                   if (!word || !difficulty) return;
                   handleAddWord(word, difficulty);
+                  setWord("");
                 }}
+                disabled={word.length === 0 || thereIsWordIsExistedInWordsList}
               >
                 <Plus size={16} strokeWidth={2} />
                 Add
