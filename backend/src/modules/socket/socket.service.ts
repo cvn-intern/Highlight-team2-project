@@ -191,6 +191,7 @@ export class SocketService {
         newRoomRound,
         oldRoomRound.painter === userId ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
       );
+      await this.sendListParticipantsInRoom(server, room);
     }
   }
 }

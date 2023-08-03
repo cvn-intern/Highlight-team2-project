@@ -247,9 +247,6 @@ const BoxChatAnswer = () => {
             placeholder="Hit chat here!"
             icon={MessageCircle}
             listChat={listChat}
-            isDisabledInput={
-              (gameStatus === PLAY_GAME && correctAnswers.includes(user?.id!))
-            }
           />
         </div>
       </div>

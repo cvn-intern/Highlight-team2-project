@@ -18,6 +18,7 @@ export class ChatGateway extends SocketGateway {
   @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(@MessageBody() msgBody: MessageBodyType, @ConnectedSocket() client: SocketClient) {
     try {
+      console.log(msgBody)
       const roomId = extractIdRoom(msgBody.codeRoom);
       const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
       const ROOM_CHAT = `${msgBody.codeRoom}-chat`;
@@ -29,8 +30,9 @@ export class ChatGateway extends SocketGateway {
       };
 
       if (!round) {
-        return this.server.in(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
+        return this.server.to(msgBody.codeRoom).emit(ROOM_CHAT, messageContent);
       }
+
       const answerRound: string = round.word;
       const typeAnswer = checkTypeAnswer(answerRound.toLocaleUpperCase(), msgBody.message.toLocaleUpperCase());
 
