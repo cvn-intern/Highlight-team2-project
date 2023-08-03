@@ -137,13 +137,12 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                         }}
                     />
                 </div>
+                
+                <p className="hidden lg:block text-7xl mx-auto font-balsamiq text-headerBlueColor">
+                    ROOM
+                </p>
 
-                <img
-                    src={RoomsTitle}
-                    className="hidden ml-10 lg:block scale-90 md:scale-100"
-                />
-
-                <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mx-auto justify-between">
+                <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mr-auto justify-between">
                     <FormField
                         control={form.control}
                         name="theme"
@@ -151,7 +150,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                             <FormItem className="max-lg:flex-col md:items-center text-slate-400 mr-10">
                                 <FormLabel className="flex items-center gap-5">
                                     <div>
-                                        <Book size={28} strokeWidth={2} color={"#22A699"} />
+                                        <Book size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
                                         THEMES
@@ -193,7 +192,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                             <FormItem className="  max-lg:flex-col md:items-center text-slate-400 mr-10">
                                 <FormLabel className="flex items-center gap-3 ">
                                     <div>
-                                        <Globe size={28} strokeWidth={2} color={"#22A699"} />
+                                        <Globe size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
                                         LANGUAGE
