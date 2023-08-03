@@ -22,10 +22,7 @@ export function ProgressPlayTime() {
 
   const handleProgressTimeout = (status: string) => {
     const isHost = getIsHost()
-    console.log({
-      status,
-      isHost
-    })
+
     if (!isHost || !socket || !codeRoom) return;
     switch (status) {
       case INTERVAL_NEW_TURN:
@@ -45,7 +42,6 @@ export function ProgressPlayTime() {
         return
 
       case END_GAME: 
-        console.log('zoooooo');
         socket.emit(RESET_GAME, codeRoom);
         return
     }

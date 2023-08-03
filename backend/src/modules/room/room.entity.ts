@@ -18,6 +18,7 @@ export class Room {
 
   @ManyToOne(() => WordsCollection, (wordsCollection) => wordsCollection.id)
   @JoinColumn({ name: 'words_collection_id' })
+  @Column()
   words_collection_id: number;
 
   @Column({ nullable: true })

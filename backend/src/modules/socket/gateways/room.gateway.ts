@@ -101,7 +101,6 @@ export class RoomGateway extends SocketGateway {
     await this.roomUserService.deleteRoomUser(room.id, data.userId);
     await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
     await this.socketService.checkAndEmitToHostRoom(this.server, room);
-    await this.socketService.sendListParticipantsInRoom(this.server, room);
 
     const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
     if (!roomRound) return;
@@ -110,6 +109,7 @@ export class RoomGateway extends SocketGateway {
     if (participants.length === 1) {
       await this.roomRoundService.deleteRoomRound(room.id);
       this.server.in(room.code_room).emit(RESET_GAME);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
       return;
     }
 
@@ -140,8 +140,6 @@ export class RoomGateway extends SocketGateway {
       client.leave(codeRoom);
       client.to(codeRoom).emit(`${codeRoom}-leave`, meesageContent);
 
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
-
       if (client.user.id === room.host_id) {
         room = await this.roomService.changeHost(room.code_room);
         await this.socketService.sendListParticipantsInRoom(this.server, room);
@@ -156,6 +154,7 @@ export class RoomGateway extends SocketGateway {
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
         this.server.in(codeRoom).emit(RESET_GAME);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
         return;
       }
 
