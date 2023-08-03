@@ -7,15 +7,17 @@ import themeService from "@/shared/services/themeService";
 import { Theme } from "@/shared/types/theme";
 import { LogOut } from "lucide-react";
 import SettingThemeForm from "./SettingThemeForm.component";
-import { Input } from "@/shared/components/shadcn-ui/Input";
 import { Search } from "lucide-react";
-import WordElement from "./WordElement";
+import WordsContainer from "./WordsContainer";
 
 const CreateThemeContent = () => {
   const [themes, setThemes] = useState<Theme[]>([]);
   const [themeId, setThemeId] = useState(1);
-  const [difficulty, setDifficulty] = useState("easy");
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
+    "easy"
+  );
   const [word, setWord] = useState("");
+  const [wordsList, setWordsList] = useState<WordType[]>([]);
   const [search, setSearch] = useState("");
   useEffect(() => {
     (async () => {
@@ -26,6 +28,21 @@ const CreateThemeContent = () => {
   useEffect(() => {
     console.log({ themeId, difficulty, word });
   }, [themeId, difficulty, word]);
+  // Handlers
+  const handleDeleteWord = (index: number) => {
+    const newWordsList = [...wordsList];
+    newWordsList.splice(index, 1);
+    setWordsList(newWordsList);
+  };
+
+  const handleAddWord = (
+    word: string,
+    difficulty: "easy" | "medium" | "hard"
+  ) => {
+    const newWordsList = [...wordsList];
+    newWordsList.push({ word, difficulty });
+    setWordsList(newWordsList);
+  };
   return (
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
@@ -37,6 +54,7 @@ const CreateThemeContent = () => {
           setDifficulty={setDifficulty}
           word={word}
           setWord={setWord}
+          handleAddWord={handleAddWord}
         />
         <div className="flex flex-col items-center w-full lg:h-full gap-y-4 bg-white rounded-2xl p-4">
           <div className="flex justify-between w-full mt-1 gap-x-5 ">
@@ -68,27 +86,16 @@ const CreateThemeContent = () => {
                 type="text"
                 className="placeholder:text-gray-400 placeholder:font-medium border-none outline-none leading-5"
                 placeholder="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
           </div>
           <div className="rounded-2xl bg-gray-300 flex-1 w-full p-4">
-            <div className="flex gap-x-8 gap-y-6 flex-wrap">
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-              <WordElement />
-            </div>
+            <WordsContainer
+              wordsList={wordsList}
+              handleDeleteWord={handleDeleteWord}
+            />
           </div>
         </div>
       </div>

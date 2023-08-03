@@ -18,10 +18,11 @@ type Props = {
   themeId: number;
   setThemeId: Dispatch<SetStateAction<number>>;
   themes: Theme[];
-  difficulty: string;
-  setDifficulty: Dispatch<SetStateAction<string>>;
+  difficulty: "easy" | "medium" | "hard";
+  setDifficulty: Dispatch<SetStateAction<"easy" | "medium" | "hard">>;
   word: string;
   setWord: Dispatch<SetStateAction<string>>;
+  handleAddWord: (word: string, difficulty: "easy" | "medium" | "hard") => void;
 };
 
 export default function SettingThemeForm({
@@ -32,6 +33,7 @@ export default function SettingThemeForm({
   setDifficulty,
   word,
   setWord,
+  handleAddWord,
 }: Props) {
   const { user } = useUserStore();
   return (
@@ -93,7 +95,13 @@ export default function SettingThemeForm({
                   setWord(e.target.value);
                 }}
               />
-              <Button className="rounded-[8px] bg-[#1B67AD] text-white flex gap-2">
+              <Button
+                className="rounded-[8px] bg-[#1B67AD] text-white flex gap-2"
+                onClick={() => {
+                  if (!word || !difficulty) return;
+                  handleAddWord(word, difficulty);
+                }}
+              >
                 <Plus size={16} strokeWidth={2} />
                 Add
               </Button>
@@ -101,7 +109,7 @@ export default function SettingThemeForm({
             <CustomRadioGroup
               options={DIFFICULTY_OPTIONS}
               state={difficulty}
-              setState={setDifficulty}
+              setState={setDifficulty as Dispatch<SetStateAction<string>>}
             />
           </div>
         </div>
