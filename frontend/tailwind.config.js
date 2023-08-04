@@ -18,8 +18,7 @@ module.exports = {
     extend: {
       fontFamily:{
         'lilita' : ['Lilita One'],
-        'balsamiq' : ['Balsamiq Sans'],        
-        'bakbak' : ['Bakbak One'],
+        'balsamiq' : ['Balsamiq Sans'],                
         'cherry': ['Cherry Bomb One'],
         'coiny': ['Coiny'],
       },
