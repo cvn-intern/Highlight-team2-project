@@ -168,7 +168,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <div className="flex flex-row w-4/5 h-4/5 justify-around">
 
               {participants && handleTop3Ranking(participants).map((item: Participant, index: number) => (
-                <div className={cn("flex-auto", {
+                <div key={index} className={cn("flex-auto", {
                   'w-60': item.is_winner,
                   'w-32 transform translate-y-7': !item.is_winner
                 })
