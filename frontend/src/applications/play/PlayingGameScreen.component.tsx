@@ -131,6 +131,10 @@ export default function PlayingGameScreen() {
     socket?.on(GAME_NEW_TURN_CHANNEL, (data: RoomRound) => {
       setRoomRound(data);
       setCorrectAnswers([]);
+      if (!canvasRef || !canvasRef.current) return;
+      resetCanvas(
+        canvasRef.current.getContext("2d", { willReadFrequently: true })!
+      );
     });
 
     socket?.on(INTERVAL_SHOW_WORD, () => {
@@ -142,7 +146,7 @@ export default function PlayingGameScreen() {
       socket?.off(INTERVAL_SHOW_WORD);
       clearTimeout(timeout)
     };
-  }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost]);
+  }, [socket, isDrawer, roomRound, gameStatus, correctAnswers, isHost, canvasRef]);
 
   useEffect(() => {
     socket?.on(GAME_STATUS_CHANNEL, ({ success, status }: RoomStatusType) => {
