@@ -17,7 +17,7 @@ export function ProgressPlayTime() {
   const [isRunning, setIsRunning] = useState(true)
 
   const { socket } = useSocketStore();
-  const { gameStatus, isHost, setGameStatus, participants, getIsHost } = useGameStore();
+  const { gameStatus, isHost, setGameStatus, participants, getIsHost, setCorrectAnswers, setParticipants } = useGameStore();
   const { codeRoom } = useParams()
 
   const handleProgressTimeout = (status: string) => {
@@ -88,6 +88,8 @@ export function ProgressPlayTime() {
     })
 
     socket?.on(END_GAME, () => {
+      setCorrectAnswers([])
+      setParticipants([...participants].map(participant => ({...participant, is_painter: false, is_next_painter: false})))
       setIsRunning(false)
       handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:END_GAME})
       setIsRunning(true)
