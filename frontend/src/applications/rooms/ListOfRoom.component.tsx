@@ -5,7 +5,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { useTranslation } from "react-i18next";
 
 interface RoomFilterInformationProps {
   roomFilter: Array<RoomList>;
@@ -27,8 +26,6 @@ const ListOfRoom: React.FC<
     }
   };
 
-  const { t } = useTranslation();
-
   return (
     <div className="bg-[#00416A]/40 p-2 rounded-2xl w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-start justify-start gap-2 flex-1 pb-2 h-[540px] w-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-full">
@@ -39,11 +36,12 @@ const ListOfRoom: React.FC<
           >
             <Card
               key={index}
-              className={`rounded-[10px] max-h-[255px] w-full aspect-square cursor-pointer hover:opacity-80 hover:bg-white border-4 border-transparent ${selectCodeRoom === roomFilter.code_room ? "border-blue-500" : ""
-                }`}
+              className={`rounded-[10px] max-h-[255px] w-full aspect-square cursor-pointer hover:opacity-80 hover:bg-white border-4 border-transparent ${
+                selectCodeRoom === roomFilter.code_room ? "border-blue-500" : ""
+              }`}
             >
-              <CardContent className="flex flex-col justify-center items-center">
-                <div className="flex justify-center items-center space-x-1 rounded-md p-4">
+              <CardContent className="flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center p-4 space-x-1 rounded-md">
                   <Avatar className="relative flex items-center bg-yellow-300 w-[80px] h-auto overflow-visible border-4 border-solid">
                     <AvatarImage
                       src={roomFilter.thumbnail}
@@ -56,23 +54,21 @@ const ListOfRoom: React.FC<
                   </Avatar>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <p className="flex flex-col justify-center items-center text-xl font-medium bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
-                    <strong>
-                      {roomFilter.theme_name.toUpperCase()}
-                    </strong>
+                  <p className="flex flex-col items-center justify-center text-xl font-medium text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text">
+                    <strong>{roomFilter.theme_name.toUpperCase()}</strong>
                     <span className="text-sm bg-gradient-to-r from-[#bdbaa3] to-[#b20a2c] bg-clip-text text-transparent">
                       #{roomFilter.code_room}
                     </span>
                   </p>
-                  <div className="flex flex-row items-center space-x-8 mt-6">
-                    <div className="flex flex-col justify-between items-center">
+                  <div className="flex flex-row items-center mt-6 space-x-8">
+                    <div className="flex flex-col items-center justify-between">
                       <UserIcon
                         size={32}
                         strokeWidth={2.5}
                         className="text-blue-500"
                       />
                       <div className="flex flex-col items-center justify-center">
-                        <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
+                        <p className="text-2xl font-medium text-center text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text">
                           <strong>
                             {roomFilter.number_of_participants}/
                             {roomFilter.max_player}
@@ -80,26 +76,26 @@ const ListOfRoom: React.FC<
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between items-center">
+                    <div className="flex flex-col items-center justify-between">
                       <Globe
                         size={32}
                         strokeWidth={2.5}
                         className="text-blue-500"
                       />
                       <div className="flex flex-col items-center justify-center">
-                        <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
+                        <p className="text-2xl font-medium text-center text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text">
                           <strong>{roomFilter.language.toUpperCase()}</strong>
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between items-center">
+                    <div className="flex flex-col items-center justify-between">
                       <Swords
                         size={32}
                         strokeWidth={2.5}
                         className="text-blue-500"
                       />
                       <div className="flex flex-col items-center justify-center">
-                        <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
+                        <p className="text-2xl font-medium text-center text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text">
                           <strong>
                             {roomFilter.current_round}/
                             {roomFilter.number_of_round}

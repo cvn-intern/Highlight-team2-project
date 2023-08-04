@@ -34,10 +34,10 @@ const ThemeCard = (props: ThemeCardProps) => {
     >
       <CardContent className="flex flex-col items-center gap-y-3">
         <Avatar className="h-[50%] w-[50%] mt-5 ring ring-offset-4 ring-slate-300">
-          <AvatarImage src={img} />
+          <AvatarImage src={img} className="object-cover w-full h-full" />
           <AvatarFallback>Avatar</AvatarFallback>
         </Avatar>
-        <CardTitle className="font-balsamiq mt-2 text-lg">{name}</CardTitle>
+        <CardTitle className="mt-2 text-lg font-balsamiq">{name}</CardTitle>
         {isOffical && (
           <div className="flex text-sky-600 gap-x-1">
             <p className="text-xl font-balsamiq">Offical </p>

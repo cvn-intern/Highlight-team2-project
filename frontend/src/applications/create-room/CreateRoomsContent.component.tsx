@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import ThemeCard from "./ThemeCard.component";
 import useToaster from "@/shared/hooks/useToaster";
 import DoorIcon from "@/shared/assets/door-icon.svg";
@@ -145,7 +146,7 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="mt-1 text-xl md:text-2xl font-serif text-headerBlueColor">
+            <p className="mt-1 font-serif text-xl md:text-2xl text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
             <div className="flex gap-x-2">
