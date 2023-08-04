@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Language } from '../language/language.entity';
 
 @Entity('theme')
 export class Theme {
@@ -10,4 +11,9 @@ export class Theme {
 
   @Column({ nullable: false })
   thumbnail: string;
+
+  @ManyToOne(() => Language, (language) => language.code)
+  @JoinColumn({ name: 'language_code' })
+  @Column({ default: 'en' })
+  language_code: string;
 }

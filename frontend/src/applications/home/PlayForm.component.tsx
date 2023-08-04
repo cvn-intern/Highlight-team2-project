@@ -31,6 +31,7 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 import { MULTIPLE_TAB } from "@/shared/types/errorCode";
+import { useUpdateUserLanguage } from "@/shared/hooks/useUpdateUserLanguage";
 
 const formSchema = z.object({
   nickname: z.string().trim().min(2).max(50),
@@ -40,6 +41,7 @@ const formSchema = z.object({
 });
 
 const PlayForm = () => {
+  const { mutate: updateUserLanguage } = useUpdateUserLanguage();
   const { user, setUser } = useUserStore();
   const { socket } = useSocketStore();
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      (error);
+      error;
       useToaster({
         type: "error",
         message: error.response.data.response || "Some error occurred!",
@@ -100,7 +102,7 @@ const PlayForm = () => {
 
   useEffect(() => {
     socket?.on("error", (error: ErrorSocket) => {
-      if(error.code === MULTIPLE_TAB) {
+      if (error.code === MULTIPLE_TAB) {
         navigate("/user/existing");
       }
     });
@@ -168,7 +170,10 @@ const PlayForm = () => {
               </FormLabel>
               <FormControl>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    updateUserLanguage(value);
+                  }}
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">

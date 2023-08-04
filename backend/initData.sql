@@ -110,7 +110,7 @@ INSERT INTO public.language(code, name) VALUES ('yo', 'Yoruba');
 INSERT INTO public.language(code, name) VALUES ('zu', 'Zulu');
 
 -- init data for theme
-INSERT INTO public.theme(id, name, thumbnail) VALUES (1, 'animal', 'https://media.istockphoto.com/vectors/animal-circle-pattern-vector-id175606088?k=6&m=175606088&s=170667a&w=0&h=h8NFINyj_616W34sy_2bSq7s_NfVQhOzJHiU6p1NkGc=');
+INSERT INTO public.theme(id, name, thumbnail, language_code) VALUES (1, 'animal', 'https://media.istockphoto.com/vectors/animal-circle-pattern-vector-id175606088?k=6&m=175606088&s=170667a&w=0&h=h8NFINyj_616W34sy_2bSq7s_NfVQhOzJHiU6p1NkGc=', 'en');
 
 -- init data user
 INSERT INTO public."user"(id, avatar, nickname, is_guest, language_code) 

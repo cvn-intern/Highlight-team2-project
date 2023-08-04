@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private redisService: RedisService,
-  ) { }
+  ) {}
 
   async getUserById(userId: number): Promise<User> {
     return await this.userRepository.findOne({
@@ -47,6 +47,13 @@ export class UserService {
     }
 
     return this.userRepository.save(user);
+  }
+
+  async updateLanguage(id: number, language_code: string) {
+    return await this.userRepository.save({
+      id,
+      language_code,
+    });
   }
 
   async getUserByIdProvider(idProvider: string): Promise<User> {

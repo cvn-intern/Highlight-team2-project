@@ -13,7 +13,10 @@ import authService from "@/shared/services/authService";
 import CreateRoom from "./applications/create-room/Page";
 import CreateTheme from "./applications/themes/Page";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
+import { QueryClient } from "@tanstack/query-core";
+import { QueryClientProvider } from "@tanstack/react-query";
 
+export const queryClient = new QueryClient();
 function App() {
   const [loading, setLoading] = useState(true);
   const { socket, createSocketInstance } = useSocketStore();
@@ -45,26 +48,28 @@ function App() {
   if (loading) return null;
 
   return (
-    <Suspense fallback="loading">
-      <Providers>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/rooms/create-room" element={<CreateRoom />} />
-            <Route path="/rooms/create-theme" element={<CreateTheme />} />
-            <Route path="/:codeRoom" element={<PlayingPage />} />
-            <Route path="/rooms" element={<RoomsPage />} />
-            <Route
-              path="/user/existing"
-              element={<UserExistsInBrowserPage />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-            <Route path="404" element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
-        <ToastContainer role="alert" closeButton={false} />
-      </Providers>
-    </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Providers>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/rooms/create-room" element={<CreateRoom />} />
+              <Route path="/rooms/create-theme" element={<CreateTheme />} />
+              <Route path="/:codeRoom" element={<PlayingPage />} />
+              <Route path="/rooms" element={<RoomsPage />} />
+              <Route
+                path="/user/existing"
+                element={<UserExistsInBrowserPage />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+              <Route path="404" element={<NotFoundPage />} />
+            </Routes>
+          </BrowserRouter>
+          <ToastContainer role="alert" closeButton={false} />
+        </Providers>
+      </Suspense>
+    </QueryClientProvider>
   );
 }
 
