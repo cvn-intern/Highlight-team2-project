@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import themeService from "@/shared/services/themeService";
@@ -73,6 +73,20 @@ const CreateThemeContent = () => {
       setThemes(data);
     })();
   }, []);
+
+  const preventFromReloadOrExist = useCallback(function (e: BeforeUnloadEvent) {
+    e.preventDefault();
+    e.returnValue = "";
+  }, []);
+  useEffect(() => {
+    if (totalWords > 0) {
+      window.addEventListener("beforeunload", preventFromReloadOrExist);
+    }
+    if (totalWords === 0) {
+      console.log(totalWords);
+      window.removeEventListener("beforeunload", preventFromReloadOrExist);
+    }
+  }, [totalWords]);
 
   // Handlers
   const handleDeleteWord = (index: number) => {
