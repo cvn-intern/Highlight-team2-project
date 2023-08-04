@@ -104,7 +104,7 @@ const WaitingRoom = () => {
             />
           </button>
 
-          <div className="flex items-stretch justify-center h-full gap-4 p-8 mb-8 bg-white home-content-responsive md:p-0">
+          <div className="flex items-stretch justify-center h-full gap-8 p-8 mb-8 bg-white home-content-responsive md:p-0">
             <PlayerInfomation nickname={nickname} setNickname={setNickname} />
             <RoomInformation />
           </div>

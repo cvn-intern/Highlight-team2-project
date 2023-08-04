@@ -23,6 +23,8 @@ module.exports = {
         'bakbak' : ['Bakbak One']
       },
       colors: {
+        headerBlueColor: "#1B67AD",
+        iconCreateRoomColor: "#4240C1",
         textBlueColor: "#22A699",
         primaryTextColor: "#838383",
         headerTextColor: "#22A699",

@@ -74,7 +74,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-lg text-slate-300">The answer was:</p>
             <p className="text-[2.5rem]">{roomRound?.word}</p>
           </div>
-          <div className="w-[180px] mt-9 ">
+          <div className="w-[180px] mt-12 animate-spin">
             <img src={AnswerHitImg} />
           </div>
           <div className="place-content-center flex flex-col">

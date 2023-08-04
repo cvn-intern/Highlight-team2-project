@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from "react";
 import { cn } from "@/shared/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -68,7 +69,7 @@ const RoomsPage = () => {
         <div className="relative bg-white flex flex-col items-center mb-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
           <button
             onClick={handleBackButton}
-            className="left-4 mx-5 md:mr-10 absolute top-4 md:top-8 md:left-10"
+            className="absolute mx-5 left-4 md:mr-10 top-4 md:top-8 md:left-10"
           >
             <Triangle
               size={40}
@@ -79,7 +80,7 @@ const RoomsPage = () => {
 
           <RoomFilterForm setRoomFilterData={setRoomFilterData} />
 
-          <div className="flex flex-col items-start justify-center h-full w-11/12 gap-4 mb-2 bg-white home-content-responsive p-0 flex-1 overflow-auto">
+          <div className="flex flex-col items-start justify-center flex-1 w-11/12 h-full gap-4 p-0 mb-2 overflow-auto bg-white home-content-responsive">
             <ListOfRoom
               roomFilter={roomFilterData}
               selectCodeRoom={selectCodeRoom}

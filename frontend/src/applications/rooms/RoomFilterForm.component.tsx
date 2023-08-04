@@ -6,13 +6,6 @@ import {
     FormLabel,
     FormMessage,
 } from "@/shared/components/shadcn-ui/form";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
-import { Input } from "@/shared/components/shadcn-ui/Input";
-import { Book, Globe, Search } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -20,13 +13,18 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/shared/components/shadcn-ui/select";
+import { z } from "zod";
+import { debounce } from "lodash";
+import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { MAX_LENGHT_OF_SEARCH } from "@/shared/constants";
+import { Input } from "@/shared/components/shadcn-ui/Input";
+import { Book, Globe, Search } from "lucide-react";
 import useToaster from "@/shared/hooks/useToaster";
 import roomService from "@/shared/services/roomService";
 import RoomsTitle from "@/shared/assets/rooms-title.png";
 import themeService from "@/shared/services/themeService";
-import { debounce } from "lodash";
-
-
 
 interface Theme {
     id: number;
@@ -139,13 +137,12 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                         }}
                     />
                 </div>
+                
+                <p className="hidden lg:block text-7xl mx-auto font-balsamiq text-headerBlueColor">
+                    ROOM
+                </p>
 
-                <img
-                    src={RoomsTitle}
-                    className="hidden ml-10 lg:block scale-90 md:scale-100"
-                />
-
-                <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mx-auto justify-between">
+                <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mr-auto justify-between">
                     <FormField
                         control={form.control}
                         name="theme"
@@ -153,7 +150,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                             <FormItem className="max-lg:flex-col md:items-center text-slate-400 mr-10">
                                 <FormLabel className="flex items-center gap-5">
                                     <div>
-                                        <Book size={28} strokeWidth={2} color={"#22A699"} />
+                                        <Book size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
                                         THEMES
@@ -195,7 +192,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                             <FormItem className="  max-lg:flex-col md:items-center text-slate-400 mr-10">
                                 <FormLabel className="flex items-center gap-3 ">
                                     <div>
-                                        <Globe size={28} strokeWidth={2} color={"#22A699"} />
+                                        <Globe size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
                                         LANGUAGE
@@ -210,12 +207,17 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                             }}
                                             defaultValue={field.value}
                                         >
-                                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
-                                                <SelectValue placeholder="Language" />
+                                            <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl overflow-hidden">
+                                                <span
+                                                    className="w-full h-full inline-block overflow-hidden text-ellipsis"
+                                                    style={{ maxWidth: '100%', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+                                                >
+                                                    <SelectValue placeholder="Language" />
+                                                </span>
                                             </SelectTrigger>
-                                            <SelectContent className="text-lg font-bold border-none ">
-                                                <SelectItem value="en">EN</SelectItem>
-                                                <SelectItem value="vi">VI</SelectItem>
+                                            <SelectContent className="text-lg font-bold border-none">
+                                                <SelectItem value="en">English</SelectItem>
+                                                <SelectItem value="vi">Tiếng Việt</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>
