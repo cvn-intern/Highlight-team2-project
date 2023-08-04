@@ -10,8 +10,17 @@ import SettingThemeForm from "./SettingThemeForm.component";
 import { Search } from "lucide-react";
 import WordsContainer from "./WordsContainer";
 import { useTranslation } from "react-i18next";
+import { useCreateWordsCollection } from "@/shared/hooks/useCreateWordsCollection";
+import { useUserStore } from "@/shared/stores/userStore";
 
 const CreateThemeContent = () => {
+  const { user } = useUserStore();
+  const { mutate: addWordsCollection } = useCreateWordsCollection();
+  // States
+  const [languageCode, setLanguageCode] = useState<string>("en");
+  useEffect(() => {
+    setLanguageCode(user?.language || "en");
+  }, [user]);
   const [themes, setThemes] = useState<Theme[]>([]);
   const [themeId, setThemeId] = useState(1);
   const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">(
@@ -22,6 +31,7 @@ const CreateThemeContent = () => {
   const { t } = useTranslation();
 
   const totalWords = useMemo(() => wordsList.length, [wordsList]);
+  const [search, setSearch] = useState("");
   const totalEasyWords = useMemo(
     () =>
       wordsList.reduce((total, currentWord) => {
@@ -40,14 +50,25 @@ const CreateThemeContent = () => {
     () => totalWords - totalEasyWords - totalMediumWords,
     [totalWords, totalEasyWords, totalMediumWords]
   );
-
   const thereIsWordIsExistedInWordsList = useMemo(
-    () => wordsList.some((wordObj) => wordObj.word === word),
+    () =>
+      wordsList.some(
+        (wordObj) =>
+          wordObj.word.toLocaleLowerCase() === word.toLocaleLowerCase()
+      ),
     [word, wordsList]
   );
+  const filteredWordsList = useMemo(
+    () => wordsList.filter((word) => word.word.includes(search)),
+    [wordsList, search]
+  );
+  const isValidToCreateWordsCollection =
+    Boolean(wordsList) &&
+    Boolean(languageCode) &&
+    Boolean(themeId) &&
+    wordsList.length > 0;
 
-  const [search, setSearch] = useState("");
-
+  // Side effects
   useEffect(() => {
     (async () => {
       const { data } = await themeService.getThemes();
@@ -55,21 +76,30 @@ const CreateThemeContent = () => {
     })();
   }, []);
 
+  // Handlers
   const handleDeleteWord = (index: number) => {
     const newWordsList = [...wordsList];
     newWordsList.splice(index, 1);
     setWordsList(newWordsList);
   };
-
   const handleAddWord = (
     word: string,
     difficulty: "easy" | "medium" | "hard"
   ) => {
+    if (word.length === 0) return;
     const newWordsList = [...wordsList];
     newWordsList.push({ word, difficulty });
     setWordsList(newWordsList);
   };
 
+  const handleCreateWordsCollection = async () => {
+    if (!isValidToCreateWordsCollection) return;
+    addWordsCollection({
+      theme_id: themeId,
+      language_code: languageCode,
+      words_list: wordsList,
+    });
+  };
   return (
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
@@ -80,6 +110,7 @@ const CreateThemeContent = () => {
           difficulty={difficulty}
           setDifficulty={setDifficulty}
           word={word}
+          languageCode={languageCode}
           thereIsWordIsExistedInWordsList={thereIsWordIsExistedInWordsList}
           setWord={setWord}
           handleAddWord={handleAddWord}
@@ -127,7 +158,7 @@ const CreateThemeContent = () => {
           </div>
           <div className="flex-1 w-full p-4 bg-gray-300 rounded-2xl">
             <WordsContainer
-              wordsList={wordsList}
+              wordsList={filteredWordsList}
               handleDeleteWord={handleDeleteWord}
             />
           </div>
@@ -146,8 +177,9 @@ const CreateThemeContent = () => {
         <Button
           type="submit"
           variant="opacityHover"
-          //   onClick={handleSubmitClick}
+          onClick={handleCreateWordsCollection}
           className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
+          disabled={!isValidToCreateWordsCollection}
         >
           <img src={DoorIcon} alt="" className="w-[18%]" />
           <p>{t("CreateTheme.createThemeButton")}</p>

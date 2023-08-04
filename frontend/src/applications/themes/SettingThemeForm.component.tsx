@@ -10,7 +10,6 @@ import { Input } from "@/shared/components/shadcn-ui/Input";
 import { Theme } from "@/shared/types/theme";
 import { Dispatch, SetStateAction } from "react";
 import { Button } from "@/shared/components/shadcn-ui/Button";
-import { useUserStore } from "@/shared/stores/userStore";
 import CustomRadioGroup from "@/shared/components/CustomRadioGroup";
 import { DIFFICULTY_OPTIONS } from "./constants";
 import { useTranslation } from "react-i18next";
@@ -22,6 +21,7 @@ type Props = {
   difficulty: "easy" | "medium" | "hard";
   setDifficulty: Dispatch<SetStateAction<"easy" | "medium" | "hard">>;
   word: string;
+  languageCode: string;
   thereIsWordIsExistedInWordsList: boolean;
   setWord: Dispatch<SetStateAction<string>>;
   handleAddWord: (word: string, difficulty: "easy" | "medium" | "hard") => void;
@@ -34,11 +34,11 @@ export default function SettingThemeForm({
   difficulty,
   setDifficulty,
   word,
+  languageCode,
   thereIsWordIsExistedInWordsList,
   setWord,
   handleAddWord,
 }: Props) {
-  const { user } = useUserStore();
   const { t } = useTranslation();
   return (
     <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
@@ -78,7 +78,7 @@ export default function SettingThemeForm({
           </p>
           <div className="flex gap-4 mt-5 text-xl text-gray-400 font-balsamiq">
             <Globe size={28} strokeWidth={2} color={"#1B67AD"} />
-            {user?.language ? user?.language.toUpperCase() : "EN"}
+            {languageCode ? languageCode.toUpperCase() : "EN"}
           </div>
         </div>
         {/* End language */}

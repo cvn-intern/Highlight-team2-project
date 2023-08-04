@@ -15,6 +15,10 @@ export class ThemeService {
     return await this.themeRepository.find();
   }
 
+  async getThemeByLanguageCode(language_code: string): Promise<Theme[]> {
+    return await this.themeRepository.find({ where: { language_code } });
+  }
+
   async createNewTheme(theme: ThemeInterface): Promise<Theme> {
     return await this.themeRepository.save(theme);
   }
