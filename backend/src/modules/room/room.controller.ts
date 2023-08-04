@@ -140,7 +140,7 @@ export class RoomController {
   @Get('/:codeRoom')
   async getRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
-      const room: Room = await this.roomService.getRoomByCodeRoom(codeRoom);
+      const room: Room = await this.roomService.getRoomInformationByCodeRoom(codeRoom);
 
       return response.status(HttpStatus.OK).json(room);
     } catch (error) {
