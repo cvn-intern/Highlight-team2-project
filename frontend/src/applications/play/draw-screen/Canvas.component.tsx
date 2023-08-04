@@ -1,13 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import cursorsIconMap from "../shared/constants/cursorsIconMap";
 // Functions
-import { PLAY_GAME } from "@/shared/components/IntervalCanvas";
-import { useGameStore } from "@/shared/stores/gameStore";
-import { useSocketClearCanvasEvent } from "../shared/hooks/useSocketClearCanvasEvent";
 import { useSocketHandleCanvasEvent } from "../shared/hooks/useSocketHandleCanvasEvents";
-import { getPointFromEvent, resetCanvas } from "./draw.helper";
+import { getPointFromEvent } from "./draw.helper";
 
 export const ROUND_DURATION_MILISECONDS = 30000;
 
@@ -23,16 +20,6 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
 
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
     useSocketHandleCanvasEvent();
-  const { handleClickClearCanvas } = useSocketClearCanvasEvent();
-  const { gameStatus } = useGameStore();
-
-  useEffect(() => {
-    if (!canvasRef || !canvasRef.current) return;
-    if (gameStatus === PLAY_GAME) return;
-    resetCanvas(
-      canvasRef.current.getContext("2d", { willReadFrequently: true })
-    );
-  }, [canvasRef, gameStatus, handleClickClearCanvas]);
 
   return (
     <div
