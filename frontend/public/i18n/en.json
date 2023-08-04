@@ -70,5 +70,26 @@
             "copyButton": "COPY",
             "shareDescription": "Invite your friends to the room!"
         }
+    },
+    "toastMessage": {
+        "success": {
+            "createRoom": "Create room successfully!"
+        },
+        "warning": {
+            "nextDrawer": "Next drawer is out!",
+            "nextDrawerRestart": "Drawer is out. The round restarts!",
+            "enterNickname": "Please enter your nickname!"
+        },
+        "error": {
+            "joinRoom": "Join room failed!",
+            "somethingWentWrong": "Something went wrong!",
+            "confirmAvatar": "Confirm avatar failed!",
+            "getAvatar": "Get avatars failed!",
+            "getRoomInfo": "Get room info failed!",
+            "fetchTheme": "Fetch theme failed!",
+            "fetchRoom": "Fetch room failed!",
+            "login": "Login failed!",
+            "logout": "Logout failed!"
+        }
     }
 }

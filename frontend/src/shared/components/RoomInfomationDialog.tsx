@@ -40,22 +40,22 @@ const RoomInfomationDialog = ({ roomInfo }: RoomInfomationDialogProps) => {
         </DialogHeader>
         <div className="grid grid-cols-3 gap-4 py-4">
           <div className="flex flex-col items-center justify-center">
-            <p className="text-[#334d50] font-semibold text-lg">Theme:</p>
+            <p className="text-[#334d50] font-semibold text-lg">{t("Theme.themeLabel")}:</p>
             <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text capitalize">
               {roomInfo?.words_collection?.theme?.name}
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
             <p className="text-[#334d50] font-semibold text-lg">
-              Rounds:
+              {t("Rounds")}
             </p>
             <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text capitalize">
-              {roomInfo?.number_of_round} rounds
+              {roomInfo?.number_of_round}
             </p>
           </div>
           <div className="flex flex-col items-center justify-center">
             <p className="text-[#334d50] font-semibold text-lg">
-              Language:
+              {t("Language.languageLabel")}
             </p>
             <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text capitalize">
               {roomInfo?.language?.name}

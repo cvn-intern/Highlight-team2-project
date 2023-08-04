@@ -65,7 +65,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
         } catch (error) {
             useToaster({
                 type: "error",
-                message: "Error fetching themes data!",
+                message: t("toastMessage.error.fetchTheme"),
             });
         }
     };
@@ -80,7 +80,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
         } catch (error) {
             useToaster({
                 type: "error",
-                message: "Error fetching rooms data!",
+                message: t("toastMessage.error.fetchRoom"),
             });
         }
     };

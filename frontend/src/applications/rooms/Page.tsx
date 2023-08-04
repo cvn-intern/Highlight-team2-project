@@ -38,7 +38,7 @@ const RoomsPage = () => {
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom")
       });
     }
   };
@@ -52,7 +52,7 @@ const RoomsPage = () => {
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom"),
       });
     }
   };

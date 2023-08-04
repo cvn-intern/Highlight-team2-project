@@ -3,9 +3,11 @@ import { Button } from "./shadcn-ui/Button";
 import authService from "../services/authService";
 import useToaster from "@/shared/hooks/useToaster";
 import { useUserStore } from "../stores/userStore";
+import { useTranslation } from "react-i18next";
 
 const GoogleLogoutButton = () => {
     const {user, deleteUser} = useUserStore();
+    const { t } = useTranslation()
     const handleLogout = async () => {
         try {
             await authService.logout();
@@ -14,7 +16,7 @@ const GoogleLogoutButton = () => {
         } catch (error) {
             useToaster({
                 type: "error",
-                message: "Log out failed!",
+                message: t("toastMessage.error.logout"),
             })
         }
     };

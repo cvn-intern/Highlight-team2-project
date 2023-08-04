@@ -39,12 +39,14 @@ import { useParams } from 'react-router-dom';
 import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
+import { useTranslation } from 'react-i18next';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -118,7 +120,7 @@ export default function PlayingGameScreen() {
       } catch (error) {
         useToaster({
           type: 'error',
-          message: 'Get room info failed!',
+          message: t("toastMessage.error.getRoomInfo"),
         });
       }
     };
@@ -157,18 +159,9 @@ export default function PlayingGameScreen() {
       setGameStatus(status!);
     });
 
-    socket?.on(GAME_NEXT_DRAWER_IS_OUT, () => {
-      useToaster({
-        message: 'Next drawer is out.',
-        type: 'warning',
-        icon: '😅',
-        bodyClassName: 'text-sm font-semibold',
-      });
-    });
-
     socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
       useToaster({
-        message: 'Drawer is out. The round restarts!',
+        message: t("toastMessage.warning.nextDrawerRestart"),
         type: 'warning',
         icon: '😅',
         bodyClassName: 'text-sm font-semibold',
@@ -177,7 +170,6 @@ export default function PlayingGameScreen() {
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
-      socket?.off(GAME_NEXT_DRAWER_IS_OUT);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
     };
   }, [socket, participants, isHost, gameStatus]);

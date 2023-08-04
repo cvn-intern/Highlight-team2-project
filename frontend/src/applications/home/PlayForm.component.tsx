@@ -95,7 +95,7 @@ const PlayForm = () => {
       error;
       useToaster({
         type: "error",
-        message: error.response.data.response || "Some error occurred!",
+        message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
       });
     }
   };

@@ -43,7 +43,7 @@ const CustomAvatar = () => {
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Confrim avatar failed!",
+        message: t("toastMessage.error.confirmAvatar"),
       })
     }
   };
@@ -56,7 +56,7 @@ const CustomAvatar = () => {
       } catch (error) {
         useToaster({
           type: "error",
-          message: "Get avatars failed!",
+          message: t("toastMessage.error.getAvatar"),
         })
       }
     };

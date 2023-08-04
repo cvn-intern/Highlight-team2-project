@@ -14,7 +14,6 @@ import {
 import ProfileLabel from "@/shared/assets/profile-label.png";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   user: Participant | null;
@@ -39,7 +38,6 @@ export function DialogDemo({ user, triggerRef }: Props) {
   }
 
   if (!user) return null;
-  const { t } = useTranslation();
 
   return (
     <DialogContent className="sm:w-[425px]" >
@@ -75,7 +73,7 @@ export function DialogDemo({ user, triggerRef }: Props) {
               strokeWidth={4}
               className="mr-4"
             />
-            {t("PlayingGame.rankingBoard.kickButton")}
+            KICK
           </Button>
         </div>
       </DialogFooter>

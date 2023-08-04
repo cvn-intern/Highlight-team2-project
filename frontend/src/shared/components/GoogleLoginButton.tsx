@@ -4,11 +4,13 @@ import { GoogleLogin } from '@react-oauth/google';
 import JWTManager from '@/shared/lib/jwt';
 import { useSocketStore } from '@/shared/stores/socketStore';
 import useToaster from '@/shared/hooks/useToaster';
+import { useTranslation } from 'react-i18next';
 
 const GoogleLoginButton = () => {
     const { user, setUser } = useUserStore()
     const { createSocketInstance } = useSocketStore()
     const {socket} = useSocketStore();
+    const { t } = useTranslation()
     return (
         <GoogleLogin
             size='large'
@@ -18,7 +20,7 @@ const GoogleLoginButton = () => {
                 if (!credentialResponse.credential) {
                     useToaster({
                         type: "error",
-                        message: "Login Failed!",
+                        message: t("toastMessage.error.login"),
                     })
                     return;
                 };
@@ -31,7 +33,7 @@ const GoogleLoginButton = () => {
                 } catch (error: any) {
                     useToaster({
                         type: "error",
-                        message: error.response.data.response || "Some error occurred!",
+                        message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
                     })
                 }
 
@@ -39,7 +41,7 @@ const GoogleLoginButton = () => {
             onError={() => {
                 useToaster({
                     type: "error",
-                    message: "Login Failed",
+                    message: t("toastMessage.error.login"),
                 })
             }}
         />

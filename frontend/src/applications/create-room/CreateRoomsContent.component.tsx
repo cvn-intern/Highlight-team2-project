@@ -93,7 +93,7 @@ const CreateRoomsContent = () => {
       error;
       useToaster({
         type: "error",
-        message: error.response.data.response || "Some error occurred!",
+        message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
       });
     }
   };
@@ -108,13 +108,13 @@ const CreateRoomsContent = () => {
         });
         useToaster({
           type: "success",
-          message: "Create room successfully!",
+          message: t("toastMessage.success.createRoom"),
         });
       }
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom"),
       });
     }
   };

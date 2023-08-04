@@ -33,7 +33,7 @@ const WaitingRoom = () => {
     if (!nickname.trim()) {
       useToaster({
         type: "warning",
-        message: "Please enter your nickname!",
+        message: t("toastMessage.warning.enterNickname"),
       });
       return;
     }
@@ -53,7 +53,7 @@ const WaitingRoom = () => {
 
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom"),
       });
     }
   };

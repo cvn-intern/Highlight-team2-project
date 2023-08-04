@@ -69,5 +69,25 @@
       "copyButton": "COPY",
       "shareDescription": "Chia sẻ link hoặc mã QR cho bạn bè để họ có thể tham gia phòng này!"
     }
+  },
+  "toastMessage": {
+    "success": {
+      "createRoom": "Tạo phòng thành công!"
+    },
+    "warning": {
+      "nextDrawerRestart": "Người vẽ đã thoát khỏi phòng, vòng chơi bắt đầu lại!",
+      "enterNickname": "Tên không được để trống!"
+    },
+    "error": {
+      "joinRoom": "Vào phòng không thành công!",
+      "somethingWentWrong": "Lỗi gì đó đã xảy ra!",
+      "confirmAvatar": "Xác nhận hình không thành công!",
+      "getAvatar": "Lấy hình không thành công!",
+      "getRoomInfo": "Lấy thông tin phòng không thành công!",
+      "fetchTheme": "Lấy thông tin chủ đề không thành công!",
+      "fetchRoom": "Không tìm thấy phòng!",
+      "login": "Đăng nhập không thành công!",
+      "logout": "Đăng xuất không thành công!"
+    }
   }
 }
