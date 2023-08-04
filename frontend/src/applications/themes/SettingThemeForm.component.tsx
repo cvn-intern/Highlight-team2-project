@@ -41,7 +41,7 @@ export default function SettingThemeForm({
 }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
+    <div className="xl:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
         <div className="flex flex-col gap-2">
           <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">

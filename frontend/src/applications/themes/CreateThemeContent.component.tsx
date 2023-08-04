@@ -5,7 +5,7 @@ import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import themeService from "@/shared/services/themeService";
 import { Theme } from "@/shared/types/theme";
-import { CopyX, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import SettingThemeForm from "./SettingThemeForm.component";
 import { Search } from "lucide-react";
 import WordsContainer from "./WordsContainer";
@@ -118,13 +118,14 @@ const CreateThemeContent = () => {
       language_code: languageCode,
       words_list: wordsList,
     });
+    navigate("/rooms/create-room");
   };
   const handleExitButton = () => {
     navigate("/rooms/create-room");
   };
   return (
     <>
-      <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
+      <div className="flex max-xl:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 xl:p-6 gap-x-2">
         <SettingThemeForm
           themeId={themeId}
           setThemeId={setThemeId}
@@ -202,14 +203,12 @@ const CreateThemeContent = () => {
           </div>
         </div>
       </div>
-      <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
+      <div className="flex max-xl:flex-col lg:gap-3 lg:my-5">
         {totalWords > 0 && (
           <AlertDialogYesNo
             buttonVariant={"link"}
             buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
-            onYesClick={() => {
-              handleExitButton();
-            }}
+            onYesClick={handleExitButton}
             Icon={AlertIcon}
             confirmText="Yes"
             cancelText="No"

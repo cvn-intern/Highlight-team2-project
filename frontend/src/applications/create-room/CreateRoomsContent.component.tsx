@@ -145,7 +145,7 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="mt-1 text-2xl font-serif text-headerBlueColor">
+            <p className="mt-1 text-xl md:text-2xl font-serif text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
             <div className="flex gap-x-2">
@@ -161,27 +161,30 @@ const CreateRoomsContent = () => {
                 <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
                   <SelectItem value={"0"}>{t("Theme.all")}</SelectItem>
                   <SelectItem value={"1"}>{t("Theme.yourTheme")}</SelectItem>
-                  <SelectItem value={"2"}>{t("Theme.officialTheme")}</SelectItem>
+                  <SelectItem value={"2"}>
+                    {t("Theme.officialTheme")}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               {
-              // !user?.is_guest
-              true && (
-                <Button
-                  type="submit"
-                  variant="opacityHover"
-                  className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
-                  onClick={handleCreateThemeClick}
-                >
-                  <p className="text-base font-bold text-white md:text-lg">
-                    {t("Theme.createTheme")}
-                  </p>
-                </Button>
-              )}
+                // !user?.is_guest
+                true && (
+                  <Button
+                    type="submit"
+                    variant="opacityHover"
+                    className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
+                    onClick={handleCreateThemeClick}
+                  >
+                    <p className="font-bold text-white text-sm md:text-base min-w-[110px]">
+                      {t("Theme.createTheme")}
+                    </p>
+                  </Button>
+                )
+              }
             </div>
           </div>
-          <ScrollArea className="xl:h-full md:h-[70%] h-[50%] w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
-            <div className="grid grid-cols-2 xl:grid-cols-4 md:grid-cols-3">
+          <ScrollArea className="w-full h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
+            <div className="flex flex-wrap justify-evenly">
               {wordsCollections.map((item) => {
                 return (
                   <ThemeCard
@@ -190,6 +193,7 @@ const CreateRoomsContent = () => {
                     img={item.theme_thumbnail}
                     onClick={() => setSelectedThemeId(item.id)}
                     isSelected={item.id === selectedThemeId}
+                    isOffical={item.is_created_by_system}
                   />
                 );
               })}
@@ -197,7 +201,7 @@ const CreateRoomsContent = () => {
           </ScrollArea>
         </div>
       </div>
-      <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
+      <div className="flex max-lg:flex-col lg:gap-3 lg:my-5">
         <Button
           type="submit"
           variant="opacityHover"
