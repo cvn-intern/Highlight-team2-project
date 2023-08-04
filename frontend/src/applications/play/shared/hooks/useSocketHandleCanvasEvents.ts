@@ -5,6 +5,7 @@ import useDrawing from "./useDrawing";
 import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "../constants/drawEvent";
 import { useParams } from "react-router";
 import { PaintContext } from "../../PlayingGameScreen.component";
+import { useGameStore } from "@/shared/stores/gameStore";
 
 
 export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
@@ -30,6 +31,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
   const [isNewPlayer, setIsNewPlayer] = useState<boolean>(true)
 
   const { handleStartDraw, handleDrawing, handleFinishDraw, handleClearCanvas } = useDrawing()
+  const { isDrawer } = useGameStore()
 
   handleMouseDown = (point: Point) => {
     socket?.emit(START_DRAW, { codeRoom, point, color, penStyle, brushSize } as SocketStartDraw);
@@ -75,31 +77,37 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       setIsNewPlayer(false)
     }
 
-    socket?.on(GET_CANVAS_STATE, (id: string) => {
-      const dataImg = canvasRef.current.toDataURL()
-
-      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
-    })
-
     socket?.on(CANVAS_STATE_FROM_SERVER, (dataImg: string) => {
       const img = new Image()
       img.src = dataImg
       img.onload = () => {
         ctx?.drawImage(img, 0, 0)
       }
-
     })
 
     socket?.on(DRAWER_CLEAR_CANVAS, () => {
-          handleClearCanvas()
-        });
+      handleClearCanvas()
+    });
 
     return () => {
       socket?.off(GET_CANVAS_STATE)
       socket?.off(CANVAS_STATE_FROM_SERVER)
       socket?.off(DRAWER_CLEAR_CANVAS)
     }
-  }, [ctx])
+  }, [ctx, isDrawer])
+
+  useEffect(() => {
+    socket?.on(GET_CANVAS_STATE, (id: string) => {
+      if (!isDrawer) return
+      const dataImg = canvasRef.current.toDataURL()
+      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
+    })
+
+    return () => {
+      socket?.off(GET_CANVAS_STATE)
+    }
+
+  }, [isDrawer])
 
 
   return { handleMouseDown, handleMouseMove, handleMouseUpOrLeave };
