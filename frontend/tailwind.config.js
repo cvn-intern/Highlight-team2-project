@@ -18,9 +18,10 @@ module.exports = {
     extend: {
       fontFamily:{
         'lilita' : ['Lilita One'],
-        'balsamiq' : ['Balsamiq Sans'],
-        'oxanium' : ['Oxanium'],
-        'bakbak' : ['Bakbak One']
+        'balsamiq' : ['Balsamiq Sans'],        
+        'bakbak' : ['Bakbak One'],
+        'cherry': ['Cherry Bomb One'],
+        'coiny': ['Coiny'],
       },
       colors: {
         headerBlueColor: "#1B67AD",

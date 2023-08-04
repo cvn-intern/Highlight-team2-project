@@ -144,11 +144,11 @@ const CreateRoomsContent = () => {
         </div>
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
-          <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="mt-1 text-2xl font-serif text-headerBlueColor">
+          <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl max-md:items-center">
+            <p className="mt-1 text-2xl font-cherry text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 max-md:flex-col max-md:gap-y-2">
               <Select
                 value={type.toString()}
                 onValueChange={(value) => {
@@ -170,7 +170,7 @@ const CreateRoomsContent = () => {
                 <Button
                   type="submit"
                   variant="opacityHover"
-                  className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
+                  className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit max-md:w-full"
                   onClick={handleCreateThemeClick}
                 >
                   <p className="text-base font-bold text-white md:text-lg">

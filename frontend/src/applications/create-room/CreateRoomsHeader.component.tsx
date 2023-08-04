@@ -24,7 +24,7 @@ const CreateRoomsHeader = () => {
                 </button>
             </div>
             <div className="w-full max-lg:mt-2 text-center lg:mr-10">
-                <p className="lg:text-5xl text-2xl font-serif text-sky-600">
+                <p className="lg:text-5xl text-2xl font-cherry text-sky-600">
                     {t("CreateRoom.setUpLabel")}
                 </p>
             </div>            
