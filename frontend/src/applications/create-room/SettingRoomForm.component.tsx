@@ -60,7 +60,7 @@ const SettingRoomForm = ({
                   <User2 className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  {t("CreateRoom.players")}
+                  {t("Players")}
                 </div>
               </FormLabel>
               <FormControl>
@@ -96,7 +96,7 @@ const SettingRoomForm = ({
                   <Trophy className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  {t("CreateRoom.rounds")}
+                  {t("Rounds")}
                 </div>
               </FormLabel>
               <FormControl>

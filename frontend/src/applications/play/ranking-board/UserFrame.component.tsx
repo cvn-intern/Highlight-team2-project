@@ -20,6 +20,7 @@ import {
 import { handleStringThatIsTooLong } from '@/shared/lib/string';
 import { useGameStore } from '@/shared/stores/gameStore';
 import { useUserStore } from '@/shared/stores/userStore';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileProps {
   rankingBoard: Array<Participant>;
@@ -47,10 +48,11 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
   }
 
   const { gameStatus, correctAnswers } = useGameStore();
-  const { user: me } = useUserStore(); 
+  const { user: me } = useUserStore();
   const renderItem = () => {
     const maxItems = maxPlayer;
     const emptySlots = maxItems - rankingBoard.length;
+    const { t } = useTranslation();
     return (
       <>
         <FlipMove className="flip-wrapper">
@@ -90,7 +92,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                       {
                         ' text-[#FFB84C] font-bold': user.id === me?.id,
                         'text-blue-600 font-bold':
-                        user.is_painter ,
+                          user.is_painter,
                         'text-green-500': correctAnswers.includes(user.id),
                       }
                     )}
@@ -100,7 +102,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                         className={cn(
                           'relative flex items-center bg-yellow-300 w-[68px] h-auto group-hover:scale-110 overflow-visible border-4 border-solid',
                           {
-                            'border-blue-500':  user.is_painter ,
+                            'border-blue-500': user.is_painter,
                             'border-green-500': correctAnswers.includes(
                               user.id
                             ),
@@ -141,11 +143,11 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                         </p>
                         <p className="font-medium text-left truncate text-md text-textBlueColor dark:text-gray-400">
                           <strong>{user.score}</strong>
-                          <span> pts</span>
+                          <span> {t("PlayingGame.rankingBoard.point")}</span>
                         </p>
-                        { user.is_next_painter && (
+                        {user.is_next_painter && (
                           <p className="font-medium text-left text-blue-500 truncate text-md dark:text-gray-400">
-                            Next to draw
+                            {t("PlayingGame.rankingBoard.nextPainter")}
                           </p>
                         )}
                       </div>
@@ -187,7 +189,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
                       />
                     </div>
                     <div className="flex items-center flex-1 min-w-0 text-xl font-bold text-gray-400">
-                      Empty
+                      {t("PlayingGame.rankingBoard.emptySlot")}
                     </div>
                   </div>
                 </div>

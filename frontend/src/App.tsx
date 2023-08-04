@@ -15,18 +15,21 @@ import CreateTheme from "./applications/themes/Page";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { QueryClient } from "@tanstack/query-core";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 export const queryClient = new QueryClient();
 function App() {
   const [loading, setLoading] = useState(true);
   const { socket, createSocketInstance } = useSocketStore();
   const { user, setUser } = useUserStore();
+  const { i18n } = useTranslation()
 
   const createNewToken = async () => {
     const {
       data: { user, accessToken },
     } = await authService.newUser();
     setUser(user);
+    i18n.changeLanguage(user.language)
     JWTManager.setToken(accessToken);
     return accessToken;
   };
@@ -37,7 +40,10 @@ function App() {
       const savedUser = JSON.parse(
         window.sessionStorage.getItem("user")!
       ) as IUser;
-      !user && setUser(savedUser);
+      if (!user) {
+        setUser(savedUser);
+        i18n.changeLanguage(savedUser.language)
+      }
       !socket && createSocketInstance(token, savedUser!.id);
       setLoading(false);
     };

@@ -4,6 +4,8 @@
     "PlayButton": "PLAY",
     "ExitButton": "EXIT",
     "AvatarLabel": "AVATAR",
+    "Rounds": "ROUNDS",
+    "Players": "PLAYERS",
     "Home": {
         "nicknameInput": "NICKNAME",
         "roomButton": "ROOMS"
@@ -29,9 +31,7 @@
     },
     "CreateRoom": {
         "setUpLabel": "SET UP",
-        "players": "PLAYERS",
-        "visible": "VISIBLE",
-        "rounds": "ROUNDS"
+        "visible": "VISIBLE"
     },
     "CreateTheme": {
         "createThemeLabel": "THEME LAB",
@@ -47,8 +47,28 @@
         "createThemeButton": "NEW THEME",
         "repeatedWordNotification": "Repeated word"
     },
+    "WaitingRoom": {
+        "yourInfoLabel": "YOUR INFOROMATION",
+        "joinRoomLabel": "JOIN ROOM"
+    },
     "PlayingGame": {
         "answerInput": "answer",
-        "chatInput": "chat"
+        "answerPlaceHolder": "Hit answer here!",
+        "chatInput": "chat",
+        "chatPlaceHolder": "Hit chat here!",
+        "roomInfo": "ROOM INFORMATION",
+        "rankingBoard": {
+            "kickButton": "KICK",
+            "emptySlot": "EMPTY",
+            "point": "pts",
+            "nextPainter": "Next to draw"
+        },
+        "share": {
+            "shareLabel": "SHARE",
+            "link": "LINK",
+            "qrcode": "QR CODE",
+            "copyButton": "COPY",
+            "shareDescription": "Invite your friends to the room!"
+        }
     }
 }

@@ -4,6 +4,8 @@
   "PlayButton": "CHƠI",
   "ExitButton": "THOÁT",
   "AvatarLabel": "ẢNH ĐẠI DIỆN",
+  "Rounds": "SỐ VÒNG",
+  "Players": "NGƯỜI CHƠI",
   "Home": {
     "nicknameInput": "BIỆT DANH",
     "roomButton": "PHÒNG"
@@ -29,9 +31,7 @@
   },
   "CreateRoom": {
     "setUpLabel": "CÀI ĐẶT PHÒNG",
-    "players": "NGƯỜI CHƠI",
-    "visible": "CÔNG KHAI",
-    "rounds": "SỐ VÒNG"
+    "visible": "CÔNG KHAI"
   },
   "CreateTheme": {
     "createThemeLabel": "LAB CHỦ ĐỀ",
@@ -47,8 +47,27 @@
     "createThemeButton": "TẠO CHỦ ĐỀ",
     "repeatedWordNotification": "Từ đã tồn tại"
   },
+  "WaitingRoom": {
+    "yourInfoLabel": "THÔNG TIN CỦA BẠN",
+    "joinRoomLabel": "THAM GIA PHÒNG"
+  },
   "PlayingGame": {
     "answerInput": "trả lời",
-    "chatInput": "nhắn tin"
+    "answerPlaceHolder": "Trả lời ở đây!",
+    "chatInput": "nhắn tin",
+    "chatPlaceHolder": "Nhắn tin ở đây!",
+    "roomInfo": "THÔNG TIN PHÒNG",
+    "rankingBoard": {
+      "kickButton": "LOẠI",
+      "emptySlot": "TRỐNG",
+      "point": "điểm"
+    },
+    "share": {
+      "shareLabel": "CHIA SẺ",
+      "link": "LINK",
+      "qrcode": "MÃ QR",
+      "copyButton": "COPY",
+      "shareDescription": "Chia sẻ link hoặc mã QR cho bạn bè để họ có thể tham gia phòng này!"
+    }
   }
 }
