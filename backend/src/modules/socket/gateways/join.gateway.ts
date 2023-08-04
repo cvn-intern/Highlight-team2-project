@@ -56,13 +56,13 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
         room = await this.roomService.changeHost(room.code_room);
       }
 
-      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
-
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         this.server.in(codeRoom).emit(RESET_GAME);
       }
 
+      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+      
       if (participants.length === 1 && roomRound) {
         await this.roomRoundService.deleteRoomRound(room.id);
       }

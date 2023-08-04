@@ -39,7 +39,6 @@ const RankingBoard = () => {
 
   useEffect(() => {
     socket?.on('participants', (data: RankingUser) => {
-
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
       const hostUser = _.find(
@@ -62,14 +61,13 @@ const RankingBoard = () => {
       }
 
       if (
-        data.participants.length === 2 &&
+        data.participants.length >= 2 &&
         isHost &&
         gameStatus &&
         gameStatus === WAIT_FOR_OTHER_PLAYERS
       ) {
         setGameStatus(START_GAME);
         return
-        
       }
       const drawer = _.find(
         data.participants,

@@ -181,6 +181,10 @@ export default function PlayingGameScreen() {
       });
     });
 
+    socket?.on('update-room-round', (roomRound: RoomRound) => {
+      setRoomRound(roomRound);
+    })
+
     socket?.on(HINT_WORD, (word: string) => {
       setHintWord(word)
     })
@@ -196,6 +200,7 @@ export default function PlayingGameScreen() {
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
       socket?.off(GET_CANVAS_STATE);
       socket?.off(HINT_WORD);
+      socket?.off('update-room-round');
     };
   }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
 

@@ -127,6 +127,12 @@ export class RoomService {
     return updateRoom;
   }
 
+  async assignHostRoom(room: Room, newHostId: number): Promise<Room> {
+    const updateRoom = await this.updateRoom({...room, host_id: newHostId});
+
+    return updateRoom;
+  }
+
   async checkStartGame(roomId: number): Promise<boolean> {
     const isStart = await this.roomRoundService.getRoundOfRoom(roomId);
 

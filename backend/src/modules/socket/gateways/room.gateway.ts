@@ -63,13 +63,15 @@ export class RoomGateway extends SocketGateway {
       };
       this.server.in(codeRoom).emit(codeRoom, messageContent);
 
-      room = await this.roomService.changeHost(room.code_room);
+      const participants = await this.roomService.getPartipantsInRoom(room);
+      if(participants.length === 1) {
+        room = await this.roomService.assignHostRoom(room, participants[0].id);
+      }
+      
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
 
-      await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, room.code_room, expireTimeOneDay);
       const roomStatus = this.roomService.getRoomStatus(room);
       this.server.to(client.id).emit(GAME_STATUS, roomStatus);
-
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }
@@ -96,19 +98,21 @@ export class RoomGateway extends SocketGateway {
         type: BLOCK_MESSAGE,
         message: HOST_KICK_USER_CONTENT,
       };
-      socketKickedUser.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
+      
+      this.server.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
       this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `You ${HOST_KICK_USER_CONTENT}`);
 
-      await this.roomUserService.deleteRoomUser(room.id, data.userId);
-      await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
-      await this.socketService.checkAndEmitToHostRoom(this.server, room);
-
-      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+      await Promise.all([
+        this.roomUserService.deleteRoomUser(room.id, data.userId),
+        this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`),
+      ])
 
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         this.server.in(room.code_room).emit(RESET_GAME);
       }
+
+      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
 
       if (participants.length === 1 && roomRound) {
         await this.roomRoundService.deleteRoomRound(room.id);
