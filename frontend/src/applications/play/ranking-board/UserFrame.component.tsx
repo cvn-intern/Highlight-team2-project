@@ -213,6 +213,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
           user={userSelected ? userSelected : null}
           blockedIdArray={blockedIdArray}
           setBlockedIdArray={setBlockedIdArray}
+          triggerRef={triggerRef}
         />
       </Dialog>
     </div>

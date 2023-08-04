@@ -19,9 +19,10 @@ type Props = {
   user: Participant | null;
   blockedIdArray: number[];
   setBlockedIdArray: React.Dispatch<React.SetStateAction<number[]>>;
+  triggerRef: any
 };
 
-export function DialogDemo({ user }: Props) {
+export function DialogDemo({ user, triggerRef }: Props) {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
 
@@ -33,12 +34,13 @@ export function DialogDemo({ user }: Props) {
     });
 
     socket?.off('kick');
+    triggerRef?.current.click();
   }
 
   if (!user) return null;
 
   return (
-    <DialogContent className="sm:w-[425px]">
+    <DialogContent className="sm:w-[425px]" >
       <DialogHeader>
         <div className="flex items-center justify-center gap-5 w-full">
           <img className="w-4/5 h-fit" src={ProfileLabel} alt="avatar" />

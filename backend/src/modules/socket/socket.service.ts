@@ -175,27 +175,26 @@ export class SocketService {
         ...oldRoomRound,
         next_painter: nextPainter,
       });
-    } else if(oldRoomRound.painter === userId) {
-      const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
-
-      const newRoomRound = await this.roomRoundService.updateRoomRound({
-        ...oldRoomRound,
-        word,
-        current_round: oldRoomRound.current_round - 1,
-        ended_at: endedAt,
-        started_at: startedAt,
-        painter: painterRound.painter,
-        next_painter: painterRound.next_painter,
-      });
-
-      await this.updateRoomRoundWhenDrawerOut(
-        server,
-        room.code_room,
-        newRoomRound,
-        oldRoomRound.painter === userId ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
-      );
+      return;
     }
 
-    await this.sendListParticipantsInRoom(server, room);
+    const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
+
+    const newRoomRound = await this.roomRoundService.updateRoomRound({
+      ...oldRoomRound,
+      word,
+      current_round: oldRoomRound.current_round - 1,
+      ended_at: endedAt,
+      started_at: startedAt,
+      painter: painterRound.painter,
+      next_painter: painterRound.next_painter,
+    });
+
+    await this.updateRoomRoundWhenDrawerOut(
+      server,
+      room.code_room,
+      newRoomRound,
+      oldRoomRound.painter === userId ? GAME_DRAWER_IS_OUT : GAME_NEXT_DRAWER_IS_OUT,
+    );
   }
 }
