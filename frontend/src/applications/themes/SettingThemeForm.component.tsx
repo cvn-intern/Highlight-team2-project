@@ -13,6 +13,7 @@ import { Button } from "@/shared/components/shadcn-ui/Button";
 import { useUserStore } from "@/shared/stores/userStore";
 import CustomRadioGroup from "@/shared/components/CustomRadioGroup";
 import { DIFFICULTY_OPTIONS } from "./constants";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   themeId: number;
@@ -38,12 +39,13 @@ export default function SettingThemeForm({
   handleAddWord,
 }: Props) {
   const { user } = useUserStore();
+  const { t } = useTranslation();
   return (
     <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
         <div className="flex flex-col gap-2">
           <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
-            1. THEME NAME
+            1. {t("CreateTheme.themeName")}
           </p>
           <Select
             value={themeId.toString()}
@@ -72,7 +74,7 @@ export default function SettingThemeForm({
         {/* End theme name */}
         <div className="flex flex-col gap-2">
           <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
-            2. LANGUAGE
+            2. {t("Language.languageLabel")}
           </p>
           <div className="flex gap-4 mt-5 text-xl text-gray-400 font-balsamiq">
             <Globe size={28} strokeWidth={2} color={"#1B67AD"} />
@@ -82,17 +84,17 @@ export default function SettingThemeForm({
         {/* End language */}
         <div className="flex flex-col gap-1">
           <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
-            3. CREATE WORDS
+            3. {t("CreateTheme.createWord")}
           </p>
           <div className="flex flex-col gap-2">
             {!thereIsWordIsExistedInWordsList && (
               <p className="text-sm font-semibold text-gray-400">
-                Add new word to the list
+                {t("CreateTheme.createWordDescription")}
               </p>
             )}
             {thereIsWordIsExistedInWordsList && (
               <p className="text-sm font-semibold text-red-400">
-                Repeated word
+                {t("CreateTheme.repeatedWordNotification")}
               </p>
             )}
 
@@ -115,7 +117,7 @@ export default function SettingThemeForm({
                 disabled={word.length === 0 || thereIsWordIsExistedInWordsList}
               >
                 <Plus size={16} strokeWidth={2} />
-                Add
+                {t("CreateTheme.addButton")}
               </Button>
             </div>
             <CustomRadioGroup

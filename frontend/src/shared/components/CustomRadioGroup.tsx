@@ -3,6 +3,7 @@ import { Option } from "../types/option";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "@radix-ui/react-label";
 import { cn } from "../lib/utils";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   options: Option[];
@@ -11,6 +12,7 @@ type Props = {
 };
 
 export default function CustomRadioGroup({ options, state, setState }: Props) {
+  const { t } = useTranslation();
   return (
     <RadioGroup
       defaultValue={options[0].value}
@@ -34,9 +36,9 @@ export default function CustomRadioGroup({ options, state, setState }: Props) {
             />
             <Label
               htmlFor={option.id}
-              className="text-sm font-semibold text-gray-400 lowercase"
+              className="text-sm font-semibold text-gray-400"
             >
-              {option.label}
+              {t("CreateTheme." + option.label)}
             </Label>
           </div>
         );

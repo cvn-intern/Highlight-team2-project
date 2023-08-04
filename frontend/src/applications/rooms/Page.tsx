@@ -13,12 +13,14 @@ import RoomFilterForm from "./RoomFilterForm.component";
 import MainLayout from "@/shared/components/MainLayout";
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { useTranslation } from "react-i18next";
 
 const RoomsPage = () => {
   const navigate = useNavigate();
   const [roomFilterData, setRoomFilterData] = useState<RoomList[]>([]);
   const [selectCodeRoom, setSelectCodeRoom] = useState<string>("");
   const { socket } = useSocketStore();
+  const { t } = useTranslation();
 
   const handleBackButton = () => {
     navigate("/");
@@ -95,7 +97,7 @@ const RoomsPage = () => {
               onClick={handleJoinCreateRoom}
             >
               <DoorOpen />
-              <p>NEW ROOM</p>
+              <p>{t("RoomList.newRoomButton")}</p>
             </Button>
             <Button
               type="submit"
@@ -109,7 +111,7 @@ const RoomsPage = () => {
               onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
-              <p>PLAY</p>
+              <p>{t("PlayButton")}</p>
             </Button>
           </div>
         </div>

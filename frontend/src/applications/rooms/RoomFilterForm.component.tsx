@@ -23,8 +23,8 @@ import { Input } from "@/shared/components/shadcn-ui/Input";
 import { Book, Globe, Search } from "lucide-react";
 import useToaster from "@/shared/hooks/useToaster";
 import roomService from "@/shared/services/roomService";
-import RoomsTitle from "@/shared/assets/rooms-title.png";
 import themeService from "@/shared/services/themeService";
+import { useTranslation } from "react-i18next";
 
 interface Theme {
     id: number;
@@ -47,6 +47,7 @@ interface SelectCodeRoomProps {
 const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) => {
     const [searchInput, setSearchInput] = useState<string>("");
     const [themesData, setThemesData] = useState<Theme[]>([]);
+    const { t } = useTranslation();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -137,9 +138,9 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                         }}
                     />
                 </div>
-                
+
                 <p className="hidden lg:block text-7xl mx-auto font-balsamiq text-headerBlueColor">
-                    ROOM
+                    {t("RoomList.roomLabel")}
                 </p>
 
                 <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mr-auto justify-between">
@@ -153,7 +154,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                         <Book size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                                        THEMES
+                                        {t("Theme.themeLabel")}
                                     </div>
                                 </FormLabel>
                                 <div className="relative flex flex-col">
@@ -170,7 +171,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                             </SelectTrigger>
                                             <SelectContent className="text-lg font-bold">
                                                 <SelectItem key={0} value="all">
-                                                    ALL
+                                                    {t("Theme.all")}
                                                 </SelectItem>
                                                 {themesData?.map((theme) => (
                                                     <SelectItem key={theme.id} value={theme.name}>
@@ -195,7 +196,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                         <Globe size={28} strokeWidth={2} className="text-headerBlueColor" />
                                     </div>
                                     <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                                        LANGUAGE
+                                        {t("Language.languageLabel")}
                                     </div>
                                 </FormLabel>
                                 <div className="relative flex flex-col">
@@ -216,8 +217,8 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                                 </span>
                                             </SelectTrigger>
                                             <SelectContent className="text-lg font-bold border-none">
-                                                <SelectItem value="en">English</SelectItem>
-                                                <SelectItem value="vi">Tiếng Việt</SelectItem>
+                                                <SelectItem value="en">{t("Language.english")}</SelectItem>
+                                                <SelectItem value="vi">{t("Language.vietnamese")}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

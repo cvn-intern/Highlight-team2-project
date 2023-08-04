@@ -31,6 +31,7 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 import { MULTIPLE_TAB } from "@/shared/types/errorCode";
+import { useTranslation } from "react-i18next";
 
 const formSchema = z.object({
   nickname: z.string().trim().min(2).max(50),
@@ -46,6 +47,11 @@ const PlayForm = () => {
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
   );
+  const { t, i18n } = useTranslation()
+
+  const handleChangeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,7 +106,7 @@ const PlayForm = () => {
 
   useEffect(() => {
     socket?.on("error", (error: ErrorSocket) => {
-      if(error.code === MULTIPLE_TAB) {
+      if (error.code === MULTIPLE_TAB) {
         navigate("/user/existing");
       }
     });
@@ -129,7 +135,7 @@ const PlayForm = () => {
                     <User2 size={28} strokeWidth={2} color={"#22A699"} />
                   </div>
                   <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                    NICKNAME
+                    {t("Home.nicknameInput")}
                   </div>
                 </FormLabel>
                 <div className="relative flex flex-col">
@@ -143,7 +149,7 @@ const PlayForm = () => {
                         maxLength={MAX_LENGHT_OF_NICKNAME}
                       />
                       <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
-                        {numberOfCharactersLeft} chars left
+                        {numberOfCharactersLeft} {t("InputCharLeft")}
                       </span>
                     </>
                   </FormControl>
@@ -163,20 +169,21 @@ const PlayForm = () => {
                   <Globe color={"#22A699"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  LANGUAGE
+                  {t("Language.languageLabel")}
                 </div>
               </FormLabel>
               <FormControl>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(e) => handleChangeLanguage(e)}
                   defaultValue={field.value}
                 >
                   <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
-                    <SelectItem value="en">English (EN)</SelectItem>
-                    <SelectItem value="vi">Vietnamese (VN)</SelectItem>
+                    <SelectItem value="en">{t("Language.english")}</SelectItem>
+                    <SelectItem value="vi">{t("Language.vietnamese")}</SelectItem>
+
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -194,7 +201,7 @@ const PlayForm = () => {
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
-            <p>ROOMS</p>
+            <p>{t("Home.roomButton")}</p>
           </Button>
 
           <Button
@@ -204,7 +211,7 @@ const PlayForm = () => {
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
-            <p>PLAY</p>
+            <p>{t("PlayButton")}</p>
           </Button>
         </div>
       </form>

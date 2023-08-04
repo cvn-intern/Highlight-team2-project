@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/shared/components/shadcn-ui/dialog";
 import { cn } from "@/shared/lib/utils";
-import { Check, Edit2 as EditIcon} from "lucide-react";
+import { Check, Edit2 as EditIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Avatar,
@@ -21,12 +21,14 @@ import AvatarCard from "@/shared/components/AvatarCard";
 import { useUserStore } from "@/shared/stores/userStore";
 import userService from "@/shared/services/userService";
 import useToaster from "@/shared/hooks/useToaster";
+import { useTranslation } from "react-i18next";
 
 const CustomAvatar = () => {
   const { user, setUser } = useUserStore();
   const [avatarIndex, setAvatarIndex] = useState(0);
   const [selectedAvatar, setSelectedAvatar] = useState(avatarIndex);
   const [avatarImages, setAvatarImages] = useState<Array<string>>([]);
+  const { t } = useTranslation()
 
   const handleConfirmAvatar = async () => {
     try {
@@ -92,7 +94,9 @@ const CustomAvatar = () => {
         >
           <DialogHeader>
             <DialogTitle className="text-5xl text-center text-headerTextColor mb-7">
-              <img src={AvatarHeader} className="w-44 md:w-52" alt=""></img>
+              <p className="hidden lg:block text-7xl mx-auto font-serif text-headerBlueColor">
+                {t("AvatarLabel")}
+              </p>
             </DialogTitle>
           </DialogHeader>
           <div className="w-full overflow-y-auto h-96">
@@ -116,7 +120,7 @@ const CustomAvatar = () => {
                 className="gap-4 mt-2 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
               >
                 <Check color="white" size={28} strokeWidth={4} />
-                <p className="text-lg">CONFIRM!</p>
+                <p className="text-lg">{t("CustomAvatar.confirmButton")}!</p>
               </Button>
             </DialogPrimitive.Close>
           </DialogFooter>

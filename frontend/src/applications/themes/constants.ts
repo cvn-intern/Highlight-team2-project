@@ -4,19 +4,19 @@ export const DIFFICULTY_OPTIONS: Option[] = [
   {
     id: "easy",
     value: "easy",
-    label: "Easy",
+    label: "easy",
     radioButtonClassName: "text-green-600",
   },
   {
     id: "medium",
     value: "medium",
-    label: "Medium",
+    label: "medium",
     radioButtonClassName: "text-yellow-600",
   },
   {
     id: "hard",
     value: "hard",
-    label: "Hard",
+    label: "hard",
     radioButtonClassName: "text-red-600",
   },
 ];

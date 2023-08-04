@@ -1,3 +1,54 @@
 {
-    "home": "homepage"
+    "OrLabel": "OR",
+    "InputCharLeft": "chars left",
+    "PlayButton": "PLAY",
+    "ExitButton": "EXIT",
+    "AvatarLabel": "AVATAR",
+    "Home": {
+        "nicknameInput": "NICKNAME",
+        "roomButton": "ROOMS"
+    },
+    "CustomAvatar": {
+        "confirmButton": "CONFIRM"
+    },
+    "RoomList": {
+        "roomLabel": "ROOMS",
+        "newRoomButton": "NEW ROOM"
+    },
+    "Language": {
+        "languageLabel": "LANGUAGE",
+        "english": "English",
+        "vietnamese": "Vietnamese"
+    },
+    "Theme": {
+        "themeLabel": "THEME",
+        "all": "ALL",
+        "yourTheme": "Your Themes",
+        "officialTheme": "Official",
+        "createTheme": "Create Theme"
+    },
+    "CreateRoom": {
+        "setUpLabel": "SET UP",
+        "players": "PLAYERS",
+        "visible": "VISIBLE",
+        "rounds": "ROUNDS"
+    },
+    "CreateTheme": {
+        "createThemeLabel": "THEME LAB",
+        "themeName": "THEME NAME",
+        "createWordLabel": "CREATE WORDS",
+        "createWordDescription": "Add new word to the list",
+        "addButton": "ADD",
+        "easy": "easy",
+        "medium": "medium",
+        "hard": "hard",
+        "numberOfWord": "WORDS CREATED",
+        "searchLabel": "SEARCH",
+        "createThemeButton": "NEW THEME",
+        "repeatedWordNotification": "Repeated word"
+    },
+    "PlayingGame": {
+        "answerInput": "answer",
+        "chatInput": "chat"
+    }
 }
