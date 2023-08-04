@@ -38,7 +38,6 @@ import { RoomStatusType, RoomType } from '@/shared/types/room';
 import { useParams } from 'react-router-dom';
 import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
-import { NEW_PLAYER } from './shared/constants/drawEvent';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
@@ -151,7 +150,6 @@ export default function PlayingGameScreen() {
   useEffect(() => {
     socket?.on(GAME_STATUS_CHANNEL, ({ success, status }: RoomStatusType) => {
       if (!success) return;
-      if (status === PLAY_GAME) socket.emit(NEW_PLAYER, codeRoom);
       if (isHost && status === WAIT_FOR_OTHER_PLAYERS && participants.length > 1){
         setGameStatus(START_GAME);
         return

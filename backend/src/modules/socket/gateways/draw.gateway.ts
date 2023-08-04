@@ -16,6 +16,7 @@ import {
   CANVAS_STATE_FROM_SERVER,
 } from '../constant';
 import { Drawing, GetCanvasState, StartDraw } from '../types/drawBody';
+import { extractIdRoom } from 'src/common/utils/helper';
 
 interface Clients {
   socketId: string;
@@ -46,17 +47,11 @@ export class DrawGateway extends SocketGateway {
   }
 
   @SubscribeMessage(NEW_PLAYER_CHANNEL)
-  handleNewPlayer(@MessageBody() codeRoom: string, @ConnectedSocket() client: Socket): void {
-    const roomSockets = this.server.of('/').in(codeRoom);
-    const listClients: Clients[] = Array.from(roomSockets[`adapter`].sids);
-
-    const inRoomClient = listClients.find((item: Clients) => {
-      const [roomId] = Array.from(item[1].values());
-      return !!roomId;
-    });
-    if (listClients.length > 1 && inRoomClient) {
-      client.broadcast.to(inRoomClient[0]).emit(GET_CANVAS_STATE, client.id);
-    }
+  async handleNewPlayer(@MessageBody() codeRoom: string, @ConnectedSocket() client: Socket) {
+    const roomId = extractIdRoom(codeRoom);
+    const roomRound = await this.roomRoundService.getRoundOfRoom(roomId);
+    const painterSocketId = await this.redisService.getObjectByKey(`USER:${roomRound.painter}:SOCKET`);
+    client.to(painterSocketId).emit(GET_CANVAS_STATE, client.id);
   }
 
   @SubscribeMessage(CANVAS_STATE_CHANNEL)
