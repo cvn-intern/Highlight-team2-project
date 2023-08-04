@@ -18,11 +18,6 @@ import {
 import { Drawing, GetCanvasState, StartDraw } from '../types/drawBody';
 import { extractIdRoom } from 'src/common/utils/helper';
 
-interface Clients {
-  socketId: string;
-  data: Set<string>;
-}
-
 export class DrawGateway extends SocketGateway {
   @SubscribeMessage(START_DRAWING_CHANNEL)
   handleStartDrawing(@MessageBody() data: StartDraw, @ConnectedSocket() client: Socket): void {
