@@ -5,17 +5,24 @@ import DoorIcon from "@/shared/assets/door-icon.svg";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import themeService from "@/shared/services/themeService";
 import { Theme } from "@/shared/types/theme";
-import { LogOut } from "lucide-react";
+import { CopyX, LogOut } from "lucide-react";
 import SettingThemeForm from "./SettingThemeForm.component";
 import { Search } from "lucide-react";
 import WordsContainer from "./WordsContainer";
 import { useTranslation } from "react-i18next";
 import { useCreateWordsCollection } from "@/shared/hooks/useCreateWordsCollection";
 import { useUserStore } from "@/shared/stores/userStore";
+import { PackageOpen } from "lucide-react";
+import { cn } from "@/shared/lib/utils";
+import { useNavigate } from "react-router";
+import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
+import AlertIcon from "@/shared/components/icons/AlertIcon";
 
 const CreateThemeContent = () => {
   const { user } = useUserStore();
   const { mutate: addWordsCollection } = useCreateWordsCollection();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   // States
   const [languageCode, setLanguageCode] = useState<string>("en");
   useEffect(() => {
@@ -28,7 +35,6 @@ const CreateThemeContent = () => {
   );
   const [word, setWord] = useState("");
   const [wordsList, setWordsList] = useState<WordType[]>([]);
-  const { t } = useTranslation();
 
   const totalWords = useMemo(() => wordsList.length, [wordsList]);
   const [search, setSearch] = useState("");
@@ -105,7 +111,6 @@ const CreateThemeContent = () => {
     newWordsList.push({ word, difficulty });
     setWordsList(newWordsList);
   };
-
   const handleCreateWordsCollection = async () => {
     if (!isValidToCreateWordsCollection) return;
     addWordsCollection({
@@ -113,6 +118,9 @@ const CreateThemeContent = () => {
       language_code: languageCode,
       words_list: wordsList,
     });
+  };
+  const handleExitButton = () => {
+    navigate("/rooms/create-room");
   };
   return (
     <>
@@ -170,24 +178,65 @@ const CreateThemeContent = () => {
               />
             </div>
           </div>
-          <div className="flex-1 w-full p-4 bg-gray-300 rounded-2xl">
-            <WordsContainer
-              wordsList={filteredWordsList}
-              handleDeleteWord={handleDeleteWord}
-            />
+          {/* Words Container */}
+          <div
+            className={cn(`flex-1 w-full p-4 bg-gray-300 rounded-2xl flex`, {
+              flexCenter: totalWords === 0,
+              "justify-center": totalWords > 0,
+            })}
+          >
+            {totalWords === 0 && (
+              <div className="flex flex-col gap-4 items-center max-w-[70%]">
+                <PackageOpen size={64} className="text-gray-400" />
+                <p className="text-2xl md:text-3xl font-medium text-gray-400 text-center">
+                  {t("CreateTheme.alertWhenThereIsNoWords")}
+                </p>
+              </div>
+            )}
+            {totalWords > 0 && (
+              <WordsContainer
+                wordsList={filteredWordsList}
+                handleDeleteWord={handleDeleteWord}
+              />
+            )}
           </div>
         </div>
       </div>
       <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
-        <Button
-          type="submit"
-          variant="opacityHover"
-          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
-          //   onClick={handleExitButton}
-        >
-          <LogOut strokeWidth={3} size={32} />
-          <p className="text-lg">{t("ExitButton")}</p>
-        </Button>
+        {totalWords > 0 && (
+          <AlertDialogYesNo
+            buttonVariant={"link"}
+            buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
+            onYesClick={() => {
+              handleExitButton();
+            }}
+            Icon={AlertIcon}
+            confirmText="Yes"
+            cancelText="No"
+            alertMessage="Discard all change?"
+            customButton={
+              <Button
+                type="submit"
+                variant="opacityHover"
+                className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
+              >
+                <LogOut strokeWidth={3} size={32} />
+                <p className="text-lg">{t("ExitButton")}</p>
+              </Button>
+            }
+          />
+        )}
+        {totalWords === 0 && (
+          <Button
+            type="submit"
+            variant="opacityHover"
+            className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
+            onClick={handleExitButton}
+          >
+            <LogOut strokeWidth={3} size={32} />
+            <p className="text-lg">{t("ExitButton")}</p>
+          </Button>
+        )}
         <Button
           type="submit"
           variant="opacityHover"

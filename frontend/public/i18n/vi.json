@@ -45,7 +45,8 @@
     "numberOfWord": "TỪ ĐƯỢC TẠO",
     "searchLabel": "TÌM KIẾM",
     "createThemeButton": "TẠO CHỦ ĐỀ",
-    "repeatedWordNotification": "Từ đã tồn tại"
+    "repeatedWordNotification": "Từ đã tồn tại",
+    "alertWhenThereIsNoWords": "Không có từ nào trong danh sách từ. Kiểm tra lại đi ba."
   },
   "PlayingGame": {
     "answerInput": "trả lời",

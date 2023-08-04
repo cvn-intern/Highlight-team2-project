@@ -84,7 +84,7 @@ export default function SettingThemeForm({
         {/* End language */}
         <div className="flex flex-col gap-1">
           <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
-            3. {t("CreateTheme.createWord")}
+            3. {t("CreateTheme.createWordLabel")}
           </p>
           <div className="flex flex-col gap-2">
             {!thereIsWordIsExistedInWordsList && (
