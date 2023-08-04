@@ -13,7 +13,7 @@ export class RoomUserService {
     private redisService: RedisService,
     @Inject(forwardRef(() => RoomRoundService))
     private roomRoundService: RoomRoundService,
-  ) { }
+  ) {}
 
   async createNewRoomUser(room_id: number, user_id: number): Promise<RoomUser> {
     const roomUser: RoomUser = await this.roomUserRepository.findOne({
@@ -61,7 +61,7 @@ export class RoomUserService {
           is_next_painter: user.id === roomRound.next_painter,
         };
       }
-      
+
       return {
         ...user,
         is_host: user.id === room.host_id,
@@ -127,6 +127,22 @@ export class RoomUserService {
     } as PainterRound;
   }
 
+  async assignNextPainter(room: Room, painter: number): Promise<number> {
+    const participants: Array<Participant> = await this.getListUserOfRoom(room);
+    const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${room.id}:PAINTERS`);
+    const drewPainters: Array<number> = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+    const currentPainter = paintersOfPreviousRound ? paintersOfPreviousRound.nextPainter : null;
+    let notNextPainters: Array<Participant> = participants;
+
+    let nextPainterId = currentPainter;
+    notNextPainters = notNextPainters.filter((participant: Participant) => !drewPainters.includes(participant.id));
+    const painterIndex: number = Math.floor(Math.random() * notNextPainters.length);
+    nextPainterId = notNextPainters[painterIndex].id;
+    await this.resetNextPainterCachePainterForRoom(room.id, nextPainterId);
+
+    return nextPainterId;
+  }
+
   async cachePainterForRoom(roomId: number, painter: number, nextPainter: number) {
     const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
 
@@ -154,14 +170,14 @@ export class RoomUserService {
     );
   }
 
-  async resetNextPainterCachePainterForRoom(roomId: number) {
+  async resetNextPainterCachePainterForRoom(roomId: number, nextPainter: number | null) {
     const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${roomId}:PAINTERS`);
 
     return await this.redisService.setObjectByKeyValue(
       `${roomId}:PAINTERS`,
       {
         ...paintersOfPreviousRound,
-        nextPainter: null,
+        nextPainter,
       },
       expireTimeOneDay,
     );

@@ -12,6 +12,7 @@ import {
   LEAVE_ROOM_CONTENT,
   LEAVE_ROOM_TYPE,
   NOTIFY_CHANNEL,
+  RESET_GAME,
 } from '../constant';
 import { SocketClient } from '../socket.class';
 import { errorsSocket } from 'src/common/errors/errorCode';
@@ -55,6 +56,7 @@ export class RoomGateway extends SocketGateway {
       await this.redisService.setObjectByKeyValue(`USER:${client.user.id}:ROOM`, codeRoom, expireTimeOneDay);
 
       const messageContent: Chat = {
+        socketId: client.id,
         user: client.user.nickname,
         type: JOIN_ROOM_TYPE,
         message: JOIN_ROOM_CONTENT,
@@ -106,11 +108,12 @@ export class RoomGateway extends SocketGateway {
     const participants = await this.roomUserService.getListUserOfRoom(room);
     if (participants.length === 1) {
       await this.roomRoundService.deleteRoomRound(room.id);
+      this.server.in(room.code_room).emit(RESET_GAME);
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
       return;
     }
 
     await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, data.userId, this.server, room);
-    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
 
   @SubscribeMessage(LEAVE_ROOM_CHANNEL)
@@ -138,7 +141,8 @@ export class RoomGateway extends SocketGateway {
       client.to(codeRoom).emit(`${codeRoom}-leave`, meesageContent);
 
       if (client.user.id === room.host_id) {
-        room = await this.roomService.changeHost(codeRoom);
+        room = await this.roomService.changeHost(room.code_room);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
       }
 
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
@@ -149,11 +153,12 @@ export class RoomGateway extends SocketGateway {
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         await this.roomRoundService.deleteRoomRound(room.id);
+        this.server.in(codeRoom).emit(RESET_GAME);
+        await this.socketService.sendListParticipantsInRoom(this.server, room);
         return;
       }
 
       await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, client.user.id, this.server, room);
-      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

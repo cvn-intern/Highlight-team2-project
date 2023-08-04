@@ -8,9 +8,11 @@ import GoogleLoginButton from "@/shared/components/GoogleLoginButton";
 import DividerWithText from "@/shared/components/DividerWithText";
 import { useUserStore } from "@/shared/stores/userStore";
 import GoogleLogoutButton from "@/shared/components/GoogleLogoutButton";
+import { useTranslation } from "react-i18next";
 
 const Homepage = () => {
   const { user } = useUserStore();
+  const { t } = useTranslation();
 
   return (
     <MainLayout>
@@ -40,7 +42,7 @@ const Homepage = () => {
             <>
               <DividerWithText
                 className="px-10 2xl:mt-10 md:px-24 lg:px-40"
-                text="LOGIN"
+                text={t("OrLabel")}
                 dividerClassname="text-red-400"
                 textClassname="2xl:text-lg w-16 h-16 2xl:w-20 2xl:h-20 flex items-center justify-center border-2 rounded-full font-bold text-textBlueColor"
               />

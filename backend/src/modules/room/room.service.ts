@@ -8,7 +8,6 @@ import { RoomRepository } from './room.repository';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { RoomUser } from '../room-user/roomUser.entity';
 import { RoomRound } from '../room-round/roomRound.entity';
-import { WordService } from '../word/word.service';
 const moment = require('moment');
 
 const MAX_LENGTH_RANDOM = 5;
@@ -19,8 +18,11 @@ export class RoomService {
     private roomRepository: RoomRepository,
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
-    private wordService: WordService,
   ) {}
+
+  async getRoomInformationByCodeRoom(codeRoom: string) {
+    return await this.roomRepository.getInformationRoom(codeRoom);
+  }
 
   async createNewRoom(roomInformation: RoomInterface): Promise<Room> {
     const codeRoom: string = randomString(MAX_LENGTH_RANDOM).toLocaleUpperCase();
@@ -51,18 +53,13 @@ export class RoomService {
   }
 
   async getRoomByCodeRoom(codeRoom: string): Promise<Room> {
-    const isExisted: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
+    const room: Room = await this.roomRepository.getRoomByCodeRoom(codeRoom);
 
-    if (!isExisted) {
+    if (!room) {
       throw new HttpException('Not found room!', HttpStatus.NOT_FOUND);
     }
 
-    const room = await this.roomRepository.getInformationRoom(codeRoom);
-
-    return {
-      ...room,
-      host_id: isExisted.host_id,
-    };
+    return room;
   }
 
   async checkUserInRoom(idUser: number, idRoom: number): Promise<boolean> {

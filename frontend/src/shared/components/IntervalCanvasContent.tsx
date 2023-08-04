@@ -13,14 +13,13 @@ import {
   INTERVAL_NEW_TURN,
   INTERVAL_NOT_SHOW_WORD,
   INTERVAL_SHOW_WORD,
-  // PLAY_GAME,
   START_GAME,
   GAME_NEW_TURN_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS,
   INTERVAL_DURATION_MILISECONDS,
-  GAME_PROGRESS,
+  GAME_PRESENT_PROGRESS,
   END_GAME,
-  INTERVAL_DRAWER_OUT,
+  GAME_REFRESH_DRAWER,
 } from "./IntervalCanvas";
 import Confetti from "react-confetti";
 import { Button } from "./shadcn-ui/Button";
@@ -28,12 +27,13 @@ import { useGameStore } from "../stores/gameStore";
 import { useSocketStore } from "../stores/socketStore";
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
+import moment from "moment"
 import { Avatar, AvatarFallback, AvatarImage } from "./shadcn-ui/avatar-shadcn";
 import { cn } from "../lib/utils";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
-  const { roomRound, isHost, correctAnswers, maxPlayer, participants } = useGameStore();
+  const { roomRound, isHost, correctAnswers, participants } = useGameStore();
   const { codeRoom } = useParams();
 
   const swapPositionRanking = (top3Users: Participant[]): Participant[] => {
@@ -45,6 +45,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
 
   const handleTop3Ranking = (listParticipant: Participant[]): Participant[] => {
     const usersInRoom: number = 3
+    if(listParticipant.length === 0) return []
     if (listParticipant.length >= usersInRoom) {
       const top3Users: Participant[] = [...listParticipant.slice(0, 3)]
       top3Users[0].is_winner = true
@@ -56,20 +57,14 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   }
 
   const handleStartGame = () => {
-    if (!isHost || !socket) return;
-    socket?.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
-    socket?.emit(GAME_PROGRESS, {
-      codeRoom,
-      maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
-    });
+    if (!isHost || !socket) return
+    socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
+    socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_NEW_TURN, sendAt: moment() })
   };
 
   const painter = useMemo(() => {
-    return participants.find(
-      (participant) => participant.id === roomRound?.painter
-    );
-  }, [roomRound, participants]);
-
+    return participants.find(participant => participant.id === roomRound?.painter)
+  }, [roomRound, participants])
 
   switch (status) {
     case INTERVAL_SHOW_WORD:
@@ -86,8 +81,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-lg mt-5 text-slate-300"> Correct players:</p>
             <p className="text-[3.5rem] mx-auto">
               {" "}
-              <span className="text-cyan-700">{correctAnswers.length}</span>/
-              <span>{maxPlayer}</span>
+              <span className="text-cyan-700">{correctAnswers.length}</span>/<span>{participants.length-1}</span>
             </p>
           </div>
         </div>
@@ -112,7 +106,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <img className="w-[200px]" src={painter?.avatar} />
         </div>
       );
-    case INTERVAL_DRAWER_OUT:
+    case GAME_REFRESH_DRAWER:
       return (
         <>
           <div className="flex relative justify-center items-center mt-2 mb-4 transform -translate-y-5">

@@ -19,6 +19,7 @@ export class WordService {
         words_collection_id: wordCollection,
       },
     });
+
     const usedWords: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
     if (usedWords) {

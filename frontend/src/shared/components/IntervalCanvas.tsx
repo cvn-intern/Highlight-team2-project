@@ -2,6 +2,13 @@ import { GameStatus } from "../stores/gameStore";
 import IntervalCanvasContent from "./IntervalCanvasContent";
 import IntervalCanvasHeader from "./IntervalCanvasHeader";
 
+export const WAIT_FOR_OTHER_PLAYERS = 'wait-for-players';
+export const PLAY_GAME = 'game-start';
+export const GAME_PROGRESS = 'game-progress';
+export const GAME_REFRESH_ROUND = 'refresh-round';
+export const GAME_REFRESH_DRAWER = 'refresh-drawer';
+export const GAME_PRESENT_PROGRESS = 'game-present-progress';
+export const GAME_PRESENT_PROGRESS_NEW_PLAYER = 'game-present-progress-new-player';
 export const INTERVAL_SHOW_WORD = "interval-show-word";
 export const INTERVAL_NOT_SHOW_WORD = "interval-not-show-word";
 export const INTERVAL_NEW_TURN = "new-turn";
@@ -9,10 +16,7 @@ export const INTERVAL_INACTIVE = "inactive";
 export const INTERVAL_DRAWER_OUT = "drawer_out";
 export const START_GAME = "start-game";
 export const END_GAME = "end-game";
-export const WAIT_FOR_OTHER_PLAYERS = "wait-for-players";
-export const PLAY_GAME = "game-start";
-export const GAME_PROGRESS = "game-progress";
-export const GAME_REFRESH_ROUND = "refresh-round";
+export const RESET_GAME = 'reset-game';
 
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';
@@ -21,7 +25,7 @@ export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
 export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
 
 
-export const INTERVAL_DURATION_MILISECONDS = 10000;
+export const INTERVAL_DURATION_MILISECONDS = 5000;
 
 type IntervalCanvasProps = {
   status: GameStatus;

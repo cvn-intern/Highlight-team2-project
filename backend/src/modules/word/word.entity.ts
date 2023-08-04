@@ -1,6 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
-import { User } from '../user/user.entity';
 
 @Entity('word')
 export class Word {
@@ -19,5 +18,6 @@ export class Word {
 
   @ManyToOne(() => WordsCollection, (wordsCollection) => wordsCollection.id)
   @JoinColumn({ name: 'words_collection_id' })
+  @Column()
   words_collection_id: number;
 }

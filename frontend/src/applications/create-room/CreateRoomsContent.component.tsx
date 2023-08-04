@@ -23,6 +23,7 @@ import {
 import { WordsCollection } from "@/shared/types/wordsCollection";
 import { useUserStore } from "@/shared/stores/userStore";
 import { DEFAULT_ROOM_TIME } from "@/shared/constants";
+import { useTranslation } from "react-i18next";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -43,6 +44,7 @@ const CreateRoomsContent = () => {
   );
   const [type, setType] = useState(0);
   const { user } = useUserStore();
+  const { t } = useTranslation();
   const [languageCode, setLanguageCode] = useState("all");
   const fetchWordsCollection = async (type: number, language_code: string) => {
     return await wordCollectionService.getWordCollections(type, language_code);
@@ -124,7 +126,7 @@ const CreateRoomsContent = () => {
     navigate("/rooms");
   };
   const handleCreateThemeClick = () => {
-    // navigate("/rooms/create-theme");
+    navigate("/rooms/create-theme");
   };
 
   return (
@@ -143,8 +145,8 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
-            <p className="mt-1 text-2xl font-balsamiq text-headerBlueColor">
-              THEME
+            <p className="mt-1 text-2xl font-serif text-headerBlueColor">
+              {t("Theme.themeLabel")}
             </p>
             <div className="flex gap-x-2">
               <Select
@@ -157,12 +159,14 @@ const CreateRoomsContent = () => {
                   <SelectValue placeholder="Themes Filter" />
                 </SelectTrigger>
                 <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
-                  <SelectItem value={"0"}>All</SelectItem>
-                  <SelectItem value={"1"}>Your Themes</SelectItem>
-                  <SelectItem value={"2"}>Offical</SelectItem>
+                  <SelectItem value={"0"}>{t("Theme.all")}</SelectItem>
+                  <SelectItem value={"1"}>{t("Theme.yourTheme")}</SelectItem>
+                  <SelectItem value={"2"}>{t("Theme.officialTheme")}</SelectItem>
                 </SelectContent>
               </Select>
-              {!user?.is_guest && (
+              {
+              // !user?.is_guest
+              true && (
                 <Button
                   type="submit"
                   variant="opacityHover"
@@ -170,7 +174,7 @@ const CreateRoomsContent = () => {
                   onClick={handleCreateThemeClick}
                 >
                   <p className="text-base font-bold text-white md:text-lg">
-                    CREATE THEME
+                    {t("Theme.createTheme")}
                   </p>
                 </Button>
               )}
@@ -201,7 +205,7 @@ const CreateRoomsContent = () => {
           onClick={handleExitButton}
         >
           <LogOut strokeWidth={3} size={32} />
-          <p className="text-lg">EXIT</p>
+          <p className="text-lg">{t("ExitButton")}</p>
         </Button>
         <Button
           type="submit"
@@ -210,7 +214,7 @@ const CreateRoomsContent = () => {
           className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
         >
           <img src={DoorIcon} alt="" className="w-[18%]" />
-          <p>NEW ROOMS</p>
+          <p>{t("RoomList.newRoomButton")}</p>
         </Button>
       </div>
     </>

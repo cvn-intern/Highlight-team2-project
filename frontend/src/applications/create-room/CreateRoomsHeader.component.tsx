@@ -1,8 +1,10 @@
 import { Triangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { useTranslation } from "react-i18next";
 
 const CreateRoomsHeader = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const handleBackButton = () => {
         navigate("/rooms");
@@ -22,8 +24,8 @@ const CreateRoomsHeader = () => {
                 </button>
             </div>
             <div className="w-full max-lg:mt-2 text-center lg:mr-10">
-                <p className="lg:text-5xl text-2xl font-balsamiq text-sky-600">
-                    SET UP
+                <p className="lg:text-5xl text-2xl font-serif text-sky-600">
+                    {t("CreateRoom.setUpLabel")}
                 </p>
             </div>            
         </div>

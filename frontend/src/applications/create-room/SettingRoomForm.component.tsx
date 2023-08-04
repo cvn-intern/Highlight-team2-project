@@ -20,6 +20,7 @@ import { Eye, Globe, Trophy, User2 } from "lucide-react";
 import _ from "lodash";
 import { z } from "zod";
 import { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
 const MIN_PLAYER_IN_ROOM = 2;
 const MAX_PLAYER_IN_ROOM = 50;
@@ -42,6 +43,7 @@ const SettingRoomForm = ({
   languageCode,
   setLanguageCode,
 }: Props) => {
+  const { t } = useTranslation();
   return (
     <Form {...form}>
       <form
@@ -58,7 +60,7 @@ const SettingRoomForm = ({
                   <User2 className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  PLAYERS
+                  {t("CreateRoom.players")}
                 </div>
               </FormLabel>
               <FormControl>
@@ -80,7 +82,6 @@ const SettingRoomForm = ({
                   </SelectContent>
                 </Select>
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -95,7 +96,7 @@ const SettingRoomForm = ({
                   <Trophy className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  ROUND
+                  {t("CreateRoom.rounds")}
                 </div>
               </FormLabel>
               <FormControl>
@@ -135,7 +136,7 @@ const SettingRoomForm = ({
                   <Eye className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  VISIBLE
+                  {t("CreateRoom.visible")}
                 </div>
               </FormLabel>
               <FormControl>
@@ -160,7 +161,7 @@ const SettingRoomForm = ({
                   <Globe className="text-iconCreateRoomColor" size={28} />
                 </div>
                 <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  LANGUAGE
+                  {t("Language.languageLabel")}
                 </div>
               </FormLabel>
               <FormControl>
@@ -175,9 +176,9 @@ const SettingRoomForm = ({
                     <SelectValue placeholder="Themes Filter" />
                   </SelectTrigger>
                   <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
-                    <SelectItem value={"all"}>All</SelectItem>
-                    <SelectItem value={"en"}>English</SelectItem>
-                    <SelectItem value={"vi"}>Tiếng Việt</SelectItem>
+                    <SelectItem value={"all"}>{t("Theme.all")}</SelectItem>
+                    <SelectItem value={"en"}>{t("Language.english")}</SelectItem>
+                    <SelectItem value={"vi"}>{t("Language.vietnamese")}</SelectItem>
                   </SelectContent>
                 </Select>
               </FormControl>

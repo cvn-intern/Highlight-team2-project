@@ -1,9 +1,11 @@
 import { Triangle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { useTranslation } from "react-i18next";
 
 const CreateThemeHeader = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleBackButton = () => {
     navigate("/rooms/create-room");
   };
@@ -21,7 +23,7 @@ const CreateThemeHeader = () => {
       </div>
       <div className="w-full max-lg:mt-2 text-center lg:mr-10">
         <p className="lg:text-5xl text-2xl font-balsamiq text-sky-600">
-          THEME LAB
+          {t("CreateTheme.createThemeLabel")}
         </p>
       </div>
     </div>

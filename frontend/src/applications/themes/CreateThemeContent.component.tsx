@@ -9,6 +9,7 @@ import { LogOut } from "lucide-react";
 import SettingThemeForm from "./SettingThemeForm.component";
 import { Search } from "lucide-react";
 import WordsContainer from "./WordsContainer";
+import { useTranslation } from "react-i18next";
 import { useCreateWordsCollection } from "@/shared/hooks/useCreateWordsCollection";
 import { useUserStore } from "@/shared/stores/userStore";
 
@@ -27,6 +28,7 @@ const CreateThemeContent = () => {
   );
   const [word, setWord] = useState("");
   const [wordsList, setWordsList] = useState<WordType[]>([]);
+  const { t } = useTranslation();
 
   const totalWords = useMemo(() => wordsList.length, [wordsList]);
   const [search, setSearch] = useState("");
@@ -132,7 +134,7 @@ const CreateThemeContent = () => {
             <div className="flex justify-between">
               <div className="flex items-center gap-2">
                 <p className="font-medium text-gray-400 uppercase">
-                  {totalWords} words created
+                  {totalWords} {t("CreateTheme.numberOfWord")}
                 </p>
                 {/* Easy */}
                 <div className="flex items-center gap-[2px]">
@@ -162,7 +164,7 @@ const CreateThemeContent = () => {
               <input
                 type="text"
                 className="leading-5 border-none outline-none placeholder:text-gray-400 placeholder:font-medium"
-                placeholder="search"
+                placeholder={t("CreateTheme.searchLabel")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -184,7 +186,7 @@ const CreateThemeContent = () => {
           //   onClick={handleExitButton}
         >
           <LogOut strokeWidth={3} size={32} />
-          <p className="text-lg">EXIT</p>
+          <p className="text-lg">{t("ExitButton")}</p>
         </Button>
         <Button
           type="submit"
@@ -194,7 +196,7 @@ const CreateThemeContent = () => {
           disabled={!isValidToCreateWordsCollection}
         >
           <img src={DoorIcon} alt="" className="w-[18%]" />
-          <p>NEW ROOMS</p>
+          <p>{t("CreateTheme.createThemeButton")}</p>
         </Button>
       </div>
     </>

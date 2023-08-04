@@ -1,0 +1,54 @@
+{
+  "OrLabel": "HOẶC",
+  "InputCharLeft": "ký tự còn lại",
+  "PlayButton": "CHƠI",
+  "ExitButton": "THOÁT",
+  "AvatarLabel": "ẢNH ĐẠI DIỆN",
+  "Home": {
+    "nicknameInput": "BIỆT DANH",
+    "roomButton": "PHÒNG"
+  },
+  "CustomAvatar": {
+    "confirmButton": "XÁC NHẬN"
+  },
+  "RoomList": {
+    "roomLabel": "PHÒNG",
+    "newRoomButton": "TẠO PHÒNG"
+  },
+  "Language": {
+    "languageLabel": "NGÔN NGỮ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt"
+  },
+  "Theme": {
+    "themeLabel": "CHỦ ĐỀ",
+    "all": "TẤT CẢ",
+    "yourTheme": "Chủ đề của tôi",
+    "officialTheme": "Chủ đề chính thức",
+    "createTheme": "Tạo chủ đề mới"
+  },
+  "CreateRoom": {
+    "setUpLabel": "CÀI ĐẶT PHÒNG",
+    "players": "NGƯỜI CHƠI",
+    "visible": "CÔNG KHAI",
+    "rounds": "SỐ VÒNG"
+  },
+  "CreateTheme": {
+    "createThemeLabel": "LAB CHỦ ĐỀ",
+    "themeName": "TÊN CHỦ ĐỀ",
+    "createWord": "TẠO TỪ",
+    "createWordDescription": "Thêm từ mới vào danh sách",
+    "addButton": "THÊM",
+    "easy": "dễ",
+    "medium": "trung bình",
+    "hard": "khó",
+    "numberOfWord": "TỪ ĐƯỢC TẠO",
+    "searchLabel": "TÌM KIẾM",
+    "createThemeButton": "TẠO CHỦ ĐỀ",
+    "repeatedWordNotification": "Từ đã tồn tại"
+  },
+  "PlayingGame": {
+    "answerInput": "trả lời",
+    "chatInput": "nhắn tin"
+  }
+}
