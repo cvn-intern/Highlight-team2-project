@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
-import { MY_WORDS_COLLECTION, OFFICIAL_WORDS_COLLECTION } from './constants';
+import { ALL_WORDS_COLLECTION, MY_WORDS_COLLECTION, OFFICIAL_WORDS_COLLECTION } from './constants';
 import { Theme } from '../theme/theme.entity';
 import { Word } from '../word/word.entity';
 
@@ -32,6 +32,16 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
       queryBuilder.where('words_collection.is_created_by_system = :is_created_by_system', {
         is_created_by_system: true,
       });
+    }
+    if (type == ALL_WORDS_COLLECTION) {
+      queryBuilder.where(
+        'words_collection.is_created_by_system = :is_created_by_system1 OR ( words_collection.is_created_by_system = :is_created_by_system2 AND words_collection.creator_id = :creator_id )',
+        {
+          is_created_by_system1: true,
+          is_created_by_system2: false,
+          creator_id,
+        },
+      );
     }
     if (language_code != 'all') {
       queryBuilder.andWhere('words_collection.language_code = :language_code', { language_code });

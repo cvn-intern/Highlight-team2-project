@@ -25,7 +25,7 @@ const ThemeCard = (props: ThemeCardProps) => {
   return (
     <Card
       className={cn(
-        "m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF] h-[200px] aspect-[3/4]",
+        "m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF] h-[240px] aspect-[3/4]",
         {
           "ring-[6px] ring-[#474DDA]": isSelected,
         }
@@ -37,12 +37,19 @@ const ThemeCard = (props: ThemeCardProps) => {
           <AvatarImage src={img} className="object-cover w-full h-full" />
           <AvatarFallback>Avatar</AvatarFallback>
         </Avatar>
-        <CardTitle className="mt-2 text-lg font-balsamiq">{name}</CardTitle>
+        <CardTitle className="mt-2 text-lg text-center font-balsamiq">
+          {name}
+        </CardTitle>
         {isOffical && (
           <div className="flex text-sky-600 gap-x-1">
             <p className="text-xl font-balsamiq">Offical </p>
             <CheckCircle2 />
           </div>
+        )}
+        {!isOffical && (
+          <p className="text-lg font-medium leading-6 text-center text-gray-400">
+            Created by you
+          </p>
         )}
       </CardContent>
     </Card>

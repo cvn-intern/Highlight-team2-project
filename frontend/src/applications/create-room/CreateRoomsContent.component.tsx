@@ -22,7 +22,6 @@ import {
   SelectValue,
 } from "@/shared/components/shadcn-ui/select";
 import { WordsCollection } from "@/shared/types/wordsCollection";
-import { useUserStore } from "@/shared/stores/userStore";
 import { DEFAULT_ROOM_TIME } from "@/shared/constants";
 import { useTranslation } from "react-i18next";
 
@@ -44,7 +43,6 @@ const CreateRoomsContent = () => {
     []
   );
   const [type, setType] = useState(0);
-  const { user } = useUserStore();
   const { t } = useTranslation();
   const [languageCode, setLanguageCode] = useState("all");
   const fetchWordsCollection = async (type: number, language_code: string) => {
@@ -71,7 +69,7 @@ const CreateRoomsContent = () => {
     },
   });
 
-  const handleSubmit = (_: z.infer<typeof formSchema>) => {
+  const handleSubmit = () => {
     return handleCreateRoom();
   };
 
