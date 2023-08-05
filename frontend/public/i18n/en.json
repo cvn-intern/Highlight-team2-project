@@ -44,7 +44,9 @@
     "hard": "hard",
     "numberOfWord": "WORDS CREATED",
     "searchLabel": "SEARCH",
-    "createThemeButton": "NEW THEME",
+    "createThemeButton": "Save",
+    "deleteThemeButton": "Delete",
+    "updateThemeButton": "Update",
     "repeatedWordNotification": "Repeated word",
     "alertWhenThereIsNoWords": "No words were found. Please create new words for this theme"
   },

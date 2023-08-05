@@ -15,6 +15,7 @@ import CreateTheme from "./applications/themes/Page";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
 import { QueryClient } from "@tanstack/query-core";
 import { QueryClientProvider } from "@tanstack/react-query";
+import Theme404 from "./applications/themes/Theme404.component";
 
 export const queryClient = new QueryClient();
 function App() {
@@ -54,6 +55,7 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Homepage />} />
+              <Route path="/test" element={<Theme404 />} />
               <Route path="/rooms/create-room" element={<CreateRoom />} />
               <Route path="/rooms/theme" element={<CreateTheme />} />
               <Route path="/:codeRoom" element={<PlayingPage />} />

@@ -10,8 +10,10 @@ import {
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
 import { CheckCircle2, Pencil } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 type ThemeCardProps = {
+  wordsCollectionId: number;
   isSelected?: boolean;
   onClick: () => void;
   img: string;
@@ -20,12 +22,13 @@ type ThemeCardProps = {
 };
 
 const ThemeCard = (props: ThemeCardProps) => {
-  const { isSelected, onClick, img, name, isOffical } = props;
-
+  const { wordsCollectionId, isSelected, onClick, img, name, isOffical } =
+    props;
+  const navigate = useNavigate();
   return (
     <Card
       className={cn(
-        "m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF] w-full aspect-[3/4] relative group cursor-pointer",
+        "m-3 rounded-2xl hover:ring-[6px] hover:bg-[#F9FEFF] w-full aspect-square relative group cursor-pointer",
         {
           "ring-[6px] ring-[#474DDA]": isSelected,
         }
@@ -34,7 +37,18 @@ const ThemeCard = (props: ThemeCardProps) => {
     >
       {!isOffical && (
         <div className="absolute inset-0 transition-all duration-200 ease-linear bg-blue-400 opacity-0 bg-opacity-30 group-hover:opacity-100">
-          <button className="absolute left-1/2 -translate-x-1/2 bottom-6 flex items-center gap-2 py-2 px-3 bg-[#474DDA] text-sm uppercase text-white font-semibold rounded-[4px]">
+          <button
+            className="absolute left-1/2 -translate-x-1/2 bottom-4 flex items-center gap-2 py-2 px-3 bg-[#474DDA] text-sm uppercase text-white font-semibold rounded-[4px]"
+            onClick={() => {
+              navigate("/rooms/theme", {
+                state: {
+                  wordsCollectionId,
+                  type: "edit",
+                },
+                replace: true,
+              });
+            }}
+          >
             <Pencil size={16} />
             <span>Edit</span>
           </button>
@@ -55,7 +69,7 @@ const ThemeCard = (props: ThemeCardProps) => {
           </div>
         )}
         {!isOffical && (
-          <p className="text-lg font-medium leading-6 text-center text-gray-400 group-hover:hidden">
+          <p className="text-lg font-medium leading-6 text-center text-gray-400 transition-all duration-200 ease-linear opacity-100 group-hover:opacity-0">
             Created by you
           </p>
         )}

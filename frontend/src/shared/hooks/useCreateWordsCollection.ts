@@ -4,7 +4,7 @@ import wordCollectionService from "@/shared/services/wordCollectionService";
 export const useCreateWordsCollection = () => {
   return useMutation({
     mutationFn: wordCollectionService.createWordsCollection,
-    onSuccess: ({ data }) => {
+    onSuccess: () => {
       // Do something here bro
     },
     onError: ({ error }) => {

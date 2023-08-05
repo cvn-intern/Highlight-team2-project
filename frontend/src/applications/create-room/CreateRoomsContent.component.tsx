@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/rules-of-hooks */
 import ThemeCard from "./ThemeCard.component";
 import useToaster from "@/shared/hooks/useToaster";
@@ -130,8 +131,8 @@ const CreateRoomsContent = () => {
 
   return (
     <>
-      <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
-        <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
+      <div className="flex max-xl:flex-col justify-center items-center xl:w-[90%] xl:h-[80%] xl:bg-gray-300 rounded-2xl mt-5 xl:p-6 gap-x-2">
+        <div className="xl:w-[42%] w-full h-full border rounded-2xl bg-white text-center">
           <div className="flex flex-col border p-5 m-5 rounded-xl place-content-center h-[91.5%]">
             <SettingRoomForm
               handleSubmit={handleSubmit}
@@ -142,8 +143,8 @@ const CreateRoomsContent = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
-          <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl">
+        <div className="flex flex-col items-center w-full xl:h-full gap-y-2 ">
+          <div className="flex flex-col justify-between w-full gap-2 p-5 mt-1 bg-white sm:flex-row gap-x-5 rounded-2xl">
             <p className="mt-1 font-serif text-xl md:text-2xl text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
@@ -154,10 +155,10 @@ const CreateRoomsContent = () => {
                   setType(parseInt(value));
                 }}
               >
-                <SelectTrigger className="w-[200px] rounded-xl md:text-lg font-bold border-2 text-slate-500">
+                <SelectTrigger className="w-[200px] rounded-xl md:text-xl font-bold border-2 text-slate-500">
                   <SelectValue placeholder="Themes Filter" />
                 </SelectTrigger>
-                <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
+                <SelectContent className="font-semibold rounded-xl md:text-xl text-slate-500">
                   <SelectItem value={"0"}>{t("Theme.all")}</SelectItem>
                   <SelectItem value={"1"}>{t("Theme.yourTheme")}</SelectItem>
                   <SelectItem value={"2"}>
@@ -182,12 +183,13 @@ const CreateRoomsContent = () => {
               }
             </div>
           </div>
-          <ScrollArea className="w-full h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
-            <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 2xl:grid-cols-3">
+          <ScrollArea className="w-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll">
+            <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 lg:grid-cols-3 2xl:grid-cols-3">
               {wordsCollections.map((item) => {
                 return (
                   <ThemeCard
                     key={item.id}
+                    wordsCollectionId={item.id}
                     name={item.theme_name.toUpperCase()}
                     img={item.theme_thumbnail}
                     onClick={() => setSelectedThemeId(item.id)}
@@ -200,7 +202,7 @@ const CreateRoomsContent = () => {
           </ScrollArea>
         </div>
       </div>
-      <div className="flex max-lg:flex-col lg:gap-3 lg:my-5">
+      <div className="flex max-xl:flex-col xl:gap-3 xl:my-5">
         <Button
           type="submit"
           variant="opacityHover"
@@ -208,7 +210,7 @@ const CreateRoomsContent = () => {
           onClick={handleExitButton}
         >
           <LogOut strokeWidth={3} size={32} />
-          <p className="text-lg">{t("ExitButton")}</p>
+          <p className="text-xl">{t("ExitButton")}</p>
         </Button>
         <Button
           type="submit"

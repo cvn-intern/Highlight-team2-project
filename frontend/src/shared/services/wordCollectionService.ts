@@ -16,4 +16,17 @@ export default {
       language_code,
       words_list,
     }),
+  getWordsCollectionInfomationById: (id: number) =>
+    axiosClient.get<WordsCollectionInformation>(`words-collection/${id}`),
+  updateWordsCollection: ({
+    id,
+    theme_id,
+    language_code,
+    words_list,
+  }: UpdateWordsCollectionDTO) =>
+    axiosClient.put<ReturnCreateWordsCollection>(`words-collection/${id}`, {
+      theme_id,
+      language_code,
+      words_list,
+    }),
 };

@@ -25,6 +25,8 @@ type Props = {
   thereIsWordIsExistedInWordsList: boolean;
   setWord: Dispatch<SetStateAction<string>>;
   handleAddWord: (word: string, difficulty: "easy" | "medium" | "hard") => void;
+  isDirty: boolean;
+  setIsDirty: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function SettingThemeForm({
@@ -38,8 +40,22 @@ export default function SettingThemeForm({
   thereIsWordIsExistedInWordsList,
   setWord,
   handleAddWord,
+  isDirty,
+  setIsDirty,
 }: Props) {
   const { t } = useTranslation();
+  const handleAddWordToWordsList = () => {
+    if (
+      !word ||
+      !difficulty ||
+      word.length === 0 ||
+      thereIsWordIsExistedInWordsList
+    )
+      return;
+    handleAddWord(word, difficulty);
+    !isDirty && setIsDirty(true);
+    setWord("");
+  };
   return (
     <div className="xl:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
@@ -50,6 +66,7 @@ export default function SettingThemeForm({
           <Select
             value={themeId.toString()}
             onValueChange={(value) => {
+              !isDirty && setIsDirty(true);
               setThemeId(parseInt(value));
             }}
           >
@@ -106,13 +123,16 @@ export default function SettingThemeForm({
                 onChange={(e) => {
                   setWord(e.target.value);
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleAddWordToWordsList();
+                  }
+                }}
               />
               <Button
                 className="rounded-[8px] bg-[#1B67AD] text-white flex gap-2"
                 onClick={() => {
-                  if (!word || !difficulty) return;
-                  handleAddWord(word, difficulty);
-                  setWord("");
+                  handleAddWordToWordsList();
                 }}
                 disabled={word.length === 0 || thereIsWordIsExistedInWordsList}
               >

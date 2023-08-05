@@ -44,7 +44,9 @@
     "hard": "khó",
     "numberOfWord": "TỪ ĐƯỢC TẠO",
     "searchLabel": "TÌM KIẾM",
-    "createThemeButton": "TẠO CHỦ ĐỀ",
+    "createThemeButton": "Lưu",
+    "deleteThemeButton": "Xóa theme",
+    "updateThemeButton": "Cập nhật theme",
     "repeatedWordNotification": "Từ đã tồn tại",
     "alertWhenThereIsNoWords": "Không có từ nào trong danh sách từ. Kiểm tra lại đi ba."
   },
