@@ -31,7 +31,6 @@ const ONE_SECOND_IN_MILISECOND = 1000
 export function ProgressPlayTime() {
   const [progress, setProgress] = useState(MAX_PROGRESS_PERCENTAGE);
   const [isRunning, setIsRunning] = useState(true);
-
   const { socket } = useSocketStore();
   const {
     gameStatus,
@@ -116,28 +115,30 @@ export function ProgressPlayTime() {
     let startTime = null;
 
     switch (status) {
-      case 'game-start':
-        startTime = currentRound?.started_at ?? new Date();
+      case PLAY_GAME:
+        startTime =  currentRound?.started_at;
         break;
       default:
         startTime = new Date();
         break;
     }
 
-    progressInterval.current = setInterval(
-      (startTime: Date) => {
-        if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(progressInterval.current);
-          return handleProgressTimeout(status);
-        }
-        const currentTime = new Date();
-        const decreaseTimeOverSecond = (currentTime.getTime() - startTime.getTime()) / ONE_SECOND_IN_MILISECOND;
-        startProgress = (maximumTimeInSeconds - decreaseTimeOverSecond) / maximumTimeInSeconds;
-        setProgress(startProgress * MAX_PROGRESS_PERCENTAGE);
-      },
-      TIME_PERSTEP,
-      new Date(startTime)
-    );
+    if(startTime) {
+      progressInterval.current = setInterval(
+        (startTime: Date) => {
+          if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
+            clearInterval(progressInterval.current);
+            return handleProgressTimeout(status);
+          }
+          const currentTime = new Date();
+          const decreaseTimeOverSecond = (currentTime.getTime() - startTime.getTime()) / ONE_SECOND_IN_MILISECOND;
+          startProgress = (maximumTimeInSeconds - decreaseTimeOverSecond) / maximumTimeInSeconds;
+          setProgress(startProgress * MAX_PROGRESS_PERCENTAGE);
+        },
+        TIME_PERSTEP,
+        new Date(startTime)
+      );
+    }
   };
 
   useEffect(() => {

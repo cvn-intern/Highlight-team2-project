@@ -264,7 +264,7 @@ export default function PlayingGameScreen() {
             )}
             {!isDrawer && gameStatus === PLAY_GAME && hintWord && (
               <div className="absolute text-center py-2 px-4 flex justify-center w-max gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
-                {hintWord.split("").map((char) => <span>{char}</span>)}
+                {hintWord.split("").map((char: string, index: number) => <span key={index}>{char}</span>)}
               </div>
             )}
             <Canvas isDrawer={isDrawer} hidden={isInterval} />
