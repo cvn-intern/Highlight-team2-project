@@ -183,7 +183,7 @@ const PlayForm = () => {
                   }}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                  <SelectTrigger className="w-full lg:w-[70%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
@@ -217,7 +217,7 @@ const PlayForm = () => {
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
-            <p>{t("PlayButton")}</p>
+            <p>{t("PlayLabel")}</p>
           </Button>
         </div>
       </form>

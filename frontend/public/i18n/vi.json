@@ -1,7 +1,7 @@
 {
   "OrLabel": "HOẶC",
   "InputCharLeft": "ký tự còn lại",
-  "PlayButton": "CHƠI",
+  "PlayLabel": "CHƠI",
   "ExitButton": "THOÁT",
   "AvatarLabel": "ẢNH ĐẠI DIỆN",
   "Rounds": "SỐ VÒNG",
@@ -83,7 +83,8 @@
   "toastMessage": {
     "success": {
       "createRoom": "Tạo phòng thành công!",
-      "copy": "Copy thành công!"
+      "copy": "Copy thành công!",
+      "updateLanguage": "Cập nhật ngôn ngữ thành công!"
     },
     "warning": {
       "nextDrawerRestart": "Người vẽ đã thoát khỏi phòng, vòng chơi bắt đầu lại!",

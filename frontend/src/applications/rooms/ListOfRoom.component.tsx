@@ -5,7 +5,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import { useTranslation } from "react-i18next";
 
 interface RoomFilterInformationProps {
   roomFilter: Array<RoomList>;

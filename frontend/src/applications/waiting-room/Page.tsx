@@ -1,5 +1,4 @@
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
-import JoinRoomBanner from "@/shared/assets/join-room-banner.png";
 import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
@@ -117,7 +116,7 @@ const WaitingRoom = () => {
               onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
-              <p>{t("PlayButton")}</p>
+              <p>{t("PlayLabel")}</p>
             </Button>
           </div>
         </div>

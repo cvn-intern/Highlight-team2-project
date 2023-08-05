@@ -112,7 +112,7 @@ const RoomsPage = () => {
               disabled={!selectCodeRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
-              <p>{t("PlayButton")}</p>
+              <p>{t("PlayLabel")}</p>
             </Button>
           </div>
         </div>

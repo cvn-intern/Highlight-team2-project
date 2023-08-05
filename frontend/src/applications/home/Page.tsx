@@ -25,10 +25,13 @@ const Homepage = () => {
         />
 
         <div className="lg:w-[80%] lg:h-[70%] min-h-[50vh] bg-white flex flex-col items-center mb-5 w-[80%] h-[70%] mt-5 rounded-2xl p-8">
-          <img
+          {/* <img
             src={BannerImg}
             className="mt-5 mb-2 2xl:my-5 w-[500px] max-lg:hidden"
-          />
+          /> */}
+          <p className="text-7xl mx-auto mb-10 font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
+            {t("PlayLabel")}
+          </p>
 
           <div className="flex items-center gap-4 mb-8 md:gap-10 xl:gap-20 home-content-responsive">
             <div className="flex flex-col">

@@ -1,7 +1,7 @@
 {
     "OrLabel": "OR",
     "InputCharLeft": "chars left",
-    "PlayButton": "PLAY",
+    "PlayLabel": "PLAY",
     "ExitButton": "EXIT",
     "AvatarLabel": "AVATAR",
     "Rounds": "ROUNDS",
@@ -83,7 +83,8 @@
     "toastMessage": {
         "success": {
             "createRoom": "Create room successfully!",
-            "copy": "Copy successfully!"
+            "copy": "Copy successfully!",
+            "updateLanguage": "Update language successfully!"
         },
         "warning": {
             "nextDrawerRestart": "Drawer is out. The round restarts!",

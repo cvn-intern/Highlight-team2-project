@@ -1,4 +1,3 @@
-import AvatarHeader from "@/shared/assets/avatar-header.png";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
