@@ -55,7 +55,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Homepage />} />
               <Route path="/rooms/create-room" element={<CreateRoom />} />
-              <Route path="/rooms/create-theme" element={<CreateTheme />} />
+              <Route path="/rooms/theme" element={<CreateTheme />} />
               <Route path="/:codeRoom" element={<PlayingPage />} />
               <Route path="/rooms" element={<RoomsPage />} />
               <Route

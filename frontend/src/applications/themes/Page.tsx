@@ -1,8 +1,8 @@
 import Logo from "@/shared/components/Logo";
 import SloganImg from "@/shared/assets/slogan.png";
 import MainLayout from "@/shared/components/MainLayout";
-import CreateThemeHeader from "./CreateThemeHeader.component";
-import CreateThemeContent from "./CreateThemeContent.component";
+import ThemeHeader from "./ThemeHeader.component";
+import ThemeContent from "./ThemeContent.component";
 
 export default function Page() {
   return (
@@ -15,8 +15,8 @@ export default function Page() {
           className="justify-self-center slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
         <div className="justify-self-center w-[90%] lg:h-[90%] min-h-[70vh] bg-white flex flex-col items-center mb-5 mt-5 rounded-2xl p-8">
-          <CreateThemeHeader />
-          <CreateThemeContent />
+          <ThemeHeader />
+          <ThemeContent />
         </div>
       </div>
     </MainLayout>

@@ -125,7 +125,7 @@ const CreateRoomsContent = () => {
     navigate("/rooms");
   };
   const handleCreateThemeClick = () => {
-    navigate("/rooms/create-theme");
+    navigate("/rooms/theme");
   };
 
   return (
@@ -183,7 +183,7 @@ const CreateRoomsContent = () => {
             </div>
           </div>
           <ScrollArea className="w-full h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
-            <div className="flex flex-wrap justify-evenly">
+            <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 2xl:grid-cols-3">
               {wordsCollections.map((item) => {
                 return (
                   <ThemeCard

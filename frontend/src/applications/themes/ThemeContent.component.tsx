@@ -18,7 +18,7 @@ import { useNavigate } from "react-router";
 import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 
-const CreateThemeContent = () => {
+const ThemeContent = () => {
   const { user } = useUserStore();
   const { mutate: addWordsCollection } = useCreateWordsCollection();
   const navigate = useNavigate();
@@ -189,7 +189,7 @@ const CreateThemeContent = () => {
             {totalWords === 0 && (
               <div className="flex flex-col gap-4 items-center max-w-[70%]">
                 <PackageOpen size={64} className="text-gray-400" />
-                <p className="text-2xl md:text-3xl font-medium text-gray-400 text-center">
+                <p className="text-2xl font-medium text-center text-gray-400 md:text-3xl">
                   {t("CreateTheme.alertWhenThereIsNoWords")}
                 </p>
               </div>
@@ -251,4 +251,4 @@ const CreateThemeContent = () => {
   );
 };
 
-export default CreateThemeContent;
+export default ThemeContent;
