@@ -94,7 +94,7 @@ const CustomAvatar = () => {
         >
           <DialogHeader>
             <DialogTitle className="text-5xl text-center text-headerTextColor mb-7">
-              <p className="hidden lg:block text-7xl mx-auto font-serif text-headerBlueColor">
+              <p className="hidden lg:block text-7xl mx-auto font-cherry text-headerBlueColor">
                 {t("AvatarLabel")}
               </p>
             </DialogTitle>

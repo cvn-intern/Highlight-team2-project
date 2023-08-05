@@ -119,7 +119,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                                                 <Input
                                                     {...field}
                                                     className={
-                                                        "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
+                                                        "max-sm:w-[50vw] font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
                                                     }
                                                     maxLength={MAX_LENGHT_OF_SEARCH}
                                                     value={searchInput}
@@ -139,11 +139,11 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                     />
                 </div>
 
-                <p className="hidden lg:block text-7xl mx-auto font-balsamiq text-headerBlueColor">
+                <p className="hidden lg:block text-7xl mx-auto font-cherry text-headerBlueColor">
                     {t("RoomList.roomLabel")}
                 </p>
 
-                <div className="flex items-center w-fit pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mr-auto justify-between">
+                <div className="flex items-center w-fit max-md:w-full pl-10 mt-5 md:mt-0 lg:pl-0 lg:pr-5 mr-auto md:justify-between justify-center">
                     <FormField
                         control={form.control}
                         name="theme"

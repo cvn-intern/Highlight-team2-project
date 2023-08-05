@@ -14,7 +14,7 @@ const CreateRooms = () => {
                     alt="Slogan"
                     className="justify-self-center slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
                 />
-                <div className="justify-self-center w-[90%] lg:h-[90%] min-h-[70vh] bg-white flex flex-col items-center mb-5 mt-5 rounded-2xl p-8">
+                <div className="justify-self-center w-[90%] lg:h-[90%] min-h-[70vh] bg-white flex flex-col items-center my-5 rounded-2xl p-8">
                     <CreateRoomsHeader />
                     <CreateRoomsContent />
                 </div>

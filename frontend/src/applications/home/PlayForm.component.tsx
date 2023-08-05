@@ -165,7 +165,7 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-1 w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex flex-1 w-full max-lg:flex-col items-start text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />

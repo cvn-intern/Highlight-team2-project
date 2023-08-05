@@ -44,7 +44,7 @@ export default function SettingThemeForm({
     <div className="lg:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
         <div className="flex flex-col gap-2">
-          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
+          <p className="mt-5 text-lg lg:text-xl font-coiny text-headerBlueColor">
             1. {t("CreateTheme.themeName")}
           </p>
           <Select
@@ -73,18 +73,18 @@ export default function SettingThemeForm({
         </div>
         {/* End theme name */}
         <div className="flex flex-col gap-2">
-          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
+          <p className="mt-5 text-lg lg:text-xl font-coiny text-headerBlueColor">
             2. {t("Language.languageLabel")}
           </p>
-          <div className="flex gap-4 mt-5 text-xl text-gray-400 font-balsamiq">
+          <div className="flex gap-4 mt-5 text-xl text-gray-400 font-grandstander">
             <Globe size={28} strokeWidth={2} color={"#1B67AD"} />
             {languageCode ? languageCode.toUpperCase() : "EN"}
           </div>
         </div>
         {/* End language */}
         <div className="flex flex-col gap-1">
-          <p className="mt-5 text-lg lg:text-xl font-balsamiq text-headerBlueColor">
-            3. {t("CreateTheme.createWord")}
+          <p className="mt-5 text-lg lg:text-xl font-coiny text-headerBlueColor">
+            3. {t("CreateTheme.createWordLabel")}
           </p>
           <div className="flex flex-col gap-2">
             {!thereIsWordIsExistedInWordsList && (
