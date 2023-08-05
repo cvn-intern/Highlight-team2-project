@@ -1,7 +1,8 @@
-import { MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import {
   END_GAME,
+  GAME_HINT_WORD,
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
@@ -12,8 +13,21 @@ import {
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
   RESET_GAME,
+  SEND_HINT_WORD,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
+import { extractIdRoom } from 'src/common/utils/helper';
+import { SocketClient } from '../socket.class';
+
+type HintAnswer = {
+  codeRoom: string;
+  word: string | null;
+}
+
+type HintWordForNewPlayer = {
+  id: string;
+  hintWord: string | null;
+}
 
 export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_NEW_TURN_CHANNEL)
@@ -123,5 +137,35 @@ export class GameGateway extends SocketGateway {
     });
 
     await this.socketService.sendListParticipantsInRoom(this.server, room);
+  }
+
+  @SubscribeMessage(GAME_HINT_WORD)
+  async handleHintWord(@MessageBody() data: HintAnswer, @ConnectedSocket() client: SocketClient) {
+    let hintWord = data.word;
+    const roomId = extractIdRoom(data.codeRoom);
+    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(roomId);
+    const word = roundOfRoom.word;
+    if (!hintWord) {
+      hintWord = '_'.repeat(word.length);
+      this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
+      return;
+    }
+
+    const indexs = [];
+    hintWord.split("").forEach((char: string, index: number) => {
+      if (char === '_') {
+        indexs.push(index);
+      }
+    })
+    
+    const indexRandom = indexs[Math.floor(Math.random() * indexs.length)];
+    
+    
+    hintWord = hintWord.slice(0, indexRandom) + word.split("").at(indexRandom) + hintWord.slice(indexRandom + 1,  hintWord.length);
+    this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
+  }
+  @SubscribeMessage(SEND_HINT_WORD)
+  async handleSendHintWordForNewPlayer(@MessageBody() {id, hintWord}: HintWordForNewPlayer, @ConnectedSocket() client: SocketClient) {
+    this.server.to(id).emit(GAME_HINT_WORD, hintWord);
   }
 }

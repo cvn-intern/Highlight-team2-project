@@ -53,12 +53,20 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
     const emptySlots = maxItems - rankingBoard.length;
     return (
       <>
-        <FlipMove className="flip-wrapper">
+        <FlipMove className="flip-wrapper" 
+          duration={400}
+          delay={10}
+          easing={'cubic-bezier(0.25, 0.5, 0.75, 1)'}
+          staggerDurationBy={30}
+          staggerDelayBy={150}
+          appearAnimation="accordionVertical"
+          enterAnimation="fade" 
+          leaveAnimation="fade">
           {[...rankingBoard]
             .sort((a, b) => b.score - a.score)
             .map((user: Participant, _index) => (
               <li
-                key={_index}
+                key={user.id}
                 className="relative flex w-full py-3 border-b-2 border-gray-100 cursor-pointer sm:py-4 group"
                 onClick={() => handleOpenUserProfile(user)}
               >
@@ -213,6 +221,7 @@ const UserFrame: React.FC<ProfileProps> = ({ maxPlayer, rankingBoard }) => {
           user={userSelected ? userSelected : null}
           blockedIdArray={blockedIdArray}
           setBlockedIdArray={setBlockedIdArray}
+          triggerRef={triggerRef}
         />
       </Dialog>
     </div>
