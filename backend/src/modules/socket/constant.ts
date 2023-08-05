@@ -62,7 +62,6 @@ export const GAME_HINT_WORD = 'hint-word';
 export const SEND_HINT_WORD = 'send-hint-word';
 export const GAME_SKIP_DRAW_TURN = 'skip-draw-turn';
 
-
 export const GAME_PLAY = 'game-play';
 export const GAME_STATUS = 'game-status';
 export const GAME_NEW_TURN = 'new-turn';

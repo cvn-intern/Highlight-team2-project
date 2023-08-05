@@ -22,6 +22,8 @@ import { RoomRound } from '../room-round/roomRound.entity';
 import { errorsSocket } from 'src/common/errors/errorCode';
 import { RoomRoundService } from '../room-round/roomRound.service';
 import { RoomUserService } from '../room-user/roomUser.service';
+import { WordService } from '../word/word.service';
+const moment = require('moment');
 
 @Injectable()
 export class SocketService {
@@ -34,6 +36,7 @@ export class SocketService {
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
     private userService: UserService,
+    private wordService: WordService,
   ) {}
   async storeClientConnection(client: Socket) {
     try {
@@ -199,9 +202,14 @@ export class SocketService {
   }
 
   async handleSkipDrawTurn(oldRoomRound: RoomRound, userId: number, server: Server, room: Room) {
-    if (oldRoomRound.painter !== userId) return;
+    if (oldRoomRound.painter !== userId) {
+      throw new WsException(errorsSocket.YOU_NOT_PAINTER);
+    }
 
-    const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
+    const { word } = await this.wordService.getWordRandom(room.words_collection_id, room.id);
+    const startedAt = moment().add(5, 'seconds').toDate();
+    const endedAt = moment(startedAt).add(room.time_per_round, 'seconds').toDate();
+    const nextPainterId = await this.roomUserService.assignNextPainter(room, oldRoomRound.next_painter);
 
     const newRoomRound = await this.roomRoundService.updateRoomRound({
       ...oldRoomRound,
@@ -209,9 +217,10 @@ export class SocketService {
       current_round: oldRoomRound.current_round - 1,
       ended_at: endedAt,
       started_at: startedAt,
-      painter: painterRound.painter,
-      next_painter: painterRound.next_painter,
+      painter: oldRoomRound.next_painter,
+      next_painter: nextPainterId,
     });
+    await this.roomRoundService.cacheDataRoomRound(newRoomRound);
 
     await this.updateRoomRoundWhenDrawerSkipTurn(server, room.code_room, newRoomRound);
   }

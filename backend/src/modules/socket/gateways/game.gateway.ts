@@ -30,6 +30,11 @@ type HintWordForNewPlayer = {
   hintWord: string | null;
 };
 
+type PainterSkip = {
+  codeRoom: string;
+  painterId: number;
+};
+
 export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_NEW_TURN_CHANNEL)
   async handleNewTurn(@MessageBody() codeRoom: string) {
@@ -159,17 +164,14 @@ export class GameGateway extends SocketGateway {
   }
 
   @SubscribeMessage(GAME_SKIP_DRAW_TURN)
-  async handleSkipDrawTurn(@MessageBody() data: any) {
-    const { codeRoom, painterId } = data;
-
-    const roomId = extractIdRoom(codeRoom);
-
-    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+  async handleSkipDrawTurn(@MessageBody() data: PainterSkip) {
+    const room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
 
-    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(roomId);
+    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
     if (!roundOfRoom) throw new WsException(errorsSocket.ROOM_ROUND_NOT_FOUND);
-    await this.socketService.handleSkipDrawTurn(roundOfRoom, painterId, this.server, room);
+    await this.socketService.handleSkipDrawTurn(roundOfRoom, data.painterId, this.server, room);
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
 }

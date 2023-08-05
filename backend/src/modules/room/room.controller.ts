@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
-import { Response, response } from 'express';
+import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
@@ -171,9 +171,7 @@ export class RoomController {
 
   @UseGuards(AuthorizeJWT)
   @Get('/current-round/:codeRoom')
-  async getCurrentRoundOfRoom(
-    @Param('codeRoom') codeRoom: string, @Res() response: Response
-  ) {
+  async getCurrentRoundOfRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
     try {
       const roomId = extractIdRoom(codeRoom);
       const currentRound = await this.roomRoundService.getRoundOfRoom(roomId);

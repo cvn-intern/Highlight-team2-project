@@ -21,7 +21,7 @@ export class Room {
   @Column()
   words_collection_id: number;
 
-  @Column({default: true, nullable: false})
+  @Column({ default: true, nullable: false })
   is_created_by_system: boolean;
 
   @Column({ nullable: true })

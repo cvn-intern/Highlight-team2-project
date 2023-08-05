@@ -76,8 +76,17 @@ export function ProgressPlayTime() {
         });
         return;
 
-      case GAME_REFRESH_DRAWER:
       case SKIP_DRAW_TURN:
+        socket.emit(GAME_PRESENT_PROGRESS, {
+          codeRoom,
+          maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+          startProgress: MAX_PROGRESS_PERCENTAGE,
+          status: INTERVAL_NEW_TURN,
+          sendAt: moment(),
+        });
+        return;
+
+      case GAME_REFRESH_DRAWER:
       case INTERVAL_SHOW_WORD:
         socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
         socket.emit(GAME_PRESENT_PROGRESS, {
@@ -88,7 +97,6 @@ export function ProgressPlayTime() {
           sendAt: moment(),
         });
         return;
-
       case END_GAME:
         socket.emit(RESET_GAME, codeRoom);
         return;
@@ -119,14 +127,14 @@ export function ProgressPlayTime() {
 
     switch (status) {
       case PLAY_GAME:
-        startTime =  currentRound?.started_at;
+        startTime = currentRound?.started_at;
         break;
       default:
         startTime = new Date();
         break;
     }
 
-    if(startTime) {
+    if (startTime) {
       progressInterval.current = setInterval(
         (startTime: Date) => {
           if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
@@ -144,7 +152,7 @@ export function ProgressPlayTime() {
     }
   };
 
- 
+
   useEffect(() => {
     socket?.on(
       GAME_PRESENT_PROGRESS,
@@ -215,7 +223,7 @@ export function ProgressPlayTime() {
       });
       setIsRunning(true);
     });
-    
+
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, async () => {
       setIsRunning(false);
       await handleIntervalProgress({

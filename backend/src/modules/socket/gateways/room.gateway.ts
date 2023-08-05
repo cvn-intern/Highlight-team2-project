@@ -64,10 +64,10 @@ export class RoomGateway extends SocketGateway {
       this.server.in(codeRoom).emit(codeRoom, messageContent);
 
       const participants = await this.roomService.getPartipantsInRoom(room);
-      if(participants.length === 1) {
+      if (participants.length === 1) {
         room = await this.roomService.assignHostRoom(room, participants[0].id);
       }
-      
+
       await this.socketService.sendListParticipantsInRoom(this.server, room);
 
       const roomStatus = this.roomService.getRoomStatus(room);
@@ -98,14 +98,14 @@ export class RoomGateway extends SocketGateway {
         type: BLOCK_MESSAGE,
         message: HOST_KICK_USER_CONTENT,
       };
-      
+
       this.server.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
       this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `You ${HOST_KICK_USER_CONTENT}`);
 
       await Promise.all([
         this.roomUserService.deleteRoomUser(room.id, data.userId),
         this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`),
-      ])
+      ]);
 
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
