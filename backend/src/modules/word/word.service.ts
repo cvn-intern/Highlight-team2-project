@@ -46,6 +46,7 @@ export class WordService {
   async deleteAllWordsInWordsCollection(words_collection_id: number) {
     await this.wordRepository.delete({ words_collection_id });
   }
+
   async cacheUsedWordsForRoom(roomId: number, word: string) {
     let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 

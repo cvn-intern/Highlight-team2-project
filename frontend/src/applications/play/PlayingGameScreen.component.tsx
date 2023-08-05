@@ -22,8 +22,10 @@ import IntervalCanvas, {
   GAME_NEW_TURN_CHANNEL,
   GAME_NEXT_DRAWER_IS_OUT,
   GAME_STATUS_CHANNEL,
+  HINT_WORD,
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
+  SEND_HINT_WORD,
   START_GAME,
   WAIT_FOR_OTHER_PLAYERS
 } from '@/shared/components/IntervalCanvas';
@@ -40,6 +42,8 @@ import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@/shared/components/shadcn-ui/Button';
+import { GET_CANVAS_STATE } from './shared/constants/drawEvent';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -58,6 +62,7 @@ export default function PlayingGameScreen() {
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
+  const [hintWord, setHintWord] = useState<string | null>(null)
 
   const {
     participants,
@@ -132,6 +137,7 @@ export default function PlayingGameScreen() {
     socket?.on(GAME_NEW_TURN_CHANNEL, (data: RoomRound) => {
       setRoomRound(data);
       setCorrectAnswers([]);
+      setHintWord(null)
       if (!canvasRef || !canvasRef.current) return;
       resetCanvas(
         canvasRef.current.getContext("2d", { willReadFrequently: true })!
@@ -152,7 +158,7 @@ export default function PlayingGameScreen() {
   useEffect(() => {
     socket?.on(GAME_STATUS_CHANNEL, ({ success, status }: RoomStatusType) => {
       if (!success) return;
-      if (isHost && status === WAIT_FOR_OTHER_PLAYERS && participants.length > 1){
+      if (isHost && status === WAIT_FOR_OTHER_PLAYERS && participants.length > 1) {
         setGameStatus(START_GAME);
         return
       }
@@ -168,13 +174,32 @@ export default function PlayingGameScreen() {
       });
     });
 
+    socket?.on(HINT_WORD, (word: string) => {
+      setHintWord(word)
+    })
+
+    socket?.on(GET_CANVAS_STATE, (id: string) => {
+      if (!isDrawer || !hintWord) return
+      socket?.emit(SEND_HINT_WORD, { hintWord, id })
+    })
+
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
+      socket?.off(GET_CANVAS_STATE);
+      socket?.off(HINT_WORD);
     };
-  }, [socket, participants, isHost, gameStatus]);
+  }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
 
   const isInterval = gameStatus !== PLAY_GAME;
+
+  const handleShowHint = () => {
+    if(hintWord === roomRound?.word) return
+    socket?.emit(HINT_WORD, {
+      codeRoom,
+      word: hintWord,
+    });
+  }
 
   return (
     <PaintContext.Provider
@@ -206,8 +231,16 @@ export default function PlayingGameScreen() {
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
             <ActionButtons roomInfo={roomInfo} />
             {isDrawer && gameStatus === PLAY_GAME && (
-              <div className="absolute w-[250px] text-center py-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
-                {roomRound?.word}
+              <div className="flex items-center gap-4 absolute min-w-[250px] text-center py-2 px-3 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
+                <Button className='bg-transparent border-2 border-white rounded-xl shadow-xl' onClick={handleShowHint}>HINT</Button>
+                <span>{roomRound?.word}</span>
+                <Button className='bg-transparent border-2 border-white rounded-xl shadow-xl'>SKIP</Button>
+              </div>
+
+            )}
+            {!isDrawer && gameStatus === PLAY_GAME && hintWord && (
+              <div className="absolute w-[250px] text-center py-2 flex justify-center  gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
+                {hintWord.split("").map((char) => <span>{char}</span>)}
               </div>
             )}
             <Canvas isDrawer={isDrawer} hidden={isInterval} />

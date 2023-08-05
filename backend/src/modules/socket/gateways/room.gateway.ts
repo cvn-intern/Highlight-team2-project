@@ -79,17 +79,17 @@ export class RoomGateway extends SocketGateway {
   async hanldeKick(@MessageBody() data: KickUser, @ConnectedSocket() client: SocketClient) {
     try {
       const room: Room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
-  
+
       if (!room) {
         throw new WsException(errorsSocket.ROOM_NOT_FOUND);
       }
-  
+
       if (room.host_id !== client.user.id) {
         throw new WsException(errorsSocket.YOU_NOT_HOST);
       }
       const socketIdKickedUser = await this.redisService.getObjectByKey(`USER:${data.userId}:SOCKET`);
       const socketKickedUser: Socket = this.server.sockets.sockets.get(socketIdKickedUser);
-  
+
       socketKickedUser.leave(room.code_room);
       const messageContent: Chat = {
         user: data.nickname,
@@ -98,26 +98,26 @@ export class RoomGateway extends SocketGateway {
       };
       socketKickedUser.to(room.code_room).emit(`${room.code_room}-leave`, messageContent);
       this.server.to(socketIdKickedUser).emit(NOTIFY_CHANNEL, `You ${HOST_KICK_USER_CONTENT}`);
-  
+
       await this.roomUserService.deleteRoomUser(room.id, data.userId);
       await this.redisService.deleteObjectByKey(`USER:${data.userId}:ROOM`);
       await this.socketService.checkAndEmitToHostRoom(this.server, room);
-  
+
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
-  
+
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
         this.server.in(room.code_room).emit(RESET_GAME);
       }
-  
+
       if (participants.length === 1 && roomRound) {
         await this.roomRoundService.deleteRoomRound(room.id);
       }
-  
+
       if (participants.length > 1 && roomRound) {
         await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, data.userId, this.server, room);
       }
-  
+
       await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
