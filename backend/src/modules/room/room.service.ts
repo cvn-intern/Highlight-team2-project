@@ -32,6 +32,7 @@ export class RoomService {
       ...roomInformation,
       code_room: `${codeRoom}_${idRoom}`,
       id: idRoom,
+      is_created_by_system: false,
     });
 
     return await this.roomRepository.save(room);
@@ -39,6 +40,13 @@ export class RoomService {
 
   async deleteRoom(codeRoom: string): Promise<void> {
     await this.roomRepository.delete({ code_room: codeRoom });
+  }
+
+  async deleteRoomCreatedByUser(roomId: number): Promise<void> {
+    await this.roomRepository.delete({
+      id: roomId,
+      is_created_by_system: false,
+    })
   }
 
   async randomRoomForQuickPlay(): Promise<string> {
@@ -119,10 +127,17 @@ export class RoomService {
 
     if (!userId) {
       await this.roomRoundService.deleteRoomRound(room.id);
+      await this.deleteRoomCreatedByUser(room.id);
       throw new HttpException('Nobody in room!', HttpStatus.BAD_REQUEST);
     }
 
     const updateRoom = await this.updateRoom({ ...room, host_id: userId });
+
+    return updateRoom;
+  }
+
+  async assignHostRoom(room: Room, newHostId: number): Promise<Room> {
+    const updateRoom = await this.updateRoom({...room, host_id: newHostId});
 
     return updateRoom;
   }

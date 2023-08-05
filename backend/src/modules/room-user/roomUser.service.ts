@@ -131,6 +131,11 @@ export class RoomUserService {
     const participants: Array<Participant> = await this.getListUserOfRoom(room);
     const paintersOfPreviousRound = await this.redisService.getObjectByKey(`${room.id}:PAINTERS`);
     const drewPainters: Array<number> = paintersOfPreviousRound ? paintersOfPreviousRound.drewPainters : [];
+
+    if(!drewPainters.includes(painter)) {
+      drewPainters.push(painter);
+    }
+    
     const currentPainter = paintersOfPreviousRound ? paintersOfPreviousRound.nextPainter : null;
     let notNextPainters: Array<Participant> = participants;
 

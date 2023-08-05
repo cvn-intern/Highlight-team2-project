@@ -24,6 +24,7 @@ export class RoomRoundService {
       },
     });
   }
+
   async createRoundOfRoom(data: RoomRoundInterface): Promise<RoomRound> {
     return await this.roomRoundRepository.save({
       ...data,

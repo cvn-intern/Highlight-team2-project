@@ -20,13 +20,13 @@ import {
 import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
-  GAME_NEXT_DRAWER_IS_OUT,
   GAME_STATUS_CHANNEL,
   HINT_WORD,
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
   SEND_HINT_WORD,
   START_GAME,
+  UPDATE_ROOM_ROUND_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS
 } from '@/shared/components/IntervalCanvas';
 import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
@@ -60,7 +60,10 @@ export default function PlayingGameScreen() {
   const [isFill, setIsFill] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(1);
   const [roomInfo, setRoomInfo] = useState<RoomType>();
+  const [numberOfHint, setNumberOfHint] = useState<number>(0);
+  const [isDisableHintButton, setIsDisableHintButton] = useState<boolean>(false);
   const [hintWord, setHintWord] = useState<string | null>(null)
+  const [maxNumberOfHint, setMaxNumberOfHint] = useState<number>(0);
 
   const {
     participants,
@@ -163,15 +166,6 @@ export default function PlayingGameScreen() {
       setGameStatus(status!);
     });
 
-    socket?.on(GAME_NEXT_DRAWER_IS_OUT, () => {
-      useToaster({
-        message: 'Next drawer is out.',
-        type: 'warning',
-        icon: '😅',
-        bodyClassName: 'text-sm font-semibold',
-      });
-    });
-
     socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
       useToaster({
         message: 'Drawer is out. The round restarts!',
@@ -180,6 +174,10 @@ export default function PlayingGameScreen() {
         bodyClassName: 'text-sm font-semibold',
       });
     });
+
+    socket?.on(UPDATE_ROOM_ROUND_CHANNEL, (roomRound: RoomRound) => {
+      setRoomRound(roomRound);
+    })
 
     socket?.on(HINT_WORD, (word: string) => {
       setHintWord(word)
@@ -192,10 +190,10 @@ export default function PlayingGameScreen() {
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
-      socket?.off(GAME_NEXT_DRAWER_IS_OUT);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
       socket?.off(GET_CANVAS_STATE);
       socket?.off(HINT_WORD);
+      socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
     };
   }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
 
@@ -203,10 +201,28 @@ export default function PlayingGameScreen() {
 
   const handleShowHint = () => {
     if(hintWord === roomRound?.word) return
+
+    if(numberOfHint === maxNumberOfHint) {
+      setIsDisableHintButton(true);
+      return;
+    } 
+
+    setNumberOfHint(numberOfHint + 1);
     socket?.emit(HINT_WORD, {
       codeRoom,
       word: hintWord,
     });
+  }
+
+  useEffect(() => {
+    if(roomRound) {
+      setMaxNumberOfHint(calculateMaxNumberOfHint(roomRound?.word));
+    }
+  }, [roomRound])
+
+  const calculateMaxNumberOfHint = (word: string): number => {
+    const maxTimes: number = word.length / 3 ;
+    return Number.parseInt(maxTimes.toString()) + 1;
   }
 
   return (
@@ -240,14 +256,14 @@ export default function PlayingGameScreen() {
             <ActionButtons roomInfo={roomInfo} />
             {isDrawer && gameStatus === PLAY_GAME && (
               <div className="flex items-center gap-4 absolute min-w-[250px] text-center py-2 px-3 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
-                <Button className='bg-transparent border-2 border-white rounded-xl shadow-xl' onClick={handleShowHint}>HINT</Button>
+                <Button disabled={isDisableHintButton} className='bg-transparent border-2 border-white rounded-xl shadow-xl' onClick={handleShowHint}>HINT</Button>
                 <span>{roomRound?.word}</span>
                 <Button className='bg-transparent border-2 border-white rounded-xl shadow-xl'>SKIP</Button>
               </div>
 
             )}
             {!isDrawer && gameStatus === PLAY_GAME && hintWord && (
-              <div className="absolute w-[250px] text-center py-2 flex justify-center  gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
+              <div className="absolute text-center py-2 px-4 flex justify-center w-max gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
                 {hintWord.split("").map((char) => <span>{char}</span>)}
               </div>
             )}

@@ -14,12 +14,14 @@ import {
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDTO } from './dto/createRoom';
-import { Response } from 'express';
+import { Response, response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { IdUser } from '../../common/decorators/idUser';
 import { RoomUserService } from '../room-user/roomUser.service';
 import { Room } from './room.entity';
 import { WordsCollectionService } from '../words-collection/wordsCollection.service';
+import { RoomRoundService } from '../room-round/roomRound.service';
+import { extractIdRoom } from 'src/common/utils/helper';
 
 @Controller('rooms')
 export class RoomController {
@@ -28,6 +30,7 @@ export class RoomController {
     private logger: Logger = new Logger(RoomController.name),
     private roomUserService: RoomUserService,
     private wordsCollectionService: WordsCollectionService,
+    private roomRoundService: RoomRoundService,
   ) {}
 
   @UseGuards(AuthorizeJWT)
@@ -160,6 +163,22 @@ export class RoomController {
         participants: users,
         max_player: room.max_player,
       });
+    } catch (error) {
+      this.logger.error(error);
+      return response.status(error.status).json(error);
+    }
+  }
+
+  @UseGuards(AuthorizeJWT)
+  @Get('/current-round/:codeRoom')
+  async getCurrentRoundOfRoom(
+    @Param('codeRoom') codeRoom: string, @Res() response: Response
+  ) {
+    try {
+      const roomId = extractIdRoom(codeRoom);
+      const currentRound = await this.roomRoundService.getRoundOfRoom(roomId);
+
+      return response.status(HttpStatus.OK).json(currentRound);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);

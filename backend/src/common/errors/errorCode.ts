@@ -27,4 +27,8 @@ export const errorsSocket = {
     code: 'YOU_NOT_HOST',
     message: 'You are not host to take this action!',
   },
+  YOU_NOT_PAINTER: {
+    code: 'YOU_NOT_PAINTER',
+    message: 'You are not painter to take this action',
+  },
 };
