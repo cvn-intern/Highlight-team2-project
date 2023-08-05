@@ -7,6 +7,7 @@ import moment from 'moment';
 import { useParams } from 'react-router-dom';
 import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
 import { GamePresentProgressPackage } from '../types/gameProgress';
+import roomService from '../services/roomService';
 
 export const MIN_PROGRESS_PERCENTAGE = 0;
 export const MAX_PROGRESS_PERCENTAGE = 100;
@@ -17,7 +18,7 @@ export function ProgressPlayTime() {
   const [isRunning, setIsRunning] = useState(true)
 
   const { socket } = useSocketStore();
-  const { gameStatus, isHost, setGameStatus, participants, getIsHost, setCorrectAnswers, setParticipants } = useGameStore();
+  const { gameStatus, isHost, setGameStatus, participants, getIsHost, setCorrectAnswers, setParticipants, roomRound, setRoomRound } = useGameStore();
   const { codeRoom } = useParams()
 
   const handleProgressTimeout = (status: string) => {
@@ -41,7 +42,7 @@ export function ProgressPlayTime() {
         socket.emit(GAME_PRESENT_PROGRESS, { codeRoom, maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, startProgress: 100, status: INTERVAL_NEW_TURN, sendAt: moment() })
         return
 
-      case END_GAME: 
+      case END_GAME:
         socket.emit(RESET_GAME, codeRoom);
         return
     }
@@ -49,49 +50,69 @@ export function ProgressPlayTime() {
 
   useEffect(() => {
     if (gameStatus !== 'game-start') setProgress(100);
-  }, [gameStatus]);
+  }, [gameStatus, roomRound]);
 
-  const progressInterval: any = useRef();
+  const progressInterval: any = useRef(null);
 
-  const handleIntervalProgress = (data: GamePresentProgressPackage) => {
+  const handleIntervalProgress = async (data: GamePresentProgressPackage) => {
     if (progressInterval) clearInterval(progressInterval.current)
     let { startProgress } = data
-    const { maximumTimeInMiliSeconds, status, sendAt } = data
-    const duration = moment.duration(moment().diff(sendAt));
-    const miliseconds = duration.asMilliseconds();
-    const percentageDescreasePerStep =
-      (MAX_PROGRESS_PERCENTAGE * TIME_PERSTEP) / (maximumTimeInMiliSeconds - miliseconds);
+    const { status, maximumTimeInMiliSeconds } = data
+    const maximumTimeInSeconds = maximumTimeInMiliSeconds/1000;
     setGameStatus(status)
     setProgress(startProgress)
 
-    progressInterval.current = setInterval(() => {
-      if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-        clearInterval(progressInterval.current);
-        return handleProgressTimeout(status);
-      }
-      startProgress = startProgress - percentageDescreasePerStep
-      setProgress(startProgress)
-    }, TIME_PERSTEP)
+    let currentRound = roomRound;
+    if (!currentRound && codeRoom) {
+      const { data } = await roomService.currentRound(codeRoom);
+      setRoomRound(data);
+      currentRound = data;
+    }
+
+    let startTime = null;
+    
+    switch (status) {
+      case 'game-start':
+      case 'new-turn':
+        startTime = currentRound?.started_at;
+        break;
+      default:
+        startTime = new Date();
+        break;
+    }
+
+    if (startTime) {
+      progressInterval.current = setInterval((startTime: Date) => {
+        if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
+          clearInterval(progressInterval.current);
+          return handleProgressTimeout(status);
+        }
+        const curTime = new Date();
+        const test = (curTime.getTime() - startTime.getTime()) / 1000;
+        startProgress = (maximumTimeInSeconds - test) / maximumTimeInSeconds;
+        setProgress(startProgress * 100)
+      }, TIME_PERSTEP, new Date(startTime))
+    }
   }
 
   useEffect(() => {
-    socket?.on(GAME_PRESENT_PROGRESS, (data: GamePresentProgressPackage) => {
-      handleIntervalProgress(data)
+    socket?.on(GAME_PRESENT_PROGRESS, async (data: GamePresentProgressPackage) => {
+      await handleIntervalProgress(data)
     });
 
-    socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, (data: GamePresentProgressPackage) => {
-      handleIntervalProgress(data)
+    socket?.on(GAME_PRESENT_PROGRESS_NEW_PLAYER, async (data: GamePresentProgressPackage) => {
+      await handleIntervalProgress(data)
     });
 
     socket?.on(RESET_GAME, () => {
       setIsRunning(false)
     })
 
-    socket?.on(END_GAME, () => {
+    socket?.on(END_GAME, async () => {
       setCorrectAnswers([])
-      setParticipants([...participants].map(participant => ({...participant, is_painter: false, is_next_painter: false})))
+      setParticipants([...participants].map(participant => ({ ...participant, is_painter: false, is_next_painter: false })))
       setIsRunning(false)
-      handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:END_GAME})
+      await handleIntervalProgress({ maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status: END_GAME })
       setIsRunning(true)
     })
 
@@ -102,9 +123,9 @@ export function ProgressPlayTime() {
         { socketId, codeRoom, maximumTimeInMiliSeconds: gameStatus === PLAY_GAME ? ROUND_DURATION_MILISECONDS : INTERVAL_DURATION_MILISECONDS, startProgress: progress, status: gameStatus, sendAt: moment() })
     });
 
-    socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
+    socket?.on(GAME_DRAWER_OUT_CHANNEL, async () => {
       setIsRunning(false)
-      handleIntervalProgress({maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status:"refresh-drawer"})
+      await handleIntervalProgress({ maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS, sendAt: new Date(), startProgress: 100, status: "refresh-drawer" })
       setIsRunning(true)
     });
 
@@ -115,7 +136,7 @@ export function ProgressPlayTime() {
       socket?.off(END_GAME)
       socket?.off(codeRoom)
     };
-  }, [socket, gameStatus, codeRoom, progress, progressInterval, isRunning, participants]);
+  }, [socket, gameStatus, codeRoom, progress, progressInterval, isRunning, participants, roomRound]);
 
   useEffect(() => {
     if (!isRunning) {
@@ -124,7 +145,7 @@ export function ProgressPlayTime() {
 
       setIsRunning(true)
     }
-  }, [isRunning, participants, gameStatus])
+  }, [isRunning, participants, gameStatus, roomRound])
 
   return (
     <Progress

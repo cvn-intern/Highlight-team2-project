@@ -141,7 +141,6 @@ export class GameGateway extends SocketGateway {
 
   @SubscribeMessage(GAME_HINT_WORD)
   async handleHintWord(@MessageBody() data: HintAnswer, @ConnectedSocket() client: SocketClient) {
-    let hintWord = data.word;
     const roomId = extractIdRoom(data.codeRoom);
     const roundOfRoom = await this.roomRoundService.getRoundOfRoom(roomId);
 
@@ -149,23 +148,7 @@ export class GameGateway extends SocketGateway {
       throw new WsException(errorsSocket.YOU_NOT_PAINTER);
     }
 
-    const word = roundOfRoom.word;
-    if (!hintWord) {
-      hintWord = '_'.repeat(word.length);
-      this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
-      return;
-    }
-
-    const indexs = [];
-    hintWord.split("").forEach((char: string, index: number) => {
-      if (char === '_') {
-        indexs.push(index);
-      }
-    })
-    
-    const indexRandom = indexs[Math.floor(Math.random() * indexs.length)];
-    hintWord = hintWord.slice(0, indexRandom) + word.split("").at(indexRandom) + hintWord.slice(indexRandom + 1,  hintWord.length);
-
+    const hintWord = await this.wordService.handleHintWord(roundOfRoom.word, data.word);
     this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
   }
   

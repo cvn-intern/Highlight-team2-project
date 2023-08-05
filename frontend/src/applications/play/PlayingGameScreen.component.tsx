@@ -263,7 +263,7 @@ export default function PlayingGameScreen() {
 
             )}
             {!isDrawer && gameStatus === PLAY_GAME && hintWord && (
-              <div className="absolute w-[250px] text-center py-2 flex justify-center  gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
+              <div className="absolute text-center py-2 px-4 flex justify-center w-max gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
                 {hintWord.split("").map((char) => <span>{char}</span>)}
               </div>
             )}
