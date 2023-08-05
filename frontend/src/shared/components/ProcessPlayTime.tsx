@@ -1,8 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { Progress } from './shadcn-ui/progress';
+import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
+import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import roomService from '../services/roomService';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
+import { GamePresentProgressPackage } from '../types/gameProgress';
 import {
+  DRAWER_SKIP_TURN_CHANNEL,
   END_GAME,
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
@@ -14,14 +19,11 @@ import {
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
   RESET_GAME,
+  SKIP_DRAW_TURN,
   START_GAME,
-  WAIT_FOR_OTHER_PLAYERS,
+  WAIT_FOR_OTHER_PLAYERS
 } from './IntervalCanvas';
-import moment from 'moment';
-import { useParams } from 'react-router-dom';
-import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
-import { GamePresentProgressPackage } from '../types/gameProgress';
-import roomService from '../services/roomService';
+import { Progress } from './shadcn-ui/progress';
 
 export const MIN_PROGRESS_PERCENTAGE = 0;
 export const MAX_PROGRESS_PERCENTAGE = 100;
@@ -75,6 +77,7 @@ export function ProgressPlayTime() {
         return;
 
       case GAME_REFRESH_DRAWER:
+      case SKIP_DRAW_TURN:
       case INTERVAL_SHOW_WORD:
         socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
         socket.emit(GAME_PRESENT_PROGRESS, {
@@ -141,6 +144,7 @@ export function ProgressPlayTime() {
     }
   };
 
+ 
   useEffect(() => {
     socket?.on(
       GAME_PRESENT_PROGRESS,
@@ -207,7 +211,18 @@ export function ProgressPlayTime() {
         maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
         sendAt: new Date(),
         startProgress: MAX_PROGRESS_PERCENTAGE,
-        status: 'refresh-drawer',
+        status: GAME_REFRESH_DRAWER,
+      });
+      setIsRunning(true);
+    });
+    
+    socket?.on(DRAWER_SKIP_TURN_CHANNEL, async () => {
+      setIsRunning(false);
+      await handleIntervalProgress({
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+        sendAt: new Date(),
+        startProgress: MAX_PROGRESS_PERCENTAGE,
+        status: SKIP_DRAW_TURN,
       });
       setIsRunning(true);
     });

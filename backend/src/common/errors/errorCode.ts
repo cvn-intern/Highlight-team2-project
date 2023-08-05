@@ -11,6 +11,10 @@ export const errorsSocket = {
     code: 'ROOM_NOT_FOUND',
     message: 'Room not found!',
   },
+  ROOM_ROUND_NOT_FOUND: {
+    code: 'ROOM_ROUND_NOT_FOUND',
+    message: 'Room round not found!',
+  },
   CAN_NOT_JOIN: {
     code: 'CAN_NOT_JOIN',
     message: 'Can not join this room!',

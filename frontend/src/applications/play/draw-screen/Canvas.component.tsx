@@ -6,7 +6,7 @@ import cursorsIconMap from "../shared/constants/cursorsIconMap";
 import { useSocketHandleCanvasEvent } from "../shared/hooks/useSocketHandleCanvasEvents";
 import { getPointFromEvent } from "./draw.helper";
 
-export const ROUND_DURATION_MILISECONDS = 60000;
+export const ROUND_DURATION_MILISECONDS = 20000;
 
 type CanvasProps = {
   hidden: boolean;

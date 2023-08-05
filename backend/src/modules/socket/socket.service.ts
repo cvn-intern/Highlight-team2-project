@@ -8,6 +8,7 @@ import { WsException } from '@nestjs/websockets';
 import { RoomService } from '../room/room.service';
 import {
   GAME_DRAWER_IS_OUT,
+  GAME_DRAWER_SKIP_TURN,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
   PARTICIPANTS_CHANNEL,
@@ -33,7 +34,7 @@ export class SocketService {
     private roomRoundService: RoomRoundService,
     private roomUserService: RoomUserService,
     private userService: UserService,
-  ) { }
+  ) {}
   async storeClientConnection(client: Socket) {
     try {
       const payload = await this.extractPayload(client);
@@ -70,7 +71,7 @@ export class SocketService {
         await this.redisService.deleteObjectByKey(`USER:${userId}:ROOM`),
         await this.redisService.deleteObjectByKey(`USER:${userId}:SOCKET`),
         await this.redisService.deleteObjectByKey(`USER:${userId}:ACCESSTOKEN`),
-      ])
+      ]);
     } catch (error) {
       this.logger.error(error);
     }
@@ -170,11 +171,11 @@ export class SocketService {
       });
       server.in(room.code_room).emit(UPDATE_ROOM_ROUND_CHANNEL, updatedRoomRound);
       return;
-    } 
-    
-    if(oldRoomRound.painter === userId) {
+    }
+
+    if (oldRoomRound.painter === userId) {
       const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
-  
+
       const newRoomRound = await this.roomRoundService.updateRoomRound({
         ...oldRoomRound,
         word,
@@ -184,12 +185,34 @@ export class SocketService {
         painter: painterRound.painter,
         next_painter: painterRound.next_painter,
       });
-  
-      await this.updateRoomRoundWhenDrawerOut(
-        server,
-        room.code_room,
-        newRoomRound,
-      );
+
+      await this.updateRoomRoundWhenDrawerOut(server, room.code_room, newRoomRound);
     }
+  }
+
+  async updateRoomRoundWhenDrawerSkipTurn(server: Server, codeRoom: string, roomRound: RoomRound) {
+    const room = await this.roomService.getRoomByCodeRoom(codeRoom);
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+    server.in(codeRoom).emit(GAME_DRAWER_SKIP_TURN);
+    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+    await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
+  }
+
+  async handleSkipDrawTurn(oldRoomRound: RoomRound, userId: number, server: Server, room: Room) {
+    if (oldRoomRound.painter !== userId) return;
+
+    const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
+
+    const newRoomRound = await this.roomRoundService.updateRoomRound({
+      ...oldRoomRound,
+      word,
+      current_round: oldRoomRound.current_round - 1,
+      ended_at: endedAt,
+      started_at: startedAt,
+      painter: painterRound.painter,
+      next_painter: painterRound.next_painter,
+    });
+
+    await this.updateRoomRoundWhenDrawerSkipTurn(server, room.code_room, newRoomRound);
   }
 }
