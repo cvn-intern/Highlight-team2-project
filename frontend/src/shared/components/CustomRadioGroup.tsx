@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { Option } from "../types/option";
-import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "./shadcn-ui/radio-group";
 import { Label } from "@radix-ui/react-label";
 import { cn } from "../lib/utils";
 import { useTranslation } from "react-i18next";

@@ -109,6 +109,7 @@ const RoomsPage = () => {
                   : "bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]"
               )}
               onClick={handleJoinRoom}
+              disabled={!selectCodeRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
               <p>{t("PlayButton")}</p>

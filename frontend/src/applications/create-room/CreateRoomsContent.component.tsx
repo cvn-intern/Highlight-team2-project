@@ -24,6 +24,7 @@ import { WordsCollection } from "@/shared/types/wordsCollection";
 import { useUserStore } from "@/shared/stores/userStore";
 import { DEFAULT_ROOM_TIME } from "@/shared/constants";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/shared/lib/utils";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -126,6 +127,13 @@ const CreateRoomsContent = () => {
     navigate("/rooms");
   };
   const handleCreateThemeClick = () => {
+    if (user?.is_guest) {
+      useToaster({
+        type: "warning",
+        message: t("toastMessage.warning.guestUser"),
+      });
+      return;
+    }
     navigate("/rooms/create-theme");
   };
 
@@ -145,7 +153,7 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full lg:h-full gap-y-2 ">
           <div className="flex justify-between w-full p-5 mt-1 bg-white gap-x-5 rounded-2xl max-md:items-center">
-            <p className="mt-1 text-2xl font-cherry text-headerBlueColor">
+            <p className="mt-1 text-2xl font-coiny text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
             <div className="flex gap-x-2 max-md:flex-col max-md:gap-y-2">
@@ -164,20 +172,21 @@ const CreateRoomsContent = () => {
                   <SelectItem value={"2"}>{t("Theme.officialTheme")}</SelectItem>
                 </SelectContent>
               </Select>
-              {
-              // !user?.is_guest
-              true && (
-                <Button
-                  type="submit"
-                  variant="opacityHover"
-                  className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit max-md:w-full"
-                  onClick={handleCreateThemeClick}
-                >
-                  <p className="text-base font-bold text-white md:text-lg">
-                    {t("Theme.createTheme")}
-                  </p>
-                </Button>
-              )}
+              <Button
+                type="submit"
+                variant="opacityHover"
+                className={cn(
+                  "gap-4 rounded-[10px] font-black w-fit max-md:w-full",
+                  !user?.is_guest
+                    ? "bg-headerBlueColor"
+                    : "bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]"
+                )}
+                onClick={handleCreateThemeClick}
+              >
+                <p className="text-base font-bold text-white md:text-lg">
+                  {t("Theme.createTheme")}
+                </p>
+              </Button>
             </div>
           </div>
           <ScrollArea className="xl:h-full md:h-[70%] h-[50%] w-full max-h-[50vh] rounded-2xl border py-5 px-2 bg-white overflow-x-scoll">
@@ -196,7 +205,7 @@ const CreateRoomsContent = () => {
             </div>
           </ScrollArea>
         </div>
-      </div>
+      </div >
       <div className="flex max-lg:flex-col lg:gap-3 lg:my-5 max-md:mt-[-15vh]">
         <Button
           type="submit"

@@ -87,7 +87,8 @@
     },
     "warning": {
       "nextDrawerRestart": "Người vẽ đã thoát khỏi phòng, vòng chơi bắt đầu lại!",
-      "enterNickname": "Tên không được để trống!"
+      "enterNickname": "Tên không được để trống!",
+      "guestUser": "Bạn phải đăng nhập để sử dụng tính năng này!"
     },
     "error": {
       "joinRoom": "Vào phòng không thành công!",
