@@ -8,10 +8,14 @@ import AlertIcon from "@/shared/components/icons/AlertIcon";
 
 interface Props {
   wordsList: WordType[];
+  isCreate: boolean;
+  isDirty: boolean;
 }
 
-const ThemeHeader = ({ wordsList }: Props) => {
+const ThemeHeader = ({ wordsList, isCreate, isDirty }: Props) => {
   const wordsListIsEmpty = useMemo(() => wordsList.length === 0, [wordsList]);
+  const showAlertConfirm =
+    (isCreate && !wordsListIsEmpty) || (!isCreate && isDirty);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const handleBackButton = () => {
@@ -21,7 +25,7 @@ const ThemeHeader = ({ wordsList }: Props) => {
   return (
     <div className="flex justify-between lg:w-full w-[70%]">
       <div>
-        {!wordsListIsEmpty && (
+        {showAlertConfirm && (
           <AlertDialogYesNo
             buttonVariant={"link"}
             buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
@@ -41,8 +45,7 @@ const ThemeHeader = ({ wordsList }: Props) => {
             }
           />
         )}
-
-        {wordsListIsEmpty && (
+        {!showAlertConfirm && (
           <button onClick={handleBackButton}>
             <Triangle
               size={40}

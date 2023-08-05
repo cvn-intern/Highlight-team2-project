@@ -29,4 +29,6 @@ export default {
       language_code,
       words_list,
     }),
+  deleteWordsCollection: (id: number) =>
+    axiosClient.delete<ReturnCreateWordsCollection>(`words-collection/${id}`),
 };

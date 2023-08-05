@@ -69,7 +69,7 @@ const ThemeCard = (props: ThemeCardProps) => {
           </div>
         )}
         {!isOffical && (
-          <p className="text-lg font-medium leading-6 text-center text-gray-400 transition-all duration-200 ease-linear opacity-100 group-hover:opacity-0">
+          <p className="text-lg font-medium leading-6 text-center text-gray-400 transition-all duration-200 ease-linear opacity-100 group-hover:opacity-0 group-hover:-z-10">
             Created by you
           </p>
         )}

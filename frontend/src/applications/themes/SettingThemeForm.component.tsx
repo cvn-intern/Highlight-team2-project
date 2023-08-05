@@ -44,18 +44,6 @@ export default function SettingThemeForm({
   setIsDirty,
 }: Props) {
   const { t } = useTranslation();
-  const handleAddWordToWordsList = () => {
-    if (
-      !word ||
-      !difficulty ||
-      word.length === 0 ||
-      thereIsWordIsExistedInWordsList
-    )
-      return;
-    handleAddWord(word, difficulty);
-    !isDirty && setIsDirty(true);
-    setWord("");
-  };
   return (
     <div className="xl:w-[42%] w-full h-full border rounded-2xl bg-white">
       <div className="flex flex-col justify-between border p-5 m-5 rounded-xl h-[91.5%]">
@@ -125,14 +113,14 @@ export default function SettingThemeForm({
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    handleAddWordToWordsList();
+                    handleAddWord(word, difficulty);
                   }
                 }}
               />
               <Button
                 className="rounded-[8px] bg-[#1B67AD] text-white flex gap-2"
                 onClick={() => {
-                  handleAddWordToWordsList();
+                  handleAddWord(word, difficulty);
                 }}
                 disabled={word.length === 0 || thereIsWordIsExistedInWordsList}
               >

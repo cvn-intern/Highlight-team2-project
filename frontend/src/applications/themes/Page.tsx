@@ -3,7 +3,7 @@ import SloganImg from "@/shared/assets/slogan.png";
 import MainLayout from "@/shared/components/MainLayout";
 import ThemeHeader from "./ThemeHeader.component";
 import ThemeContent from "./ThemeContent.component";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import wordCollectionService from "@/shared/services/wordCollectionService";
@@ -14,6 +14,8 @@ export default function Page() {
   const { state } = useLocation();
   const isCreate = !state || state.type === "create";
   const wordsCollectionId = state?.wordsCollectionId;
+  const [wordsList, setWordsList] = useState<WordType[]>([]);
+  const [isDirty, setIsDirty] = useState(false);
 
   const { data, isLoading, isFetching, isError } = useQuery({
     queryKey: ["wordsCollection", wordsCollectionId],
@@ -22,9 +24,12 @@ export default function Page() {
     enabled: !!wordsCollectionId,
   });
   const wordsCollectionInformation = data?.data;
-  const [wordsList, setWordsList] = useState<WordType[]>(
-    wordsCollectionInformation ? wordsCollectionInformation.words_list : []
-  );
+
+  useEffect(() => {
+    if (wordsCollectionInformation) {
+      setWordsList(wordsCollectionInformation.words_list);
+    }
+  }, [wordsCollectionInformation]);
 
   if ((isLoading || isFetching) && !!wordsCollectionId) return <ThemeLoading />;
 
@@ -43,12 +48,18 @@ export default function Page() {
           className="justify-self-center slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
         <div className="justify-self-center w-[90%] lg:h-[90%] min-h-[70vh] bg-white flex flex-col items-center mb-5 mt-5 rounded-2xl p-8">
-          <ThemeHeader wordsList={wordsList} />
+          <ThemeHeader
+            wordsList={wordsList}
+            isCreate={isCreate}
+            isDirty={isDirty}
+          />
           <ThemeContent
             wordsList={wordsList}
             setWordsList={setWordsList}
             isCreate={isCreate}
             wordsCollectionInformation={wordsCollectionInformation}
+            isDirty={isDirty}
+            setIsDirty={setIsDirty}
           />
         </div>
       </div>

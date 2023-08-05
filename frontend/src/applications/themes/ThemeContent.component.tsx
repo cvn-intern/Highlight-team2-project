@@ -20,12 +20,16 @@ import { PackageOpen } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useNavigate } from "react-router";
 import ThemeActions from "./ThemeActions.component";
+import { useUpdateWordsCollection } from "@/shared/hooks/useUpdateWordsCollection";
+import { useDeleteWordsCollection } from "@/shared/hooks/useDeleteWordsCollection";
 
 interface Props {
   wordsList: WordType[];
   setWordsList: Dispatch<SetStateAction<WordType[]>>;
   isCreate: boolean;
   wordsCollectionInformation?: WordsCollectionInformation;
+  setIsDirty: Dispatch<SetStateAction<boolean>>;
+  isDirty: boolean;
 }
 
 const ThemeContent = ({
@@ -33,13 +37,16 @@ const ThemeContent = ({
   setWordsList,
   isCreate,
   wordsCollectionInformation,
+  setIsDirty,
+  isDirty,
 }: Props) => {
   const navigate = useNavigate();
   const { user } = useUserStore();
   const { mutate: addWordsCollection } = useCreateWordsCollection();
+  const { mutate: updateWordsCollection } = useUpdateWordsCollection();
+  const { mutate: deleteWordsCollection } = useDeleteWordsCollection();
   const { t } = useTranslation();
   // States
-  const [isDirty, setIsDirty] = useState(false);
   const [themes, setThemes] = useState<Theme[]>([]);
   const [languageCode, setLanguageCode] = useState<string>(
     wordsCollectionInformation?.language_code || "en"
@@ -112,6 +119,7 @@ const ThemeContent = ({
     if (totalWords === 0) {
       window.removeEventListener("beforeunload", preventFromReloadOrExist);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalWords]);
 
   // Handlers
@@ -119,15 +127,24 @@ const ThemeContent = ({
     const newWordsList = [...wordsList];
     newWordsList.splice(index, 1);
     setWordsList(newWordsList);
+    !isDirty && setIsDirty(true);
   };
   const handleAddWord = (
     word: string,
     difficulty: "easy" | "medium" | "hard"
   ) => {
-    if (word.length === 0) return;
+    if (
+      !word ||
+      !difficulty ||
+      word.length === 0 ||
+      thereIsWordIsExistedInWordsList
+    )
+      return;
     const newWordsList = [...wordsList];
     newWordsList.push({ word, difficulty });
     setWordsList(newWordsList);
+    !isDirty && setIsDirty(true);
+    setWord("");
   };
   const handleCreateWordsCollection = async () => {
     if (!isValidToCreateWordsCollection) return;
@@ -136,6 +153,21 @@ const ThemeContent = ({
       language_code: languageCode,
       words_list: wordsList,
     });
+    navigate("/rooms/create-room");
+  };
+  const handleUpdateWordsCollection = async () => {
+    if (!isValidToCreateWordsCollection || !wordsCollectionInformation) return;
+    updateWordsCollection({
+      id: wordsCollectionInformation.id,
+      theme_id: themeId,
+      language_code: languageCode,
+      words_list: wordsList,
+    });
+    navigate("/rooms/create-room");
+  };
+  const handleDeleteWordsCollection = async () => {
+    if (!wordsCollectionInformation) return;
+    deleteWordsCollection(wordsCollectionInformation.id);
     navigate("/rooms/create-room");
   };
   return (
@@ -222,8 +254,11 @@ const ThemeContent = ({
       </div>
       <ThemeActions
         handleCreateWordsCollection={handleCreateWordsCollection}
+        handleUpdateWordsCollection={handleUpdateWordsCollection}
+        handleDeleteWordsCollection={handleDeleteWordsCollection}
         isValidToCreateWordsCollection={isValidToCreateWordsCollection}
         isCreate={isCreate}
+        isDirty={isDirty}
       />
     </>
   );
