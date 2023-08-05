@@ -46,7 +46,7 @@ export class RoomService {
     await this.roomRepository.delete({
       id: roomId,
       is_created_by_system: false,
-    })
+    });
   }
 
   async randomRoomForQuickPlay(): Promise<string> {
@@ -137,7 +137,7 @@ export class RoomService {
   }
 
   async assignHostRoom(room: Room, newHostId: number): Promise<Room> {
-    const updateRoom = await this.updateRoom({...room, host_id: newHostId});
+    const updateRoom = await this.updateRoom({ ...room, host_id: newHostId });
 
     return updateRoom;
   }

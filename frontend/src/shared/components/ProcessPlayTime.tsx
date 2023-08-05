@@ -1,8 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { Progress } from './shadcn-ui/progress';
+import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
+import moment from 'moment';
+import { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import roomService from '../services/roomService';
 import { useGameStore } from '../stores/gameStore';
 import { useSocketStore } from '../stores/socketStore';
+import { GamePresentProgressPackage } from '../types/gameProgress';
 import {
+  DRAWER_SKIP_TURN_CHANNEL,
   END_GAME,
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
@@ -14,14 +19,11 @@ import {
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
   RESET_GAME,
+  SKIP_DRAW_TURN,
   START_GAME,
-  WAIT_FOR_OTHER_PLAYERS,
+  WAIT_FOR_OTHER_PLAYERS
 } from './IntervalCanvas';
-import moment from 'moment';
-import { useParams } from 'react-router-dom';
-import { ROUND_DURATION_MILISECONDS } from '@/applications/play/draw-screen/Canvas.component';
-import { GamePresentProgressPackage } from '../types/gameProgress';
-import roomService from '../services/roomService';
+import { Progress } from './shadcn-ui/progress';
 
 export const MIN_PROGRESS_PERCENTAGE = 0;
 export const MAX_PROGRESS_PERCENTAGE = 100;
@@ -31,7 +33,6 @@ const ONE_SECOND_IN_MILISECOND = 1000
 export function ProgressPlayTime() {
   const [progress, setProgress] = useState(MAX_PROGRESS_PERCENTAGE);
   const [isRunning, setIsRunning] = useState(true);
-
   const { socket } = useSocketStore();
   const {
     gameStatus,
@@ -75,6 +76,16 @@ export function ProgressPlayTime() {
         });
         return;
 
+      case SKIP_DRAW_TURN:
+        socket.emit(GAME_PRESENT_PROGRESS, {
+          codeRoom,
+          maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+          startProgress: MAX_PROGRESS_PERCENTAGE,
+          status: INTERVAL_NEW_TURN,
+          sendAt: moment(),
+        });
+        return;
+
       case GAME_REFRESH_DRAWER:
       case INTERVAL_SHOW_WORD:
         socket.emit(GAME_NEW_TURN_CHANNEL, codeRoom);
@@ -86,7 +97,6 @@ export function ProgressPlayTime() {
           sendAt: moment(),
         });
         return;
-
       case END_GAME:
         socket.emit(RESET_GAME, codeRoom);
         return;
@@ -116,29 +126,32 @@ export function ProgressPlayTime() {
     let startTime = null;
 
     switch (status) {
-      case 'game-start':
-        startTime = currentRound?.started_at ?? new Date();
+      case PLAY_GAME:
+        startTime = currentRound?.started_at;
         break;
       default:
         startTime = new Date();
         break;
     }
 
-    progressInterval.current = setInterval(
-      (startTime: Date) => {
-        if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
-          clearInterval(progressInterval.current);
-          return handleProgressTimeout(status);
-        }
-        const currentTime = new Date();
-        const decreaseTimeOverSecond = (currentTime.getTime() - startTime.getTime()) / ONE_SECOND_IN_MILISECOND;
-        startProgress = (maximumTimeInSeconds - decreaseTimeOverSecond) / maximumTimeInSeconds;
-        setProgress(startProgress * MAX_PROGRESS_PERCENTAGE);
-      },
-      TIME_PERSTEP,
-      new Date(startTime)
-    );
+    if (startTime) {
+      progressInterval.current = setInterval(
+        (startTime: Date) => {
+          if (startProgress <= MIN_PROGRESS_PERCENTAGE) {
+            clearInterval(progressInterval.current);
+            return handleProgressTimeout(status);
+          }
+          const currentTime = new Date();
+          const decreaseTimeOverSecond = (currentTime.getTime() - startTime.getTime()) / ONE_SECOND_IN_MILISECOND;
+          startProgress = (maximumTimeInSeconds - decreaseTimeOverSecond) / maximumTimeInSeconds;
+          setProgress(startProgress * MAX_PROGRESS_PERCENTAGE);
+        },
+        TIME_PERSTEP,
+        new Date(startTime)
+      );
+    }
   };
+
 
   useEffect(() => {
     socket?.on(
@@ -206,7 +219,18 @@ export function ProgressPlayTime() {
         maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
         sendAt: new Date(),
         startProgress: MAX_PROGRESS_PERCENTAGE,
-        status: 'refresh-drawer',
+        status: GAME_REFRESH_DRAWER,
+      });
+      setIsRunning(true);
+    });
+
+    socket?.on(DRAWER_SKIP_TURN_CHANNEL, async () => {
+      setIsRunning(false);
+      await handleIntervalProgress({
+        maximumTimeInMiliSeconds: INTERVAL_DURATION_MILISECONDS,
+        sendAt: new Date(),
+        startProgress: MAX_PROGRESS_PERCENTAGE,
+        status: SKIP_DRAW_TURN,
       });
       setIsRunning(true);
     });

@@ -5,7 +5,6 @@ import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE, RESET_GAME } from '../constant';
 import { Socket } from 'socket.io';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { errorsSocket } from 'src/common/errors/errorCode';
-const moment = require('moment');
 
 export class JoinGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -62,7 +61,7 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
       }
 
       const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
-      
+
       if (participants.length === 1 && roomRound) {
         await this.roomRoundService.deleteRoomRound(room.id);
       }
