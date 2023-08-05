@@ -26,6 +26,7 @@ import IntervalCanvas, {
   PLAY_GAME,
   SEND_HINT_WORD,
   START_GAME,
+  UPDATE_ROOM_ROUND_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS
 } from '@/shared/components/IntervalCanvas';
 import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
@@ -174,7 +175,7 @@ export default function PlayingGameScreen() {
       });
     });
 
-    socket?.on('update-room-round', (roomRound: RoomRound) => {
+    socket?.on(UPDATE_ROOM_ROUND_CHANNEL, (roomRound: RoomRound) => {
       setRoomRound(roomRound);
     })
 
@@ -192,7 +193,7 @@ export default function PlayingGameScreen() {
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
       socket?.off(GET_CANVAS_STATE);
       socket?.off(HINT_WORD);
-      socket?.off('update-room-round');
+      socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
     };
   }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
 

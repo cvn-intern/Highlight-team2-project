@@ -12,6 +12,7 @@ import {
   GAME_NEW_TURN_CHANNEL,
   PARTICIPANTS_CHANNEL,
   QUALIFY_TO_START_CHANNEL,
+  UPDATE_ROOM_ROUND_CHANNEL,
 } from './constant';
 import { RoomInterface } from '../room/room.interface';
 import { Room } from '../room/room.entity';
@@ -167,7 +168,7 @@ export class SocketService {
         ...oldRoomRound,
         next_painter: nextPainter,
       });
-      server.in(room.code_room).emit('update-room-round', updatedRoomRound);
+      server.in(room.code_room).emit(UPDATE_ROOM_ROUND_CHANNEL, updatedRoomRound);
       return;
     } 
     

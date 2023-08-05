@@ -1,4 +1,5 @@
 import {
+  PARTICIPANTS_CHANNEL,
   START_GAME,
   WAIT_FOR_OTHER_PLAYERS,
 } from '@/shared/components/IntervalCanvas';
@@ -38,7 +39,7 @@ const RankingBoard = () => {
   const { codeRoom } = useParams();
 
   useEffect(() => {
-    socket?.on('participants', (data: RankingUser) => {
+    socket?.on(PARTICIPANTS_CHANNEL, (data: RankingUser) => {
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
       const hostUser = _.find(
@@ -79,7 +80,7 @@ const RankingBoard = () => {
     });
 
     return () => {
-      socket?.off('participants');
+      socket?.off(PARTICIPANTS_CHANNEL);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, gameStatus, codeRoom, isHost, participants, user]);
