@@ -60,7 +60,8 @@
     "rankingBoard": {
       "kickButton": "LOẠI",
       "emptySlot": "TRỐNG",
-      "point": "điểm"
+      "point": "điểm",
+      "nextPainter": "Người vẽ tiếp theo"
     },
     "share": {
       "shareLabel": "CHIA SẺ",
@@ -68,11 +69,21 @@
       "qrcode": "MÃ QR",
       "copyButton": "COPY",
       "shareDescription": "Chia sẻ link hoặc mã QR cho bạn bè để họ có thể tham gia phòng này!"
+    },
+    "exit": {
+      "yes": "CÓ",
+      "no": "KHÔNG",
+      "exitDescription": "Bạn có chắc chắn muốn thoát khỏi phòng không?"
+    },
+    "userDialog": {
+      "kick": "LOẠI",
+      "profileLabel": "THÔNG TIN"
     }
   },
   "toastMessage": {
     "success": {
-      "createRoom": "Tạo phòng thành công!"
+      "createRoom": "Tạo phòng thành công!",
+      "copy": "Copy thành công!"
     },
     "warning": {
       "nextDrawerRestart": "Người vẽ đã thoát khỏi phòng, vòng chơi bắt đầu lại!",

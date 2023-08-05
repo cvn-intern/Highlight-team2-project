@@ -14,6 +14,7 @@ import {
 import ProfileLabel from "@/shared/assets/profile-label.png";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   user: Participant | null;
@@ -25,6 +26,7 @@ type Props = {
 export function DialogDemo({ user, triggerRef }: Props) {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   const handleKick = () => {
     socket?.emit('kick', {
@@ -73,7 +75,7 @@ export function DialogDemo({ user, triggerRef }: Props) {
               strokeWidth={4}
               className="mr-4"
             />
-            KICK
+            {t("PlayingGame.userDialog.kick")}
           </Button>
         </div>
       </DialogFooter>

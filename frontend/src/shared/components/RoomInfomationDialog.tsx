@@ -57,8 +57,8 @@ const RoomInfomationDialog = ({ roomInfo }: RoomInfomationDialogProps) => {
             <p className="text-[#334d50] font-semibold text-lg">
               {t("Language.languageLabel")}
             </p>
-            <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text capitalize">
-              {roomInfo?.language?.name}
+            <p className="text-xl font-bold text-transparent bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text">
+              {t("Language." + roomInfo?.language?.name.toLowerCase())}
             </p>
           </div>
         </div>

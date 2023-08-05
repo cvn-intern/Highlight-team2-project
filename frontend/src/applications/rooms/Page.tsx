@@ -45,7 +45,7 @@ const RoomsPage = () => {
 
   const handleJoinCreateRoom = async () => {
     try {
-      navigate("/rooms/create-room" + selectCodeRoom, {
+      navigate("/rooms/create-room", {
         state: { wait: false },
         replace: false,
       });

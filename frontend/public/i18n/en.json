@@ -69,14 +69,23 @@
             "qrcode": "QR CODE",
             "copyButton": "COPY",
             "shareDescription": "Invite your friends to the room!"
+        },
+        "exit": {
+            "yes": "YES",
+            "no": "NO",
+            "exitDescription": "Are you sure you want to exit the room?"
+        },
+        "userDialog": {
+            "kick": "KICK",
+            "profileLabel": "PROFILE"
         }
     },
     "toastMessage": {
         "success": {
-            "createRoom": "Create room successfully!"
+            "createRoom": "Create room successfully!",
+            "copy": "Copy successfully!"
         },
         "warning": {
-            "nextDrawer": "Next drawer is out!",
             "nextDrawerRestart": "Drawer is out. The round restarts!",
             "enterNickname": "Please enter your nickname!"
         },

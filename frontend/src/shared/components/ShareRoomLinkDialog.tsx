@@ -29,7 +29,7 @@ const ShareRoomLinkDialog = () => {
         navigator.clipboard.writeText(roomLink)
         useToaster({
             type: "success",
-            message: "Copied",
+            message: t("toastMessage.success.copy"),
             position: "bottom-right"
         })
     }
