@@ -104,7 +104,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(handleSubmit)}
-                className="w-full flex flex-col md:flex-row items-center justify-between my-3"
+                className="w-full flex flex-col md:flex-row items-center justify-between mt-3 md:mb-4 mb-[-1.5rem] md:gap-x-20"
             >
                 <div className="flex items-center ml-12 md:ml-32">
                     <FormField
@@ -139,7 +139,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({ setRoomFilterData }) =>
                     />
                 </div>
 
-                <p className="hidden lg:block text-7xl mx-auto font-cherry text-headerBlueColor">
+                <p className="hidden xl:block text-7xl mx-auto font-cherry text-headerBlueColor">
                     {t("RoomList.roomLabel")}
                 </p>
 
