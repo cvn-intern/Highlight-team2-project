@@ -160,7 +160,7 @@ export class SocketService {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
-    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+    this.sendRoomRoundToPainter(server, roomRound);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 
@@ -197,7 +197,7 @@ export class SocketService {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_DRAWER_SKIP_TURN);
-    server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+    this.sendRoomRoundToPainter(server, roomRound);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 
@@ -223,5 +223,12 @@ export class SocketService {
     await this.roomRoundService.cacheDataRoomRound(newRoomRound);
 
     await this.updateRoomRoundWhenDrawerSkipTurn(server, room.code_room, newRoomRound);
+  }
+
+  async sendRoomRoundToPainter(server: Server, roomRound: RoomRound): Promise<string> {
+    const painterSocketId = await this.redisService.getObjectByKey(`USER:${roomRound.painter}:SOCKET`);
+    server.to(painterSocketId).emit(GAME_NEW_TURN_CHANNEL, roomRound);
+
+    return painterSocketId;
   }
 }

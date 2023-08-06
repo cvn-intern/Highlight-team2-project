@@ -66,9 +66,10 @@ export class GameGateway extends SocketGateway {
     await this.roomRoundService.cacheDataRoomRound(roundOfRoom);
 
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
-    this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
+    this.socketService.sendRoomRoundToPainter(this.server, roundOfRoom);
     await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
+  
   @SubscribeMessage(GAME_START_CHANNEL)
   async handleStartGame(@MessageBody() codeRoom: string) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);

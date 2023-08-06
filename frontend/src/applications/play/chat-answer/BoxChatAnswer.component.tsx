@@ -56,16 +56,17 @@ interface MessageBodyInterface {
 
 const BoxChat = (props: BoxProps) => {
   const { icon: Icon } = props;
-  const [inputChat, SetInputChat] = useState('');
+  const [inputChat, setInputChat] = useState('');
   const [numberOfCharactersLeft, setNumberOfCharactersLeft] = useState<number>(
     MAX_NUMBER_OF_CHARACTER
   );
   const messagesEndRef = useRef<any>(null);
+  const { socket } = useSocketStore();
+  const { codeRoom } = useParams();
+  
   useEffect(() => {
     setNumberOfCharactersLeft(MAX_NUMBER_OF_CHARACTER - inputChat.length);
   }, [inputChat]);
-  const { socket } = useSocketStore();
-  const { codeRoom } = useParams();
 
   const sendMessages = (message: string) => {
     if (message.trim() === '') return;
@@ -82,7 +83,7 @@ const BoxChat = (props: BoxProps) => {
       } as MessageBodyInterface);
     }
 
-    SetInputChat('');
+    setInputChat('');
   };
 
   const throttledSendMessages = useCallback(throttle(sendMessages, 300), []);
@@ -94,7 +95,11 @@ const BoxChat = (props: BoxProps) => {
 
   const handleInputText = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.value.length > MAX_NUMBER_OF_CHARACTER) return;
-    SetInputChat(e.target.value);
+    if(props.isDisabledInput) {
+      setInputChat('');
+      return;
+    }
+    setInputChat(e.target.value);
   };
 
   useEffect(() => {
