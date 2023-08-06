@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { Drawing, Point, SocketDrawing, SocketGetCanvasState, SocketStartDraw, StartDraw, UseCustomHookHandleCanvasEvents } from "../../draw-screen/draw";
+import { Drawing, Point, SocketDrawing, SocketStartDraw, StartDraw, UseCustomHookHandleCanvasEvents } from "../../draw-screen/draw";
 import useDrawing from "./useDrawing";
-import { CANVAS_STATE, CANVAS_STATE_FROM_SERVER, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, GET_CANVAS_STATE, NEW_PLAYER, START_DRAW } from "../constants/drawEvent";
+import {  CANVAS_STATE_FROM_SERVER, DRAWER_CLEAR_CANVAS, DRAWER_DRAWING, DRAWER_FINISH_DRAWING, DRAWER_START_DRAWING, DRAWING, FINISH_DRAW, NEW_PLAYER, START_DRAW } from "../constants/drawEvent";
 import { useParams } from "react-router";
 import { PaintContext } from "../../PlayingGameScreen.component";
 import { useGameStore } from "@/shared/stores/gameStore";
@@ -94,19 +94,6 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       socket?.off(DRAWER_CLEAR_CANVAS)
     }
   }, [ctx, isDrawer])
-
-  useEffect(() => {
-    socket?.on(GET_CANVAS_STATE, (id: string) => {
-      if (!isDrawer) return
-      const dataImg = canvasRef.current.toDataURL()
-      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
-    })
-
-    return () => {
-      socket?.off(GET_CANVAS_STATE)
-    }
-
-  }, [socket, isDrawer])
 
   return { handleMouseDown, handleMouseMove, handleMouseUpOrLeave };
 }

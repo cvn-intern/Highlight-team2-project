@@ -230,8 +230,7 @@ const BoxChatAnswer = () => {
       socket?.off(`${codeRoom}-answer`);
       socket?.off(`${codeRoom}-leave`);
     };
-  }, [socket, participants, roomRound, isHost, gameStatus]);
-
+  }, [socket, participants, roomRound, isHost, gameStatus, correctAnswers, user]);
   return (
     <>
       <div className="w-[var(--canvas-width)] flex-1 flex item-center bg-white rounded-[10px] mt-2 relative">

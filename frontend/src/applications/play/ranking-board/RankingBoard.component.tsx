@@ -93,7 +93,7 @@ const RankingBoard = () => {
     return () => {
       socket?.off(GAME_UPDATE_RANKING);
     };
-  }, [socket]);
+  }, [socket, socket, participants]);
 
   const numberOfPlayers = participants.length;
 
