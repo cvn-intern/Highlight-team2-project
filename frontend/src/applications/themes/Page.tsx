@@ -5,10 +5,9 @@ import ThemeHeader from "./ThemeHeader.component";
 import ThemeContent from "./ThemeContent.component";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import wordCollectionService from "@/shared/services/wordCollectionService";
 import Theme404 from "./Theme404.component";
 import ThemeLoading from "./ThemeLoading.component";
+import { useQueryWordsCollections } from "@/shared/hooks/useQueryWordsCollections";
 
 export default function Page() {
   const { state } = useLocation();
@@ -17,12 +16,8 @@ export default function Page() {
   const [wordsList, setWordsList] = useState<WordType[]>([]);
   const [isDirty, setIsDirty] = useState(false);
 
-  const { data, isLoading, isFetching, isError } = useQuery({
-    queryKey: ["wordsCollection", wordsCollectionId],
-    queryFn: () =>
-      wordCollectionService.getWordsCollectionInfomationById(wordsCollectionId),
-    enabled: !!wordsCollectionId,
-  });
+  const { data, isLoading, isFetching, isError } =
+    useQueryWordsCollections(wordsCollectionId);
   const wordsCollectionInformation = data?.data;
 
   useEffect(() => {

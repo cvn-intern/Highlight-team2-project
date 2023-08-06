@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WordsCollection } from '../words-collection/wordsCollection.entity';
@@ -35,14 +35,19 @@ export class WordsCollectionRepository extends Repository<WordsCollection> {
     }
     if (type == ALL_WORDS_COLLECTION) {
       queryBuilder.where(
-        'words_collection.is_created_by_system = :is_created_by_system1 OR ( words_collection.is_created_by_system = :is_created_by_system2 AND words_collection.creator_id = :creator_id )',
-        {
-          is_created_by_system1: true,
-          is_created_by_system2: false,
-          creator_id,
-        },
+        new Brackets((qb) => {
+          qb.where('words_collection.is_created_by_system = true').orWhere(
+            new Brackets((qb) => {
+              qb.where('words_collection.is_created_by_system = false').andWhere(
+                'words_collection.creator_id = :creator_id',
+                { creator_id },
+              );
+            }),
+          );
+        }),
       );
     }
+
     if (language_code != 'all') {
       queryBuilder.andWhere('words_collection.language_code = :language_code', { language_code });
     }
