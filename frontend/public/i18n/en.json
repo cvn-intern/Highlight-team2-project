@@ -80,6 +80,24 @@
             "profileLabel": "PROFILE"
         }
     },
+    "interval": {
+        "intervalLabel": "INTERVAL",
+        "newTurn": "NEW TURN",
+        "inactive": "INACTIVE",
+        "lostTurnDescription": "You've lost your turn",
+        "waiting": "WAITING",
+        "gameOver": "GAME OVER",
+        "winnerDescription": "the winner is:",
+        "refreshRound": "REFRESHING ROUND",
+        "answerDescription": "The answer was:",
+        "correctPlayer": "Correct player:",
+        "nobodyHit": "Nobody hit the answer",
+        "painterLeft": "Painter has left the room",
+        "painterSkip": "Painter has skipped the turn",
+        "waitOtherPlayer": "Wait for other players",
+        "waitForHost": "Wait for host to start the game",
+        "startGameButton": "START GAME"
+    },
     "toastMessage": {
         "success": {
             "createRoom": "Create room successfully!",

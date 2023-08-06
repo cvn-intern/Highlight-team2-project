@@ -80,6 +80,24 @@
       "profileLabel": "THÔNG TIN"
     }
   },
+  "interval": {
+    "intervalLabel": "KHOẢNG NGHỈ",
+    "newTurn": "VÒNG MỚI",
+    "inactive": "KHÔNG HOẠT ĐỘNG",
+    "lostTurnDescription": "Bạn đã mất lượt vẽ!",
+    "waiting": "ĐANG CHỜ",
+    "gameOver": "KẾT THÚC",
+    "winnerDescription": "người chiến thắng là:",
+    "refreshRound": "KHỞI ĐỘNG VÒNG ĐẤU",
+    "answerDescription": "Câu trả lời là:",
+    "correctPlayer": "Người trả lời đúng là:",
+    "nobodyHit": "Không ai trả lời đúng!",
+    "painterLeft": "Người vẽ đã thoát khỏi phòng!",
+    "painterSkip": "Người vẽ đã bỏ qua từ này!",
+    "waitOtherPlayer": "Chờ người chơi khác",
+    "waitForHost": "Chờ chủ phòng bắt đầu",
+    "startGameButton": "BẮT ĐẦU"
+  },
   "toastMessage": {
     "success": {
       "createRoom": "Tạo phòng thành công!",

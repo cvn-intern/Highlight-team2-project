@@ -11,7 +11,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import ProfileLabel from "@/shared/assets/profile-label.png";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";

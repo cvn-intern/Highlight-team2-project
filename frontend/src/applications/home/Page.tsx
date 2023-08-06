@@ -1,4 +1,3 @@
-import BannerImg from "@/shared/assets/play-banner.png";
 import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
