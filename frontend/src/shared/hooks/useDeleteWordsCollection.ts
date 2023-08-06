@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import wordCollectionService from "../services/wordCollectionService";
 
 export const useDeleteWordsCollection = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: wordCollectionService.deleteWordsCollection,
-    onSuccess: ({ data }) => {
-      // Do something here bro
+    onSuccess: () => {
+      queryClient.invalidateQueries(["wordsCollection", 0, "all"]);
     },
     onError: ({ error }) => {
       alert(error);

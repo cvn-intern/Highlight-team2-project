@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import wordCollectionService from "../services/wordCollectionService";
 
-export const useQueryWordsCollections = (wordsCollectionId: number) => {
+export const useQueryWordsCollections = (data: GetWordCollectionsDTO) => {
+  const { type, language_code } = data;
   return useQuery({
-    queryKey: ["wordsCollection", wordsCollectionId],
-    queryFn: () =>
-      wordCollectionService.getWordsCollectionInfomationById(wordsCollectionId),
-    enabled: !!wordsCollectionId,
+    queryKey: ["wordsCollection", type, language_code],
+    queryFn: () => wordCollectionService.getWordCollections(data),
   });
 };

@@ -1,11 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import wordCollectionService from "@/shared/services/wordCollectionService";
 
 export const useCreateWordsCollection = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: wordCollectionService.createWordsCollection,
     onSuccess: () => {
-      // Do something here bro
+      queryClient.invalidateQueries(["wordsCollection", 0, "all"]);
     },
     onError: ({ error }) => {
       alert(error);

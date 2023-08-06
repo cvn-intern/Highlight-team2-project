@@ -1,3 +1,8 @@
+type GetWordCollectionsDTO = {
+  type: number;
+  language_code: string;
+};
+
 type CreateWordsCollectionDTO = {
   theme_id: number;
   language_code: string;

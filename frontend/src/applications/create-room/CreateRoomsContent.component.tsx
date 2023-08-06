@@ -4,12 +4,11 @@ import ThemeCard from "./ThemeCard.component";
 import useToaster from "@/shared/hooks/useToaster";
 import DoorIcon from "@/shared/assets/door-icon.svg";
 import roomService from "@/shared/services/roomService";
-import wordCollectionService from "@/shared/services/wordCollectionService";
 import SettingRoomForm from "./SettingRoomForm.component";
 import { z } from "zod";
 import { LogOut } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSocketStore } from "@/shared/stores/socketStore";
@@ -22,9 +21,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/shared/components/shadcn-ui/select";
-import { WordsCollection } from "@/shared/types/wordsCollection";
 import { DEFAULT_ROOM_TIME } from "@/shared/constants";
 import { useTranslation } from "react-i18next";
+import { useQueryWordsCollections } from "@/shared/hooks/useQueryWordsCollections";
+import Spinner from "@/shared/components/Spinner";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -40,21 +40,14 @@ const formSchema = z.object({
 });
 
 const CreateRoomsContent = () => {
-  const [wordsCollections, setWordsCollections] = useState<WordsCollection[]>(
-    []
-  );
   const [type, setType] = useState(0);
   const { t } = useTranslation();
   const [languageCode, setLanguageCode] = useState("all");
-  const fetchWordsCollection = async (type: number, language_code: string) => {
-    return await wordCollectionService.getWordCollections(type, language_code);
-  };
-  useEffect(() => {
-    (async () => {
-      const { data } = await fetchWordsCollection(type, languageCode);
-      setWordsCollections(data);
-    })();
-  }, [type, languageCode]);
+  const { data, isLoading, isFetching } = useQueryWordsCollections({
+    type,
+    language_code: languageCode,
+  });
+  const wordsCollections = data ? data.data : [];
   const [selectedThemeId, setSelectedThemeId] = useState(DEFAULT_THEME);
   const navigate = useNavigate();
   const { socket } = useSocketStore();
@@ -81,13 +74,13 @@ const CreateRoomsContent = () => {
       const visible = form.getValues("visible");
       const theme = selectedThemeId;
 
-      const { data: createRoomResponse } = await roomService.createRoom(
-        players,
-        theme,
-        round,
-        DEFAULT_ROOM_TIME,
-        visible
-      );
+      const { data: createRoomResponse } = await roomService.createRoom({
+        max_player: players,
+        words_collection_id: theme,
+        number_of_round: round,
+        time_per_round: DEFAULT_ROOM_TIME,
+        is_public: visible,
+      });
       handleJoinNewCreateRoom(createRoomResponse.code_room);
     } catch (error: any) {
       error;
@@ -183,23 +176,30 @@ const CreateRoomsContent = () => {
               }
             </div>
           </div>
-          <ScrollArea className="w-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll">
-            <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 lg:grid-cols-3 2xl:grid-cols-3">
-              {wordsCollections.map((item) => {
-                return (
-                  <ThemeCard
-                    key={item.id}
-                    wordsCollectionId={item.id}
-                    name={item.theme_name.toUpperCase()}
-                    img={item.theme_thumbnail}
-                    onClick={() => setSelectedThemeId(item.id)}
-                    isSelected={item.id === selectedThemeId}
-                    isOffical={item.is_created_by_system}
-                  />
-                );
-              })}
+          {!isFetching && !isLoading && wordsCollections && (
+            <ScrollArea className="relative w-full h-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll">
+              <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 lg:grid-cols-3 2xl:grid-cols-3">
+                {wordsCollections.map((item) => {
+                  return (
+                    <ThemeCard
+                      key={item.id}
+                      wordsCollectionId={item.id}
+                      name={item.theme_name.toUpperCase()}
+                      img={item.theme_thumbnail}
+                      onClick={() => setSelectedThemeId(item.id)}
+                      isSelected={item.id === selectedThemeId}
+                      isOffical={item.is_created_by_system}
+                    />
+                  );
+                })}
+              </div>
+            </ScrollArea>
+          )}
+          {(isFetching || isLoading) && (
+            <div className="flex w-full h-full bg-white flexCenter rounded-2xl">
+              <Spinner />
             </div>
-          </ScrollArea>
+          )}
         </div>
       </div>
       <div className="flex max-xl:flex-col xl:gap-3 xl:my-5">

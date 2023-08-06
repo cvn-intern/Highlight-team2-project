@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Theme404 from "./Theme404.component";
 import ThemeLoading from "./ThemeLoading.component";
-import { useQueryWordsCollections } from "@/shared/hooks/useQueryWordsCollections";
+import { useGetWordsCollectionInfomationById } from "@/shared/hooks/useGetWordsCollectionInfomationById";
 
 export default function Page() {
   const { state } = useLocation();
@@ -17,7 +17,7 @@ export default function Page() {
   const [isDirty, setIsDirty] = useState(false);
 
   const { data, isLoading, isFetching, isError } =
-    useQueryWordsCollections(wordsCollectionId);
+    useGetWordsCollectionInfomationById(wordsCollectionId);
   const wordsCollectionInformation = data?.data;
 
   useEffect(() => {
