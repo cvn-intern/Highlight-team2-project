@@ -9,6 +9,7 @@ import { RoomService } from 'src/modules/room/room.service';
 import { AuthorizeSocket } from 'src/common/guards/authorizeSocket';
 import { WebsocketExceptionsFilter } from '../socket.filter';
 import { RoomRoundService } from 'src/modules/room-round/roomRound.service';
+import { WordService } from 'src/modules/word/word.service';
 
 const SOCKET_PORT = 3001;
 
@@ -23,6 +24,7 @@ export class SocketGateway {
     public userService: UserService,
     public redisService: RedisService,
     public roomUserService: RoomUserService,
+    public wordService: WordService,
     public roomService: RoomService,
     public roomRoundService: RoomRoundService,
     public logger: Logger = new Logger(SocketGateway.name),

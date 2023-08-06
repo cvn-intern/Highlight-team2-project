@@ -20,6 +20,7 @@ import {
   GAME_PRESENT_PROGRESS,
   END_GAME,
   GAME_REFRESH_DRAWER,
+  SKIP_DRAW_TURN,
 } from "./IntervalCanvas";
 import Confetti from "react-confetti";
 import { Button } from "./shadcn-ui/Button";
@@ -113,6 +114,15 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <img className="w-1/3" src={PainterIsOut} />
           </div>
           <p className="text-xl absolute bottom-6 text-slate-500">Painter has left the room :(</p>
+        </>
+      );
+    case SKIP_DRAW_TURN:
+      return (
+        <>
+          <div className="flex relative justify-center items-center mt-2 mb-4 transform -translate-y-5">
+            <img className="w-1/3" src={PainterIsOut} />
+          </div>
+          <p className="text-xl absolute bottom-6 text-slate-500">Painter has skipped the turn :(</p>
         </>
       );
     case WAIT_FOR_OTHER_PLAYERS:
