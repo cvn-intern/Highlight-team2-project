@@ -190,6 +190,7 @@ const BoxChatAnswer = () => {
       const ANSWER_CORRETLY = 3;
       if (data.type === ANSWER_CORRETLY && data.user === user?.nickname) {
         const answers = [...correctAnswers, user.id];
+        console.log(answers);
         const newParticipants = [...participants].map((participant) => {
           if (participant.id === user.id) {
             return {
