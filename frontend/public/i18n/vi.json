@@ -83,6 +83,7 @@
   "interval": {
     "intervalLabel": "KHOẢNG NGHỈ",
     "newTurn": "VÒNG MỚI",
+    "turnNotify": "Lượt vẽ của",
     "inactive": "KHÔNG HOẠT ĐỘNG",
     "lostTurnDescription": "Bạn đã mất lượt vẽ!",
     "waiting": "ĐANG CHỜ",

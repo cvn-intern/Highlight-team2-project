@@ -83,6 +83,7 @@
     "interval": {
         "intervalLabel": "INTERVAL",
         "newTurn": "NEW TURN",
+        "turnNotify": "It's the turn of",
         "inactive": "INACTIVE",
         "lostTurnDescription": "You've lost your turn",
         "waiting": "WAITING",

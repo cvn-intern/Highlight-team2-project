@@ -21,7 +21,7 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
     case INTERVAL_SHOW_WORD:
       return (
         <>
-          <p className="text-[3rem] text-sky-700">{t("interval.interalLabel")}</p>
+          <p className="text-[3rem] text-sky-700">{t("interval.intervalLabel")}</p>
         </>
       );
     case INTERVAL_NEW_TURN:
@@ -29,7 +29,7 @@ const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
         <>
           <p className="text-[3rem] text-yellow-400">{t("interval.newTurn")}</p>
           <p className="text-xl text-slate-400">
-            It's the turn of{" "}
+            {t("interval.turnNotify")}{" "}
             <span className="text-slate-900">{nextDrawer?.nickname}</span>
           </p>
         </>
