@@ -1,4 +1,5 @@
 import {
+  PARTICIPANTS_CHANNEL,
   START_GAME,
   WAIT_FOR_OTHER_PLAYERS,
 } from '@/shared/components/IntervalCanvas';
@@ -15,7 +16,6 @@ import { useParams } from 'react-router-dom';
 export interface RankingUser {
   participants: Array<Participant>;
   max_player: number; 
-  roomRound: RoomRound;
 }
 
 const RankingBoard = () => {
@@ -31,22 +31,19 @@ const RankingBoard = () => {
     gameStatus,
     setIsDrawer,
     setCorrectAnswers,
-    roomRound,
     setRoomRound,
     isHost
   } = useGameStore();
   const { codeRoom } = useParams();
 
   useEffect(() => {
-    socket?.on('participants', (data: RankingUser) => {
-
+    socket?.on(PARTICIPANTS_CHANNEL, (data: RankingUser) => {
       setParticipants(data.participants);
       setMaxPlayer(data.max_player);
       const hostUser = _.find(
         data.participants,
         (participant) => participant.is_host
       );
-      if (!roomRound) setRoomRound(data.roomRound);
 
       const isHost = hostUser?.id === user?.id
       setIsHost(isHost);
@@ -62,14 +59,13 @@ const RankingBoard = () => {
       }
 
       if (
-        data.participants.length === 2 &&
+        data.participants.length >= 2 &&
         isHost &&
         gameStatus &&
         gameStatus === WAIT_FOR_OTHER_PLAYERS
       ) {
         setGameStatus(START_GAME);
         return
-        
       }
       const drawer = _.find(
         data.participants,
@@ -81,7 +77,7 @@ const RankingBoard = () => {
     });
 
     return () => {
-      socket?.off('participants');
+      socket?.off(PARTICIPANTS_CHANNEL);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, gameStatus, codeRoom, isHost, participants, user]);
@@ -97,7 +93,7 @@ const RankingBoard = () => {
     return () => {
       socket?.off(GAME_UPDATE_RANKING);
     };
-  }, [socket]);
+  }, [socket, participants]);
 
   const numberOfPlayers = participants.length;
 

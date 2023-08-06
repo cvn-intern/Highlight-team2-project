@@ -21,4 +21,6 @@ export default {
     axiosClient.get<RoomList[]>(
       `rooms?theme=${theme}&language_code=${languageCode}&search=${search}`
     ),
+  currentRound: (codeRoom: string) =>
+    axiosClient.get<RoomRound>(`rooms/current-round/${codeRoom}`),
 };

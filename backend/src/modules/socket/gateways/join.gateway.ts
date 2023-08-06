@@ -5,7 +5,6 @@ import { LEAVE_ROOM_CONTENT, LEAVE_ROOM_TYPE, RESET_GAME } from '../constant';
 import { Socket } from 'socket.io';
 import { expireTimeOneDay } from 'src/common/variables/constVariable';
 import { errorsSocket } from 'src/common/errors/errorCode';
-const moment = require('moment');
 
 export class JoinGateway extends SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -51,24 +50,27 @@ export class JoinGateway extends SocketGateway implements OnGatewayConnection, O
 
       await this.roomUserService.deleteRoomUser(room.id, user.id);
       await this.socketService.removeClientDisconnection(user.id);
-      
+
       if (user.id === room.host_id) {
         room = await this.roomService.changeHost(room.code_room);
-        await this.socketService.sendListParticipantsInRoom(this.server, room);
       }
-
-      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
-      if (!roomRound) return;
 
       const participants = await this.roomUserService.getListUserOfRoom(room);
       if (participants.length === 1) {
-        await this.roomRoundService.deleteRoomRound(room.id);
         this.server.in(codeRoom).emit(RESET_GAME);
-        await this.socketService.sendListParticipantsInRoom(this.server, room);
-        return;
       }
 
-      await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
+      const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+
+      if (participants.length === 1 && roomRound) {
+        await this.roomRoundService.deleteRoomRound(room.id);
+      }
+
+      if (participants.length > 1 && roomRound) {
+        await this.socketService.handlePainterOrNextPainterOutRoom(roomRound, user.id, this.server, room);
+      }
+
+      await this.socketService.sendListParticipantsInRoom(this.server, room);
     } catch (error) {
       this.logger.error(error);
     }

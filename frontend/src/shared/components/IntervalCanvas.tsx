@@ -17,12 +17,18 @@ export const INTERVAL_DRAWER_OUT = "drawer_out";
 export const START_GAME = "start-game";
 export const END_GAME = "end-game";
 export const RESET_GAME = 'reset-game';
+export const HINT_WORD = 'hint-word';
+export const SKIP_DRAW_TURN = 'skip-draw-turn';
 
 export const QUALIFY_TO_START_CHANNEL = 'qualify-to-start';
 export const GAME_STATUS_CHANNEL = 'game-status';
 export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
 export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
-export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
+export const SEND_HINT_WORD = 'send-hint-word';
+export const GET_CORRECT_PLAYERS = 'get-correct-players';
+export const UPDATE_ROOM_ROUND_CHANNEL = 'update-room-round';
+export const PARTICIPANTS_CHANNEL = 'participants';
+export const DRAWER_SKIP_TURN_CHANNEL = 'drawer-skip-turn';
 
 
 export const INTERVAL_DURATION_MILISECONDS = 5000;

@@ -24,6 +24,7 @@ export class RoomRoundService {
       },
     });
   }
+
   async createRoundOfRoom(data: RoomRoundInterface): Promise<RoomRound> {
     return await this.roomRoundRepository.save({
       ...data,
@@ -63,8 +64,9 @@ export class RoomRoundService {
       this.wordService.getWordRandom(room.words_collection_id, room.id),
       this.roomUserService.assignPainterAndNextPainter(room),
     ]);
-    const startedAt: Date = new Date();
-    const endedAt = moment(startedAt).add(room.time_per_round, 'seconds');
+
+    const startedAt = moment().add(5, 'seconds').toDate();
+    const endedAt = moment(startedAt).add(room.time_per_round, 'seconds').toDate();
 
     return {
       word,

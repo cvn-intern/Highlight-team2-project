@@ -46,6 +46,7 @@ export class WordService {
   async deleteAllWordsInWordsCollection(words_collection_id: number) {
     await this.wordRepository.delete({ words_collection_id });
   }
+
   async cacheUsedWordsForRoom(roomId: number, word: string) {
     let words: Array<string> = await this.redisService.getObjectByKey(`${roomId}:WORDS`);
 
@@ -59,5 +60,41 @@ export class WordService {
 
   async deleteCacheUsedWordsForRoom(roomId: number) {
     return await this.redisService.deleteObjectByKey(`${roomId}:WORDS`);
+  }
+
+  async handleHintWord(wordAnswer: string, wordReceiver: string): Promise<string> {
+    let hintWord = wordReceiver;
+    const indexSpace = wordAnswer.indexOf(' ');
+    if (!hintWord) {
+      hintWord = '_'.repeat(wordAnswer.length);
+      if (indexSpace >= 0) {
+        hintWord =
+          hintWord.slice(0, indexSpace) +
+          wordAnswer.split('').at(indexSpace) +
+          hintWord.slice(indexSpace + 1, hintWord.length);
+      }
+      return hintWord;
+    }
+
+    const indexs = [];
+    hintWord.split('').forEach((char: string, index: number) => {
+      if (char === '_') {
+        indexs.push(index);
+      }
+    });
+
+    const indexRandom = indexs[Math.floor(Math.random() * indexs.length)];
+    hintWord =
+      hintWord.slice(0, indexRandom) +
+      wordAnswer.split('').at(indexRandom) +
+      hintWord.slice(indexRandom + 1, hintWord.length);
+    if (indexSpace >= 0) {
+      hintWord =
+        hintWord.slice(0, indexSpace) +
+        wordAnswer.split('').at(indexSpace) +
+        hintWord.slice(indexSpace + 1, hintWord.length);
+    }
+
+    return hintWord;
   }
 }

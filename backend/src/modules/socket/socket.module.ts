@@ -17,6 +17,7 @@ import { RoomRoundModule } from '../room-round/roomRound.module';
 import { GameGateway } from './gateways/game.gateway';
 import { JoinGateway } from './gateways/join.gateway';
 import { RoomGateway } from './gateways/room.gateway';
+import { WordModule } from '../word/word.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RoomGateway } from './gateways/room.gateway';
     RoomUserModule,
     RoomModule,
     RoomRoundModule,
+    WordModule,
     TypeOrmModule.forFeature([RoomUser]),
   ],
   controllers: [],

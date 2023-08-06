@@ -1,19 +1,45 @@
-import { MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
+import { ConnectedSocket, MessageBody, SubscribeMessage, WsException } from '@nestjs/websockets';
 import { SocketGateway } from './socket.gateway';
 import {
   END_GAME,
+  GAME_HINT_WORD,
   GAME_INTERVAL_SHOW_WORD_CHANNEL,
   GAME_NEW_TURN,
   GAME_NEW_TURN_CHANNEL,
   GAME_PRESENT_PROGRESS_CHANNEL,
   GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
+  GAME_SKIP_DRAW_TURN,
   GAME_START_CHANNEL,
   GAME_STATUS,
   GAME_UPDATE_RANKING_CHANNEL,
   GAME_WAIT_PLAYERS_CHANNEL,
+  GET_CORRECT_PLAYERS_CHANNEL,
   RESET_GAME,
+  SEND_HINT_WORD,
 } from '../constant';
 import { errorsSocket } from 'src/common/errors/errorCode';
+import { extractIdRoom } from 'src/common/utils/helper';
+import { SocketClient } from '../socket.class';
+
+type HintAnswer = {
+  codeRoom: string;
+  word: string | null;
+};
+
+type HintWordForNewPlayer = {
+  id: string;
+  hintWord: string | null;
+};
+
+type PainterSkip = {
+  codeRoom: string;
+  painterId: number;
+};
+
+type CorrectPlayers = {
+  correctAnswers: number[];
+  id: string;
+};
 
 export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_NEW_TURN_CHANNEL)
@@ -46,9 +72,10 @@ export class GameGateway extends SocketGateway {
     await this.roomRoundService.cacheDataRoomRound(roundOfRoom);
 
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
-    this.server.in(codeRoom).emit(GAME_NEW_TURN_CHANNEL, roundOfRoom);
+    this.socketService.sendRoomRoundToPainter(this.server, roundOfRoom, codeRoom);
     await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
+
   @SubscribeMessage(GAME_START_CHANNEL)
   async handleStartGame(@MessageBody() codeRoom: string) {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
@@ -87,7 +114,8 @@ export class GameGateway extends SocketGateway {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
 
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
-    this.server.in(codeRoom).emit(GAME_INTERVAL_SHOW_WORD_CHANNEL);
+    const roomRound = await this.roomRoundService.getRoundOfRoom(room.id);
+    this.server.in(codeRoom).emit(GAME_INTERVAL_SHOW_WORD_CHANNEL, roomRound);
 
     await this.roomService.updateRoomStatus(room, GAME_INTERVAL_SHOW_WORD_CHANNEL);
   }
@@ -123,5 +151,40 @@ export class GameGateway extends SocketGateway {
     });
 
     await this.socketService.sendListParticipantsInRoom(this.server, room);
+  }
+
+  @SubscribeMessage(GAME_HINT_WORD)
+  async handleHintWord(@MessageBody() data: HintAnswer, @ConnectedSocket() client: SocketClient) {
+    const roomId = extractIdRoom(data.codeRoom);
+    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(roomId);
+
+    if (client.user.id !== roundOfRoom.painter) {
+      throw new WsException(errorsSocket.YOU_NOT_PAINTER);
+    }
+
+    const hintWord = await this.wordService.handleHintWord(roundOfRoom.word, data.word);
+    this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
+  }
+
+  @SubscribeMessage(SEND_HINT_WORD)
+  async handleSendHintWordForNewPlayer(@MessageBody() { id, hintWord }: HintWordForNewPlayer) {
+    this.server.to(id).emit(GAME_HINT_WORD, hintWord);
+  }
+
+  @SubscribeMessage(GAME_SKIP_DRAW_TURN)
+  async handleSkipDrawTurn(@MessageBody() data: PainterSkip) {
+    const room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
+    if (!roundOfRoom) throw new WsException(errorsSocket.ROOM_ROUND_NOT_FOUND);
+    await this.socketService.handleSkipDrawTurn(roundOfRoom, data.painterId, this.server, room);
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
+  }
+
+  @SubscribeMessage(GET_CORRECT_PLAYERS_CHANNEL)
+  async hanldeGetCorrectPlayers(@MessageBody() { id, correctAnswers }: CorrectPlayers) {
+    this.server.to(id).emit(GET_CORRECT_PLAYERS_CHANNEL, correctAnswers);
   }
 }
