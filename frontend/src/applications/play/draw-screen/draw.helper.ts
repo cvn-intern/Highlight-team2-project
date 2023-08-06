@@ -285,15 +285,6 @@ export const pickColor = (
   setColor(color);
 };
 
-// export const getPointFromEvent = (
-//   e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
-// ): Point => {
-//   //Check if e is MouseEvent
-//   const X_COMPARE_TO_CANVAS = e.nativeEvent.offsetX;
-//   const Y_COMPARE_TO_CANVAS = e.nativeEvent.offsetY;
-//   return { x: X_COMPARE_TO_CANVAS, y: Y_COMPARE_TO_CANVAS };
-// };
-
 export const getPointFromEvent = (
   e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent> | any
 ): Point => {

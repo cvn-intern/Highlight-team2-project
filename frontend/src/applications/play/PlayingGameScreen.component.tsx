@@ -47,10 +47,12 @@ import { resetCanvas } from "./draw-screen/draw.helper";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { CANVAS_STATE, GET_CANVAS_STATE } from "./shared/constants/drawEvent";
+import { useMediaQuery } from "react-responsive";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
+  const isTabletOrMobile = useMediaQuery({ maxWidth: 991 });
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
 
@@ -300,11 +302,11 @@ export default function PlayingGameScreen() {
     >
       <MainLayout>
         <div
-          className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex items-center justify-center px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
+          className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex items-center justify-center px-10 py-[56px] gap-6 scale-[0.4] sm:scale-[0.5] md:scale-[0.6] lg:scale-[0.8] xl:scale-[1] 2xl:scale-100 select-none`}
         >
-          <RankingBoard />
+          {!isTabletOrMobile && <RankingBoard />}
           <div className="relative w-[var(--canvas-width)] flex flex-col gap-6">
-            <ActionButtons roomInfo={roomInfo} />
+            {!isTabletOrMobile && <ActionButtons roomInfo={roomInfo} />}
             {isDrawer && gameStatus === PLAY_GAME && (
               <div className="flex items-center gap-4 absolute min-w-[250px] text-center py-2 px-3 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
                 <Button
@@ -334,7 +336,7 @@ export default function PlayingGameScreen() {
             {gameStatus && isInterval && (
               <IntervalCanvas status={gameStatus} hidden={!isInterval} />
             )}
-            <BoxChatAnswer />
+            {!isTabletOrMobile && <BoxChatAnswer />}
             <div
               className={cn("absolute top-[380px] z-[999999] w-full", {
                 hidden:
@@ -346,7 +348,7 @@ export default function PlayingGameScreen() {
             </div>
           </div>
 
-          {isDrawer && <PaintTools />}
+          {isDrawer && !isTabletOrMobile && <PaintTools />}
         </div>
       </MainLayout>
     </PaintContext.Provider>
