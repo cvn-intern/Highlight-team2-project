@@ -90,7 +90,6 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
     });
 
     return () => {
-      socket?.off(GET_CANVAS_STATE)
       socket?.off(CANVAS_STATE_FROM_SERVER)
       socket?.off(DRAWER_CLEAR_CANVAS)
     }
@@ -107,8 +106,7 @@ export function useSocketHandleCanvasEvent(): UseCustomHookHandleCanvasEvents {
       socket?.off(GET_CANVAS_STATE)
     }
 
-  }, [isDrawer])
-
+  }, [socket, isDrawer])
 
   return { handleMouseDown, handleMouseMove, handleMouseUpOrLeave };
 }

@@ -198,7 +198,8 @@ const BoxChatAnswer = () => {
               answered_at: new Date(),
             };
           }
-          if (participant.id === roomRound?.painter) {
+          
+          if (participant.is_painter) {
             return {
               ...participant,
               score: participant.score + 2,

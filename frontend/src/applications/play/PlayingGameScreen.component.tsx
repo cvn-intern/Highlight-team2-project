@@ -224,7 +224,6 @@ export default function PlayingGameScreen() {
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
-      socket?.off(GET_CANVAS_STATE);
       socket?.off(HINT_WORD);
       socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
       socket?.off(DRAWER_SKIP_TURN_CHANNEL);

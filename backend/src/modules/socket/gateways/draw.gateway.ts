@@ -46,11 +46,11 @@ export class DrawGateway extends SocketGateway {
     const roomId = extractIdRoom(codeRoom);
     const roomRound = await this.roomRoundService.getRoundOfRoom(roomId);
     if (!roomRound) return;
-
     const painterSocketId = await this.redisService.getObjectByKey(`USER:${roomRound.painter}:SOCKET`);
+
     if (!painterSocketId) return;
 
-    client.to(painterSocketId).emit(GET_CANVAS_STATE, client.id);
+    client.broadcast.to(painterSocketId).emit(GET_CANVAS_STATE, client.id);
   }
 
   @SubscribeMessage(CANVAS_STATE_CHANNEL)
