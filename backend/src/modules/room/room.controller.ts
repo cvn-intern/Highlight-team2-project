@@ -91,32 +91,6 @@ export class RoomController {
   }
 
   @UseGuards(AuthorizeJWT)
-  @Delete('/:codeRoom')
-  async deleteRoom(@Param('codeRoom') codeRoom: string, @Res() response: Response) {
-    try {
-      const room = await this.roomService.getRoomByCodeRoom(codeRoom);
-      if (!room) {
-        return response.status(HttpStatus.NOT_FOUND).json({
-          message: 'Room not found',
-        });
-      }
-      const roomUsers = await this.roomUserService.getListUserOfRoom(room);
-      if (roomUsers && roomUsers.length > 0) {
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-          message: 'There are still users in the room, you cannot delete it now!',
-        });
-      }
-      await this.roomService.deleteRoom(codeRoom);
-      return response.status(HttpStatus.OK).json({
-        message: 'Delete room successfully',
-      });
-    } catch (error) {
-      this.logger.error(error);
-      return response.status(error.status).json(error);
-    }
-  }
-
-  @UseGuards(AuthorizeJWT)
   @Get('/quick-play')
   async getRoomQuickPlay(@Res() response: Response) {
     try {

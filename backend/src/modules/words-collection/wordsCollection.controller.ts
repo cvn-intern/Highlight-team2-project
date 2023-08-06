@@ -97,7 +97,14 @@ export class WordsCollectionController {
     @Res() response: Response,
     @IdUser() idUser: number,
   ) {
-    const creator_id = idUser;
+    const old_words_collection = await this.wordsCollectionService.getWordsCollectionDetailById(Number(id));
+    const creator_id = old_words_collection.creator_id;
+    if (creator_id !== idUser) {
+      return response.status(HttpStatus.FORBIDDEN).json({
+        statusCode: HttpStatus.FORBIDDEN,
+        message: `You are not allowed to update this words collection`,
+      });
+    }
     const is_created_by_system = false;
     const { theme_id, language_code, words_list } = createWordsCollectionDto;
     // Update words collection data
@@ -119,12 +126,19 @@ export class WordsCollectionController {
 
   @UseGuards(AuthorizeJWT)
   @Delete('/:id')
-  async deleteWordsCollection(@Param('id') id: number, @Res() response: Response) {
+  async deleteWordsCollection(@Param('id') id: number, @Res() response: Response, @IdUser() idUser: number) {
     const words_collection_id = Number(id);
     const words_collection = await this.wordsCollectionService.getWordsCollectionDetailById(words_collection_id);
     if (!words_collection) {
       return response.status(HttpStatus.NOT_FOUND).json({
         message: `Words collection with id ${id} not found`,
+      });
+    }
+    const creator_id = words_collection.creator_id;
+    if (creator_id !== idUser) {
+      return response.status(HttpStatus.FORBIDDEN).json({
+        statusCode: HttpStatus.FORBIDDEN,
+        message: `You are not allowed to delete this words collection`,
       });
     }
     await this.wordsCollectionService.deleteWordsCollection(words_collection_id);
