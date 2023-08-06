@@ -16,7 +16,6 @@ import { useParams } from 'react-router-dom';
 export interface RankingUser {
   participants: Array<Participant>;
   max_player: number; 
-  roomRound: RoomRound;
 }
 
 const RankingBoard = () => {
@@ -32,7 +31,6 @@ const RankingBoard = () => {
     gameStatus,
     setIsDrawer,
     setCorrectAnswers,
-    roomRound,
     setRoomRound,
     isHost
   } = useGameStore();
@@ -46,7 +44,6 @@ const RankingBoard = () => {
         data.participants,
         (participant) => participant.is_host
       );
-      if (!roomRound) setRoomRound(data.roomRound);
 
       const isHost = hostUser?.id === user?.id
       setIsHost(isHost);

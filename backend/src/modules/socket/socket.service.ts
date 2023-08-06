@@ -144,15 +144,11 @@ export class SocketService {
   }
 
   async sendListParticipantsInRoom(server: Server, room: Room) {
-    const [participants, roomRound] = await Promise.all([
-      this.roomService.getPartipantsInRoom(room),
-      this.roomRoundService.getRoundOfRoom(room.id),
-    ]);
+    const participants = await this.roomService.getPartipantsInRoom(room);
 
     server.in(room.code_room).emit(PARTICIPANTS_CHANNEL, {
       participants,
       max_player: room.max_player,
-      roomRound,
     });
   }
 
@@ -160,7 +156,7 @@ export class SocketService {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_DRAWER_IS_OUT);
-    this.sendRoomRoundToPainter(server, roomRound);
+    this.sendRoomRoundToPainter(server, roomRound, codeRoom);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 
@@ -197,7 +193,7 @@ export class SocketService {
     const room = await this.roomService.getRoomByCodeRoom(codeRoom);
     if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
     server.in(codeRoom).emit(GAME_DRAWER_SKIP_TURN);
-    this.sendRoomRoundToPainter(server, roomRound);
+    this.sendRoomRoundToPainter(server, roomRound, codeRoom);
     await this.roomService.updateRoomStatus(room, GAME_NEW_TURN);
   }
 
@@ -225,10 +221,13 @@ export class SocketService {
     await this.updateRoomRoundWhenDrawerSkipTurn(server, room.code_room, newRoomRound);
   }
 
-  async sendRoomRoundToPainter(server: Server, roomRound: RoomRound): Promise<string> {
+  async sendRoomRoundToPainter(server: Server, roomRound: RoomRound, codeRoom: string): Promise<string> {
     const painterSocketId = await this.redisService.getObjectByKey(`USER:${roomRound.painter}:SOCKET`);
     server.to(painterSocketId).emit(GAME_NEW_TURN_CHANNEL, roomRound);
-
+    server
+      .in(codeRoom)
+      .except(painterSocketId)
+      .emit(GAME_NEW_TURN_CHANNEL, { ...roomRound, word: '' });
     return painterSocketId;
   }
 }

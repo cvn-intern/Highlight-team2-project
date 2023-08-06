@@ -737,9 +737,9 @@ VALUES ('alakazam', 'hard', 3);
 INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('ponyta', 'hard', 3);
 INSERT INTO public.word(word, difficulty, words_collection_id)
-VALUES ('machester united', 'medium', 4);
+VALUES ('manchester united', 'medium', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
-VALUES ('machester city', 'easy', 4);
+VALUES ('manchester city', 'easy', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('real madrid', 'medium', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
@@ -761,7 +761,7 @@ VALUES ('al nassr', 'easy', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('ac milan', 'easy', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
-VALUES ('roma', 'easy', 4);
+VALUES ('as roma', 'easy', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
 VALUES ('inter milan', 'medium', 4);
 INSERT INTO public.word(word, difficulty, words_collection_id)
