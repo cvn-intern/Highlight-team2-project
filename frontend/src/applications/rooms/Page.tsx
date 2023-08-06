@@ -68,7 +68,7 @@ const RoomsPage = () => {
           alt="Slogan"
           className="slogan-width slogan-responsive w-[250px] 2xl:w-[300px] mt-2.5 2xl:mt-5"
         />
-        <div className="relative bg-white flex flex-col items-center mb-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] mt-5 rounded-2xl pb-5">
+        <div className="relative bg-white flex flex-col items-center my-5 w-[92%] xl:w-3/4 2xl:w-3/5 min-h-[70vh] rounded-2xl pb-5">
           <button
             onClick={handleBackButton}
             className="absolute mx-5 left-4 md:mr-10 top-4 md:top-8 md:left-10"
@@ -82,14 +82,14 @@ const RoomsPage = () => {
 
           <RoomFilterForm setRoomFilterData={setRoomFilterData} />
 
-          <div className="flex flex-col items-start justify-center flex-1 w-11/12 h-full gap-4 p-0 mb-2 overflow-auto bg-white home-content-responsive">
+          <div className="flex flex-col items-start justify-center flex-1 w-11/12 h-full gap-4 p-1 mb-2 overflow-y-scrol bg-white home-content-responsive">
             <ListOfRoom
               roomFilter={roomFilterData}
               selectCodeRoom={selectCodeRoom}
               setSelectCodeRoom={setSelectCodeRoom}
             />
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 my-2">
             <Button
               type="submit"
               variant="opacityHover"

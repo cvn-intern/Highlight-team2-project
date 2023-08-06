@@ -11,6 +11,10 @@ export const errorsSocket = {
     code: 'ROOM_NOT_FOUND',
     message: 'Room not found!',
   },
+  ROOM_ROUND_NOT_FOUND: {
+    code: 'ROOM_ROUND_NOT_FOUND',
+    message: 'Room round not found!',
+  },
   CAN_NOT_JOIN: {
     code: 'CAN_NOT_JOIN',
     message: 'Can not join this room!',
@@ -26,5 +30,9 @@ export const errorsSocket = {
   YOU_NOT_HOST: {
     code: 'YOU_NOT_HOST',
     message: 'You are not host to take this action!',
+  },
+  YOU_NOT_PAINTER: {
+    code: 'YOU_NOT_PAINTER',
+    message: 'You are not painter to take this action',
   },
 };

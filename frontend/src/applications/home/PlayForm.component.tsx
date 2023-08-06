@@ -203,7 +203,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#2193b0] to-[#6dd5ed] p-5"
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
@@ -213,7 +213,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />

@@ -50,16 +50,17 @@ export const GAME_REFRESH_CHANNEL = 'refresh-round';
 export const GAME_REFRESH_DRAWER_CHANNEL = 'refresh-drawer';
 export const GAME_PRESENT_PROGRESS_CHANNEL = 'game-present-progress';
 export const GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL = 'game-present-progress-new-player';
+export const UPDATE_ROOM_ROUND_CHANNEL = 'update-room-round';
 
 export const NOTIFY_CHANNEL = 'notification';
 export const GAME_PROGRESS_CHANNEL = 'game-progress';
 export const GAME_UPDATE_RANKING_CHANNEL = 'update-ranking';
 export const GAME_INTERVAL_SHOW_WORD_CHANNEL = 'interval-show-word';
 export const GAME_DRAWER_IS_OUT = 'drawer-is-out';
-export const GAME_NEXT_DRAWER_IS_OUT = 'next-drawer-is-out';
+export const GAME_DRAWER_SKIP_TURN = 'drawer-skip-turn';
 export const GAME_HINT_WORD = 'hint-word';
 export const SEND_HINT_WORD = 'send-hint-word';
-
+export const GAME_SKIP_DRAW_TURN = 'skip-draw-turn';
 
 export const GAME_PLAY = 'game-play';
 export const GAME_STATUS = 'game-status';

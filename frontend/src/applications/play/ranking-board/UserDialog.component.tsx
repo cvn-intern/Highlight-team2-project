@@ -44,9 +44,9 @@ export function DialogDemo({ user, triggerRef }: Props) {
   return (
     <DialogContent className="sm:w-[425px]" >
       <DialogHeader>
-        <div className="flex items-center justify-center gap-5 w-full">
-          <img className="w-4/5 h-fit" src={ProfileLabel} alt="avatar" />
-        </div>
+        <p className="text-5xl mx-auto mb-5 font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
+          {t("PlayingGame.userDialog.profileLabel")}
+        </p>
       </DialogHeader>
       <div className="flex flex-col items-center justify-center gap-5 w-full py-5">
         <Avatar className="flex items-center bg-yellow-300 w-1/3 h-auto rounded-full">

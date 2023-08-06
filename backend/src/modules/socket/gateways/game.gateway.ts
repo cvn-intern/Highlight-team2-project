@@ -8,6 +8,7 @@ import {
   GAME_NEW_TURN_CHANNEL,
   GAME_PRESENT_PROGRESS_CHANNEL,
   GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL,
+  GAME_SKIP_DRAW_TURN,
   GAME_START_CHANNEL,
   GAME_STATUS,
   GAME_UPDATE_RANKING_CHANNEL,
@@ -22,12 +23,17 @@ import { SocketClient } from '../socket.class';
 type HintAnswer = {
   codeRoom: string;
   word: string | null;
-}
+};
 
 type HintWordForNewPlayer = {
   id: string;
   hintWord: string | null;
-}
+};
+
+type PainterSkip = {
+  codeRoom: string;
+  painterId: number;
+};
 
 export class GameGateway extends SocketGateway {
   @SubscribeMessage(GAME_NEW_TURN_CHANNEL)
@@ -141,31 +147,31 @@ export class GameGateway extends SocketGateway {
 
   @SubscribeMessage(GAME_HINT_WORD)
   async handleHintWord(@MessageBody() data: HintAnswer, @ConnectedSocket() client: SocketClient) {
-    let hintWord = data.word;
     const roomId = extractIdRoom(data.codeRoom);
     const roundOfRoom = await this.roomRoundService.getRoundOfRoom(roomId);
-    const word = roundOfRoom.word;
-    if (!hintWord) {
-      hintWord = '_'.repeat(word.length);
-      this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
-      return;
+
+    if (client.user.id !== roundOfRoom.painter) {
+      throw new WsException(errorsSocket.YOU_NOT_PAINTER);
     }
 
-    const indexs = [];
-    hintWord.split("").forEach((char: string, index: number) => {
-      if (char === '_') {
-        indexs.push(index);
-      }
-    })
-    
-    const indexRandom = indexs[Math.floor(Math.random() * indexs.length)];
-    
-    
-    hintWord = hintWord.slice(0, indexRandom) + word.split("").at(indexRandom) + hintWord.slice(indexRandom + 1,  hintWord.length);
+    const hintWord = await this.wordService.handleHintWord(roundOfRoom.word, data.word);
     this.server.in(data.codeRoom).emit(GAME_HINT_WORD, hintWord);
   }
+
   @SubscribeMessage(SEND_HINT_WORD)
-  async handleSendHintWordForNewPlayer(@MessageBody() {id, hintWord}: HintWordForNewPlayer, @ConnectedSocket() client: SocketClient) {
+  async handleSendHintWordForNewPlayer(@MessageBody() { id, hintWord }: HintWordForNewPlayer) {
     this.server.to(id).emit(GAME_HINT_WORD, hintWord);
+  }
+
+  @SubscribeMessage(GAME_SKIP_DRAW_TURN)
+  async handleSkipDrawTurn(@MessageBody() data: PainterSkip) {
+    const room = await this.roomService.getRoomByCodeRoom(data.codeRoom);
+
+    if (!room) throw new WsException(errorsSocket.ROOM_NOT_FOUND);
+
+    const roundOfRoom = await this.roomRoundService.getRoundOfRoom(room.id);
+    if (!roundOfRoom) throw new WsException(errorsSocket.ROOM_ROUND_NOT_FOUND);
+    await this.socketService.handleSkipDrawTurn(roundOfRoom, data.painterId, this.server, room);
+    await this.socketService.sendListParticipantsInRoom(this.server, room);
   }
 }
