@@ -43,7 +43,6 @@ export function ProgressPlayTime() {
     setCorrectAnswers,
     setParticipants,
     roomRound,
-    setRoomRound,
   } = useGameStore();
   const { codeRoom } = useParams();
   const progressInterval: any = useRef(null);
@@ -119,7 +118,6 @@ export function ProgressPlayTime() {
     let currentRound = roomRound;
     if (!currentRound && codeRoom) {
       const { data } = await roomService.currentRound(codeRoom);
-      setRoomRound(data);
       currentRound = data;
     }
 
