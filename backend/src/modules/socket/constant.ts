@@ -51,6 +51,7 @@ export const GAME_REFRESH_DRAWER_CHANNEL = 'refresh-drawer';
 export const GAME_PRESENT_PROGRESS_CHANNEL = 'game-present-progress';
 export const GAME_PRESENT_PROGRESS_NEW_PLAYER_CHANNEL = 'game-present-progress-new-player';
 export const UPDATE_ROOM_ROUND_CHANNEL = 'update-room-round';
+export const GET_CORRECT_PLAYERS_CHANNEL = 'get-correct-players';
 
 export const NOTIFY_CHANNEL = 'notification';
 export const GAME_PROGRESS_CHANNEL = 'game-progress';

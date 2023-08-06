@@ -15,6 +15,7 @@ import {
   PenStyleType,
   Point,
   RGBAColorType,
+  SocketGetCanvasState,
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
@@ -22,6 +23,7 @@ import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_STATUS_CHANNEL,
+  GET_CORRECT_PLAYERS,
   HINT_WORD,
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
@@ -44,7 +46,7 @@ import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 import { Button } from '@/shared/components/shadcn-ui/Button';
-import { GET_CANVAS_STATE } from './shared/constants/drawEvent';
+import { CANVAS_STATE, GET_CANVAS_STATE } from './shared/constants/drawEvent';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -148,8 +150,9 @@ export default function PlayingGameScreen() {
       );
     });
 
-    socket?.on(INTERVAL_SHOW_WORD, () => {
+    socket?.on(INTERVAL_SHOW_WORD, (round: RoomRound) => {
       setIsDrawer(false);
+      setRoomRound(round);
     });
 
     return () => {
@@ -199,27 +202,39 @@ export default function PlayingGameScreen() {
     });
 
     socket?.on(GET_CANVAS_STATE, (id: string) => {
-      if (!isDrawer || !hintWord) return;
-      socket?.emit(SEND_HINT_WORD, { hintWord, id });
+      if(!isDrawer) return
+      if (hintWord) {
+        socket?.emit(SEND_HINT_WORD, { hintWord, id });
+      }
+      socket?.emit(GET_CORRECT_PLAYERS, { correctAnswers, id });
+      if(!canvasRef || !canvasRef.current) return
+      const dataImg = canvasRef.current.toDataURL()
+      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, () => {
-      // socket?.emit(SEND_HINT_WORD, { hintWord, id })
       useToaster({
         type: 'warning',
         message: 'Drawer has skipped the turn. The round restarts!',
       });
     });
 
+    socket?.on(GET_CORRECT_PLAYERS, (data: number[]) => {
+      if(!data) return
+      setCorrectAnswers(data)
+    });
+
+
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
       socket?.off(GAME_DRAWER_OUT_CHANNEL);
-      socket?.off(GET_CANVAS_STATE);
       socket?.off(HINT_WORD);
       socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
       socket?.off(DRAWER_SKIP_TURN_CHANNEL);
+      socket?.off(GET_CORRECT_PLAYERS);
+      socket?.off(GET_CANVAS_STATE);
     };
-  }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
+  }, [socket, participants, isHost, gameStatus, hintWord, canvasRef, correctAnswers]);
 
   const isInterval = gameStatus !== PLAY_GAME;
 

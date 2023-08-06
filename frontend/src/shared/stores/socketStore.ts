@@ -17,7 +17,7 @@ export const useSocketStore = create<SocketState>((set) => ({
         authorization: token,
         user: userId.toString(),
       },
-      secure: true
+      secure: true,
     });
 
     return {...state, socket: socketInit}
