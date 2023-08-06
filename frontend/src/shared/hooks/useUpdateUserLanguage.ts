@@ -9,8 +9,8 @@ export const useUpdateUserLanguage = () => {
   const { t } = useTranslation();
   return useMutation({
     mutationFn: userService.updateLanguage,
-    onSuccess: ({ data }, language_code) => {
-      setLanguage(language_code);
+    onSuccess: ({ data }) => {
+      setLanguage(data.language_code);
       useToaster({
         type: "success",
         message: t("toastMessage.success.updateLanguage"),

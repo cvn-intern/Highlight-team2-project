@@ -87,7 +87,6 @@ const CreateThemeContent = () => {
       window.addEventListener("beforeunload", preventFromReloadOrExist);
     }
     if (totalWords === 0) {
-      console.log(totalWords);
       window.removeEventListener("beforeunload", preventFromReloadOrExist);
     }
   }, [totalWords]);
