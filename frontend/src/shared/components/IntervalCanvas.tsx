@@ -48,7 +48,7 @@ const IntervalCanvas = ({
       id="interval-layout"
       className={`relative overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0 bg-white bg-no-repeat bg-center`}
     >
-      <div className="flex flex-col items-center font-lilita">
+      <div className="flex flex-col items-center font-coiny">
         <IntervalCanvasHeader status={status} />
         <IntervalCanvasContent status={status} />
       </div>

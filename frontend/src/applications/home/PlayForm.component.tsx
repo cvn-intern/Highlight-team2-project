@@ -95,7 +95,7 @@ const PlayForm = () => {
       error;
       useToaster({
         type: "error",
-        message: error.response.data.response || "Some error occurred!",
+        message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
       });
     }
   };
@@ -165,7 +165,7 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-1 w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex flex-1 w-full max-lg:flex-col items-start text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />
@@ -183,7 +183,7 @@ const PlayForm = () => {
                   }}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                  <SelectTrigger className="w-full lg:w-[70%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
@@ -203,7 +203,7 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#2193b0] to-[#6dd5ed] p-5"
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
@@ -213,11 +213,11 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
-            <p>{t("PlayButton")}</p>
+            <p>{t("PlayLabel")}</p>
           </Button>
         </div>
       </form>

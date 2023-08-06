@@ -47,12 +47,14 @@ import { resetCanvas } from "./draw-screen/draw.helper";
 import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import { CANVAS_STATE, GET_CANVAS_STATE } from "./shared/constants/drawEvent";
+import { useTranslation } from "react-i18next";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -131,7 +133,7 @@ export default function PlayingGameScreen() {
       } catch (error) {
         useToaster({
           type: "error",
-          message: "Get room info failed!",
+          message: t("toastMessage.error.getRoomInfo"),
         });
       }
     };
@@ -186,7 +188,7 @@ export default function PlayingGameScreen() {
 
     socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
       useToaster({
-        message: "Drawer is out. The round restarts!",
+        message: t("toastMessage.warning.nextDrawerRestart"),
         type: "warning",
         icon: "😅",
         bodyClassName: "text-sm font-semibold",

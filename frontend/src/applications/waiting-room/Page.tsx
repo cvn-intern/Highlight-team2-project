@@ -1,5 +1,4 @@
 import ControllerIcon from "@/shared/assets/controller-icon.svg";
-import JoinRoomBanner from "@/shared/assets/join-room-banner.png";
 import SloganImg from "@/shared/assets/slogan.png";
 import Logo from "@/shared/components/Logo";
 import MainLayout from "@/shared/components/MainLayout";
@@ -15,6 +14,7 @@ import RoomInformation from "./RoomInformation.component";
 import useToaster from "@/shared/hooks/useToaster";
 import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
 import { MULTIPLE_TAB } from "@/shared/types/errorCode";
+import { useTranslation } from "react-i18next";
 
 const WaitingRoom = () => {
   const { user, setUser } = useUserStore();
@@ -22,6 +22,7 @@ const WaitingRoom = () => {
   const navigate = useNavigate();
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   const handleBackButton = () => {
     navigate("/");
@@ -31,7 +32,7 @@ const WaitingRoom = () => {
     if (!nickname.trim()) {
       useToaster({
         type: "warning",
-        message: "Please enter your nickname!",
+        message: t("toastMessage.warning.enterNickname"),
       });
       return;
     }
@@ -48,10 +49,10 @@ const WaitingRoom = () => {
 
       navigate("/" + codeRoom, { state: { wait: false }, replace: false });
     } catch (error) {
-      
+
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom"),
       });
     }
   };
@@ -63,7 +64,7 @@ const WaitingRoom = () => {
 
   useEffect(() => {
     socket?.on("error", (error: ErrorSocket) => {
-      if(error.code === MULTIPLE_TAB) {
+      if (error.code === MULTIPLE_TAB) {
         navigate("/user/existing");
       } else {
         useToaster({
@@ -89,10 +90,9 @@ const WaitingRoom = () => {
         />
 
         <div className="relative lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] sm:w-[80vw] min-h-[70vh] mt-5 rounded-2xl pb-8">
-          <img
-            src={JoinRoomBanner}
-            className="mt-1 mb-1 2xl:my-5 w-[500px] max-md:hidden"
-          />
+          <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5 my-5">
+            {t("WaitingRoom.joinRoomLabel")}
+          </p>
           <button
             className="absolute mt-5 mr-5 top-1 left-4 md:left-10"
             onClick={handleBackButton}
@@ -116,7 +116,7 @@ const WaitingRoom = () => {
               onClick={handleJoinRoom}
             >
               <img src={ControllerIcon} alt="" className="w-[25%]" />
-              <p>PLAY</p>
+              <p>{t("PlayLabel")}</p>
             </Button>
           </div>
         </div>

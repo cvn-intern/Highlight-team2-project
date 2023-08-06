@@ -60,7 +60,6 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
       language: "en",
     },
   });
-
   const fetchThemesData = async () => {
     try {
       const { data } = await themeService.getThemes();
@@ -68,7 +67,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Error fetching themes data!",
+        message: t("toastMessage.error.fetchTheme"),
       });
     }
   };
@@ -83,7 +82,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Error fetching rooms data!",
+        message: t("toastMessage.error.fetchRoom"),
       });
     }
   };
@@ -142,11 +141,11 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
           />
         </div>
 
-        <p className="hidden mx-auto lg:block text-7xl font-balsamiq text-headerBlueColor">
+        <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
           {t("RoomList.roomLabel")}
         </p>
 
-        <div className="flex items-center justify-between pl-10 mt-5 mr-auto w-fit md:mt-0 lg:pl-0 lg:pr-5">
+        <div className="flex items-center justify-center pl-10 mt-5 mr-auto w-fit max-md:w-full md:mt-0 lg:pl-0 lg:pr-5 md:justify-between">
           <FormField
             control={form.control}
             name="theme"

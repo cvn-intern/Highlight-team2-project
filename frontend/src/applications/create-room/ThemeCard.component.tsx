@@ -59,12 +59,12 @@ const ThemeCard = (props: ThemeCardProps) => {
           <AvatarImage src={img} className="object-cover w-full h-full" />
           <AvatarFallback>Avatar</AvatarFallback>
         </Avatar>
-        <CardTitle className="mt-2 text-lg text-center font-balsamiq">
+        <CardTitle className="mt-2 text-lg text-center font-grandstander">
           {name}
         </CardTitle>
         {isOffical && (
           <div className="flex text-sky-600 gap-x-1">
-            <p className="text-xl font-balsamiq">Offical </p>
+            <p className="text-xl font-grandstander">Offical </p>
             <CheckCircle2 />
           </div>
         )}

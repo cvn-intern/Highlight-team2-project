@@ -25,6 +25,8 @@ import { DEFAULT_ROOM_TIME } from "@/shared/constants";
 import { useTranslation } from "react-i18next";
 import { useQueryWordsCollections } from "@/shared/hooks/useQueryWordsCollections";
 import Spinner from "@/shared/components/Spinner";
+import { cn } from "@/shared/lib/utils";
+import { useUserStore } from "@/shared/stores/userStore";
 
 const DEFAULT_ROUND = "3";
 const DEFAULT_PLAYER = "8";
@@ -40,6 +42,7 @@ const formSchema = z.object({
 });
 
 const CreateRoomsContent = () => {
+  const { user } = useUserStore();
   const [type, setType] = useState(0);
   const { t } = useTranslation();
   const [languageCode, setLanguageCode] = useState("all");
@@ -86,7 +89,9 @@ const CreateRoomsContent = () => {
       error;
       useToaster({
         type: "error",
-        message: error.response.data.response || "Some error occurred!",
+        message:
+          error.response.data.response ||
+          t("toastMessage.error.somethingWentWrong"),
       });
     }
   };
@@ -101,13 +106,13 @@ const CreateRoomsContent = () => {
         });
         useToaster({
           type: "success",
-          message: "Create room successfully!",
+          message: t("toastMessage.success.createRoom"),
         });
       }
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Join room failed!",
+        message: t("toastMessage.error.joinRoom"),
       });
     }
   };
@@ -116,9 +121,16 @@ const CreateRoomsContent = () => {
     document.getElementById("submitBtn")?.click();
   };
   const handleExitButton = () => {
-    navigate("/rooms");
+    navigate("/");
   };
   const handleCreateThemeClick = () => {
+    if (user?.is_guest) {
+      useToaster({
+        type: "warning",
+        message: t("toastMessage.warning.guestUser"),
+      });
+      return;
+    }
     navigate("/rooms/theme");
   };
 
@@ -138,10 +150,10 @@ const CreateRoomsContent = () => {
 
         <div className="flex flex-col items-center w-full xl:h-full gap-y-2 ">
           <div className="flex flex-col justify-between w-full gap-2 p-5 mt-1 bg-white sm:flex-row gap-x-5 rounded-2xl">
-            <p className="mt-1 font-serif text-xl md:text-2xl text-headerBlueColor">
+            <p className="mt-1 text-xl font-coiny md:text-2xl text-headerBlueColor">
               {t("Theme.themeLabel")}
             </p>
-            <div className="flex gap-x-2">
+            <div className="flex gap-x-2 max-md:flex-col max-md:gap-y-2">
               <Select
                 value={type.toString()}
                 onValueChange={(value) => {
@@ -159,21 +171,21 @@ const CreateRoomsContent = () => {
                   </SelectItem>
                 </SelectContent>
               </Select>
-              {
-                // !user?.is_guest
-                true && (
-                  <Button
-                    type="submit"
-                    variant="opacityHover"
-                    className="gap-4 rounded-[10px] font-black bg-[#3f84f3] w-fit"
-                    onClick={handleCreateThemeClick}
-                  >
-                    <p className="font-bold text-white text-sm md:text-base min-w-[110px]">
-                      {t("Theme.createTheme")}
-                    </p>
-                  </Button>
-                )
-              }
+              <Button
+                type="submit"
+                variant="opacityHover"
+                className={cn(
+                  "gap-4 rounded-[10px] font-black w-fit max-md:w-full",
+                  !user?.is_guest
+                    ? "bg-headerBlueColor"
+                    : "bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]"
+                )}
+                onClick={handleCreateThemeClick}
+              >
+                <p className="text-base font-bold text-white md:text-lg">
+                  {t("Theme.createTheme")}
+                </p>
+              </Button>
             </div>
           </div>
           {!isFetching && !isLoading && wordsCollections && (

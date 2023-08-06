@@ -1,4 +1,3 @@
-import AvatarHeader from "@/shared/assets/avatar-header.png";
 import { Button } from "@/shared/components/shadcn-ui/Button";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {
@@ -43,7 +42,7 @@ const CustomAvatar = () => {
     } catch (error) {
       useToaster({
         type: "error",
-        message: "Confrim avatar failed!",
+        message: t("toastMessage.error.confirmAvatar"),
       })
     }
   };
@@ -56,7 +55,7 @@ const CustomAvatar = () => {
       } catch (error) {
         useToaster({
           type: "error",
-          message: "Get avatars failed!",
+          message: t("toastMessage.error.getAvatar"),
         })
       }
     };
@@ -94,7 +93,7 @@ const CustomAvatar = () => {
         >
           <DialogHeader>
             <DialogTitle className="text-5xl text-center text-headerTextColor mb-7">
-              <p className="hidden lg:block text-7xl mx-auto font-serif text-headerBlueColor">
+              <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
                 {t("AvatarLabel")}
               </p>
             </DialogTitle>

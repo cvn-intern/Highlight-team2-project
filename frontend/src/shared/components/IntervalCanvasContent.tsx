@@ -21,21 +21,23 @@ import {
   END_GAME,
   GAME_REFRESH_DRAWER,
   SKIP_DRAW_TURN,
-} from './IntervalCanvas';
-import Confetti from 'react-confetti';
-import { Button } from './shadcn-ui/Button';
-import { useGameStore } from '../stores/gameStore';
-import { useSocketStore } from '../stores/socketStore';
-import { useParams } from 'react-router-dom';
-import { useMemo } from 'react';
-import moment from 'moment';
-import { Avatar, AvatarFallback, AvatarImage } from './shadcn-ui/avatar-shadcn';
-import { cn } from '../lib/utils';
+} from "./IntervalCanvas";
+import Confetti from "react-confetti";
+import { Button } from "./shadcn-ui/Button";
+import { useGameStore } from "../stores/gameStore";
+import { useSocketStore } from "../stores/socketStore";
+import { useParams } from "react-router-dom";
+import { useMemo } from "react";
+import moment from "moment"
+import { Avatar, AvatarFallback, AvatarImage } from "./shadcn-ui/avatar-shadcn";
+import { cn } from "../lib/utils";
+import { useTranslation } from "react-i18next";
 
 const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
   const { socket } = useSocketStore();
   const { roomRound, isHost, correctAnswers, participants } = useGameStore();
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   const swapPositionRanking = (top3Users: Participant[]): Participant[] => {
     const temp: Participant = top3Users[0];
@@ -86,7 +88,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
       return (
         <div className="flex justify-between gap-x-20 ">
           <div className="flex flex-col items-center place-content-center">
-            <p className="text-lg text-slate-300">The answer was:</p>
+            <p className="text-lg text-slate-300">{t("interval.answerDescription")}</p>
             <p className="text-[2.5rem]">
               {roomRound?.word.toLocaleUpperCase()}
             </p>
@@ -95,7 +97,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <img src={AnswerHitImg} />
           </div>
           <div className="place-content-center flex flex-col">
-            <p className="text-lg mt-5 text-slate-300"> Correct players:</p>
+            <p className="text-lg mt-5 text-slate-300"> {t("interval.correctPlayer")}</p>
             <p className="text-[3.5rem] mx-auto">
               {' '}
               <span className="text-cyan-700">{correctPlayers.length}</span>/
@@ -112,8 +114,8 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           </div>
           <div className="place-content-center flex flex-col">
             <p className="text-[1.5rem] text-slate-300">
-              {' '}
-              Nobody hits the answer :(
+              {" "}
+              {t("interval.nobodyHit")} :(
             </p>
           </div>
         </div>
@@ -131,7 +133,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <img className="w-1/3" src={PainterIsOut} />
           </div>
           <p className="text-xl absolute bottom-6 text-slate-500">
-            Painter has left the room :(
+            {t("interval.painterLeft")} :(
           </p>
         </>
       );
@@ -141,9 +143,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           <div className="flex relative justify-center items-center mt-2 mb-4 transform -translate-y-5">
             <img className="w-1/3" src={PainterIsOut} />
           </div>
-          <p className="text-xl absolute bottom-6 text-slate-500">
-            Painter has skipped the turn :(
-          </p>
+          <p className="text-xl absolute bottom-6 text-slate-500">{t("interval.painterSkip")} :(</p>
         </>
       );
     case WAIT_FOR_OTHER_PLAYERS:
@@ -156,8 +156,8 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-[1.5rem] text-slate-300">
               {' '}
               {isHost
-                ? 'Wait for other players'
-                : 'Wait for the host to start the game'}
+                ? t("interval.waitOtherPlayer")
+                : t("interval.waitForHost")}
             </p>
           </div>
         </div>
@@ -170,10 +170,10 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
           </div>
           <div className="place-content-center flex flex-col">
             <p className="text-[1.5rem] text-slate-300">
-              {' '}
-              Wait for other players
-            </p>
-          </div>
+              {" "}
+              {t("interval.waitOtherPlayer")}
+            </p >
+          </div >
           <div className="place-content-center flex flex-col">
             <Button
               type="submit"
@@ -182,10 +182,10 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
               onClick={handleStartGame}
             >
               <img src={ControllerIcon} alt="" className="w-[20%]" />
-              <p>START GAME</p>
+              <p>{t("interval.startGameButton")}</p>
             </Button>
           </div>
-        </div>
+        </div >
       );
     case END_GAME:
       return (
@@ -240,8 +240,8 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
                                 item.is_winner
                                   ? RankFirst
                                   : index === 0
-                                  ? RankSecond
-                                  : RankThird
+                                    ? RankSecond
+                                    : RankThird
                               }
                             />
                           </Avatar>

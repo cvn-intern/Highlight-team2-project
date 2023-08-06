@@ -172,6 +172,11 @@ const ThemeContent = ({
     deleteWordsCollection(wordsCollectionInformation.id);
     navigate("/rooms/create-room");
   };
+
+  const handleExitButton = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <div className="flex max-xl:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 xl:p-6 gap-x-2">
