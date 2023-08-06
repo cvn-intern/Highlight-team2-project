@@ -23,6 +23,8 @@ import ThemeActions from "./ThemeActions.component";
 import { useUpdateWordsCollection } from "@/shared/hooks/useUpdateWordsCollection";
 import { useDeleteWordsCollection } from "@/shared/hooks/useDeleteWordsCollection";
 
+const MIN_WORDS_LIST_LENGTH = 15;
+
 interface Props {
   wordsList: WordType[];
   setWordsList: Dispatch<SetStateAction<WordType[]>>;
@@ -98,7 +100,7 @@ const ThemeContent = ({
     Boolean(wordsList) &&
     Boolean(languageCode) &&
     Boolean(themeId) &&
-    wordsList.length > 0;
+    wordsList.length >= MIN_WORDS_LIST_LENGTH;
 
   // Side effects
   useEffect(() => {
@@ -259,6 +261,7 @@ const ThemeContent = ({
         isValidToCreateWordsCollection={isValidToCreateWordsCollection}
         isCreate={isCreate}
         isDirty={isDirty}
+        hasEnoughWords={totalWords >= MIN_WORDS_LIST_LENGTH}
       />
     </>
   );

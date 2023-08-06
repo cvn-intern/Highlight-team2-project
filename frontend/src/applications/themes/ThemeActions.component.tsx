@@ -11,6 +11,7 @@ type Props = {
   isValidToCreateWordsCollection?: boolean;
   isCreate: boolean;
   isDirty: boolean;
+  hasEnoughWords: boolean;
 };
 
 export default function ThemeActions({
@@ -20,21 +21,29 @@ export default function ThemeActions({
   isValidToCreateWordsCollection,
   isCreate,
   isDirty,
+  hasEnoughWords,
 }: Props) {
   const { t } = useTranslation();
   return (
     <div className="flex max-xl:flex-col lg:gap-3 lg:my-5">
       {isCreate && (
-        <Button
-          type="button"
-          variant="opacityHover"
-          onClick={handleCreateWordsCollection}
-          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px] uppercase text-lg"
-          disabled={!isValidToCreateWordsCollection}
-        >
-          <Settings size={24} />
-          <p>{t("CreateTheme.createThemeButton")}</p>
-        </Button>
+        <div className="relative group">
+          <Button
+            type="button"
+            variant="opacityHover"
+            onClick={handleCreateWordsCollection}
+            className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px] uppercase text-lg"
+            disabled={!isValidToCreateWordsCollection || !hasEnoughWords}
+          >
+            <Settings size={24} />
+            <p>{t("CreateTheme.createThemeButton")}</p>
+          </Button>
+          {!hasEnoughWords && (
+            <p className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[32px] px-2 py-1 rounded-[4px] border border-gray-400 w-max text-lg bg-sky-600 text-white hidden group-hover:block">
+              You must have at least 15 words to create a theme
+            </p>
+          )}
+        </div>
       )}
       {!isCreate && (
         <>
@@ -58,16 +67,23 @@ export default function ThemeActions({
             }
           />
 
-          <Button
-            type="button"
-            variant="opacityHover"
-            onClick={handleUpdateWordsCollection}
-            className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-yellow-500 py-5 w-[200px] uppercase text-lg"
-            disabled={!isDirty}
-          >
-            <Settings size={24} />
-            <p>{t("CreateTheme.updateThemeButton")}</p>
-          </Button>
+          <div className="relative group">
+            <Button
+              type="button"
+              variant="opacityHover"
+              onClick={handleUpdateWordsCollection}
+              className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-yellow-500 py-5 w-[200px] uppercase text-lg"
+              disabled={!isDirty || !hasEnoughWords}
+            >
+              <Settings size={24} />
+              <p>{t("CreateTheme.updateThemeButton")}</p>
+            </Button>
+            {!hasEnoughWords && (
+              <p className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[32px] px-2 py-1 rounded-[4px] border border-gray-400 w-max text-lg bg-sky-600 text-white hidden group-hover:block">
+                You must have at least 15 words to create a theme
+              </p>
+            )}
+          </div>
         </>
       )}
     </div>
