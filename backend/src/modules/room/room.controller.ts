@@ -176,10 +176,10 @@ export class RoomController {
       const roomId = extractIdRoom(codeRoom);
       const currentRound = await this.roomRoundService.getRoundOfRoom(roomId);
 
-      return response.status(HttpStatus.OK).json({
+      return response.status(HttpStatus.OK).json(currentRound ? {
         ...currentRound,
         word: '',
-      });
+      } : null);
     } catch (error) {
       this.logger.error(error);
       return response.status(error.status).json(error);
