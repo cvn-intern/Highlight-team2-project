@@ -15,6 +15,7 @@ import {
   PenStyleType,
   Point,
   RGBAColorType,
+  SocketGetCanvasState,
 } from './draw-screen/draw';
 // Funtions
 import IntervalCanvas, {
@@ -45,7 +46,7 @@ import ActionButtons from '../../shared/components/ActionButtons';
 import { resetCanvas } from './draw-screen/draw.helper';
 import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
 import { Button } from '@/shared/components/shadcn-ui/Button';
-import { GET_CANVAS_STATE } from './shared/constants/drawEvent';
+import { CANVAS_STATE, GET_CANVAS_STATE } from './shared/constants/drawEvent';
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
@@ -206,6 +207,9 @@ export default function PlayingGameScreen() {
         socket?.emit(SEND_HINT_WORD, { hintWord, id });
       }
       socket?.emit(GET_CORRECT_PLAYERS, { correctAnswers, id });
+      if(!canvasRef || !canvasRef.current) return
+      const dataImg = canvasRef.current.toDataURL()
+      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, () => {
@@ -228,8 +232,9 @@ export default function PlayingGameScreen() {
       socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
       socket?.off(DRAWER_SKIP_TURN_CHANNEL);
       socket?.off(GET_CORRECT_PLAYERS);
+      socket?.off(GET_CANVAS_STATE);
     };
-  }, [socket, participants, isHost, gameStatus, hintWord, setHintWord, correctAnswers]);
+  }, [socket, participants, isHost, gameStatus, hintWord, canvasRef, correctAnswers]);
 
   const isInterval = gameStatus !== PLAY_GAME;
 
