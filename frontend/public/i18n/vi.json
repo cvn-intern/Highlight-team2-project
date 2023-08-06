@@ -6,9 +6,14 @@
   "AvatarLabel": "ẢNH ĐẠI DIỆN",
   "Rounds": "SỐ VÒNG",
   "Players": "NGƯỜI CHƠI",
+  "logoutButton": "ĐĂNG XUẤT",
   "Home": {
     "nicknameInput": "BIỆT DANH",
     "roomButton": "PHÒNG"
+  },
+  "NotFound": {
+      "notFoundLabel": "ÔI BẠN TÔI HÌNH NHƯ BẠN LẠC RỒI NHỂ",
+      "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại rồi bạn ei!"
   },
   "CustomAvatar": {
     "confirmButton": "XÁC NHẬN"

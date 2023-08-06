@@ -6,9 +6,14 @@
     "AvatarLabel": "AVATAR",
     "Rounds": "ROUNDS",
     "Players": "PLAYERS",
+    "logoutButton": "LOGOUT",
     "Home": {
         "nicknameInput": "NICKNAME",
         "roomButton": "ROOMS"
+    },
+    "NotFound": {
+        "notFoundLabel": "Look like you're lost!",
+        "notFoundDescription": "The page you are looking for not available!"
     },
     "CustomAvatar": {
         "confirmButton": "CONFIRM"

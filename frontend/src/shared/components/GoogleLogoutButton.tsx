@@ -30,7 +30,7 @@ const GoogleLogoutButton = () => {
                     onClick={handleLogout}
                 >
                     <LogOut />
-                    <span>LOG OUT</span>
+                    <span>{t("logoutButton")}</span>
                 </Button>
             )}
         </>

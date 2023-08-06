@@ -12,10 +12,12 @@ import WordsContainer from "./WordsContainer";
 import { useTranslation } from "react-i18next";
 import { useCreateWordsCollection } from "@/shared/hooks/useCreateWordsCollection";
 import { useUserStore } from "@/shared/stores/userStore";
+import { useNavigate } from "react-router-dom";
 
 const CreateThemeContent = () => {
   const { user } = useUserStore();
   const { mutate: addWordsCollection } = useCreateWordsCollection();
+  const navigate = useNavigate();
   // States
   const [languageCode, setLanguageCode] = useState<string>("en");
   useEffect(() => {
@@ -114,6 +116,11 @@ const CreateThemeContent = () => {
       words_list: wordsList,
     });
   };
+
+  const handleExitButton = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <div className="flex max-lg:flex-col justify-center items-center lg:w-[90%] lg:h-[80%] lg:bg-gray-300 rounded-2xl mt-5 lg:p-6 gap-x-2">
@@ -183,7 +190,7 @@ const CreateThemeContent = () => {
           type="submit"
           variant="opacityHover"
           className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
-          //   onClick={handleExitButton}
+          onClick={handleExitButton}
         >
           <LogOut strokeWidth={3} size={32} />
           <p className="text-lg">{t("ExitButton")}</p>

@@ -124,7 +124,7 @@ const CreateRoomsContent = () => {
     document.getElementById("submitBtn")?.click();
   };
   const handleExitButton = () => {
-    navigate("/rooms");
+    navigate("/");
   };
   const handleCreateThemeClick = () => {
     if (user?.is_guest) {
