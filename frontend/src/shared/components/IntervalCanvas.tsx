@@ -25,6 +25,7 @@ export const GAME_STATUS_CHANNEL = 'game-status';
 export const GAME_NEW_TURN_CHANNEL = 'game-new-turn';
 export const GAME_DRAWER_OUT_CHANNEL = 'drawer-is-out';
 export const SEND_HINT_WORD = 'send-hint-word';
+export const GET_CORRECT_PLAYERS = 'get-correct-players';
 export const UPDATE_ROOM_ROUND_CHANNEL = 'update-room-round';
 export const PARTICIPANTS_CHANNEL = 'participants';
 export const DRAWER_SKIP_TURN_CHANNEL = 'drawer-skip-turn';

@@ -22,6 +22,7 @@ import IntervalCanvas, {
   GAME_DRAWER_OUT_CHANNEL,
   GAME_NEW_TURN_CHANNEL,
   GAME_STATUS_CHANNEL,
+  GET_CORRECT_PLAYERS,
   HINT_WORD,
   INTERVAL_SHOW_WORD,
   PLAY_GAME,
@@ -199,17 +200,25 @@ export default function PlayingGameScreen() {
     });
 
     socket?.on(GET_CANVAS_STATE, (id: string) => {
-      if (!isDrawer || !hintWord) return;
-      socket?.emit(SEND_HINT_WORD, { hintWord, id });
+      if(!isDrawer) return
+      if (hintWord) {
+        socket?.emit(SEND_HINT_WORD, { hintWord, id });
+      }
+      socket?.emit(GET_CORRECT_PLAYERS, { correctAnswers, id });
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, () => {
-      // socket?.emit(SEND_HINT_WORD, { hintWord, id })
       useToaster({
         type: 'warning',
         message: 'Drawer has skipped the turn. The round restarts!',
       });
     });
+
+    socket?.on(GET_CORRECT_PLAYERS, (data: number[]) => {
+      if(!data) return
+      setCorrectAnswers(data)
+    });
+
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
@@ -218,8 +227,9 @@ export default function PlayingGameScreen() {
       socket?.off(HINT_WORD);
       socket?.off(UPDATE_ROOM_ROUND_CHANNEL);
       socket?.off(DRAWER_SKIP_TURN_CHANNEL);
+      socket?.off(GET_CORRECT_PLAYERS);
     };
-  }, [socket, participants, isHost, gameStatus, hintWord, setHintWord]);
+  }, [socket, participants, isHost, gameStatus, hintWord, setHintWord, correctAnswers]);
 
   const isInterval = gameStatus !== PLAY_GAME;
 
