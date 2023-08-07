@@ -146,6 +146,8 @@ export default function PlayingGameScreen() {
       setRoomRound(data);
       setCorrectAnswers([]);
       setHintWord(null);
+      setIsDisableHintButton(false);
+      setMaxNumberOfHint(0);
       if (!canvasRef || !canvasRef.current) return;
       resetCanvas(
         canvasRef.current.getContext("2d", { willReadFrequently: true })!

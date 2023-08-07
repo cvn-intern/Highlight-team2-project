@@ -73,7 +73,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
 
   const painter = useMemo(() => {
     return participants.find(
-      (participant) => participant.id === roomRound?.painter
+      (participant) => participant.is_painter
     );
   }, [roomRound, participants]);
 
