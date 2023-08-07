@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Logger, Post, Get, Res, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Logger, Post, Get, Res, ValidationPipe, UseGuards, Query } from '@nestjs/common';
 import { ThemeService } from './theme.service';
 import { CreateThemeDTO } from './dto/createTheme';
 import { Response } from 'express';
@@ -10,9 +10,9 @@ export class ThemeController {
 
   @UseGuards(AuthorizeJWT)
   @Get()
-  async getAllTheme(@Res() response: Response) {
+  async getThemeByLanguageCode(@Query('language_code') language_code: string, @Res() response: Response) {
     try {
-      const themes = await this.themeService.getAllTheme();
+      const themes = await this.themeService.getThemeByLanguageCode(language_code);
       return response.status(HttpStatus.OK).json(themes);
     } catch (error) {
       this.logger.error(error);

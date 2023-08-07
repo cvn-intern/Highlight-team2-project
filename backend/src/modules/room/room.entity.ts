@@ -41,7 +41,7 @@ export class Room {
   language_code: string;
 
   @Column({ default: true })
-  is_public: boolean; // false: private, true: public
+  is_public: boolean;
 
   @Column({
     type: 'enum',

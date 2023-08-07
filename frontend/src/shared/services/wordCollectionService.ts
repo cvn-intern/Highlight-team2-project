@@ -1,14 +1,34 @@
 import axiosClient from "../lib/axiosClient";
-interface WordCollection {
-    id: number
-    creator_id: number
-    language_code: string
-    is_created_by_system: boolean
-    theme_name: string
-    theme_thumbnail: string
-    created_at: Date
-    updated_at: Date
-}
+import { WordsCollection } from "../types/wordsCollection";
+
 export default {
-    getWordCollections: () => axiosClient.get<Array<WordCollection>>("words-collection?type=0"),
-}
+  getWordCollections: ({ type, language_code }: GetWordCollectionsDTO) =>
+    axiosClient.get<WordsCollection[]>(
+      `words-collection?type=${type}&language_code=${language_code}`
+    ),
+  createWordsCollection: ({
+    theme_id,
+    language_code,
+    words_list,
+  }: CreateWordsCollectionDTO) =>
+    axiosClient.post<ReturnCreateWordsCollection>(`words-collection`, {
+      theme_id,
+      language_code,
+      words_list,
+    }),
+  getWordsCollectionInfomationById: (id: number) =>
+    axiosClient.get<WordsCollectionInformation>(`words-collection/${id}`),
+  updateWordsCollection: ({
+    id,
+    theme_id,
+    language_code,
+    words_list,
+  }: UpdateWordsCollectionDTO) =>
+    axiosClient.put<ReturnCreateWordsCollection>(`words-collection/${id}`, {
+      theme_id,
+      language_code,
+      words_list,
+    }),
+  deleteWordsCollection: (id: number) =>
+    axiosClient.delete<ReturnCreateWordsCollection>(`words-collection/${id}`),
+};

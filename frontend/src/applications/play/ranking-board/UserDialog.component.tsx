@@ -11,9 +11,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
-import ProfileLabel from "@/shared/assets/profile-label.png";
 import { useSocketStore } from "@/shared/stores/socketStore";
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   user: Participant | null;
@@ -25,6 +25,7 @@ type Props = {
 export function DialogDemo({ user, triggerRef }: Props) {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   const handleKick = () => {
     socket?.emit('kick', {
@@ -42,9 +43,9 @@ export function DialogDemo({ user, triggerRef }: Props) {
   return (
     <DialogContent className="sm:w-[425px]" >
       <DialogHeader>
-        <div className="flex items-center justify-center gap-5 w-full">
-          <img className="w-4/5 h-fit" src={ProfileLabel} alt="avatar" />
-        </div>
+        <p className="text-5xl mx-auto mb-5 font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5">
+          {t("PlayingGame.userDialog.profileLabel")}
+        </p>
       </DialogHeader>
       <div className="flex flex-col items-center justify-center gap-5 w-full py-5">
         <Avatar className="flex items-center bg-yellow-300 w-1/3 h-auto rounded-full">
@@ -73,7 +74,7 @@ export function DialogDemo({ user, triggerRef }: Props) {
               strokeWidth={4}
               className="mr-4"
             />
-            KICK
+            {t("PlayingGame.userDialog.kick")}
           </Button>
         </div>
       </DialogFooter>

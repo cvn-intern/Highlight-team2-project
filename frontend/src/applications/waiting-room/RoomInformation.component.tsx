@@ -7,12 +7,14 @@ import roomService from '@/shared/services/roomService';
 import { RoomType } from '@/shared/types/room';
 import { Globe, Swords, User2 as UserIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const RoomInformation = () => {
   const { codeRoom } = useParams();
   const navigate = useNavigate();
   const [roomData, setRoomData] = useState<RoomType>();
+  const { t } = useTranslation()
   useEffect(() => {
     const getRoomInformation = async () => {
       if (!codeRoom) return;
@@ -20,7 +22,7 @@ const RoomInformation = () => {
         const { data } = await roomService.getRoom(codeRoom);
         setRoomData(data);
       } catch (error) {
-        navigate('404');
+        navigate('404', { replace: true });
       }
     };
 
@@ -53,7 +55,7 @@ const RoomInformation = () => {
               </Avatar>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
-                  THEME
+                  {t("Theme.themeLabel")}
                 </p>
                 <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
                   <strong>
@@ -68,7 +70,7 @@ const RoomInformation = () => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
-                  LANGUAGE
+                  {t("Language.languageLabel")}
                 </p>
                 <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
                   <strong>{roomData && roomData.language.name}</strong>
@@ -83,7 +85,7 @@ const RoomInformation = () => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
-                  ROUND
+                  {t("Rounds")}
                 </p>
                 <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
                   <strong>{roomData && roomData.number_of_round}</strong>
@@ -96,7 +98,7 @@ const RoomInformation = () => {
               </div>
               <div className="flex flex-col items-center justify-center">
                 <p className="text-lg font-medium text-slate-400 text-center max-w-[180px] 2xl:max-w-[200px] dark:text-white">
-                  PLAYERS
+                  {t("Players")}
                 </p>
                 <p className="font-medium text-2xl text-center bg-gradient-to-r from-yellow-500 to-blue-500 bg-clip-text text-transparent">
                   <strong>

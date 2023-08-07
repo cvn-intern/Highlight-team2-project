@@ -28,6 +28,7 @@ export const ANSWER_CORRETLY = 3;
 export const ANSWER_APPROXIMATELY = 4;
 export const ANSWER_WRONG = 5;
 export const BLOCK_MESSAGE = 6;
+export const HOST_KICK_USER = 7;
 export const MINIMUM_CHAR_WRONG = 2;
 export const ANSWER_CORRECTLY_CONTENT = 'hit!';
 export const ANSWER_APPROXIMATELY_CONTENT = 'answer is close!';

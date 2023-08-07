@@ -1,9 +1,6 @@
 import axiosClient from "../lib/axiosClient";
-interface Theme{
-    id: number
-    name: string
-    thumbnail: string
-}
+import { Theme } from "../types/theme";
+
 export default {
-    getThemes: () => axiosClient.get<Array<Theme>>("themes"),
-}
+  getThemes: () => axiosClient.get<Theme[]>("themes"),
+};

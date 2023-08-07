@@ -8,8 +8,8 @@ import { WordType } from './dto/createWordsCollection';
 export class WordsCollectionService {
   constructor(private wordsCollectionRepository: WordsCollectionRepository, private wordService: WordService) {}
 
-  async getWordsCollectionByType(type: number, creator_id: number): Promise<WordsCollection[]> {
-    return await this.wordsCollectionRepository.getWordsCollectionByType(type, creator_id);
+  async getWordsCollectionByQuery(type: number, language_code: string, creator_id: number): Promise<WordsCollection[]> {
+    return await this.wordsCollectionRepository.getWordsCollectionByQuery(type, language_code, creator_id);
   }
 
   async getWordsCollectionDetailById(id: number) {

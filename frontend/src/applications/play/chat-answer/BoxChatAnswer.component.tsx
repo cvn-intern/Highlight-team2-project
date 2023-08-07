@@ -18,8 +18,9 @@ import {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { iconsMap } from '../shared/constants/icons';
-import { GAME_UPDATE_RANKING, covertMessage } from './chatAnswer.helper';
+import { GAME_UPDATE_RANKING, useConvertMessage } from './chatAnswer.helper';
 import './styles/style.css';
+import { useTranslation } from 'react-i18next';
 
 interface BoxProps {
   label: string;
@@ -107,12 +108,12 @@ const BoxChat = (props: BoxProps) => {
   }, [props.listChat]);
 
   useEffect(() => { }, [props.isDisabledInput]);
-
+  const { t } = useTranslation();
   return (
     <>
       <div className="box relative w-[100%]">
         <div className="shadow-lg box-label">
-          <span>{props.label.toLocaleUpperCase()}</span>
+          <span>{t("PlayingGame." + props.label + "Input").toLocaleUpperCase()}</span>
         </div>
         <div>
           <div className="h-[--chat-content-heigth] overflow-auto pr-2 scrollbar-thin  scrollbar-thumb-slate-400  scrollbar-thumb-rounded-md">
@@ -142,7 +143,7 @@ const BoxChat = (props: BoxProps) => {
                   })}
               />
               <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
-                {numberOfCharactersLeft} chars left
+                {numberOfCharactersLeft} {t("InputCharLeft")}
               </span>
             </form>
             <label
@@ -159,6 +160,7 @@ const BoxChat = (props: BoxProps) => {
 };
 
 const BoxChatAnswer = () => {
+  const {convertMessage} = useConvertMessage();
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const [listChat, setListChat] = useState<Array<Chat>>([]);
@@ -177,12 +179,12 @@ const BoxChatAnswer = () => {
   useEffect(() => {
     if (!codeRoom) return;
     socket?.on(codeRoom, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
     socket?.on(`${codeRoom}-chat`, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
@@ -214,12 +216,12 @@ const BoxChatAnswer = () => {
         });
       }
 
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListAnswer((pre) => [...pre, convertData]);
     });
 
     socket?.on(`${codeRoom}-leave`, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
@@ -230,13 +232,14 @@ const BoxChatAnswer = () => {
       socket?.off(`${codeRoom}-leave`);
     };
   }, [socket, participants, roomRound, isHost, gameStatus, correctAnswers, user]);
+  const { t } = useTranslation();
   return (
     <>
       <div className="w-[var(--canvas-width)] flex-1 flex item-center bg-white rounded-[10px] mt-2 relative">
         <div className="pr-2 border-r w-[50%]">
           <BoxChat
             label="answer"
-            placeholder="Hit answer here!"
+            placeholder={t("PlayingGame.answerPlaceHolder")}
             icon={Pencil}
             listChat={listAnswer}
             isDisabledInput={
@@ -249,7 +252,7 @@ const BoxChatAnswer = () => {
         <div className="pl-2 border-l w-[50%]">
           <BoxChat
             label="chat"
-            placeholder="Hit chat here!"
+            placeholder={t("PlayingGame.chatPlaceHolder")}
             icon={MessageCircle}
             listChat={listChat}
           />
