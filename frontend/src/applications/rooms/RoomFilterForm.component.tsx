@@ -105,10 +105,10 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="flex flex-col items-center justify-between w-full my-3 md:flex-row"
+        onSubmit={form.handleSubmit(handleSubmit)}        
+        className="w-full flex flex-col md:flex-row items-center justify-between mt-3 md:mb-4 mb-[-1.5rem] md:gap-x-20"
       >
-        <div className="flex items-center ml-12 md:ml-32">
+        <div className="flex items-center md:ml-12">
           <FormField
             control={form.control}
             name="searchInput"
@@ -121,7 +121,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                         <Input
                           {...field}
                           className={
-                            "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10"
+                            "font-bold text-lg border-primaryTextColor border-2 h-12 rounded-xl pr-10 w-[50vw] md:w-full"
                           }
                           maxLength={MAX_LENGHT_OF_SEARCH}
                           value={searchInput}
@@ -159,7 +159,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                       className="text-headerBlueColor"
                     />
                   </div>
-                  <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                  <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
                     {t("Theme.themeLabel")}
                   </div>
                 </FormLabel>
@@ -172,10 +172,10 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                       }}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-full h-12 text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
+                      <SelectTrigger className="w-full h-12 md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
                         <SelectValue placeholder="Theme" />
                       </SelectTrigger>
-                      <SelectContent className="text-lg font-bold">
+                      <SelectContent className="md:text-lg font-bold">
                         <SelectItem key={0} value="all">
                           {t("Theme.all")}
                         </SelectItem>
@@ -205,7 +205,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                       className="text-headerBlueColor"
                     />
                   </div>
-                  <div className="mr-3 text-lg font-bold text-primaryTextColor">
+                  <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
                     {t("Language.languageLabel")}
                   </div>
                 </FormLabel>
@@ -218,7 +218,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                       }}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-full h-12 overflow-hidden text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
+                      <SelectTrigger className="w-full h-12 overflow-hidden md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
                         <span
                           className="inline-block w-full h-full overflow-hidden text-ellipsis"
                           style={{
@@ -230,7 +230,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
                           <SelectValue placeholder="Language" />
                         </span>
                       </SelectTrigger>
-                      <SelectContent className="text-lg font-bold border-none">
+                      <SelectContent className="md:text-lg font-bold border-none">
                         <SelectItem value="en">
                           {t("Language.english")}
                         </SelectItem>
