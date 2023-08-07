@@ -20,7 +20,8 @@
     },
     "RoomList": {
         "roomLabel": "ROOMS",
-        "newRoomButton": "NEW ROOM"
+        "newRoomButton": "NEW ROOM",
+        "noRoom": "No room found"
     },
     "Language": {
         "languageLabel": "LANGUAGE",
@@ -34,7 +35,8 @@
         "officialTheme": "Official",
         "createTheme": "Create Theme",
         "officialDescription": "Official",
-        "byYouDescription": "Created by you"
+        "byYouDescription": "Created by you",
+        "noTheme": "Something went wrong! This theme is not founded!"
     },
     "CreateRoom": {
         "setUpLabel": "SET UP",

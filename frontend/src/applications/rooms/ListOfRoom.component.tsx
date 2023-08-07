@@ -5,6 +5,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/shadcn-ui/avatar-shadcn";
+import Room404 from "./room404.component";
 
 interface RoomFilterInformationProps {
   roomFilter: Array<RoomList>;
@@ -18,6 +19,10 @@ interface SelectCodeRoomProps {
 const ListOfRoom: React.FC<
   RoomFilterInformationProps & SelectCodeRoomProps
 > = ({ roomFilter, selectCodeRoom, setSelectCodeRoom }) => {
+  console.log("roomFilter", roomFilter);
+  if (roomFilter.length === 0) {
+    return <Room404 />;
+  }
   const handleSelectRoom = (codeRoom: string) => {
     if (selectCodeRoom === codeRoom) {
       setSelectCodeRoom("");
@@ -28,7 +33,7 @@ const ListOfRoom: React.FC<
 
   return (
     <div className="border bg-[#00416A]/40 p-2 rounded-2xl w-full overflow-y-auto scrollbar-thin scrollbar-thumb-slate-500 scrollbar-thumb-rounded-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-start justify-start gap-3 flex-1 m-4 pb-2 h-[540px] w-ful">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4  items-start justify-start gap-3 flex-1 m-4 pb-2 h-[540px]">
         {roomFilter.map((roomFilter, index) => (
           <button
             key={index}
