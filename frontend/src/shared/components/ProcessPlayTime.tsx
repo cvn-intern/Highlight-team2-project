@@ -106,7 +106,6 @@ export function ProgressPlayTime() {
     setProgress(MAX_PROGRESS_PERCENTAGE);
   }, [gameStatus, roomRound]);
 
-
   const handleIntervalProgress = async (data: GamePresentProgressPackage) => {
     if (progressInterval) clearInterval(progressInterval.current);
     let { startProgress } = data;
