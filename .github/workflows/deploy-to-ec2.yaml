@@ -26,7 +26,7 @@ jobs:
           ssh-username: root
           ssh-host: 128.199.69.44
           source-folder: ./frontend/dist
-          destination-folder: /var/www/highlight-io.xyz/html
+          destination-folder: /var/www/highlight-io.top/html
 
   backend-deploy:
     runs-on: ubuntu-latest
