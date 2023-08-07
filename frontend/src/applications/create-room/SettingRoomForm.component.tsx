@@ -126,6 +126,44 @@ const SettingRoomForm = ({
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="language"
+          render={({ field }) => (
+            <FormItem className="flex justify-between max-md:flex-col items-start w-full gap-2 text-slate-400">
+              <FormLabel className="flex items-center gap-3 mt-4">
+                <div>
+                  <Globe className="text-iconCreateRoomColor" size={28} />
+                </div>
+                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
+                  {t("Language.languageLabel")}
+                </div>
+              </FormLabel>
+              <FormControl>
+                <Select
+                  value={languageCode}
+                  onValueChange={(value) => {
+                    setLanguageCode(value);
+                    field.onChange(value);
+                  }}
+                >
+                  <SelectTrigger className="lg:w-[30%] w-full font-bold border-2 rounded-xl md:text-lg text-slate-500">
+                    <SelectValue placeholder="Themes Filter" />
+                  </SelectTrigger>
+                  <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
+                    <SelectItem value={"all"}>{t("Theme.all")}</SelectItem>
+                    <SelectItem value={"en"}>{t("Language.english")}</SelectItem>
+                    <SelectItem value={"vi"}>{t("Language.vietnamese")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="visible"
@@ -150,44 +188,6 @@ const SettingRoomForm = ({
             </FormItem>
           )}
         />
-
-        <FormField
-          control={form.control}
-          name="language"
-          render={({ field }) => (
-            <FormItem className="flex flex-col items-start w-full gap-2 text-slate-400">
-              <FormLabel className="flex items-center gap-3 mt-4">
-                <div>
-                  <Globe className="text-iconCreateRoomColor" size={28} />
-                </div>
-                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
-                  {t("Language.languageLabel")}
-                </div>
-              </FormLabel>
-              <FormControl>
-                <Select
-                  value={languageCode}
-                  onValueChange={(value) => {
-                    setLanguageCode(value);
-                    field.onChange(value);
-                  }}
-                >
-                  <SelectTrigger className="w-full font-bold border-2 rounded-xl md:text-lg text-slate-500">
-                    <SelectValue placeholder="Themes Filter" />
-                  </SelectTrigger>
-                  <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
-                    <SelectItem value={"all"}>{t("Theme.all")}</SelectItem>
-                    <SelectItem value={"en"}>{t("Language.english")}</SelectItem>
-                    <SelectItem value={"vi"}>{t("Language.vietnamese")}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <button type="submit" id="submitBtn" hidden></button>
       </form>
     </Form>

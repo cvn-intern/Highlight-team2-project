@@ -158,9 +158,9 @@ const CreateRoomsContent = () => {
                 value={type.toString()}
                 onValueChange={(value) => {
                   setType(parseInt(value));
-                }}
+                }}                
               >
-                <SelectTrigger className="w-[200px] rounded-xl md:text-xl font-bold border-2 text-slate-500">
+                <SelectTrigger className="w-full rounded-xl md:text-xl font-bold border-2 text-slate-500">
                   <SelectValue placeholder="Themes Filter" />
                 </SelectTrigger>
                 <SelectContent className="font-semibold rounded-xl md:text-xl text-slate-500">
@@ -189,7 +189,7 @@ const CreateRoomsContent = () => {
             </div>
           </div>
           {!isFetching && !isLoading && wordsCollections && (
-            <ScrollArea className="relative w-full h-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll">
+            <ScrollArea className="relative w-full h-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll max-lg:h-[50vh]">
               <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 lg:grid-cols-3 2xl:grid-cols-3">
                 {wordsCollections.map((item) => {
                   return (
