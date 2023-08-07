@@ -1,11 +1,13 @@
-import { Controller, Get, HttpStatus, Logger, Res } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Logger, Res, UseGuards } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { Response } from 'express';
+import { AuthorizeJWT } from 'src/common/guards/authorizeJWT';
 
 @Controller('languages')
 export class LanguageController {
   constructor(private languageService: LanguageService, private logger: Logger = new Logger(LanguageController.name)) {}
 
+  @UseGuards(AuthorizeJWT)
   @Get()
   async getAllLanguage(@Res() response: Response) {
     try {
