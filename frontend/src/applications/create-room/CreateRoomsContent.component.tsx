@@ -214,7 +214,7 @@ const CreateRoomsContent = () => {
           )}
         </div>
       </div>
-      <div className="flex flex-row xl:gap-3 xl:my-5 mt-5">
+      <div className="flex flex-row xl:gap-3 xl:my-5 mt-5 gap-x-2">
         <Button
           type="submit"
           variant="opacityHover"
