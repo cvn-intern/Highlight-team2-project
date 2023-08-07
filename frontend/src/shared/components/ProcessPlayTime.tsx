@@ -237,7 +237,6 @@ export function ProgressPlayTime() {
     return () => {
       socket?.off(GAME_PRESENT_PROGRESS);
       socket?.off(GAME_PRESENT_PROGRESS_NEW_PLAYER);
-      socket?.off(DRAWER_SKIP_TURN_CHANNEL);
       socket?.off(RESET_GAME);
       socket?.off(END_GAME);
       socket?.off(codeRoom);
@@ -253,7 +252,7 @@ export function ProgressPlayTime() {
     roomRound,
     isHost,
   ]);
-  
+
   useEffect(() => {
     if (!isRunning) {
       clearInterval(progressInterval.current);
