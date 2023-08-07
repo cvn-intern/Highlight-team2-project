@@ -43,7 +43,7 @@ export function DialogDemo({ user, triggerRef }: Props) {
   return (
     <DialogContent className="sm:w-[425px]" >
       <DialogHeader>
-        <p className="text-5xl mx-auto mb-5 font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
+        <p className="text-5xl mx-auto mb-5 font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5">
           {t("PlayingGame.userDialog.profileLabel")}
         </p>
       </DialogHeader>

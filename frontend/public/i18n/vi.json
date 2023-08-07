@@ -12,8 +12,8 @@
     "roomButton": "PHÒNG"
   },
   "NotFound": {
-      "notFoundLabel": "ÔI BẠN TÔI HÌNH NHƯ BẠN LẠC RỒI NHỂ",
-      "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại rồi bạn ei!"
+    "notFoundLabel": "ÔI BẠN TÔI HÌNH NHƯ BẠN LẠC RỒI NHỂ",
+    "notFoundDescription": "Trang bạn đang tìm kiếm không tồn tại rồi bạn ei!"
   },
   "CustomAvatar": {
     "confirmButton": "XÁC NHẬN"
@@ -32,7 +32,9 @@
     "all": "TẤT CẢ",
     "yourTheme": "Chủ đề của tôi",
     "officialTheme": "Chủ đề chính thức",
-    "createTheme": "Tạo chủ đề mới"
+    "createTheme": "Tạo chủ đề mới",
+    "officialDescription": "Chính thức",
+    "byYouDescription": "Tạo bởi bạn"
   },
   "CreateRoom": {
     "setUpLabel": "CÀI ĐẶT PHÒNG",
@@ -41,7 +43,7 @@
   "CreateTheme": {
     "createThemeLabel": "LAB CHỦ ĐỀ",
     "themeName": "TÊN CHỦ ĐỀ",
-    "createWord": "TẠO TỪ",
+    "createWordLabel": "TẠO TỪ",
     "createWordDescription": "Thêm từ mới vào danh sách",
     "addButton": "THÊM",
     "easy": "dễ",
@@ -50,7 +52,10 @@
     "numberOfWord": "TỪ ĐƯỢC TẠO",
     "searchLabel": "TÌM KIẾM",
     "createThemeButton": "TẠO CHỦ ĐỀ",
-    "repeatedWordNotification": "Từ đã tồn tại"
+    "deleteThemeButton": "XÓA",
+    "updateThemeButton": "CẬP NHẬT",
+    "repeatedWordNotification": "Từ đã tồn tại",
+    "alertWhenThereIsNoWords": "Chủ đề phải có ít nhất 1 từ"
   },
   "WaitingRoom": {
     "yourInfoLabel": "THÔNG TIN CỦA BẠN",
@@ -78,11 +83,20 @@
     "exit": {
       "yes": "CÓ",
       "no": "KHÔNG",
-      "exitDescription": "Bạn có chắc chắn muốn thoát khỏi phòng không?"
+      "exitDescription": "Bạn có chắc chắn muốn thoát khỏi phòng không?",
+      "exitThemeDescription": "Bạn có chắc chắn muốn thoát không? Các thay đổi sẽ không được lưu lại!"
     },
     "userDialog": {
       "kick": "LOẠI",
       "profileLabel": "THÔNG TIN"
+    },
+    "chatAndAnswerResponse": {
+      "answerCorrectly": "đã trả lời đúng!",
+      "answerApproximately": "đã trả lời gần đúng!",
+      "joinRoom": "đã vào phòng!",
+      "leaveRoom": "đã rời phòng!",
+      "serverBlockedMessage": "đã bị chặn tin nhắn!",
+      "hostKickUser": "đã bị chủ phòng loại!"
     }
   },
   "interval": {

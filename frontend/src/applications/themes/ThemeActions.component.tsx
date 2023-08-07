@@ -52,9 +52,9 @@ export default function ThemeActions({
             buttonClassName="bg-white flexCenter cursor-pointer w-full h-full rounded-none"
             onYesClick={handleDeleteWordsCollection}
             Icon={AlertIcon}
-            confirmText="Yes"
-            cancelText="No"
-            alertMessage="Are you sure you want to delete this theme? You cannot undo this action!"
+            confirmText={t("PlayingGame.exit.yes")}
+            cancelText={t("PlayingGame.exit.no")}
+            alertMessage={t("PlayingGame.exit.exitThemeDescription")}
             customButton={
               <Button
                 type="button"

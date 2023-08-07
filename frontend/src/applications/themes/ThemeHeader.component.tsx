@@ -7,12 +7,12 @@ import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 
 interface Props {
-  wordsList: WordType[];
+  wordsList?: WordType[];
   isCreate: boolean;
   isDirty: boolean;
 }
 
-const ThemeHeader = ({ wordsList, isCreate, isDirty }: Props) => {
+const ThemeHeader = ({ wordsList = [], isCreate, isDirty }: Props) => {
   const wordsListIsEmpty = useMemo(() => wordsList.length === 0, [wordsList]);
   const showAlertConfirm =
     (isCreate && !wordsListIsEmpty) || (!isCreate && isDirty);
@@ -56,7 +56,7 @@ const ThemeHeader = ({ wordsList, isCreate, isDirty }: Props) => {
         )}
       </div>
       <div className="w-full text-center max-lg:mt-2 lg:mr-10">
-        <p className="text-2xl lg:text-5xl font-balsamiq text-sky-600">
+        <p className="lg:text-5xl text-2xl font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-4">
           {t("CreateTheme.createThemeLabel")}
         </p>
       </div>

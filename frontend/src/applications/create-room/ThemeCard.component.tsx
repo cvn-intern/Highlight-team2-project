@@ -11,6 +11,7 @@ import {
 import { CheckCircle2, Pencil } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type ThemeCardProps = {
   wordsCollectionId: number;
@@ -25,6 +26,7 @@ const ThemeCard = (props: ThemeCardProps) => {
   const { wordsCollectionId, isSelected, onClick, img, name, isOffical } =
     props;
   const navigate = useNavigate();
+  const { t } = useTranslation();
   return (
     <Card
       className={cn(
@@ -64,13 +66,13 @@ const ThemeCard = (props: ThemeCardProps) => {
         </CardTitle>
         {isOffical && (
           <div className="flex text-sky-600 gap-x-1">
-            <p className="text-xl font-grandstander">Offical </p>
+            <p className="text-xl font-grandstander">{t("Theme.officialDescription")} </p>
             <CheckCircle2 />
           </div>
         )}
         {!isOffical && (
           <p className="text-lg font-medium leading-6 text-center text-gray-400 transition-all duration-200 ease-linear opacity-100 group-hover:opacity-0 group-hover:-z-10">
-            Created by you
+            {t("Theme.byYouDescription")}
           </p>
         )}
       </CardContent>

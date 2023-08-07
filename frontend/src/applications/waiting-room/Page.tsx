@@ -90,7 +90,7 @@ const WaitingRoom = () => {
         />
 
         <div className="relative lg:min-w-[80vw] lg:min-h-[70vh] bg-white flex flex-col items-center mb-5 w-[80vw] sm:w-[80vw] min-h-[70vh] mt-5 rounded-2xl pb-8">
-          <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5 my-5">
+          <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5 my-5">
             {t("WaitingRoom.joinRoomLabel")}
           </p>
           <button
