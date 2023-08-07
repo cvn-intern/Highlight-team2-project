@@ -89,7 +89,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
         <div className="flex justify-between gap-x-20 ">
           <div className="flex flex-col items-center place-content-center">
             <p className="text-lg text-slate-300">{t("interval.answerDescription")}</p>
-            <p className="text-[2.5rem]">
+            <p className="text-[2.5rem] text-center">
               {roomRound?.word.toLocaleUpperCase()}
             </p>
           </div>
@@ -100,7 +100,8 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-lg mt-5 text-slate-300"> {t("interval.correctPlayer")}</p>
             <p className="text-[3.5rem] mx-auto">
               {' '}
-              <span className="text-cyan-700">{correctPlayers.length}</span>/
+              <span className="text-cyan-700">{correctPlayers.length}</span>
+              <span className='font-cherry'>/</span>
               <span>{participants.length - 1}</span>
             </p>
           </div>

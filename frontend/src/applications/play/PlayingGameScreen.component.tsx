@@ -219,7 +219,7 @@ export default function PlayingGameScreen() {
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, () => {
       useToaster({
         type: "warning",
-        message: "Drawer has skipped the turn. The round restarts!",
+        message: t("toastMessage.warning.drawerSkipTurn"),
       });
     });
 
@@ -301,7 +301,7 @@ export default function PlayingGameScreen() {
         setBrushSize,
       }}
     >
-      <MainLayout>
+      <MainLayout className="h-screen overflow-hidden">
         <div
           className={`relative w-[var(--play-window-width)] h-[--play-window-height] flex items-center justify-center px-10 py-[56px] gap-6 scale-[0.3] sm:scale-[0.4] md:scale-[0.5] lg:scale-[0.6] xl:scale-[1] 2xl:scale-100 select-none`}
         >

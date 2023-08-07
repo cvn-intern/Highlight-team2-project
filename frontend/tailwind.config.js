@@ -21,6 +21,7 @@ module.exports = {
         'grandstander' : ['Grandstander'],
         'balsamiq' : ['Balsamiq Sans'],                
         'coiny': ['Coiny'],
+        'cherry': ['Cherry Bomb One'],
       },
       colors: {
         headerBlueColor: "#1B67AD",

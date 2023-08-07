@@ -1,10 +1,10 @@
 import React from "react";
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+const MainLayout = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => {
   return (
     <div
       id="main-layout"
-      className="min-h-screen overflow-hidden bg-blue-500 flexCenter"
+      className={`min-h-screen bg-blue-500 flexCenter ${className}`}
     >
       {children}
     </div>
