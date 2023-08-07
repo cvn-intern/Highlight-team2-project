@@ -3,11 +3,18 @@ import PlayingGameScreen from "./PlayingGameScreen.component";
 import WaitingRoom from "../waiting-room/Page";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSocketStore } from "@/shared/stores/socketStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useToaster from "@/shared/hooks/useToaster";
 import { NOTIFICATION } from "./shared/constants/socket";
 
 export default function Page() {
+  const [isTabletOrMobile, setIsTabletOrMobile] = useState(false);
+  useEffect(() => {
+    const windowWidth = window.innerWidth;
+    if (windowWidth < 768) {
+      setIsTabletOrMobile(true);
+    }
+  }, []);
   const { state } = useLocation();
   const { socket } = useSocketStore();
   const navigate = useNavigate();
