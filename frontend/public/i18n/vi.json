@@ -20,7 +20,8 @@
   },
   "RoomList": {
     "roomLabel": "PHÒNG",
-    "newRoomButton": "TẠO PHÒNG"
+    "newRoomButton": "TẠO PHÒNG",
+    "noRoom": "Không có phòng nào!"
   },
   "Language": {
     "languageLabel": "NGÔN NGỮ",
@@ -34,7 +35,8 @@
     "officialTheme": "Chủ đề chính thức",
     "createTheme": "Tạo chủ đề mới",
     "officialDescription": "Chính thức",
-    "byYouDescription": "Tạo bởi bạn"
+    "byYouDescription": "Tạo bởi bạn",
+    "noTheme": "Không có chủ đề nào!"
   },
   "CreateRoom": {
     "setUpLabel": "CÀI ĐẶT PHÒNG",
@@ -55,7 +57,7 @@
     "deleteThemeButton": "XÓA",
     "updateThemeButton": "CẬP NHẬT",
     "repeatedWordNotification": "Từ đã tồn tại",
-    "alertWhenThereIsNoWords": "Chủ đề phải có ít nhất 1 từ"
+    "alertWhenThereIsNoWords": "Chủ đề phải có ít nhất 15 từ"
   },
   "WaitingRoom": {
     "yourInfoLabel": "THÔNG TIN CỦA BẠN",
