@@ -44,7 +44,7 @@ jobs:
           ssh-username: root
           ssh-host: 157.245.193.191
           source-folder: ./backend
-          destination-folder: /home/ubuntu/backend
+          destination-folder: /root/backend
 
       - uses: ./.github/actions/backend-build
         with:
