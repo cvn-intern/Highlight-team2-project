@@ -1,4 +1,3 @@
--- CREATE ALL TABLE
 --
 -- PostgreSQL database dump
 --
@@ -6,7 +5,7 @@
 -- Dumped from database version 15.3
 -- Dumped by pg_dump version 15.3
 
--- Started on 2023-08-04 11:07:41
+-- Started on 2023-08-07 12:36:12
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -96,11 +95,11 @@ CREATE TABLE public.room (
     thumbnail character varying NOT NULL,
     is_public boolean DEFAULT true NOT NULL,
     status public.room_status_enum DEFAULT 'wait-for-players'::public.room_status_enum NOT NULL,
-    created_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
+    created_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL,
     words_collection_id integer NOT NULL,
-    is_created_by_system boolean NOT NULL DEFAULT true,
-    language_code character varying
+    language_code character varying,
+    is_created_by_system boolean DEFAULT true NOT NULL
 );
 
 
@@ -147,7 +146,8 @@ ALTER TABLE public.roomuser OWNER TO postgres;
 CREATE TABLE public.theme (
     id integer NOT NULL,
     name character varying NOT NULL,
-    thumbnail character varying NOT NULL
+    thumbnail character varying NOT NULL,
+    language_code character varying DEFAULT 'en'::character varying NOT NULL
 );
 
 
@@ -170,7 +170,7 @@ CREATE SEQUENCE public.theme_id_seq
 ALTER TABLE public.theme_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3408 (class 0 OID 0)
+-- TOC entry 3412 (class 0 OID 0)
 -- Dependencies: 217
 -- Name: theme_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -190,8 +190,8 @@ CREATE TABLE public."user" (
     is_guest boolean DEFAULT true NOT NULL,
     provider public.user_provider_enum,
     id_provider character varying,
-    created_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
+    created_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL,
     language_code character varying
 );
 
@@ -215,7 +215,7 @@ CREATE SEQUENCE public.user_id_seq
 ALTER TABLE public.user_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3409 (class 0 OID 0)
+-- TOC entry 3413 (class 0 OID 0)
 -- Dependencies: 215
 -- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -255,7 +255,7 @@ CREATE SEQUENCE public.word_id_seq
 ALTER TABLE public.word_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3410 (class 0 OID 0)
+-- TOC entry 3414 (class 0 OID 0)
 -- Dependencies: 223
 -- Name: word_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -272,10 +272,10 @@ CREATE TABLE public.words_collection (
     id integer NOT NULL,
     theme_id integer NOT NULL,
     creator_id integer,
-    language_code character varying NOT NULL,
+    language_code character varying DEFAULT 'en'::character varying NOT NULL,
     is_created_by_system boolean DEFAULT false NOT NULL,
-    created_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL
+    created_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone DEFAULT '2023-08-07 12:33:08.599955'::timestamp without time zone NOT NULL
 );
 
 
@@ -298,7 +298,7 @@ CREATE SEQUENCE public.words_collection_id_seq
 ALTER TABLE public.words_collection_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3411 (class 0 OID 0)
+-- TOC entry 3415 (class 0 OID 0)
 -- Dependencies: 219
 -- Name: words_collection_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -323,7 +323,7 @@ ALTER TABLE ONLY public."user" ALTER COLUMN id SET DEFAULT nextval('public.user_
 
 
 --
--- TOC entry 3227 (class 2604 OID 24239)
+-- TOC entry 3230 (class 2604 OID 24239)
 -- Name: word id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -331,7 +331,7 @@ ALTER TABLE ONLY public.word ALTER COLUMN id SET DEFAULT nextval('public.word_id
 
 
 --
--- TOC entry 3218 (class 2604 OID 24186)
+-- TOC entry 3219 (class 2604 OID 24186)
 -- Name: words_collection id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -339,7 +339,7 @@ ALTER TABLE ONLY public.words_collection ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3231 (class 2606 OID 24155)
+-- TOC entry 3234 (class 2606 OID 24155)
 -- Name: language PK_465b3173cdddf0ac2d3fe73a33c; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -348,7 +348,7 @@ ALTER TABLE ONLY public.language
 
 
 --
--- TOC entry 3245 (class 2606 OID 24244)
+-- TOC entry 3248 (class 2606 OID 24244)
 -- Name: word PK_ad026d65e30f80b7056ca31f666; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -357,7 +357,7 @@ ALTER TABLE ONLY public.word
 
 
 --
--- TOC entry 3243 (class 2606 OID 24227)
+-- TOC entry 3246 (class 2606 OID 24227)
 -- Name: roomround PK_af86c5a12994958fe26a90cb5da; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -366,7 +366,7 @@ ALTER TABLE ONLY public.roomround
 
 
 --
--- TOC entry 3235 (class 2606 OID 24181)
+-- TOC entry 3238 (class 2606 OID 24181)
 -- Name: theme PK_c1934d0b4403bf10c1ab0c18166; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -375,7 +375,7 @@ ALTER TABLE ONLY public.theme
 
 
 --
--- TOC entry 3239 (class 2606 OID 24217)
+-- TOC entry 3242 (class 2606 OID 24217)
 -- Name: room PK_c6d46db005d623e691b2fbcba23; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -384,7 +384,7 @@ ALTER TABLE ONLY public.room
 
 
 --
--- TOC entry 3233 (class 2606 OID 24172)
+-- TOC entry 3236 (class 2606 OID 24172)
 -- Name: user PK_cace4a159ff9f2512dd42373760; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -393,7 +393,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3247 (class 2606 OID 24250)
+-- TOC entry 3250 (class 2606 OID 24250)
 -- Name: roomuser PK_ed8cee3d4bf4f051f7098f02a09; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -402,7 +402,7 @@ ALTER TABLE ONLY public.roomuser
 
 
 --
--- TOC entry 3237 (class 2606 OID 24193)
+-- TOC entry 3240 (class 2606 OID 24193)
 -- Name: words_collection PK_f394eec17a3ea60401eb8650d35; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -411,7 +411,7 @@ ALTER TABLE ONLY public.words_collection
 
 
 --
--- TOC entry 3241 (class 2606 OID 24219)
+-- TOC entry 3244 (class 2606 OID 24219)
 -- Name: room UQ_3894204acc6f0e88fffb23c716e; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -420,7 +420,7 @@ ALTER TABLE ONLY public.room
 
 
 --
--- TOC entry 3259 (class 2606 OID 24311)
+-- TOC entry 3263 (class 2606 OID 24311)
 -- Name: roomuser FK_162490c04bddc0c62cc2d903ddb; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -429,7 +429,7 @@ ALTER TABLE ONLY public.roomuser
 
 
 --
--- TOC entry 3248 (class 2606 OID 24251)
+-- TOC entry 3251 (class 2606 OID 24251)
 -- Name: user FK_1a4658671f0d0f7e5788c7954fc; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -438,7 +438,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3249 (class 2606 OID 24256)
+-- TOC entry 3253 (class 2606 OID 24256)
 -- Name: words_collection FK_2d5a486dbfc13e351c3bd7ee2e9; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -447,7 +447,7 @@ ALTER TABLE ONLY public.words_collection
 
 
 --
--- TOC entry 3252 (class 2606 OID 24281)
+-- TOC entry 3256 (class 2606 OID 24281)
 -- Name: room FK_4a3ecc80069b5e8c315d3a33b32; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -456,7 +456,7 @@ ALTER TABLE ONLY public.room
 
 
 --
--- TOC entry 3255 (class 2606 OID 24296)
+-- TOC entry 3259 (class 2606 OID 24296)
 -- Name: roomround FK_9f1cbc2efebf4e6f87cbe59090d; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -465,7 +465,7 @@ ALTER TABLE ONLY public.roomround
 
 
 --
--- TOC entry 3250 (class 2606 OID 24266)
+-- TOC entry 3254 (class 2606 OID 25419)
 -- Name: words_collection FK_a332eec04b05f211d4d4ea7c34c; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -474,7 +474,7 @@ ALTER TABLE ONLY public.words_collection
 
 
 --
--- TOC entry 3256 (class 2606 OID 24286)
+-- TOC entry 3260 (class 2606 OID 24286)
 -- Name: roomround FK_af86c5a12994958fe26a90cb5da; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -483,7 +483,7 @@ ALTER TABLE ONLY public.roomround
 
 
 --
--- TOC entry 3257 (class 2606 OID 24291)
+-- TOC entry 3261 (class 2606 OID 24291)
 -- Name: roomround FK_b3e48fce126db6ae4fcebbaad40; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -492,7 +492,7 @@ ALTER TABLE ONLY public.roomround
 
 
 --
--- TOC entry 3253 (class 2606 OID 24271)
+-- TOC entry 3257 (class 2606 OID 24271)
 -- Name: room FK_bd18dee6d0bc5caab60e8a704e5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -501,7 +501,7 @@ ALTER TABLE ONLY public.room
 
 
 --
--- TOC entry 3251 (class 2606 OID 24261)
+-- TOC entry 3255 (class 2606 OID 24261)
 -- Name: words_collection FK_cb68a1c4c9dea3476e116826231; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -510,7 +510,16 @@ ALTER TABLE ONLY public.words_collection
 
 
 --
--- TOC entry 3260 (class 2606 OID 24306)
+-- TOC entry 3252 (class 2606 OID 25414)
+-- Name: theme FK_d1d1cac61d213ea61ed5eae9b95; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.theme
+    ADD CONSTRAINT "FK_d1d1cac61d213ea61ed5eae9b95" FOREIGN KEY (language_code) REFERENCES public.language(code);
+
+
+--
+-- TOC entry 3264 (class 2606 OID 24306)
 -- Name: roomuser FK_d3f8d5f9984c1771b48c2040eee; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -519,7 +528,7 @@ ALTER TABLE ONLY public.roomuser
 
 
 --
--- TOC entry 3254 (class 2606 OID 24846)
+-- TOC entry 3258 (class 2606 OID 24846)
 -- Name: room FK_f1cc011dae2c842575672399d3d; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -528,7 +537,7 @@ ALTER TABLE ONLY public.room
 
 
 --
--- TOC entry 3258 (class 2606 OID 24851)
+-- TOC entry 3262 (class 2606 OID 24851)
 -- Name: word FK_f1fe227dbd2a8ce60794a906388; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -536,12 +545,11 @@ ALTER TABLE ONLY public.word
     ADD CONSTRAINT "FK_f1fe227dbd2a8ce60794a906388" FOREIGN KEY (words_collection_id) REFERENCES public.words_collection(id);
 
 
--- Completed on 2023-08-04 11:07:42
+-- Completed on 2023-08-07 12:36:12
 
 --
 -- PostgreSQL database dump complete
 --
-
 
 -- init data for language
 INSERT INTO public.language(code, name) VALUES ('af', 'Afrikaans');
@@ -659,7 +667,6 @@ INSERT INTO public.theme(id, name, thumbnail, language_code) VALUES (1, 'animal'
 INSERT INTO public.theme(id, name, thumbnail, language_code) VALUES (2, 'games', 'https://us.123rf.com/450wm/jemastock/jemastock1912/jemastock191220956/135481905-video-game-control-handle-icon-vector-illustration-design.jpg?ver=6', 'en');
 INSERT INTO public.theme(id, name, thumbnail, language_code) VALUES (3, 'pokemon', 'https://th.bing.com/th/id/R.c6303dd15997893f02348dafd1e4062f?rik=A7EjLrbq%2fokSaA&riu=http%3a%2f%2fjourneytojah.com%2fwp-content%2fuploads%2f2020%2f05%2fpokemon-3418266_640.png&ehk=QJMrwpN5aeIYlP%2fwAHNENVq8SBL2NHkwutmNxVUqb3k%3d&risl=&pid=ImgRaw&r=0', 'en');
 INSERT INTO public.theme(id, name, thumbnail, language_code) VALUES (4, 'football club', 'https://th.bing.com/th/id/R.1ce8d1d6ccc8ff539048b46f0051e997?rik=T81PNTHsJoitbw&pid=ImgRaw&r=0', 'en');
-
 
 -- init data user
 INSERT INTO public."user"(id, avatar, nickname, is_guest, language_code) 
