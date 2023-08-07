@@ -10,9 +10,9 @@ import {
 } from "./IntervalCanvas";
 
 const IntervalCanvasHeader = ({ status = INTERVAL_INACTIVE }) => {
-  const { participants, roomRound } = useGameStore();
+  const { participants } = useGameStore();
   const nextDrawer = participants.find(
-    (participant) => participant.id === roomRound?.painter
+    (participant) => participant.is_painter
   );
 
   switch (status) {

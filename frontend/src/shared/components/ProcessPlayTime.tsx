@@ -110,7 +110,7 @@ export function ProgressPlayTime() {
   const handleIntervalProgress = async (data: GamePresentProgressPackage) => {
     if (progressInterval) clearInterval(progressInterval.current);
     let { startProgress } = data;
-    const { status, maximumTimeInMiliSeconds } = data;
+    const { status, maximumTimeInMiliSeconds, sendAt } = data;
     const maximumTimeInSeconds = maximumTimeInMiliSeconds / ONE_SECOND_IN_MILISECOND;
     setGameStatus(status);
     setProgress(startProgress);
@@ -128,7 +128,7 @@ export function ProgressPlayTime() {
         startTime = currentRound?.started_at;
         break;
       default:
-        startTime = new Date();
+        startTime = sendAt;
         break;
     }
 
@@ -220,6 +220,7 @@ export function ProgressPlayTime() {
         status: GAME_REFRESH_DRAWER,
       });
       setIsRunning(true);
+
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, async () => {
@@ -236,6 +237,7 @@ export function ProgressPlayTime() {
     return () => {
       socket?.off(GAME_PRESENT_PROGRESS);
       socket?.off(GAME_PRESENT_PROGRESS_NEW_PLAYER);
+      socket?.off(DRAWER_SKIP_TURN_CHANNEL);
       socket?.off(RESET_GAME);
       socket?.off(END_GAME);
       socket?.off(codeRoom);
@@ -249,8 +251,9 @@ export function ProgressPlayTime() {
     isRunning,
     participants,
     roomRound,
+    isHost,
   ]);
-
+  console.log({participants})
   useEffect(() => {
     if (!isRunning) {
       clearInterval(progressInterval.current);
