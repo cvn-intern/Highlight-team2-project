@@ -13,16 +13,16 @@ import { LucideIcon } from "lucide-react";
 import { cn } from "../lib/utils";
 
 interface Props {
-  buttonContent: React.ReactNode;
+  buttonContent?: React.ReactNode;
   buttonVariant?:
-  | "link"
-  | "default"
-  | "destructive"
-  | "outline"
-  | "secondary"
-  | "ghost"
-  | null
-  | undefined;
+    | "link"
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | null
+    | undefined;
   buttonClassName?: string;
   onYesClick?: (...args: any[]) => void;
   onNoClick?: (...args: any[]) => void;
@@ -31,20 +31,21 @@ interface Props {
   confirmText?: string;
   cancelText?: string;
   alertMessage?: string;
-  messageClassName?: string
-  containerClassName?: string
-  cancelClassName?: string
-  confirmClassName?: string
-  footerClassName?: string
-  headerChildren?: React.ReactElement
+  messageClassName?: string;
+  containerClassName?: string;
+  cancelClassName?: string;
+  confirmClassName?: string;
+  footerClassName?: string;
+  headerChildren?: React.ReactElement;
+  customButton?: React.ReactElement;
 }
 
 export default function AlertDialogYesNo({
   buttonContent,
   buttonVariant = "outline",
   buttonClassName = "",
-  onYesClick = () => { },
-  onNoClick = () => { },
+  onYesClick = () => {},
+  onNoClick = () => {},
   Icon,
   iconSize = 25,
   messageClassName = "",
@@ -55,21 +56,29 @@ export default function AlertDialogYesNo({
   cancelClassName = "",
   confirmClassName = "",
   footerClassName = "",
-  headerChildren
+  headerChildren,
+  customButton,
 }: Props) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant={buttonVariant} className={buttonClassName}>
-          {buttonContent}
-        </Button>
+        {customButton ?? (
+          <Button variant={buttonVariant} className={buttonClassName}>
+            {buttonContent}
+          </Button>
+        )}
       </AlertDialogTrigger>
-      <AlertDialogContent style={{borderRadius: '10px'}} className={containerClassName}>
+      <AlertDialogContent
+        style={{ borderRadius: "10px" }}
+        className={containerClassName}
+      >
         <AlertDialogHeader>
           <div className="flexCenter">
-            {headerChildren ?? <Icon size={iconSize} />} 
+            {headerChildren ?? <Icon size={iconSize} />}
           </div>
-          <AlertDialogDescription className={cn("text-center", messageClassName)}>
+          <AlertDialogDescription
+            className={cn("text-center", messageClassName)}
+          >
             {alertMessage}
           </AlertDialogDescription>
         </AlertDialogHeader>

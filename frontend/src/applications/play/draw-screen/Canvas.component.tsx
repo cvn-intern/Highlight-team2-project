@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { PaintContext } from "@/applications/play/PlayingGameScreen.component";
-import { useContext } from "react";
+import { MouseEvent, TouchEvent, useContext } from "react";
 import cursorsIconMap from "../shared/constants/cursorsIconMap";
 // Functions
 import { useSocketHandleCanvasEvent } from "../shared/hooks/useSocketHandleCanvasEvents";
@@ -21,6 +21,31 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
   const { handleMouseDown, handleMouseMove, handleMouseUpOrLeave } =
     useSocketHandleCanvasEvent();
 
+  const handleStartDrawing = (
+    e:
+      | MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+      | TouchEvent<HTMLCanvasElement>
+  ) => {
+    if (!isDrawer) return;
+    const point = getPointFromEvent(e);
+    handleMouseDown(point);
+  };
+
+  const handleDrawing = (
+    e:
+      | MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+      | TouchEvent<HTMLCanvasElement>
+  ) => {
+    if (!isDrawer) return;
+    const currentPoint = getPointFromEvent(e);
+    handleMouseMove(currentPoint);
+  };
+
+  const handleStopDrawing = () => {
+    if (!isDrawer) return;
+    handleMouseUpOrLeave();
+  };
+
   return (
     <div
       className={` overflow-hidden rounded-[10px] w-[760px] aspect-[2] flex-shrink-0 ${
@@ -33,24 +58,14 @@ const Canvas = ({ hidden = false, isDrawer = false }: CanvasProps) => {
         className={`w-[var(--canvas-width)] h-[var(--canvas-height)] bg-white rounded-[10px] ${
           cursorsIconMap[penStyle] ?? ""
         } ${!isDrawer && "pointer-events-none"}`}
-        onMouseDown={(e) => {
-          if (!isDrawer) return;
-          const point = getPointFromEvent(e);
-          handleMouseDown(point);
-        }}
-        onMouseMove={(e) => {
-          if (!isDrawer) return;
-          const currentPoint = getPointFromEvent(e);
-          handleMouseMove(currentPoint);
-        }}
-        onMouseUp={() => {
-          if (!isDrawer) return;
-          handleMouseUpOrLeave();
-        }}
-        onMouseLeave={() => {
-          if (!isDrawer) return;
-          handleMouseUpOrLeave();
-        }}
+        onMouseDown={handleStartDrawing}
+        onMouseMove={handleDrawing}
+        onMouseUp={handleStopDrawing}
+        onMouseLeave={handleStopDrawing}
+        onTouchStart={handleStartDrawing}
+        onTouchMove={handleDrawing}
+        onTouchEnd={handleStopDrawing}
+        onTouchCancel={handleStopDrawing}
       ></canvas>
     </div>
   );

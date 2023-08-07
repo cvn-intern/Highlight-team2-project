@@ -20,7 +20,7 @@ export class WordsCollection {
 
   @ManyToOne(() => Language, (language) => language.code)
   @JoinColumn({ name: 'language_code' })
-  @Column()
+  @Column({ default: 'en' })
   language_code: string;
 
   @Column({

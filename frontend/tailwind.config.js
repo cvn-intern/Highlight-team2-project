@@ -18,11 +18,13 @@ module.exports = {
     extend: {
       fontFamily:{
         'lilita' : ['Lilita One'],
-        'balsamiq' : ['Balsamiq Sans'],
-        'oxanium' : ['Oxanium'],
-        'bakbak' : ['Bakbak One']
+        'grandstander' : ['Grandstander'],
+        'balsamiq' : ['Balsamiq Sans'],                
+        'coiny': ['Coiny'],
       },
       colors: {
+        headerBlueColor: "#1B67AD",
+        iconCreateRoomColor: "#4240C1",
         textBlueColor: "#22A699",
         primaryTextColor: "#838383",
         headerTextColor: "#22A699",

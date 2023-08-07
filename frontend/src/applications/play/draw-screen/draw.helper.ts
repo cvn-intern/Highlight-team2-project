@@ -286,9 +286,24 @@ export const pickColor = (
 };
 
 export const getPointFromEvent = (
-  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent>
+  e: MouseEvent<HTMLCanvasElement, globalThis.MouseEvent> | any
 ): Point => {
-  const X_COMPARE_TO_CANVAS = e.nativeEvent.offsetX;
-  const Y_COMPARE_TO_CANVAS = e.nativeEvent.offsetY;
-  return { x: X_COMPARE_TO_CANVAS, y: Y_COMPARE_TO_CANVAS };
+  let clientX = 0;
+  let clientY = 0;
+
+  if (e.type.startsWith("mouse")) {
+    clientX = e.nativeEvent.offsetX;
+    clientY = e.nativeEvent.offsetY;
+  } else if (e.type.startsWith("touch")) {
+    // For mobile devices with touch events
+    const touch = e.touches[0] || e.changedTouches[0];
+    const canvas = e.currentTarget as HTMLCanvasElement;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    clientX = (touch.clientX - rect.left) * scaleX;
+    clientY = (touch.clientY - rect.top) * scaleY;
+  }
+
+  return { x: clientX, y: clientY };
 };

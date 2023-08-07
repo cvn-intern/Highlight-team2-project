@@ -1,3 +1,144 @@
 {
-    "home": "homepage"
+    "OrLabel": "OR",
+    "InputCharLeft": "chars left",
+    "PlayLabel": "PLAY",
+    "ExitButton": "EXIT",
+    "AvatarLabel": "AVATAR",
+    "Rounds": "ROUNDS",
+    "Players": "PLAYERS",
+    "logoutButton": "LOGOUT",
+    "Home": {
+        "nicknameInput": "NICKNAME",
+        "roomButton": "ROOMS"
+    },
+    "NotFound": {
+        "notFoundLabel": "Look like you're lost!",
+        "notFoundDescription": "The page you are looking for not available!"
+    },
+    "CustomAvatar": {
+        "confirmButton": "CONFIRM"
+    },
+    "RoomList": {
+        "roomLabel": "ROOMS",
+        "newRoomButton": "NEW ROOM"
+    },
+    "Language": {
+        "languageLabel": "LANGUAGE",
+        "english": "English",
+        "vietnamese": "Vietnamese"
+    },
+    "Theme": {
+        "themeLabel": "THEME",
+        "all": "ALL",
+        "yourTheme": "Your Themes",
+        "officialTheme": "Official",
+        "createTheme": "Create Theme",
+        "officialDescription": "Official",
+        "byYouDescription": "Created by you"
+    },
+    "CreateRoom": {
+        "setUpLabel": "SET UP",
+        "visible": "VISIBLE"
+    },
+    "CreateTheme": {
+        "createThemeLabel": "THEME LAB",
+        "themeName": "THEME NAME",
+        "createWordLabel": "CREATE WORDS",
+        "createWordDescription": "Add new word to the list",
+        "addButton": "ADD",
+        "easy": "easy",
+        "medium": "medium",
+        "hard": "hard",
+        "numberOfWord": "WORDS CREATED",
+        "searchLabel": "SEARCH",
+        "createThemeButton": "Save",
+        "deleteThemeButton": "Delete",
+        "updateThemeButton": "Update",
+        "repeatedWordNotification": "Repeated word",
+        "alertWhenThereIsNoWords": "No words were found. Please create new words for this theme"
+    },
+    "WaitingRoom": {
+        "yourInfoLabel": "YOUR INFOROMATION",
+        "joinRoomLabel": "JOIN ROOM"
+    },
+    "PlayingGame": {
+        "answerInput": "answer",
+        "answerPlaceHolder": "Hit answer here!",
+        "chatInput": "chat",
+        "chatPlaceHolder": "Hit chat here!",
+        "roomInfo": "ROOM INFORMATION",
+        "rankingBoard": {
+            "kickButton": "KICK",
+            "emptySlot": "EMPTY",
+            "point": "pts",
+            "nextPainter": "Next to draw"
+        },
+        "share": {
+            "shareLabel": "SHARE",
+            "link": "LINK",
+            "qrcode": "QR CODE",
+            "copyButton": "COPY",
+            "shareDescription": "Invite your friends to the room!"
+        },
+        "exit": {
+            "yes": "YES",
+            "no": "NO",
+            "exitDescription": "Are you sure you want to exit the room?",
+            "exitThemeDescription": "Are you sure you want to delete this theme? You cannot undo this action!"
+        },
+        "userDialog": {
+            "kick": "KICK",
+            "profileLabel": "PROFILE"
+        },
+        "chatAndAnswerResponse": {
+            "answerCorrectly": "hit!",
+            "answerApproximately": "answer is close!",
+            "joinRoom": "joined",
+            "leaveRoom": "left",
+            "serverBlockedMessage": "Server blocked this message!",
+            "hostKickUser": "has been kicked by host!"
+        }
+    },
+    "interval": {
+        "intervalLabel": "INTERVAL",
+        "newTurn": "NEW TURN",
+        "turnNotify": "It's the turn of",
+        "inactive": "INACTIVE",
+        "lostTurnDescription": "You've lost your turn",
+        "waiting": "WAITING",
+        "gameOver": "GAME OVER",
+        "winnerDescription": "the winner is:",
+        "refreshRound": "REFRESHING ROUND",
+        "answerDescription": "The answer was:",
+        "correctPlayer": "Correct player:",
+        "nobodyHit": "Nobody hit the answer",
+        "painterLeft": "Painter has left the room",
+        "painterSkip": "Painter has skipped the turn",
+        "waitOtherPlayer": "Wait for other players",
+        "waitForHost": "Wait for host to start the game",
+        "startGameButton": "START GAME"
+    },
+    "toastMessage": {
+        "success": {
+            "createRoom": "Create room successfully!",
+            "copy": "Copy successfully!",
+            "updateLanguage": "Update language successfully!"
+        },
+        "warning": {
+            "nextDrawerRestart": "Drawer is out. The round restarts!",
+            "enterNickname": "Please enter your nickname!",
+            "guestUser": "You must login to use this function!"
+        },
+        "error": {
+            "joinRoom": "Join room failed!",
+            "somethingWentWrong": "Something went wrong!",
+            "confirmAvatar": "Confirm avatar failed!",
+            "getAvatar": "Get avatars failed!",
+            "getRoomInfo": "Get room info failed!",
+            "fetchTheme": "Fetch theme failed!",
+            "fetchRoom": "Fetch room failed!",
+            "login": "Login failed!",
+            "logout": "Logout failed!"
+        }
+    }
 }

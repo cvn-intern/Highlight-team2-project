@@ -3,6 +3,7 @@ import { useSocketStore } from "@/shared/stores/socketStore";
 import { useNavigate, useParams } from "react-router-dom";
 import roomService from "../services/roomService";
 import useToaster from "../hooks/useToaster";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   children: React.ReactNode;
@@ -13,6 +14,7 @@ export default function CheckSocketDisconnectedRoute({ children }: Props) {
   const { socket } = useSocketStore();
   const socketIsAvailable = socket && socket.connected;
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!socketIsAvailable) {
@@ -27,7 +29,7 @@ export default function CheckSocketDisconnectedRoute({ children }: Props) {
           
           useToaster({
             type: "error",
-            message: error.response.data.response || "Some error occurred!",
+            message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
           });
           navigate("/");
         }

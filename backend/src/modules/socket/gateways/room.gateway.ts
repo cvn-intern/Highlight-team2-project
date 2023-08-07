@@ -3,6 +3,7 @@ import { SocketGateway } from './socket.gateway';
 import {
   BLOCK_MESSAGE,
   GAME_STATUS,
+  HOST_KICK_USER,
   HOST_KICK_USER_CONTENT,
   JOIN_ROOM_CHANNEL,
   JOIN_ROOM_CONTENT,
@@ -95,7 +96,7 @@ export class RoomGateway extends SocketGateway {
       socketKickedUser.leave(room.code_room);
       const messageContent: Chat = {
         user: data.nickname,
-        type: BLOCK_MESSAGE,
+        type: HOST_KICK_USER,
         message: HOST_KICK_USER_CONTENT,
       };
 
