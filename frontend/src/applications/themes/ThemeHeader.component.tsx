@@ -7,12 +7,12 @@ import AlertDialogYesNo from "@/shared/components/AlertDialogYesNo";
 import AlertIcon from "@/shared/components/icons/AlertIcon";
 
 interface Props {
-  wordsList: WordType[];
+  wordsList?: WordType[];
   isCreate: boolean;
   isDirty: boolean;
 }
 
-const ThemeHeader = ({ wordsList, isCreate, isDirty }: Props) => {
+const ThemeHeader = ({ wordsList = [], isCreate, isDirty }: Props) => {
   const wordsListIsEmpty = useMemo(() => wordsList.length === 0, [wordsList]);
   const showAlertConfirm =
     (isCreate && !wordsListIsEmpty) || (!isCreate && isDirty);

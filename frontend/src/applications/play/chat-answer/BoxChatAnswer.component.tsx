@@ -18,7 +18,7 @@ import {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { iconsMap } from '../shared/constants/icons';
-import { GAME_UPDATE_RANKING, covertMessage } from './chatAnswer.helper';
+import { GAME_UPDATE_RANKING, useConvertMessage } from './chatAnswer.helper';
 import './styles/style.css';
 import { useTranslation } from 'react-i18next';
 
@@ -160,6 +160,7 @@ const BoxChat = (props: BoxProps) => {
 };
 
 const BoxChatAnswer = () => {
+  const {convertMessage} = useConvertMessage();
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const [listChat, setListChat] = useState<Array<Chat>>([]);
@@ -178,12 +179,12 @@ const BoxChatAnswer = () => {
   useEffect(() => {
     if (!codeRoom) return;
     socket?.on(codeRoom, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
     socket?.on(`${codeRoom}-chat`, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
@@ -215,12 +216,12 @@ const BoxChatAnswer = () => {
         });
       }
 
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListAnswer((pre) => [...pre, convertData]);
     });
 
     socket?.on(`${codeRoom}-leave`, (data: MessageReceiver) => {
-      const convertData: Chat = covertMessage(data);
+      const convertData: Chat = convertMessage(data);
       setListChat((pre) => [...pre, convertData]);
     });
 
