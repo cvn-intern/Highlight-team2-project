@@ -128,7 +128,7 @@ export function ProgressPlayTime() {
         startTime = currentRound?.started_at;
         break;
       default:
-        startTime = sendAt;
+        startTime = new Date();
         break;
     }
 
