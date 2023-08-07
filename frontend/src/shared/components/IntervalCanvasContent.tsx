@@ -89,7 +89,7 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
         <div className="flex justify-between gap-x-20 ">
           <div className="flex flex-col items-center place-content-center">
             <p className="text-lg text-slate-300">{t("interval.answerDescription")}</p>
-            <p className="text-[2.5rem]">
+            <p className="text-[2.5rem] text-center">
               {roomRound?.word.toLocaleUpperCase()}
             </p>
           </div>
