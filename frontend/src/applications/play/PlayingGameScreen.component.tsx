@@ -250,10 +250,6 @@ export default function PlayingGameScreen() {
   const isInterval = gameStatus !== PLAY_GAME;
 
   const handleShowHint = () => {
-    console.log({
-      numberOfHint,
-      maxNumberOfHint,
-    })
     if (numberOfHint === maxNumberOfHint) {
       setIsDisableHintButton(true);
       setNumberOfHint(0);
