@@ -226,11 +226,11 @@ export class SocketService {
 
   async sendRoomRoundToPainter(server: Server, roomRound: RoomRound, codeRoom: string): Promise<string> {
     const painterSocketId = await this.redisService.getObjectByKey(`USER:${roomRound.painter}:SOCKET`);
-    server.to(painterSocketId).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     server
       .in(codeRoom)
       .except(painterSocketId)
       .emit(GAME_NEW_TURN_CHANNEL, { ...roomRound, word: '' });
+    server.to(painterSocketId).emit(GAME_NEW_TURN_CHANNEL, roomRound);
     return painterSocketId;
   }
 }
