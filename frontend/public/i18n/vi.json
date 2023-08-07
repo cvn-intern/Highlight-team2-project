@@ -71,7 +71,7 @@
       "kickButton": "LOẠI",
       "emptySlot": "TRỐNG",
       "point": "điểm",
-      "nextPainter": "Người vẽ tiếp theo"
+      "nextPainter": "Vẽ tiếp theo"
     },
     "share": {
       "shareLabel": "CHIA SẺ",
@@ -100,7 +100,7 @@
     }
   },
   "interval": {
-    "intervalLabel": "KHOẢNG NGHỈ",
+    "intervalLabel": "GIẢI LAO",
     "newTurn": "VÒNG MỚI",
     "turnNotify": "Lượt vẽ của",
     "inactive": "KHÔNG HOẠT ĐỘNG",
