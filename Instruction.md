@@ -8,7 +8,7 @@
 - Pgadmin
 - Redis
 
-## Configuration
+## Format file .env
 
 - Front End environment variables
 ```
@@ -51,10 +51,10 @@ git clone https://github.com/cvn-intern/Highlight-team2-project
 - Development
 
 Requirement: 
-File .production.env in backend folder
-Run redis in port 6379 or any port (Note: config port to env file)
-Run pgadmin and config port 5432 or any port (Note: config port to env file). 
-Create database and copy the name of database to paste to env file.
+File .production.env in backend folder <br />
+Run redis in port 6379 or any port (Note: config port to env file) <br />
+Run pgadmin and config port 5432 or any port (Note: config port to env file).  <br />
+Create database and copy the name of database to paste to env file. <br />
 ```sh
 cd backend
 npm install
@@ -63,11 +63,11 @@ npm run start:dev
 
 - Production 
 
-Requirement: 
-File .production.env in backend folder
-Run redis in port 6379 or any port (Note: config port to env file)
-Run pgadmin and config port 5432 or any port (Note: config port to env file). 
-Create database and copy the name of database to paste to env file.
+Requirement: <br />
+File .production.env in backend folder <br />
+Run redis in port 6379 or any port (Note: config port to env file) <br />
+Run pgadmin and config port 5432 or any port (Note: config port to env file).  <br />
+Create database and copy the name of database to paste to env file. <br />
 
 ```
 cd backend
@@ -77,9 +77,9 @@ npm run start:prod
 ```
 - Using docker
 
-Requirement: 
-File .docker.env in backend folder
-```
+Requirement: <br /> 
+File .docker.env in backend folder <br />
+``` 
 cd backend
 docker compose up -d
 ```
@@ -87,8 +87,8 @@ docker compose up -d
 ### FrontEnd
 - Development
 
-Requirement: 
-File .env in frontend folder
+Requirement:  <br />
+File .env in frontend folder <br />
 
 ```
 cd frontend
@@ -98,8 +98,8 @@ npm run dev
 
 - Production
 
-Requirement: 
-File .env.production.env in frontend folder
+Requirement: <br />
+File .env.production.env in frontend folder <br />
 
 ```
 cd frontend
