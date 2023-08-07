@@ -56,7 +56,7 @@ const ThemeHeader = ({ wordsList, isCreate, isDirty }: Props) => {
         )}
       </div>
       <div className="w-full text-center max-lg:mt-2 lg:mr-10">
-        <p className="text-2xl lg:text-5xl font-balsamiq text-sky-600">
+        <p className="lg:text-5xl text-2xl font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-4">
           {t("CreateTheme.createThemeLabel")}
         </p>
       </div>

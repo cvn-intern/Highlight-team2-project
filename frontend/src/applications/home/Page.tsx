@@ -28,7 +28,7 @@ const Homepage = () => {
             src={BannerImg}
             className="mt-5 mb-2 2xl:my-5 w-[500px] max-lg:hidden"
           /> */}
-          <p className="text-7xl mx-auto mb-10 font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
+          <p className="text-7xl mx-auto mb-10 font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5">
             {t("PlayLabel")}
           </p>
 

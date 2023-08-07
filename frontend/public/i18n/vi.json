@@ -50,7 +50,10 @@
     "numberOfWord": "TỪ ĐƯỢC TẠO",
     "searchLabel": "TÌM KIẾM",
     "createThemeButton": "TẠO CHỦ ĐỀ",
-    "repeatedWordNotification": "Từ đã tồn tại"
+    "deleteThemeButton": "XÓA",
+    "updateThemeButton": "CẬP NHẬT",
+    "repeatedWordNotification": "Từ đã tồn tại",
+    "alertWhenThereIsNoWords": "Chủ đề phải có ít nhất 1 từ"
   },
   "WaitingRoom": {
     "yourInfoLabel": "THÔNG TIN CỦA BẠN",

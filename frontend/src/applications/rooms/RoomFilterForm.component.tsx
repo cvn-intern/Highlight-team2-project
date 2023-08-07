@@ -141,7 +141,7 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
           />
         </div>
 
-        <p className="hidden lg:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
+        <p className="hidden xl:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5">
           {t("RoomList.roomLabel")}
         </p>
 

@@ -49,8 +49,11 @@
         "hard": "hard",
         "numberOfWord": "WORDS CREATED",
         "searchLabel": "SEARCH",
-        "createThemeButton": "NEW THEME",
-        "repeatedWordNotification": "Repeated word"
+        "createThemeButton": "Save",
+        "deleteThemeButton": "Delete",
+        "updateThemeButton": "Update",
+        "repeatedWordNotification": "Repeated word",
+        "alertWhenThereIsNoWords": "No words were found. Please create new words for this theme"
     },
     "WaitingRoom": {
         "yourInfoLabel": "YOUR INFOROMATION",
