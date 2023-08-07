@@ -99,6 +99,7 @@ CREATE TABLE public.room (
     created_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
     updated_at timestamp without time zone DEFAULT '2023-08-04 11:06:59.35692'::timestamp without time zone NOT NULL,
     words_collection_id integer NOT NULL,
+    is_created_by_system boolean NOT NULL DEFAULT true,
     language_code character varying
 );
 
