@@ -100,7 +100,8 @@ const IntervalCanvasContent = ({ status = INTERVAL_SHOW_WORD }) => {
             <p className="text-lg mt-5 text-slate-300"> {t("interval.correctPlayer")}</p>
             <p className="text-[3.5rem] mx-auto">
               {' '}
-              <span className="text-cyan-700">{correctPlayers.length}</span>/
+              <span className="text-cyan-700">{correctPlayers.length}</span>
+              <span className='font-cherry'>/</span>
               <span>{participants.length - 1}</span>
             </p>
           </div>

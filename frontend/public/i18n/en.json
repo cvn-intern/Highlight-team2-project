@@ -127,7 +127,8 @@
         "warning": {
             "nextDrawerRestart": "Drawer is out. The round restarts!",
             "enterNickname": "Please enter your nickname!",
-            "guestUser": "You must login to use this function!"
+            "guestUser": "You must login to use this function!",
+            "drawerSkipTurn": "Drawer has skipped the turn. The round restarts!"
         },
         "error": {
             "joinRoom": "Join room failed!",
