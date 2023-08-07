@@ -173,7 +173,10 @@ export class SocketService {
     }
 
     if (oldRoomRound.painter === userId) {
-      const { endedAt, painterRound, startedAt, word } = await this.roomRoundService.initRoundInfomation(room);
+      const { painterRound, word } = await this.roomRoundService.initRoundInfomation(room);
+
+      const startedAt = moment().add(5 * 2, 'seconds').toDate();
+      const endedAt = moment(startedAt).add(room.time_per_round, 'seconds').toDate();
 
       const newRoomRound = await this.roomRoundService.updateRoomRound({
         ...oldRoomRound,
@@ -203,7 +206,7 @@ export class SocketService {
     }
 
     const { word } = await this.wordService.getWordRandom(room.words_collection_id, room.id);
-    const startedAt = moment().add(5, 'seconds').toDate();
+    const startedAt = moment().add(5 * 2, 'seconds').toDate();
     const endedAt = moment(startedAt).add(room.time_per_round, 'seconds').toDate();
     const nextPainterId = await this.roomUserService.assignNextPainter(room, oldRoomRound.next_painter);
 
