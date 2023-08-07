@@ -147,7 +147,7 @@ export default function PlayingGameScreen() {
       setCorrectAnswers([]);
       setHintWord(null);
       setIsDisableHintButton(false);
-      setMaxNumberOfHint(0);
+      setMaxNumberOfHint(calculateMaxNumberOfHint(data.word));
       if (!canvasRef || !canvasRef.current) return;
       resetCanvas(
         canvasRef.current.getContext("2d", { willReadFrequently: true })!
@@ -250,10 +250,13 @@ export default function PlayingGameScreen() {
   const isInterval = gameStatus !== PLAY_GAME;
 
   const handleShowHint = () => {
-    if (hintWord === roomRound?.word) return;
-
+    console.log({
+      numberOfHint,
+      maxNumberOfHint,
+    })
     if (numberOfHint === maxNumberOfHint) {
       setIsDisableHintButton(true);
+      setNumberOfHint(0);
       return;
     }
 
@@ -268,7 +271,7 @@ export default function PlayingGameScreen() {
     if (roomRound) {
       setMaxNumberOfHint(calculateMaxNumberOfHint(roomRound?.word));
     }
-  }, [roomRound]);
+  }, [roomRound, hintWord]);
 
   const calculateMaxNumberOfHint = (word: string): number => {
     const maxTimes: number = word.length / 3;
