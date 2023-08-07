@@ -158,9 +158,9 @@ const CreateRoomsContent = () => {
                 value={type.toString()}
                 onValueChange={(value) => {
                   setType(parseInt(value));
-                }}                
+                }}
               >
-                <SelectTrigger className="w-full rounded-xl md:text-xl font-bold border-2 text-slate-500">
+                <SelectTrigger className="sm:w-[200px] w-full rounded-xl md:text-xl font-bold border-2 text-slate-500">
                   <SelectValue placeholder="Themes Filter" />
                 </SelectTrigger>
                 <SelectContent className="font-semibold rounded-xl md:text-xl text-slate-500">
@@ -175,7 +175,7 @@ const CreateRoomsContent = () => {
                 type="submit"
                 variant="opacityHover"
                 className={cn(
-                  "gap-4 rounded-[10px] font-black w-fit max-md:w-full",
+                  "gap-4 rounded-[10px] font-black w-full max-md:w-full sm:w-[200px]",
                   !user?.is_guest
                     ? "bg-headerBlueColor"
                     : "bg-gradient-to-r from-[#bdc3c7] to-[#2c3e50]"
@@ -189,7 +189,7 @@ const CreateRoomsContent = () => {
             </div>
           </div>
           {!isFetching && !isLoading && wordsCollections && (
-            <ScrollArea className="relative w-full h-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll max-lg:h-[50vh]">
+            <ScrollArea className="relative w-full h-full px-2 py-5 bg-white border rounded-2xl overflow-x-scoll max-h-[400px]">
               <div className="grid items-stretch grid-cols-2 row-auto gap-4 pr-6 lg:grid-cols-3 2xl:grid-cols-3">
                 {wordsCollections.map((item) => {
                   return (
@@ -214,24 +214,24 @@ const CreateRoomsContent = () => {
           )}
         </div>
       </div>
-      <div className="flex max-xl:flex-col xl:gap-3 xl:my-5">
+      <div className="flex flex-row xl:gap-3 xl:my-5 mt-5 gap-x-2">
         <Button
           type="submit"
           variant="opacityHover"
-          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px]"
+          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#C13A3A] py-5 w-[200px] max-md:w-[150px]"
           onClick={handleExitButton}
         >
           <LogOut strokeWidth={3} size={32} />
-          <p className="text-xl">{t("ExitButton")}</p>
+          <p className="md:text-lg text-sm">{t("ExitButton")}</p>
         </Button>
         <Button
           type="submit"
           variant="opacityHover"
           onClick={handleSubmitClick}
-          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px]"
+          className="gap-4 md:mt-2 mt-3 rounded-full border-8 border-black font-black bg-[#22A699] py-5 w-[200px] max-md:w-[150px]"
         >
           <img src={DoorIcon} alt="" className="w-[18%]" />
-          <p>{t("RoomList.newRoomButton")}</p>
+          <p className="md:text-lg text-sm">{t("RoomList.newRoomButton")}</p>
         </Button>
       </div>
     </>

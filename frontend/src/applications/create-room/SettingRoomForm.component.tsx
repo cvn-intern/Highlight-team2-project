@@ -54,7 +54,7 @@ const SettingRoomForm = ({
           control={form.control}
           name="players"
           render={({ field }) => (
-            <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex justify-between w-full max-lg:flex-col lg:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <User2 className="text-iconCreateRoomColor" size={28} />
@@ -90,7 +90,7 @@ const SettingRoomForm = ({
           control={form.control}
           name="round"
           render={({ field }) => (
-            <FormItem className="flex justify-between w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex justify-between w-full max-lg:flex-col lg:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Trophy className="text-iconCreateRoomColor" size={28} />
@@ -131,7 +131,7 @@ const SettingRoomForm = ({
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex justify-between max-md:flex-col items-start w-full gap-2 text-slate-400">
+            <FormItem className="flex justify-between w-full max-lg:flex-col lg:items-center text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-4">
                 <div>
                   <Globe className="text-iconCreateRoomColor" size={28} />
@@ -148,7 +148,7 @@ const SettingRoomForm = ({
                     field.onChange(value);
                   }}
                 >
-                  <SelectTrigger className="lg:w-[30%] w-full font-bold border-2 rounded-xl md:text-md text-slate-500">
+                  <SelectTrigger className="lg:w-[30%] w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue placeholder="Themes Filter" />
                   </SelectTrigger>
                   <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
