@@ -59,7 +59,7 @@ const SettingRoomForm = ({
                 <div>
                   <User2 className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
+                <div className="mr-3 font-bold text-md lg:text-xl text-primaryTextColor">
                   {t("Players")}
                 </div>
               </FormLabel>
@@ -136,7 +136,7 @@ const SettingRoomForm = ({
                 <div>
                   <Globe className="text-iconCreateRoomColor" size={28} />
                 </div>
-                <div className="mr-3 font-bold text-mg lg:text-xl text-primaryTextColor">
+                <div className="mr-3 font-bold text-md lg:text-lg text-primaryTextColor">
                   {t("Language.languageLabel")}
                 </div>
               </FormLabel>
@@ -148,7 +148,7 @@ const SettingRoomForm = ({
                     field.onChange(value);
                   }}
                 >
-                  <SelectTrigger className="lg:w-[30%] w-full font-bold border-2 rounded-xl md:text-lg text-slate-500">
+                  <SelectTrigger className="lg:w-[30%] w-full font-bold border-2 rounded-xl md:text-md text-slate-500">
                     <SelectValue placeholder="Themes Filter" />
                   </SelectTrigger>
                   <SelectContent className="font-semibold rounded-xl md:text-lg text-slate-500">
