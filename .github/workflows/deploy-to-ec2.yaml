@@ -3,8 +3,7 @@ name: Deploy project
 on:
   push:
     branches:
-      - main
-      - deploy
+      - digital_ocean
 
 jobs:
   frontend-deploy:
@@ -14,18 +13,18 @@ jobs:
 
       - uses: ./.github/actions/setting-ssh-to-host
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND }}
-          ssh-username: ubuntu
-          ssh-host: ec2-52-77-230-42.ap-southeast-1.compute.amazonaws.com
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_FRONTEND_VPS }}
+          ssh-username: root
+          ssh-host: 128.199.69.44
 
       - uses: ./.github/actions/frontend-build
         with:
-          variables-env: ${{ secrets.FRONTEND_ENV }}
+          variables-env: ${{ secrets.FRONTEND_ENV_VPS }}
 
       - uses: ./.github/actions/sync-source-to-host
         with:
-          ssh-username: ubuntu
-          ssh-host: ec2-52-77-230-42.ap-southeast-1.compute.amazonaws.com
+          ssh-username: root
+          ssh-host: 128.199.69.44
           source-folder: ./frontend/dist
           destination-folder: /var/www/highlight-io.xyz/html
 
@@ -36,19 +35,19 @@ jobs:
 
       - uses: ./.github/actions/setting-ssh-to-host
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_BACKEND }}
-          ssh-username: ubuntu
-          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY_BACKEND_VPS }}
+          ssh-username: root
+          ssh-host: 157.245.193.191
 
       - uses: ./.github/actions/sync-source-to-host
         with:
-          ssh-username: ubuntu
-          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
+          ssh-username: root
+          ssh-host: 157.245.193.191
           source-folder: ./backend
           destination-folder: /home/ubuntu/backend
 
       - uses: ./.github/actions/backend-build
         with:
-          variables-env: ${{ secrets.BACKEND_ENV }}
-          ssh-username: ubuntu
-          ssh-host: ec2-54-254-9-143.ap-southeast-1.compute.amazonaws.com
+          variables-env: ${{ secrets.BACKEND_ENV_VPS }}
+          ssh-username: root
+          ssh-host: 157.245.193.191

@@ -1,18 +1,18 @@
 server {
     listen [::]:80;
     listen 80;
-    server_name highlight-io.xyz;
+    server_name highlight-io.top;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 default_server ssl http2;
     listen [::]:443 ssl http2;
-    server_name highlight-io.xyz www.highlight-io.xyz;
+    server_name highlight-io.top www.highlight-io.top;
 
-    root /var/www/highlight-io.xyz/html;
-    ssl_certificate /etc/letsencrypt/live/highlight-io.xyz/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/highlight-io.xyz/privkey.pem;
+    root /var/www/highlight-io.top/html;
+    ssl_certificate /etc/letsencrypt/live/highlight-io.top/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/highlight-io.top/privkey.pem;
 
     location ~ /.well-known/acme-challenge {
         allow all;
