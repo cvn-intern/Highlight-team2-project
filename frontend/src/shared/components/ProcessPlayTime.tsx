@@ -110,7 +110,7 @@ export function ProgressPlayTime() {
   const handleIntervalProgress = async (data: GamePresentProgressPackage) => {
     if (progressInterval) clearInterval(progressInterval.current);
     let { startProgress } = data;
-    const { status, maximumTimeInMiliSeconds, sendAt } = data;
+    const { status, maximumTimeInMiliSeconds } = data;
     const maximumTimeInSeconds = maximumTimeInMiliSeconds / ONE_SECOND_IN_MILISECOND;
     setGameStatus(status);
     setProgress(startProgress);
