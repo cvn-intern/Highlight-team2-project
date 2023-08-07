@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import PlayingGameScreen from "./PlayingGameScreen.component";
 import WaitingRoom from "../waiting-room/Page";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -16,9 +17,9 @@ export default function Page() {
       useToaster({
         type: "error",
         message,
-      })
+      });
       navigate("/");
-    })
+    });
 
     return () => {
       socket?.off(NOTIFICATION);

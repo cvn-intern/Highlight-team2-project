@@ -1,14 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import useDisableBackButton from '@/shared/hooks/useDisableBackButton';
-import { createContext, useEffect, useRef, useState } from 'react';
+import useDisableBackButton from "@/shared/hooks/useDisableBackButton";
+import { createContext, useEffect, useRef, useState } from "react";
 // Variables
-import { DEFAULT_BLACK } from './shared/constants/color';
+import { DEFAULT_BLACK } from "./shared/constants/color";
 // Components
-import MainLayout from '@/shared/components/MainLayout';
-import BoxChatAnswer from './chat-answer/BoxChatAnswer.component';
-import Canvas from './draw-screen/Canvas.component';
-import PaintTools from './draw-screen/PaintTools.component';
-import RankingBoard from './ranking-board/RankingBoard.component';
+import MainLayout from "@/shared/components/MainLayout";
+import BoxChatAnswer from "./chat-answer/BoxChatAnswer.component";
+import Canvas from "./draw-screen/Canvas.component";
+import PaintTools from "./draw-screen/PaintTools.component";
+import RankingBoard from "./ranking-board/RankingBoard.component";
 // Types
 import {
   PaintContextType,
@@ -16,7 +16,7 @@ import {
   Point,
   RGBAColorType,
   SocketGetCanvasState,
-} from './draw-screen/draw';
+} from "./draw-screen/draw";
 // Funtions
 import IntervalCanvas, {
   DRAWER_SKIP_TURN_CHANNEL,
@@ -32,27 +32,29 @@ import IntervalCanvas, {
   START_GAME,
   UPDATE_ROOM_ROUND_CHANNEL,
   WAIT_FOR_OTHER_PLAYERS,
-} from '@/shared/components/IntervalCanvas';
-import { ProgressPlayTime } from '@/shared/components/ProcessPlayTime';
-import useToaster from '@/shared/hooks/useToaster';
-import { rgbaToHex } from '@/shared/lib/colors';
-import { cn } from '@/shared/lib/utils';
-import roomService from '@/shared/services/roomService';
-import { useGameStore } from '@/shared/stores/gameStore';
-import { useSocketStore } from '@/shared/stores/socketStore';
-import { RoomStatusType, RoomType } from '@/shared/types/room';
-import { useParams } from 'react-router-dom';
-import ActionButtons from '../../shared/components/ActionButtons';
-import { resetCanvas } from './draw-screen/draw.helper';
-import { PEN_STYLE_BRUSH } from './shared/constants/penStyles';
-import { Button } from '@/shared/components/shadcn-ui/Button';
-import { CANVAS_STATE, GET_CANVAS_STATE } from './shared/constants/drawEvent';
+} from "@/shared/components/IntervalCanvas";
+import { ProgressPlayTime } from "@/shared/components/ProcessPlayTime";
+import useToaster from "@/shared/hooks/useToaster";
+import { rgbaToHex } from "@/shared/lib/colors";
+import { cn } from "@/shared/lib/utils";
+import roomService from "@/shared/services/roomService";
+import { useGameStore } from "@/shared/stores/gameStore";
+import { useSocketStore } from "@/shared/stores/socketStore";
+import { RoomStatusType, RoomType } from "@/shared/types/room";
+import { useParams } from "react-router-dom";
+import ActionButtons from "../../shared/components/ActionButtons";
+import { resetCanvas } from "./draw-screen/draw.helper";
+import { PEN_STYLE_BRUSH } from "./shared/constants/penStyles";
+import { Button } from "@/shared/components/shadcn-ui/Button";
+import { CANVAS_STATE, GET_CANVAS_STATE } from "./shared/constants/drawEvent";
+import { useTranslation } from "react-i18next";
 
 export const PaintContext = createContext<PaintContextType | null>(null);
 
 export default function PlayingGameScreen() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { codeRoom } = useParams();
+  const { t } = useTranslation();
 
   // States
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -99,17 +101,17 @@ export default function PlayingGameScreen() {
       ctx.fillStyle = hexColor;
       ctx.strokeStyle = hexColor;
       ctx.lineWidth = brushSize;
-      ctx.lineCap = 'round';
+      ctx.lineCap = "round";
     };
     resetState();
-    window.addEventListener('resize', () => {
+    window.addEventListener("resize", () => {
       resetState();
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     if (!canvasRef.current) return;
-    setCtx(canvasRef.current.getContext('2d', { willReadFrequently: true }));
+    setCtx(canvasRef.current.getContext("2d", { willReadFrequently: true }));
   }, [canvasRef]);
 
   useEffect(() => {
@@ -130,8 +132,8 @@ export default function PlayingGameScreen() {
         setRoomInfo(data);
       } catch (error) {
         useToaster({
-          type: 'error',
-          message: 'Get room info failed!',
+          type: "error",
+          message: t("toastMessage.error.getRoomInfo"),
         });
       }
     };
@@ -144,9 +146,11 @@ export default function PlayingGameScreen() {
       setRoomRound(data);
       setCorrectAnswers([]);
       setHintWord(null);
+      setIsDisableHintButton(false);
+      setMaxNumberOfHint(0);
       if (!canvasRef || !canvasRef.current) return;
       resetCanvas(
-        canvasRef.current.getContext('2d', { willReadFrequently: true })!
+        canvasRef.current.getContext("2d", { willReadFrequently: true })!
       );
     });
 
@@ -186,10 +190,10 @@ export default function PlayingGameScreen() {
 
     socket?.on(GAME_DRAWER_OUT_CHANNEL, () => {
       useToaster({
-        message: 'Drawer is out. The round restarts!',
-        type: 'warning',
-        icon: '😅',
-        bodyClassName: 'text-sm font-semibold',
+        message: t("toastMessage.warning.nextDrawerRestart"),
+        type: "warning",
+        icon: "😅",
+        bodyClassName: "text-sm font-semibold",
       });
     });
 
@@ -202,28 +206,27 @@ export default function PlayingGameScreen() {
     });
 
     socket?.on(GET_CANVAS_STATE, (id: string) => {
-      if(!isDrawer) return
+      if (!isDrawer) return;
       if (hintWord) {
         socket?.emit(SEND_HINT_WORD, { hintWord, id });
       }
       socket?.emit(GET_CORRECT_PLAYERS, { correctAnswers, id });
-      if(!canvasRef || !canvasRef.current) return
-      const dataImg = canvasRef.current.toDataURL()
-      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState)
+      if (!canvasRef || !canvasRef.current) return;
+      const dataImg = canvasRef.current.toDataURL();
+      socket?.emit(CANVAS_STATE, { dataImg, id } as SocketGetCanvasState);
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, () => {
       useToaster({
-        type: 'warning',
-        message: 'Drawer has skipped the turn. The round restarts!',
+        type: "warning",
+        message: "Drawer has skipped the turn. The round restarts!",
       });
     });
 
     socket?.on(GET_CORRECT_PLAYERS, (data: number[]) => {
-      if(!data) return
-      setCorrectAnswers(data)
+      if (!data) return;
+      setCorrectAnswers(data);
     });
-
 
     return () => {
       socket?.off(GAME_STATUS_CHANNEL);
@@ -234,7 +237,15 @@ export default function PlayingGameScreen() {
       socket?.off(GET_CORRECT_PLAYERS);
       socket?.off(GET_CANVAS_STATE);
     };
-  }, [socket, participants, isHost, gameStatus, hintWord, canvasRef, correctAnswers]);
+  }, [
+    socket,
+    participants,
+    isHost,
+    gameStatus,
+    hintWord,
+    canvasRef,
+    correctAnswers,
+  ]);
 
   const isInterval = gameStatus !== PLAY_GAME;
 
@@ -302,14 +313,14 @@ export default function PlayingGameScreen() {
               <div className="flex items-center gap-4 absolute min-w-[250px] text-center py-2 px-3 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
                 <Button
                   disabled={isDisableHintButton}
-                  className="bg-transparent border-2 border-white rounded-xl shadow-xl"
+                  className="bg-transparent border-2 border-white shadow-xl rounded-xl"
                   onClick={handleShowHint}
                 >
                   HINT
                 </Button>
                 <span>{roomRound?.word}</span>
                 <Button
-                  className="bg-transparent border-2 border-white rounded-xl shadow-xl"
+                  className="bg-transparent border-2 border-white shadow-xl rounded-xl"
                   onClick={handleSkipDrawTurn}
                 >
                   SKIP
@@ -318,7 +329,7 @@ export default function PlayingGameScreen() {
             )}
             {!isDrawer && gameStatus === PLAY_GAME && hintWord && (
               <div className="absolute text-center py-2 px-4 flex justify-center w-max gap-2 bg-slate-500 rounded-xl shadow-lg top-[-25px] z-[999999] text-3xl font-bold left-1/2 translate-x-[-50%] uppercase text-yellow-400 tracking-widest">
-                {hintWord.split('').map((char: string, index: number) => (
+                {hintWord.split("").map((char: string, index: number) => (
                   <span key={index}>{char}</span>
                 ))}
               </div>
@@ -329,7 +340,7 @@ export default function PlayingGameScreen() {
             )}
             <BoxChatAnswer />
             <div
-              className={cn('absolute top-[380px] z-[999999] w-full', {
+              className={cn("absolute top-[380px] z-[999999] w-full", {
                 hidden:
                   gameStatus === WAIT_FOR_OTHER_PLAYERS ||
                   gameStatus === START_GAME,

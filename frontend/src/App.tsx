@@ -11,18 +11,25 @@ import PlayingPage from "@/applications/play/Page";
 import NotFoundPage from "./shared/pages/NotFoundPage";
 import authService from "@/shared/services/authService";
 import CreateRoom from "./applications/create-room/Page";
+import CreateTheme from "./applications/themes/Page";
 import UserExistsInBrowserPage from "./shared/pages/UserExistsInBrowserPage";
+import { QueryClient } from "@tanstack/query-core";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
+export const queryClient = new QueryClient();
 function App() {
   const [loading, setLoading] = useState(true);
   const { socket, createSocketInstance } = useSocketStore();
   const { user, setUser } = useUserStore();
+  const { i18n } = useTranslation();
 
   const createNewToken = async () => {
     const {
       data: { user, accessToken },
     } = await authService.newUser();
     setUser(user);
+    i18n.changeLanguage(user.language);
     JWTManager.setToken(accessToken);
     return accessToken;
   };
@@ -33,7 +40,10 @@ function App() {
       const savedUser = JSON.parse(
         window.sessionStorage.getItem("user")!
       ) as IUser;
-      !user && setUser(savedUser);
+      if (!user) {
+        setUser(savedUser);
+        i18n.changeLanguage(savedUser.language);
+      }
       !socket && createSocketInstance(token, savedUser!.id);
       setLoading(false);
     };
@@ -41,29 +51,31 @@ function App() {
     initPlayer();
   }, []);
 
-
   if (loading) return null;
 
   return (
-    <Suspense fallback="loading">
-      <Providers>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/rooms/create-room" element={<CreateRoom />} />
-            <Route path="/:codeRoom" element={<PlayingPage />} />
-            <Route path="/rooms" element={<RoomsPage />} />
-            <Route
-              path="/user/existing"
-              element={<UserExistsInBrowserPage />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-            <Route path="404" element={<NotFoundPage />} />
-          </Routes>
-        </BrowserRouter>
-        <ToastContainer role="alert" closeButton={false} />
-      </Providers>
-    </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback="loading">
+        <Providers>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="/rooms/create-room" element={<CreateRoom />} />
+              <Route path="/rooms/theme" element={<CreateTheme />} />
+              <Route path="/:codeRoom" element={<PlayingPage />} />
+              <Route path="/rooms" element={<RoomsPage />} />
+              <Route
+                path="/user/existing"
+                element={<UserExistsInBrowserPage />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+              <Route path="404" element={<NotFoundPage />} />
+            </Routes>
+          </BrowserRouter>
+          <ToastContainer role="alert" closeButton={false} />
+        </Providers>
+      </Suspense>
+    </QueryClientProvider>
   );
 }
 

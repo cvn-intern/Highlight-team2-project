@@ -34,7 +34,7 @@ export class RoomRepository extends Repository<Room> {
       .getMany();
   }
 
-  async getRoomsByQuery(theme: string, language_code: string) {
+  async getRoomsByQuery(theme: string, language_code: string, search: string) {
     const queryBuilder = this.createQueryBuilder('room')
       .leftJoinAndMapOne('room.language', Language, 'language', 'language.code = room.language_code')
       .leftJoinAndMapOne(
@@ -46,11 +46,18 @@ export class RoomRepository extends Repository<Room> {
       .leftJoinAndMapOne('wordcollection.theme', Theme, 'theme', 'wordcollection.theme_id = theme.id')
       .leftJoinAndMapMany('room.participants', RoomUser, 'roomuser', 'roomuser.room_id = room.id')
       .leftJoinAndMapOne('room.room_round', RoomRound, 'roomround', 'roomround.room_id = room.id')
-      .select(['room', 'roomuser', 'wordcollection', 'theme'])
+      .select(['room', 'roomuser', 'wordcollection', 'theme', 'language'])
       .addSelect(['theme.thumbnail', 'theme.name', 'language.code', 'roomround.current_round']);
 
     if (theme != 'all') {
       queryBuilder.andWhere('theme.name = :theme', { theme });
+    }
+
+    if (!!search) {
+      queryBuilder
+        .andWhere('LOWER(room.code_room) LIKE :search', { search: `%${search.toLowerCase()}%` })
+        .orWhere('LOWER(theme.name) LIKE :search', { search: `%${search.toLowerCase()}%` })
+        .orWhere('LOWER(language.code) LIKE :search', { search: `%${search.toLowerCase()}%` });
     }
 
     const rooms = await queryBuilder

@@ -49,6 +49,13 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
+  async updateLanguage(id: number, language_code: string) {
+    return await this.userRepository.save({
+      id,
+      language_code,
+    });
+  }
+
   async getUserByIdProvider(idProvider: string): Promise<User> {
     const isUserExisted = await this.userRepository.findOne({
       where: {

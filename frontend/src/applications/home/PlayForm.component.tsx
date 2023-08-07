@@ -31,6 +31,8 @@ import userService from "@/shared/services/userService";
 import { MAX_LENGHT_OF_NICKNAME } from "@/shared/constants";
 import useToaster from "@/shared/hooks/useToaster";
 import { MULTIPLE_TAB } from "@/shared/types/errorCode";
+import { useTranslation } from "react-i18next";
+import { useUpdateUserLanguage } from "@/shared/hooks/useUpdateUserLanguage";
 
 const formSchema = z.object({
   nickname: z.string().trim().min(2).max(50),
@@ -40,12 +42,18 @@ const formSchema = z.object({
 });
 
 const PlayForm = () => {
+  const { mutate: updateUserLanguage } = useUpdateUserLanguage();
   const { user, setUser } = useUserStore();
   const { socket } = useSocketStore();
   const navigate = useNavigate();
   const [formAction, setFormAction] = useState<"quick-play" | "find-room">(
     "quick-play"
   );
+  const { t, i18n } = useTranslation()
+
+  const handleChangeLanguage = (language: string) => {
+    i18n.changeLanguage(language)
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -84,10 +92,10 @@ const PlayForm = () => {
 
       navigate("/" + data, { state: { wait: false }, replace: true });
     } catch (error: any) {
-      (error);
+      error;
       useToaster({
         type: "error",
-        message: error.response.data.response || "Some error occurred!",
+        message: error.response.data.response || t("toastMessage.error.somethingWentWrong"),
       });
     }
   };
@@ -100,7 +108,7 @@ const PlayForm = () => {
 
   useEffect(() => {
     socket?.on("error", (error: ErrorSocket) => {
-      if(error.code === MULTIPLE_TAB) {
+      if (error.code === MULTIPLE_TAB) {
         navigate("/user/existing");
       }
     });
@@ -129,7 +137,7 @@ const PlayForm = () => {
                     <User2 size={28} strokeWidth={2} color={"#22A699"} />
                   </div>
                   <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                    NICKNAME
+                    {t("Home.nicknameInput")}
                   </div>
                 </FormLabel>
                 <div className="relative flex flex-col">
@@ -143,7 +151,7 @@ const PlayForm = () => {
                         maxLength={MAX_LENGHT_OF_NICKNAME}
                       />
                       <span className="absolute text-[10px] text-slate-400 top-1/2 -translate-y-1/2 right-2">
-                        {numberOfCharactersLeft} chars left
+                        {numberOfCharactersLeft} {t("InputCharLeft")}
                       </span>
                     </>
                   </FormControl>
@@ -157,26 +165,31 @@ const PlayForm = () => {
           control={form.control}
           name="language"
           render={({ field }) => (
-            <FormItem className="flex flex-1 w-full max-lg:flex-col md:items-center text-slate-400">
+            <FormItem className="flex flex-1 w-full max-lg:flex-col items-start text-slate-400">
               <FormLabel className="flex items-center gap-3 mt-2">
                 <div>
                   <Globe color={"#22A699"} size={28} />
                 </div>
                 <div className="mr-3 text-lg font-bold text-primaryTextColor">
-                  LANGUAGE
+                  {t("Language.languageLabel")}
                 </div>
               </FormLabel>
               <FormControl>
                 <Select
-                  onValueChange={field.onChange}
+                  onValueChange={(value) => {
+                    field.onChange(value);
+                    updateUserLanguage(value);
+                    handleChangeLanguage(value)
+                  }}
                   defaultValue={field.value}
                 >
-                  <SelectTrigger className="w-full h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
+                  <SelectTrigger className="w-full lg:w-[70%] h-12 text-lg font-bold border-2 border-primaryTextColor rounded-xl">
                     <SelectValue placeholder="Theme" />
                   </SelectTrigger>
                   <SelectContent className="text-lg font-bold border-2 border-primaryTextColor">
-                    <SelectItem value="en">English (EN)</SelectItem>
-                    <SelectItem value="vi">Vietnamese (VN)</SelectItem>
+                    <SelectItem value="en">{t("Language.english")}</SelectItem>
+                    <SelectItem value="vi">{t("Language.vietnamese")}</SelectItem>
+
                   </SelectContent>
                 </Select>
               </FormControl>
@@ -190,21 +203,21 @@ const PlayForm = () => {
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#22A699] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#2193b0] to-[#6dd5ed] p-5"
             onClick={() => setFormAction("find-room")}
           >
             <img src={DoorIcon} alt="" className="w-[20%]" />
-            <p>ROOMS</p>
+            <p>{t("Home.roomButton")}</p>
           </Button>
 
           <Button
             type="submit"
             variant="opacityHover"
-            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-[#FFE569] p-5"
+            className="gap-4 md:mt-2 mt-5 rounded-full border-8 border-black font-black bg-gradient-to-r from-[#f7b733] to-[#E4E5E6] p-5"
             onClick={() => setFormAction("quick-play")}
           >
             <img src={ControllerIcon} alt="" className="w-[25%]" />
-            <p>PLAY</p>
+            <p>{t("PlayLabel")}</p>
           </Button>
         </div>
       </form>

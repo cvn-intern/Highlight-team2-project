@@ -14,6 +14,7 @@ import { cn } from "../lib/utils";
 import { Button } from "./shadcn-ui/Button";
 import QRCode from "react-qr-code";
 import useToaster from "../hooks/useToaster";
+import { useTranslation } from "react-i18next";
 
 type ShareMode = "link" | "qr-code"
 
@@ -28,11 +29,11 @@ const ShareRoomLinkDialog = () => {
         navigator.clipboard.writeText(roomLink)
         useToaster({
             type: "success",
-            message: "Copied",
+            message: t("toastMessage.success.copy"),
             position: "bottom-right"
         })
     }
-
+    const { t } = useTranslation()
     return (
         <Dialog>
             <DialogTrigger>
@@ -45,19 +46,19 @@ const ShareRoomLinkDialog = () => {
             <DialogContent className="max-w-[350px] sm:max-w-[550px]">
                 <DialogHeader>
                     <DialogTitle className="mb-8 text-4xl text-center text-transparent uppercase bg-gradient-to-r from-[#242e35] bg-clip-text">
-                        Share
+                        {t("PlayingGame.share.shareLabel")}
                     </DialogTitle>
                     <DialogDescription>
                         <div className="flex p-1 w-[80%] rounded-xl border-[1px] border-black/30 font-bold text-lg mx-auto mb-6">
                             <div className={cn("bg-transparent py-1 text-center px-4 flex-1 rounded-xl cursor-pointer", {
                                 "bg-[#677d8b] text-white ": shareMode === "link"
                             })} onClick={() => handleSelectShareMode("link")}>
-                                LINK
+                                {t("PlayingGame.share.link")}
                             </div>
                             <div className={cn("bg-transparent py-1 text-center px-4 flex-1 rounded-xl cursor-pointer", {
                                 "bg-[#677d8b] text-white": shareMode === "qr-code"
                             })} onClick={() => handleSelectShareMode("qr-code")}>
-                                QR CODE
+                                {t("PlayingGame.share.qrcode")}
                             </div>
                         </div>
 
@@ -73,7 +74,7 @@ const ShareRoomLinkDialog = () => {
                             />
                         </div>
 
-                        <p className="text-center mt-4 text-lg font-semibold">Invite your friends to the room!</p>
+                        <p className="text-center mt-4 text-lg font-semibold">{t("PlayingGame.share.shareDescription")}</p>
                         <div className="py-1 px-3 md:px-10 w-fit mx-auto border-2 border-slate-400 rounded-xl text-lg font-semibold text-slate-500">
                             {roomLink}
                         </div>
@@ -85,7 +86,7 @@ const ShareRoomLinkDialog = () => {
                             onClick={handleCopyRoomLink}
                         >
                             <Copy fill="#fff" />
-                            <p className="text-xl ml-4">COPY</p>
+                            <p className="text-xl ml-4">{t("PlayingGame.share.copyButton")}</p>
                         </Button>
                     </>
                 ) : (
@@ -95,7 +96,7 @@ const ShareRoomLinkDialog = () => {
                             className="w-[40%] mx-auto h-auto"
                             value={roomLink}
                         />
-                        <p className="text-center mt-2.5 mb-5 text-xl font-semibold text-slate-600">You know exactly what this is!</p>
+                        <p className="text-center mt-2.5 mb-5 text-xl font-semibold text-slate-600">{t("PlayingGame.share.shareDescription")}</p>
                     </>
                 )}
             </DialogContent>

@@ -220,6 +220,7 @@ export function ProgressPlayTime() {
         status: GAME_REFRESH_DRAWER,
       });
       setIsRunning(true);
+
     });
 
     socket?.on(DRAWER_SKIP_TURN_CHANNEL, async () => {
@@ -249,6 +250,7 @@ export function ProgressPlayTime() {
     isRunning,
     participants,
     roomRound,
+    isHost,
   ]);
 
   useEffect(() => {

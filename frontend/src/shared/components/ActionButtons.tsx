@@ -9,6 +9,7 @@ import { useSocketStore } from "@/shared/stores/socketStore";
 import ShareRoomLinkDialog from "./ShareRoomLinkDialog";
 import RoomInfomationDialog from "./RoomInfomationDialog";
 import { RoomType } from "../types/room";
+import { useTranslation } from "react-i18next";
 
 type ActionButtonsProps = {
   roomInfo?: RoomType;
@@ -19,6 +20,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
   const { socket } = useSocketStore();
   const { codeRoom } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const toggleSound = () => setIsSound((prev) => !prev);
   const handleOutRoom = () => {
@@ -49,8 +51,8 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
             buttonClassName="text-white p-0"
             Icon={LogOut}
             iconSize={50}
-            confirmText="Yes"
-            cancelText="No"
+            confirmText={t("PlayingGame.exit.yes")}
+            cancelText={t("PlayingGame.exit.no")}
             onYesClick={handleOutRoom}
             headerChildren={
               <img
@@ -59,7 +61,7 @@ const ActionButtons = ({ roomInfo }: ActionButtonsProps) => {
                 className="object-cover w-32 h-32 mb-2"
               />
             }
-            alertMessage="Do you want to leave the game?"
+            alertMessage={t("PlayingGame.exit.exitDescription")}
             messageClassName="text-xl font-bold text-black"
             cancelClassName="rounded-full border-8 border-black font-black bg-gradient-to-r from-[#00416A] to-[#E4E5E6] p-5 w-[150px] text-xl text-black hover:text-white"
             confirmClassName="rounded-full border-8 border-black font-black bg-gradient-to-r from-[#ffd452] to-[#E4E5E6] p-5 w-[150px] text-xl text-black hover:text-white"

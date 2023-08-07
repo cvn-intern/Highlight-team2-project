@@ -183,7 +183,7 @@ export class RoomService {
     await this.roomRepository.save({ ...room, status, updated_at: new Date() });
   }
 
-  async getRoomsByQuery(theme: string, language_code: string): Promise<Room[]> {
-    return await this.roomRepository.getRoomsByQuery(theme, language_code);
+  async getRoomsByQuery(theme: string, language_code: string, search: string): Promise<Room[]> {
+    return await this.roomRepository.getRoomsByQuery(theme, language_code, search);
   }
 }
