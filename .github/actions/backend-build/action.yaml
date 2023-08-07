@@ -20,12 +20,12 @@ runs:
       run: |
         echo "${{ inputs.variables-env }}" > .production.env
         echo "${{ inputs.variables-env }}" > .docker.env
-        scp .docker.env ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:/home/ubuntu/backend
-        scp .production.env ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:/home/ubuntu/backend
+        scp .docker.env ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:/root/backend
+        scp .production.env ${{ inputs.ssh-username }}@${{ inputs.ssh-host }}:/root/backend
 
     - name: Deploy using Docker Compose
       shell: bash
       run: |
-        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend && sudo docker compose down'
-        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend/script && sudo sh ./remove-unused-docker-resources.sh'
-        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /home/ubuntu/backend && sudo docker compose up --detach'
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /root/backend && sudo docker compose down'
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /root/backend/script && sudo sh ./remove-unused-docker-resources.sh'
+        ssh ${{ inputs.ssh-username }}@${{ inputs.ssh-host }} 'cd /root/backend && sudo docker compose up --detach'
