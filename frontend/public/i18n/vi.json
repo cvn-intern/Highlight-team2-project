@@ -71,7 +71,7 @@
       "kickButton": "LOẠI",
       "emptySlot": "TRỐNG",
       "point": "điểm",
-      "nextPainter": "Người vẽ tiếp theo"
+      "nextPainter": "Vẽ tiếp theo"
     },
     "share": {
       "shareLabel": "CHIA SẺ",
@@ -100,7 +100,7 @@
     }
   },
   "interval": {
-    "intervalLabel": "KHOẢNG NGHỈ",
+    "intervalLabel": "GIẢI LAO",
     "newTurn": "VÒNG MỚI",
     "turnNotify": "Lượt vẽ của",
     "inactive": "KHÔNG HOẠT ĐỘNG",
@@ -127,7 +127,8 @@
     "warning": {
       "nextDrawerRestart": "Người vẽ đã thoát khỏi phòng, vòng chơi bắt đầu lại!",
       "enterNickname": "Tên không được để trống!",
-      "guestUser": "Bạn phải đăng nhập để sử dụng tính năng này!"
+      "guestUser": "Bạn phải đăng nhập để sử dụng tính năng này!",
+      "drawerSkipTurn": "Người vẽ đã bỏ qua từ này, vòng chơi bắt đầu lại!"
     },
     "error": {
       "joinRoom": "Vào phòng không thành công!",

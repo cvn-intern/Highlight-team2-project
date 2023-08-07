@@ -105,8 +105,8 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(handleSubmit)}        
-        className="w-full flex flex-col md:flex-row items-center justify-between mt-3 md:mb-4 mb-[-1.5rem] md:gap-x-20"
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="w-full flex flex-col md:flex-row items-center mt-3 md:mb-4 mb-[-1.5rem] lg:gap-x-20"
       >
         <div className="flex items-center md:ml-12">
           <FormField
@@ -141,110 +141,115 @@ const RoomFilterForm: React.FC<SelectCodeRoomProps> = ({
           />
         </div>
 
-        <p className="hidden xl:block text-7xl mx-auto font-coiny bg-gradient-to-r from-[#2196f3] to-[#FFC371] text-transparent bg-clip-text pt-5">
+        <p className="hidden xl:block xl:text-7xl text-5xl font-coiny bg-gradient-to-r from-[#f7b733] to-[#0575E6] text-transparent bg-clip-text pt-5">
           {t("RoomList.roomLabel")}
         </p>
 
-        <div className="flex items-center justify-center pl-10 mt-5 mr-auto w-fit max-md:w-full md:mt-0 lg:pl-0 lg:pr-5 md:justify-between">
-          <FormField
-            control={form.control}
-            name="theme"
-            render={({ field }) => (
-              <FormItem className="mr-10 max-lg:flex-col md:items-center text-slate-400">
-                <FormLabel className="flex items-center gap-5">
-                  <div>
-                    <Book
-                      size={28}
-                      strokeWidth={2}
-                      className="text-headerBlueColor"
-                    />
-                  </div>
-                  <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
-                    {t("Theme.themeLabel")}
-                  </div>
-                </FormLabel>
-                <div className="relative flex flex-col">
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        handleDropdownChange();
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full h-12 md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
-                        <SelectValue placeholder="Theme" />
-                      </SelectTrigger>
-                      <SelectContent className="md:text-lg font-bold">
-                        <SelectItem key={0} value="all">
-                          {t("Theme.all")}
-                        </SelectItem>
-                        {themesData?.map((theme) => (
-                          <SelectItem key={theme.id} value={theme.name}>
-                            {theme.name.toUpperCase()}
+        <div className="flex flex-1 items-center justify-center pl-10 mt-5 mr-auto w-fit max-md:w-full md:mt-0 lg:pl-0 lg:pr-5 md:justify-between">
+          <div className="xl:w-[10vw] lg:w-[18vw] md:w-[24vw]">
+            <FormField
+              control={form.control}
+              name="theme"
+              render={({ field }) => (
+                <FormItem className="mr-10 max-lg:flex-col md:items-center text-slate-400">
+                  <FormLabel className="flex items-center gap-5">
+                    <div>
+                      <Book
+                        size={28}
+                        strokeWidth={2}
+                        className="text-headerBlueColor"
+                      />
+                    </div>
+                    <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
+                      {t("Theme.themeLabel")}
+                    </div>
+                  </FormLabel>
+                  <div className="relative flex flex-col">
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleDropdownChange();
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full h-12 md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
+                          <SelectValue placeholder="Theme" />
+                        </SelectTrigger>
+                        <SelectContent className="md:text-lg font-bold">
+                          <SelectItem key={0} value="all">
+                            {t("Theme.all")}
                           </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="language"
-            render={({ field }) => (
-              <FormItem className="mr-10 max-lg:flex-col md:items-center text-slate-400">
-                <FormLabel className="flex items-center gap-3 ">
-                  <div>
-                    <Globe
-                      size={28}
-                      strokeWidth={2}
-                      className="text-headerBlueColor"
-                    />
+                          {themesData?.map((theme) => (
+                            <SelectItem key={theme.id} value={theme.name}>
+                              {theme.name.toUpperCase()}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                   </div>
-                  <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
-                    {t("Language.languageLabel")}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="xl:w-[11vw] lg:w-[19vw] md:w-[26vw]">
+            <FormField
+              control={form.control}
+              name="language"
+              render={({ field }) => (
+                <FormItem className="mr-10 max-lg:flex-col md:items-center text-slate-400">
+                  <FormLabel className="flex items-center gap-3 ">
+                    <div>
+                      <Globe
+                        size={28}
+                        strokeWidth={2}
+                        className="text-headerBlueColor"
+                      />
+                    </div>
+                    <div className="mr-3 md:text-lg font-bold text-primaryTextColor">
+                      {t("Language.languageLabel")}
+                    </div>
+                  </FormLabel>
+                  <div className="relative flex flex-col">
+                    <FormControl>
+                      <Select
+                        onValueChange={(value) => {
+                          field.onChange(value);
+                          handleDropdownChange();
+                        }}
+                        defaultValue={field.value}
+                      >
+                        <SelectTrigger className="w-full h-12 overflow-hidden md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
+                          <span
+                            className="inline-block w-full h-full overflow-hidden text-ellipsis"
+                            style={{
+                              maxWidth: "100%",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            <SelectValue placeholder="Language" />
+                          </span>
+                        </SelectTrigger>
+                        <SelectContent className="md:text-lg font-bold border-none">
+                          <SelectItem value="en">
+                            {t("Language.english")}
+                          </SelectItem>
+                          <SelectItem value="vi">
+                            {t("Language.vietnamese")}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                   </div>
-                </FormLabel>
-                <div className="relative flex flex-col">
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        handleDropdownChange();
-                      }}
-                      defaultValue={field.value}
-                    >
-                      <SelectTrigger className="w-full h-12 overflow-hidden md:text-lg font-bold border-none focus:ring-0 focus:ring-offset-0 rounded-xl">
-                        <span
-                          className="inline-block w-full h-full overflow-hidden text-ellipsis"
-                          style={{
-                            maxWidth: "100%",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          <SelectValue placeholder="Language" />
-                        </span>
-                      </SelectTrigger>
-                      <SelectContent className="md:text-lg font-bold border-none">
-                        <SelectItem value="en">
-                          {t("Language.english")}
-                        </SelectItem>
-                        <SelectItem value="vi">
-                          {t("Language.vietnamese")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
         </div>
       </form>
     </Form>
