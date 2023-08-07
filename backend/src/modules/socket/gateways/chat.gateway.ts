@@ -17,7 +17,6 @@ import { RoomRound } from 'src/modules/room-round/roomRound.entity';
 export class ChatGateway extends SocketGateway {
   @SubscribeMessage(CHAT_ROOM_CHANNEL)
   async handleMessageChatBox(@MessageBody() msgBody: MessageBodyType, @ConnectedSocket() client: SocketClient) {
-    console.log('msgBody', msgBody);
     try {
       const roomId = extractIdRoom(msgBody.codeRoom);
       const round: RoomRound = await this.roomRoundService.getRoundOfRoom(roomId);
