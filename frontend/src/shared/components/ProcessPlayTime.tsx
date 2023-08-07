@@ -253,7 +253,7 @@ export function ProgressPlayTime() {
     roomRound,
     isHost,
   ]);
-  console.log({participants})
+  
   useEffect(() => {
     if (!isRunning) {
       clearInterval(progressInterval.current);
