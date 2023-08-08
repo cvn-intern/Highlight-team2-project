@@ -16,7 +16,6 @@ import { Response } from 'express';
 import { AuthorizeJWT } from '../../common/guards/authorizeJWT';
 import { UpdateUserDTO } from './dto/updateUser';
 import { RedisService } from '../redis/redis.service';
-import { Language } from '../language/language.entity';
 import { IdUser } from 'src/common/decorators/idUser';
 
 @Controller('users')
